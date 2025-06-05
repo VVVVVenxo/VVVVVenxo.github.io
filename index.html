@@ -1,151 +1,560 @@
 <!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>VVVVVenxo&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="VVVVVenxo&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="VVVVVenxo&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="VVVVVenxo"><meta property="og:url" content="https://vvvvvenxo.github.io/"><meta property="og:site_name" content="VVVVVenxo&#039;s Blog"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://vvvvvenxo.github.io/img/og_image.png"><meta property="article:author" content="VVVVVenxo"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://vvvvvenxo.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://VVVVVenxo.github.io"},"headline":"VVVVVenxo's Blog","image":["https://vvvvvenxo.github.io/img/og_image.png"],"author":{"@type":"Person","name":"VVVVVenxo"},"publisher":{"@type":"Organization","name":"VVVVVenxo's Blog","logo":{"@type":"ImageObject","url":"https://vvvvvenxo.github.io/img/logo.svg"}},"description":""}</script><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
-  (function () {
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta>
+  <title>VVVVVenxo&#039;s Blog</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="application-name" content="VVVVVenxo&#039;s Blog">
+  <meta name="msapplication-TileImage" content="/img/favicon.svg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="VVVVVenxo&#039;s Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="VVVVVenxo">
+  <meta property="og:url" content="https://vvvvvenxo.github.io/">
+  <meta property="og:site_name" content="VVVVVenxo&#039;s Blog">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:image" content="https://vvvvvenxo.github.io/img/og_image.png">
+  <meta property="article:author" content="VVVVVenxo">
+  <meta property="twitter:card" content="summary">
+  <meta property="twitter:image:src" content="https://vvvvvenxo.github.io/img/og_image.png">
+  <script
+    type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://VVVVVenxo.github.io"},"headline":"VVVVVenxo's Blog","image":["https://vvvvvenxo.github.io/img/og_image.png"],"author":{"@type":"Person","name":"VVVVVenxo"},"publisher":{"@type":"Organization","name":"VVVVVenxo's Blog","logo":{"@type":"ImageObject","url":"https://vvvvvenxo.github.io/img/logo.svg"}},"description":""}</script>
+  <link rel="icon" href="/img/favicon.svg">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+  <link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro">
+  <link data-pjax rel="stylesheet" href="/css/default.css">
+  <style>
+    body>.footer,
+    body>.navbar,
+    body>.section {
+      opacity: 0
+    }
+  </style><!--!--><!--!--><!--!--><!--!-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css">
+  <!--!--><!--!--><!--!-->
+  <style>
+    .pace {
+      -webkit-pointer-events: none;
+      pointer-events: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none
+    }
+
+    .pace-inactive {
+      display: none
+    }
+
+    .pace .pace-progress {
+      background: #3273dc;
+      position: fixed;
+      z-index: 2000;
+      top: 0;
+      right: 100%;
+      width: 100%;
+      height: 2px
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script>
+  <!--!--><!--!--><!-- hexo injector head_end start -->
+  <script>
+    (function () {
       function switchTab() {
-          if (!location.hash) {
-            return;
-          }
+        if (!location.hash) {
+          return;
+        }
 
-          const id = '#' + CSS.escape(location.hash.substring(1));
-          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
-          if (!$tabMenu) {
-            return;
-          }
+        const id = '#' + CSS.escape(location.hash.substring(1));
+        const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+        if (!$tabMenu) {
+          return;
+        }
 
-          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
-          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
-          Array.from($tabMenuContainer.querySelectorAll('a'))
-              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
-              .forEach($content => $content.classList.add('is-hidden'));
+        const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+        Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+        Array.from($tabMenuContainer.querySelectorAll('a'))
+          .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+          .forEach($content => $content.classList.add('is-hidden'));
 
-          if ($tabMenu) {
-              $tabMenu.parentElement.classList.add('is-active');
-          }
-          const $activeTab = document.querySelector(id);
-          if ($activeTab) {
-              $activeTab.classList.remove('is-hidden');
-          }
+        if ($tabMenu) {
+          $tabMenu.parentElement.classList.add('is-active');
+        }
+        const $activeTab = document.querySelector(id);
+        if ($activeTab) {
+          $activeTab.classList.remove('is-hidden');
+        }
       }
       switchTab();
       window.addEventListener('hashchange', switchTab, false);
-  })();
-  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="VVVVVenxo&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/VVVVVenxo/VVVVVenxo.github.io"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-06-04T12:39:57.194Z" title="2025/6/4 20:39:57">2025-06-04</time>发表</span><span class="level-item"><time dateTime="2025-06-04T12:51:23.585Z" title="2025/6/4 20:51:23">2025-06-04</time>更新</span><span class="level-item">1 分钟读完 (大约175个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2025/06/04/C++%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/">C++整体框架</a></p><div class="content"><blockquote>
-<p>本框架基于Primer C++第五版进行构建，正在逐步施工中，会超链接到已经完成的文章。</p>
-</blockquote>
-<h2 id="C-基础"><a href="#C-基础" class="headerlink" title="C++基础"></a>C++基础</h2><ul>
-<li><a href="#%E5%8F%98%E9%87%8F">变量</a></li>
-<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2">字符串</a></li>
-<li><a href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F">表达式</a></li>
-<li><a href="#%E8%AF%AD%E5%8F%A5">语句</a></li>
-<li><a href="#%E5%87%BD%E6%95%B0%E7%B1%BB">函数类</a></li>
-</ul>
-<h2 id="C-标准库"><a href="#C-标准库" class="headerlink" title="C++标准库"></a>C++标准库</h2><ul>
-<li><a href="#IO%E5%BA%93">IO库</a></li>
-<li><a href="#%E9%A1%BA%E5%BA%8F%E5%AE%B9%E5%99%A8">顺序容器</a></li>
-<li><a href="#%E6%B3%9B%E5%9E%8B%E7%AE%97%E6%B3%95">泛型算法</a></li>
-<li><a href="#%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8">关联容器</a></li>
-<li><a href="#%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98">动态内存</a></li>
-</ul>
-<h2 id="C-类设计者的工具"><a href="#C-类设计者的工具" class="headerlink" title="C++类设计者的工具"></a>C++类设计者的工具</h2><ul>
-<li><a href="#%E6%8B%B7%E8%B4%9D%E6%8E%A7%E5%88%B6">拷贝控制</a></li>
-<li><a href="#%E9%87%8D%E8%BD%BD%E8%BF%90%E7%AE%97%E4%B8%8E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2">重载运算与类型转换</a></li>
-<li><a href="#OOP%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1">OOP程序设计</a></li>
-<li><a href="#%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%B3%9B%E5%9E%8B">模板与泛型</a></li>
-</ul>
-<h2 id="C-11新特性"><a href="#C-11新特性" class="headerlink" title="C++11新特性"></a>C++11新特性</h2><ul>
-<li><a href="#lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F">lambda表达式</a></li>
-<li><a href="#auto">auto</a></li>
-<li><a href="#nullptr">nullptr</a></li>
-</ul>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-06-04T12:33:16.568Z" title="2025/6/4 20:33:16">2025-06-04</time>发表</span><span class="level-item"><time dateTime="2025-06-04T12:34:46.093Z" title="2025/6/4 20:34:46">2025-06-04</time>更新</span><span class="level-item">4 分钟读完 (大约536个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2025/06/04/C++%E5%85%B3%E9%94%AE%E5%AD%97/">C++关键字</a></p><div class="content"><h3 id="C-类型转换关键字"><a href="#C-类型转换关键字" class="headerlink" title="C++类型转换关键字"></a>C++类型转换关键字</h3><ol>
-<li>const_cast:：把const属性去掉，即将const转换为非const（也可以反过来），const_cast只能用于指针或引用，并且只能改变对象的底层const（顶层const，本身是const，底层const，指向对象const）；</li>
-<li>static_cast:：隐式类型转换，可以实现C++中内置基本数据类型之间的相互转换，enum、struct、 int、char、float等，能进行类层次间的向上类型转换和向下类型转换（向下不安全，因为没有进行动态类型检查）。它不能进行无关类型(如非基类和子类)指针之间的转换，也不能作用包含底层const的对象；</li>
-<li>dynamic_cast：动态类型转换，用于将基类的指针或引用安全地转换成派生类的指针或引用（也可以向上转换），若指针转换失败返回NULL，若引用返回失败抛出bad_cast异常。dynamic_cast是在运行时进行安全性检查；使用dynamic_cast父类一定要有虚函数，否则编译不通过；</li>
-<li>reinterpret_cast：reinterpret是重新解释的意思，此标识符的意思即为将数据的二进制形式重新解释，但是不改变其值，有着和C风格的强制转换同样的能力。它可以转化任何内置的数据类型为其他任何的数据类型，也可以转化任何指针类型为其他的类型。它甚至可以转化内置的数据类型为指针，无须考虑类型安全或者常量的情形。不到万不得已绝对不用（比较不安全）。</li>
-</ol>
-<blockquote>
-<p><strong>static_cast和dynamic_cast的异同点？</strong><br>二者都会做类型安全检查，只是static_cast在编译期进行类型检查，dynamic_cast在运行期进行类型检查。后者需要父类具备虚函数，而前者不需要。</p>
-</blockquote>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-06-04T12:22:35.865Z" title="2025/6/4 20:22:35">2025-06-04</time>发表</span><span class="level-item"><time dateTime="2025-06-04T13:01:03.555Z" title="2025/6/4 21:01:03">2025-06-04</time>更新</span><span class="level-item">8 分钟读完 (大约1183个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2025/06/04/C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">C++内存管理</a></p><div class="content"><h3 id="C-中的内存分区"><a href="#C-中的内存分区" class="headerlink" title="C++中的内存分区"></a>C++中的内存分区</h3><ol>
-<li>堆，使用malloc、free动态分配和释放空间，能分配较大的内存；</li>
-<li>栈，为函数的局部变量分配内存，能分配较小的内存；</li>
-<li>全局&#x2F;静态存储区，用于存储全局变量和静态变量；</li>
-<li>常量存储区，专门用来存放常量；</li>
-<li>自由存储区：通过new和delete分配和释放空间的内存，具体实现可能是堆或者内存池。</li>
-</ol>
-<hr>
-<blockquote>
-<h5 id="堆和自由存储区的区别："><a href="#堆和自由存储区的区别：" class="headerlink" title="堆和自由存储区的区别："></a>堆和自由存储区的区别：</h5><p>堆是C和操作系统的术语，自由存储区是C++的术语，指的是通过new和delete动态分配和释放对象的抽象概念；基本上C++也会用堆区实现自由存储，但程序员可以通过重载操作符，改用其他内存实现自由存储，比如全局变量做的对象池。</p>
-<h5 id="堆和栈的区别："><a href="#堆和栈的区别：" class="headerlink" title="堆和栈的区别："></a>堆和栈的区别：</h5><ol>
-<li>堆中的内存需要手动申请和手动释放，栈中内存是由OS自动申请和自动释放；</li>
-<li>堆能分配的内存较大（4G(32位机器)），栈能分配的内存较小（1M）；</li>
-<li>在堆中分配和释放内存会产生内存碎片，栈不会产生内存碎片；</li>
-<li>堆的分配效率低，栈的分配效率高；</li>
-<li>堆地址从低向上，栈由高向下。</li>
-</ol>
-</blockquote>
-<hr>
-<h3 id="内存泄漏（Memory-Leak）"><a href="#内存泄漏（Memory-Leak）" class="headerlink" title="内存泄漏（Memory Leak）"></a>内存泄漏（Memory Leak）</h3><p>是指程序在运行过程中分配了内存空间，但在不再使用这些内存时，没有释放它们，导致这部分内存无法被重新利用。长期下去，内存泄漏会导致程序占用越来越多的内存，甚至可能导致程序崩溃。</p>
-<hr>
-<h3 id="使用C-C-进行内存的分配、释放。"><a href="#使用C-C-进行内存的分配、释放。" class="headerlink" title="使用C&#x2F;C++进行内存的分配、释放。"></a>使用C&#x2F;C++进行内存的分配、释放。</h3><p>C使用<code>malloc/free</code>，C++使用<code>new/delete</code>，前者是C语言中的库函数，后者是C++语言的运算符，对于自定义对象，<code>malloc/free</code>只进行分配内存和释放内存，无法调用其构造函数和析构函数，只有<code>new/delete</code>能做到，完成对象的空间分配和初始化，以及对象的销毁和释放空间，不能混用，具体区别如下：</p>
-<blockquote>
-<ol>
-<li><code>new</code>分配内存空间无需指定分配内存大小，malloc需要；</li>
-<li><code>new</code>返回类型指针，类型安全，<code>malloc</code>返回void*，再强制转换成所需要的类型；</li>
-<li><code>new</code>是从自由存储区获得内存，<code>malloc</code>从堆中获取内存；</li>
-<li>对于类对象，<code>new</code>会调用构造函数和析构函数，<code>malloc</code>不会（核心）。</li>
-</ol>
-</blockquote>
-<hr>
-<h3 id="内存对齐"><a href="#内存对齐" class="headerlink" title="内存对齐"></a>内存对齐</h3><p><strong>C++进行内存对齐的原因：</strong><br>关键在于CPU存取数据的效率问题。为了提高效率，计算机从内存中取数据是按照一个固定长度的。比如在32位机上，CPU每次都是取32bit数据的，也就是4字节；若不进行对齐，要取出两块地址中的数据，进行掩码和移位等操作，写入目标寄存器内存，效率很低。内存对齐一方面可以节省内存，一方面可以提升数据读取的速度。</p>
-<p>关键在于CPU存取数据的效率问题。为了提高效率，计算机从内存中取数据是按照一个固定长度的。比如在32位机上，CPU每次都是取32bit数据的，也就是4字节；若不进行对齐，要取出两块地址中的数据，进行掩码和移位等操作，写入目标寄存器内存，效率很低。内存对齐一方面可以节省内存，一方面可以提升数据读取的速度。</p>
-<p><strong>C++对齐的原则</strong></p>
-<ol>
-<li>结构体变量的首地址能够被其最宽基本类型成员的对齐值所整除；</li>
-<li>结构体内每一个成员的相对于起始地址的偏移量能够被该变量的大小整除；</li>
-<li>结构体总体大小能够被最宽成员大小整除；如果不满足这些条件，编译器就会进行一个填充（padding）。</li>
-</ol>
-<p><strong>我们应该怎么做？</strong><br>声明数据结构时，字节对齐的数据依次声明，然后小成员组合在一起，能省去一些浪费的空间，不要把小成员参杂声明在字节对齐的数据之间。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-06-04T11:58:15.925Z" title="2025/6/4 19:58:15">2025-06-04</time>发表</span><span class="level-item"><time dateTime="2025-06-04T12:02:25.081Z" title="2025/6/4 20:02:25">2025-06-04</time>更新</span><span class="level-item">1 分钟读完 (大约181个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2025/06/04/%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF-%E7%BD%91%E7%BB%9C/">游戏客户端-网络</a></p><div class="content"><p>Mirror和NetCode比较头疼的一点就是双端代码是写在一起的，一开始理解起来会很困难。</p>
-<p><strong>了解：</strong> OSI七层架构、TCP&#x2F;IP五层架构。</p>
-<p>&nbsp;</p>
-<p><strong>UDP：</strong> 无连接，大小控制在64K里面，不可靠传输，由于不需要连接速度稍快</p>
-<p><strong>TCP：</strong> 面向字节流的可靠传输，需要三次握手&#x2F;四次挥手来建立连接、断开连接，因此传输效率较慢。</p>
-<p>&nbsp;</p>
-<p><strong>Socket套接字：</strong> 是计算机之间进行通信的一系列协议。如果要进行网络开发，则要使用要Socket。本质是包含了TCP&#x2F;IP的协议的API。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-06-04T11:53:49.550Z" title="2025/6/4 19:53:49">2025-06-04</time>发表</span><span class="level-item"><time dateTime="2025-06-04T12:08:10.408Z" title="2025/6/4 20:08:10">2025-06-04</time>更新</span><span class="level-item">几秒读完 (大约39个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2025/06/04/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/">学习方法论</a></p><div class="content"><h1 id="建立知识体系的方法"><a href="#建立知识体系的方法" class="headerlink" title="建立知识体系的方法"></a>建立知识体系的方法</h1><h2 id="结构化"><a href="#结构化" class="headerlink" title="结构化"></a>结构化</h2><h2 id="时间线"><a href="#时间线" class="headerlink" title="时间线"></a>时间线</h2><h2 id="流程化"><a href="#流程化" class="headerlink" title="流程化"></a>流程化</h2><p>&nbsp;</p>
-<h3 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h3><ol>
-<li>学习步骤：3W：（What、Why、How）</li>
-<li>多问为什么</li>
-</ol>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-06-03T14:17:42.068Z" title="2025/6/3 22:17:42">2025-06-03</time>发表</span><span class="level-item"><time dateTime="2025-06-04T12:21:22.151Z" title="2025/6/4 20:21:22">2025-06-04</time>更新</span><span class="level-item">3 分钟读完 (大约423个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2025/06/03/CPP%E9%87%8C%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0/">C++中的虚函数</a></p><div class="content"><h3 id="C-中的多态"><a href="#C-中的多态" class="headerlink" title="C++中的多态"></a>C++中的多态</h3><ul>
-<li>多态是面向对象编程的三大原则之一（封装、继承、多态）。</li>
-<li>所谓多态，就是同一个函数名具有多种状态，或者说一个接口具有不同的行为。</li>
-<li>C++的多态分为<strong>编译时多态</strong>和<strong>运行时多态</strong>.</li>
-<li>编译时多态也称为为<strong>静态联编</strong>，通过重载和模板来实现；运行时多态称为<strong>动态联编</strong>，通过继承和虚函数来实现。</li>
-</ul>
-<hr>
-<h3 id="虚函数的实现机制"><a href="#虚函数的实现机制" class="headerlink" title="虚函数的实现机制"></a>虚函数的实现机制</h3><ul>
-<li>虚函数是通过<strong>虚函数表</strong>来实现的，虚函数表包含了一个类（所有）的虚函数的地址。</li>
-<li>在有虚函数的类对象中，它内存空间的头部会有一个<strong>虚函数表指针</strong>（虚表指针），用来管理虚函数表。</li>
-<li>当子类对象对父类虚函数进行重写的时候，虚函数表的相应虚函数地址会发生改变，改写成这个虚函数的地址，当我们用一个父类的指针来操作子类对象的时候，它可以指明实际所调用的函数。</li>
-</ul>
-<hr>
-<h3 id="虚函数的特质"><a href="#虚函数的特质" class="headerlink" title="虚函数的特质"></a>虚函数的特质</h3><ul>
-<li>虚函数存在于类中，不同的类对象共享一张虚函数表（为了节省内存空间）。</li>
-</ul>
-<hr>
-<h3 id="在C中实现虚函数"><a href="#在C中实现虚函数" class="headerlink" title="在C中实现虚函数"></a>在C中实现虚函数</h3><ul>
-<li>需要做的工作：手动构造父子关系、创建虚函数表、设置虚表指针并指向虚函数表、填充虚函数表；当虚函数重写的时候还需要手动修改函数指针等等。</li>
-</ul>
-</div></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="VVVVVenxo"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">VVVVVenxo</p><p class="is-size-6 is-block">To be a rock and not to roll.</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>JiangSu, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">6</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="E-mail" href="mailto:1263147353@qq.com"><i class="fab fa-envelope"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Steam" href="https://steamcommunity.com/profiles/76561198863443106/"><i class="fab fa-steam"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-06-04T12:39:57.194Z">2025-06-04</time></p><p class="title"><a href="/2025/06/04/C++%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/">C++整体框架</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-06-04T12:33:16.568Z">2025-06-04</time></p><p class="title"><a href="/2025/06/04/C++%E5%85%B3%E9%94%AE%E5%AD%97/">C++关键字</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-06-04T12:22:35.865Z">2025-06-04</time></p><p class="title"><a href="/2025/06/04/C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">C++内存管理</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-06-04T11:58:15.925Z">2025-06-04</time></p><p class="title"><a href="/2025/06/04/%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF-%E7%BD%91%E7%BB%9C/">游戏客户端-网络</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-06-04T11:53:49.550Z">2025-06-04</time></p><p class="title"><a href="/2025/06/04/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/">学习方法论</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2025/06/"><span class="level-start"><span class="level-item">六月 2025</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="VVVVVenxo&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2025 VVVVVenxo</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">Everything's Alright</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/VVVVVenxo/VVVVVenxo.github.io"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
-            article: {
-                highlight: {
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+    })();
+  </script><!-- hexo injector head_end end -->
+  <meta name="generator" content="Hexo 7.3.0">
+</head>
+
+<body class="is-2-column">
+  <nav class="navbar navbar-main">
+    <div class="container navbar-container">
+      <div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img
+            src="/img/logo.svg" alt="VVVVVenxo&#039;s Blog" height="28"></a></div>
+      <div class="navbar-menu">
+        <div class="navbar-start"><a class="navbar-item is-active" href="/">Home</a><a class="navbar-item"
+            href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item"
+            href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div>
+        <div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub"
+            href="https://github.com/VVVVVenxo/VVVVVenxo.github.io"><i class="fab fa-github"></i></a><a
+            class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div>
+      </div>
+    </div>
+  </nav>
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen">
+          <div class="card">
+            <article class="card-content article" role="article">
+              <div class="article-meta is-size-7 is-uppercase level is-mobile">
+                <div class="level-left"><span class="level-item"><time dateTime="2025-06-04T12:39:57.194Z"
+                      title="2025/6/4 20:39:57">2025-06-04</time>发表</span><span class="level-item"><time
+                      dateTime="2025-06-04T12:51:23.585Z" title="2025/6/4 20:51:23">2025-06-04</time>更新</span><span
+                    class="level-item">1 分钟读完 (大约175个字)</span></div>
+              </div>
+              <p class="title is-3 is-size-4-mobile"><a class="link-muted"
+                  href="/2025/06/04/C++%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/">C++整体框架</a></p>
+              <div class="content">
+                <blockquote>
+                  <p>本框架基于Primer C++第五版进行构建，正在逐步施工中，会超链接到已经完成的文章。</p>
+                </blockquote>
+                <h2 id="C-基础"><a href="#C-基础" class="headerlink" title="C++基础"></a>C++基础</h2>
+                <ul>
+                  <li><a href="#%E5%8F%98%E9%87%8F">变量</a></li>
+                  <li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2">字符串</a></li>
+                  <li><a href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F">表达式</a></li>
+                  <li><a href="#%E8%AF%AD%E5%8F%A5">语句</a></li>
+                  <li><a href="#%E5%87%BD%E6%95%B0%E7%B1%BB">函数类</a></li>
+                </ul>
+                <h2 id="C-标准库"><a href="#C-标准库" class="headerlink" title="C++标准库"></a>C++标准库</h2>
+                <ul>
+                  <li><a href="#IO%E5%BA%93">IO库</a></li>
+                  <li><a href="#%E9%A1%BA%E5%BA%8F%E5%AE%B9%E5%99%A8">顺序容器</a></li>
+                  <li><a href="#%E6%B3%9B%E5%9E%8B%E7%AE%97%E6%B3%95">泛型算法</a></li>
+                  <li><a href="#%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8">关联容器</a></li>
+                  <li><a href="#%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98">动态内存</a></li>
+                </ul>
+                <h2 id="C-类设计者的工具"><a href="#C-类设计者的工具" class="headerlink" title="C++类设计者的工具"></a>C++类设计者的工具</h2>
+                <ul>
+                  <li><a href="#%E6%8B%B7%E8%B4%9D%E6%8E%A7%E5%88%B6">拷贝控制</a></li>
+                  <li><a
+                      href="#%E9%87%8D%E8%BD%BD%E8%BF%90%E7%AE%97%E4%B8%8E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2">重载运算与类型转换</a>
+                  </li>
+                  <li><a href="#OOP%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1">OOP程序设计</a></li>
+                  <li><a href="#%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%B3%9B%E5%9E%8B">模板与泛型</a></li>
+                </ul>
+                <h2 id="C-11新特性"><a href="#C-11新特性" class="headerlink" title="C++11新特性"></a>C++11新特性</h2>
+                <ul>
+                  <li><a href="#lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F">lambda表达式</a></li>
+                  <li><a href="#auto">auto</a></li>
+                  <li><a href="#nullptr">nullptr</a></li>
+                </ul>
+              </div>
+            </article>
+          </div>
+          <div class="card">
+            <article class="card-content article" role="article">
+              <div class="article-meta is-size-7 is-uppercase level is-mobile">
+                <div class="level-left"><span class="level-item"><time dateTime="2025-06-04T12:33:16.568Z"
+                      title="2025/6/4 20:33:16">2025-06-04</time>发表</span><span class="level-item"><time
+                      dateTime="2025-06-04T12:34:46.093Z" title="2025/6/4 20:34:46">2025-06-04</time>更新</span><span
+                    class="level-item">4 分钟读完 (大约536个字)</span></div>
+              </div>
+              <p class="title is-3 is-size-4-mobile"><a class="link-muted"
+                  href="/2025/06/04/C++%E5%85%B3%E9%94%AE%E5%AD%97/">C++关键字</a></p>
+              <div class="content">
+                <h3 id="C-类型转换关键字"><a href="#C-类型转换关键字" class="headerlink" title="C++类型转换关键字"></a>C++类型转换关键字</h3>
+                <ol>
+                  <li>
+                    const_cast:：把const属性去掉，即将const转换为非const（也可以反过来），const_cast只能用于指针或引用，并且只能改变对象的底层const（顶层const，本身是const，底层const，指向对象const）；
+                  </li>
+                  <li>static_cast:：隐式类型转换，可以实现C++中内置基本数据类型之间的相互转换，enum、struct、
+                    int、char、float等，能进行类层次间的向上类型转换和向下类型转换（向下不安全，因为没有进行动态类型检查）。它不能进行无关类型(如非基类和子类)指针之间的转换，也不能作用包含底层const的对象；
+                  </li>
+                  <li>
+                    dynamic_cast：动态类型转换，用于将基类的指针或引用安全地转换成派生类的指针或引用（也可以向上转换），若指针转换失败返回NULL，若引用返回失败抛出bad_cast异常。dynamic_cast是在运行时进行安全性检查；使用dynamic_cast父类一定要有虚函数，否则编译不通过；
+                  </li>
+                  <li>
+                    reinterpret_cast：reinterpret是重新解释的意思，此标识符的意思即为将数据的二进制形式重新解释，但是不改变其值，有着和C风格的强制转换同样的能力。它可以转化任何内置的数据类型为其他任何的数据类型，也可以转化任何指针类型为其他的类型。它甚至可以转化内置的数据类型为指针，无须考虑类型安全或者常量的情形。不到万不得已绝对不用（比较不安全）。
+                  </li>
+                </ol>
+                <blockquote>
+                  <p>
+                    <strong>static_cast和dynamic_cast的异同点？</strong><br>二者都会做类型安全检查，只是static_cast在编译期进行类型检查，dynamic_cast在运行期进行类型检查。后者需要父类具备虚函数，而前者不需要。
+                  </p>
+                </blockquote>
+              </div>
+            </article>
+          </div>
+          <div class="card">
+            <article class="card-content article" role="article">
+              <div class="article-meta is-size-7 is-uppercase level is-mobile">
+                <div class="level-left"><span class="level-item"><time dateTime="2025-06-04T12:22:35.865Z"
+                      title="2025/6/4 20:22:35">2025-06-04</time>发表</span><span class="level-item"><time
+                      dateTime="2025-06-04T13:01:03.555Z" title="2025/6/4 21:01:03">2025-06-04</time>更新</span><span
+                    class="level-item">8 分钟读完 (大约1183个字)</span></div>
+              </div>
+              <p class="title is-3 is-size-4-mobile"><a class="link-muted"
+                  href="/2025/06/04/C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">C++内存管理</a></p>
+              <div class="content">
+                <h3 id="C-中的内存分区"><a href="#C-中的内存分区" class="headerlink" title="C++中的内存分区"></a>C++中的内存分区</h3>
+                <ol>
+                  <li>堆，使用malloc、free动态分配和释放空间，能分配较大的内存；</li>
+                  <li>栈，为函数的局部变量分配内存，能分配较小的内存；</li>
+                  <li>全局&#x2F;静态存储区，用于存储全局变量和静态变量；</li>
+                  <li>常量存储区，专门用来存放常量；</li>
+                  <li>自由存储区：通过new和delete分配和释放空间的内存，具体实现可能是堆或者内存池。</li>
+                </ol>
+                <hr>
+                <blockquote>
+                  <h5 id="堆和自由存储区的区别："><a href="#堆和自由存储区的区别：" class="headerlink" title="堆和自由存储区的区别："></a>堆和自由存储区的区别：
+                  </h5>
+                  <p>
+                    堆是C和操作系统的术语，自由存储区是C++的术语，指的是通过new和delete动态分配和释放对象的抽象概念；基本上C++也会用堆区实现自由存储，但程序员可以通过重载操作符，改用其他内存实现自由存储，比如全局变量做的对象池。
+                  </p>
+                  <h5 id="堆和栈的区别："><a href="#堆和栈的区别：" class="headerlink" title="堆和栈的区别："></a>堆和栈的区别：</h5>
+                  <ol>
+                    <li>堆中的内存需要手动申请和手动释放，栈中内存是由OS自动申请和自动释放；</li>
+                    <li>堆能分配的内存较大（4G(32位机器)），栈能分配的内存较小（1M）；</li>
+                    <li>在堆中分配和释放内存会产生内存碎片，栈不会产生内存碎片；</li>
+                    <li>堆的分配效率低，栈的分配效率高；</li>
+                    <li>堆地址从低向上，栈由高向下。</li>
+                  </ol>
+                </blockquote>
+                <hr>
+                <h3 id="内存泄漏（Memory-Leak）"><a href="#内存泄漏（Memory-Leak）" class="headerlink"
+                    title="内存泄漏（Memory Leak）"></a>内存泄漏（Memory Leak）</h3>
+                <p>是指程序在运行过程中分配了内存空间，但在不再使用这些内存时，没有释放它们，导致这部分内存无法被重新利用。长期下去，内存泄漏会导致程序占用越来越多的内存，甚至可能导致程序崩溃。</p>
+                <hr>
+                <h3 id="使用C-C-进行内存的分配、释放。"><a href="#使用C-C-进行内存的分配、释放。" class="headerlink"
+                    title="使用C&#x2F;C++进行内存的分配、释放。"></a>使用C&#x2F;C++进行内存的分配、释放。</h3>
+                <p>
+                  C使用<code>malloc/free</code>，C++使用<code>new/delete</code>，前者是C语言中的库函数，后者是C++语言的运算符，对于自定义对象，<code>malloc/free</code>只进行分配内存和释放内存，无法调用其构造函数和析构函数，只有<code>new/delete</code>能做到，完成对象的空间分配和初始化，以及对象的销毁和释放空间，不能混用，具体区别如下：
+                </p>
+                <blockquote>
+                  <ol>
+                    <li><code>new</code>分配内存空间无需指定分配内存大小，malloc需要；</li>
+                    <li><code>new</code>返回类型指针，类型安全，<code>malloc</code>返回void*，再强制转换成所需要的类型；</li>
+                    <li><code>new</code>是从自由存储区获得内存，<code>malloc</code>从堆中获取内存；</li>
+                    <li>对于类对象，<code>new</code>会调用构造函数和析构函数，<code>malloc</code>不会（核心）。</li>
+                  </ol>
+                </blockquote>
+                <hr>
+                <h3 id="内存对齐"><a href="#内存对齐" class="headerlink" title="内存对齐"></a>内存对齐</h3>
+                <p>
+                  <strong>C++进行内存对齐的原因：</strong><br>关键在于CPU存取数据的效率问题。为了提高效率，计算机从内存中取数据是按照一个固定长度的。比如在32位机上，CPU每次都是取32bit数据的，也就是4字节；若不进行对齐，要取出两块地址中的数据，进行掩码和移位等操作，写入目标寄存器内存，效率很低。内存对齐一方面可以节省内存，一方面可以提升数据读取的速度。
+                </p>
+                <p>
+                  关键在于CPU存取数据的效率问题。为了提高效率，计算机从内存中取数据是按照一个固定长度的。比如在32位机上，CPU每次都是取32bit数据的，也就是4字节；若不进行对齐，要取出两块地址中的数据，进行掩码和移位等操作，写入目标寄存器内存，效率很低。内存对齐一方面可以节省内存，一方面可以提升数据读取的速度。
+                </p>
+                <p><strong>C++对齐的原则</strong></p>
+                <ol>
+                  <li>结构体变量的首地址能够被其最宽基本类型成员的对齐值所整除；</li>
+                  <li>结构体内每一个成员的相对于起始地址的偏移量能够被该变量的大小整除；</li>
+                  <li>结构体总体大小能够被最宽成员大小整除；如果不满足这些条件，编译器就会进行一个填充（padding）。</li>
+                </ol>
+                <p><strong>我们应该怎么做？</strong><br>声明数据结构时，字节对齐的数据依次声明，然后小成员组合在一起，能省去一些浪费的空间，不要把小成员参杂声明在字节对齐的数据之间。</p>
+              </div>
+            </article>
+          </div>
+          <div class="card">
+            <article class="card-content article" role="article">
+              <div class="article-meta is-size-7 is-uppercase level is-mobile">
+                <div class="level-left"><span class="level-item"><time dateTime="2025-06-04T11:58:15.925Z"
+                      title="2025/6/4 19:58:15">2025-06-04</time>发表</span><span class="level-item"><time
+                      dateTime="2025-06-04T12:02:25.081Z" title="2025/6/4 20:02:25">2025-06-04</time>更新</span><span
+                    class="level-item">1 分钟读完 (大约181个字)</span></div>
+              </div>
+              <p class="title is-3 is-size-4-mobile"><a class="link-muted"
+                  href="/2025/06/04/%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF-%E7%BD%91%E7%BB%9C/">游戏客户端-网络</a></p>
+              <div class="content">
+                <p>Mirror和NetCode比较头疼的一点就是双端代码是写在一起的，一开始理解起来会很困难。</p>
+                <p><strong>了解：</strong> OSI七层架构、TCP&#x2F;IP五层架构。</p>
+                <p>&nbsp;</p>
+                <p><strong>UDP：</strong> 无连接，大小控制在64K里面，不可靠传输，由于不需要连接速度稍快</p>
+                <p><strong>TCP：</strong> 面向字节流的可靠传输，需要三次握手&#x2F;四次挥手来建立连接、断开连接，因此传输效率较慢。</p>
+                <p>&nbsp;</p>
+                <p><strong>Socket套接字：</strong> 是计算机之间进行通信的一系列协议。如果要进行网络开发，则要使用要Socket。本质是包含了TCP&#x2F;IP的协议的API。</p>
+              </div>
+            </article>
+          </div>
+          <div class="card">
+            <article class="card-content article" role="article">
+              <div class="article-meta is-size-7 is-uppercase level is-mobile">
+                <div class="level-left"><span class="level-item"><time dateTime="2025-06-04T11:53:49.550Z"
+                      title="2025/6/4 19:53:49">2025-06-04</time>发表</span><span class="level-item"><time
+                      dateTime="2025-06-04T12:08:10.408Z" title="2025/6/4 20:08:10">2025-06-04</time>更新</span><span
+                    class="level-item">几秒读完 (大约39个字)</span></div>
+              </div>
+              <p class="title is-3 is-size-4-mobile"><a class="link-muted"
+                  href="/2025/06/04/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/">学习方法论</a></p>
+              <div class="content">
+                <h1 id="建立知识体系的方法"><a href="#建立知识体系的方法" class="headerlink" title="建立知识体系的方法"></a>建立知识体系的方法</h1>
+                <h2 id="结构化"><a href="#结构化" class="headerlink" title="结构化"></a>结构化</h2>
+                <h2 id="时间线"><a href="#时间线" class="headerlink" title="时间线"></a>时间线</h2>
+                <h2 id="流程化"><a href="#流程化" class="headerlink" title="流程化"></a>流程化</h2>
+                <p>&nbsp;</p>
+                <h3 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h3>
+                <ol>
+                  <li>学习步骤：3W：（What、Why、How）</li>
+                  <li>多问为什么</li>
+                </ol>
+              </div>
+            </article>
+          </div>
+          <div class="card">
+            <article class="card-content article" role="article">
+              <div class="article-meta is-size-7 is-uppercase level is-mobile">
+                <div class="level-left"><span class="level-item"><time dateTime="2025-06-03T14:17:42.068Z"
+                      title="2025/6/3 22:17:42">2025-06-03</time>发表</span><span class="level-item"><time
+                      dateTime="2025-06-04T12:21:22.151Z" title="2025/6/4 20:21:22">2025-06-04</time>更新</span><span
+                    class="level-item">3 分钟读完 (大约423个字)</span></div>
+              </div>
+              <p class="title is-3 is-size-4-mobile"><a class="link-muted"
+                  href="/2025/06/03/CPP%E9%87%8C%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0/">C++中的虚函数</a></p>
+              <div class="content">
+                <h3 id="C-中的多态"><a href="#C-中的多态" class="headerlink" title="C++中的多态"></a>C++中的多态</h3>
+                <ul>
+                  <li>多态是面向对象编程的三大原则之一（封装、继承、多态）。</li>
+                  <li>所谓多态，就是同一个函数名具有多种状态，或者说一个接口具有不同的行为。</li>
+                  <li>C++的多态分为<strong>编译时多态</strong>和<strong>运行时多态</strong>.</li>
+                  <li>编译时多态也称为为<strong>静态联编</strong>，通过重载和模板来实现；运行时多态称为<strong>动态联编</strong>，通过继承和虚函数来实现。</li>
+                </ul>
+                <hr>
+                <h3 id="虚函数的实现机制"><a href="#虚函数的实现机制" class="headerlink" title="虚函数的实现机制"></a>虚函数的实现机制</h3>
+                <ul>
+                  <li>虚函数是通过<strong>虚函数表</strong>来实现的，虚函数表包含了一个类（所有）的虚函数的地址。</li>
+                  <li>在有虚函数的类对象中，它内存空间的头部会有一个<strong>虚函数表指针</strong>（虚表指针），用来管理虚函数表。</li>
+                  <li>当子类对象对父类虚函数进行重写的时候，虚函数表的相应虚函数地址会发生改变，改写成这个虚函数的地址，当我们用一个父类的指针来操作子类对象的时候，它可以指明实际所调用的函数。</li>
+                </ul>
+                <hr>
+                <h3 id="虚函数的特质"><a href="#虚函数的特质" class="headerlink" title="虚函数的特质"></a>虚函数的特质</h3>
+                <ul>
+                  <li>虚函数存在于类中，不同的类对象共享一张虚函数表（为了节省内存空间）。</li>
+                </ul>
+                <hr>
+                <h3 id="在C中实现虚函数"><a href="#在C中实现虚函数" class="headerlink" title="在C中实现虚函数"></a>在C中实现虚函数</h3>
+                <ul>
+                  <li>需要做的工作：手动构造父子关系、创建虚函数表、设置虚表指针并指向虚函数表、填充虚函数表；当虚函数重写的时候还需要手动修改函数指针等等。</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1">
+          <div class="card widget" data-type="profile">
+            <div class="card-content">
+              <nav class="level">
+                <div class="level-item has-text-centered flex-shrink-1">
+                  <div>
+                    <figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png"
+                        alt="VVVVVenxo"></figure>
+                    <p class="title is-size-4 is-block" style="line-height:inherit;">VVVVVenxo</p>
+                    <p class="is-size-6 is-block">To be a rock and not to roll.</p>
+                    <p class="is-size-6 is-flex justify-content-center"><i
+                        class="fas fa-map-marker-alt mr-1"></i><span>JiangSu, China</span></p>
+                  </div>
+                </div>
+              </nav>
+              <nav class="level is-mobile">
+                <div class="level-item has-text-centered is-marginless">
+                  <div>
+                    <p class="heading">文章</p><a href="/archives/">
+                      <p class="title">6</p>
+                    </a>
+                  </div>
+                </div>
+                <div class="level-item has-text-centered is-marginless">
+                  <div>
+                    <p class="heading">分类</p><a href="/categories/">
+                      <p class="title">0</p>
+                    </a>
+                  </div>
+                </div>
+                <div class="level-item has-text-centered is-marginless">
+                  <div>
+                    <p class="heading">标签</p><a href="/tags/">
+                      <p class="title">0</p>
+                    </a>
+                  </div>
+                </div>
+              </nav>
+              <div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice"
+                  target="_blank" rel="me noopener">关注我</a></div>
+              <div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless"
+                  target="_blank" rel="me noopener" title="Github" href="https://github.com/VVVVVenxo"><i
+                    class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless"
+                  target="_blank" rel="me noopener" title="E-mail" href="mailto:1263147353@qq.com"><i
+                    class="fab fa-envelope"></i></a><a class="level-item button is-transparent is-marginless"
+                  target="_blank" rel="me noopener" title="Steam"
+                  href="https://steamcommunity.com/profiles/76561198863443106/"><i class="fab fa-steam"></i></a><a
+                  class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS"
+                  href="/"><i class="fas fa-rss"></i></a></div>
+            </div>
+          </div><!--!-->
+          <div class="card widget" data-type="links">
+            <div class="card-content">
+              <div class="menu">
+                <h3 class="menu-label">链接</h3>
+                <ul class="menu-list">
+                  <li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span
+                        class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span
+                          class="level-item tag">hexo.io</span></span></a></li>
+                  <li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span
+                        class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span
+                          class="level-item tag">bulma.io</span></span></a></li>
+                </ul>
+              </div>
+            </div>
+          </div><!--!-->
+          <div class="card widget" data-type="recent-posts">
+            <div class="card-content">
+              <h3 class="menu-label">最新文章</h3>
+              <article class="media">
+                <div class="media-content">
+                  <p class="date"><time dateTime="2025-06-04T12:39:57.194Z">2025-06-04</time></p>
+                  <p class="title"><a href="/2025/06/04/C++%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/">C++整体框架</a></p>
+                </div>
+              </article>
+              <article class="media">
+                <div class="media-content">
+                  <p class="date"><time dateTime="2025-06-04T12:33:16.568Z">2025-06-04</time></p>
+                  <p class="title"><a href="/2025/06/04/C++%E5%85%B3%E9%94%AE%E5%AD%97/">C++关键字</a></p>
+                </div>
+              </article>
+              <article class="media">
+                <div class="media-content">
+                  <p class="date"><time dateTime="2025-06-04T12:22:35.865Z">2025-06-04</time></p>
+                  <p class="title"><a href="/2025/06/04/C++%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">C++内存管理</a></p>
+                </div>
+              </article>
+              <article class="media">
+                <div class="media-content">
+                  <p class="date"><time dateTime="2025-06-04T11:58:15.925Z">2025-06-04</time></p>
+                  <p class="title"><a
+                      href="/2025/06/04/%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF-%E7%BD%91%E7%BB%9C/">游戏客户端-网络</a>
+                  </p>
+                </div>
+              </article>
+              <article class="media">
+                <div class="media-content">
+                  <p class="date"><time dateTime="2025-06-04T11:53:49.550Z">2025-06-04</time></p>
+                  <p class="title"><a href="/2025/06/04/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/">学习方法论</a></p>
+                </div>
+              </article>
+            </div>
+          </div>
+          <div class="card widget" data-type="archives">
+            <div class="card-content">
+              <div class="menu">
+                <h3 class="menu-label">归档</h3>
+                <ul class="menu-list">
+                  <li><a class="level is-mobile" href="/archives/2025/06/"><span class="level-start"><span
+                          class="level-item">六月 2025</span></span><span class="level-end"><span
+                          class="level-item tag">6</span></span></a></li>
+                </ul>
+              </div>
+            </div>
+          </div><!--!-->
+          <div class="card widget" data-type="subscribe-email">
+            <div class="card-content">
+              <div class="menu">
+                <h3 class="menu-label">订阅更新</h3>
+                <form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow"
+                  onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true">
+                  <input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US">
+                  <div class="field has-addons">
+                    <div class="control has-icons-left is-expanded"><input class="input" name="email" type="email"
+                        placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+                    </div>
+                    <div class="control"><input class="button" type="submit" value="订阅"></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="card widget">
+            <div class="card-content">
+              <div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to
+                show this AD unit. Please set it in <code>_config.yml</code>.</div>
+            </div>
+          </div>
+          <div class="card widget" data-type="subscribe-email">
+            <div class="card-content">
+              <div class="menu">
+                <h3 class="menu-label">follow.it</h3>
+                <form action="" method="post" target="_blank">
+                  <div class="field has-addons">
+                    <div class="control has-icons-left is-expanded"><input class="input" name="email" type="email"
+                        placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+                    </div>
+                    <div class="control"><input class="button" type="submit" value="订阅"></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div><!--!-->
+      </div>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="container">
+      <div class="level">
+        <div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg"
+              alt="VVVVVenxo&#039;s Blog" height="28"></a>
+          <p class="is-size-7"><span>&copy; 2025 VVVVVenxo</span>  Powered by <a href="https://hexo.io/" target="_blank"
+              rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank"
+              rel="noopener">Icarus</a></p>
+          <p class="is-size-7">Everything's Alright</p>
+        </div>
+        <div class="level-end">
+          <div class="field has-addons">
+            <p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener"
+                title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a>
+            </p>
+            <p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener"
+                title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i
+                  class="fab fa-creative-commons-by"></i></a></p>
+            <p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener"
+                title="Download on GitHub" href="https://github.com/VVVVVenxo/VVVVVenxo.github.io"><i
+                  class="fab fa-github"></i></a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+  <script>moment.locale("zh-cn");</script>
+  <script>var IcarusThemeSettings = {
+      article: {
+        highlight: {
+          clipboard: true,
+          fold: 'unfolded'
+        }
+      }
+    };</script>
+  <script data-pjax src="/js/column.js"></script>
+  <script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i
+      class="fas fa-chevron-up"></i></a>
+  <script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!-->
+  <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script>
+  <script>window.addEventListener("load", () => {
       window.cookieconsent.initialise({
         type: "info",
         theme: "edgeless",
@@ -170,16 +579,37 @@
           },
         },
       });
-    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
-            if (typeof $.fn.lightGallery === 'function') {
-                $('.article').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof $.fn.justifiedGallery === 'function') {
-                if ($('.justified-gallery > p > .gallery-item').length) {
-                    $('.justified-gallery > p > .gallery-item').unwrap();
-                }
-                $('.justified-gallery').justifiedGallery();
-            }
-        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
-            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
-        });</script></body></html>
+    });</script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js"
+    defer></script>
+  <script>window.addEventListener("load", () => {
+      if (typeof $.fn.lightGallery === 'function') {
+        $('.article').lightGallery({ selector: '.gallery-item' });
+      }
+      if (typeof $.fn.justifiedGallery === 'function') {
+        if ($('.justified-gallery > p > .gallery-item').length) {
+          $('.justified-gallery > p > .gallery-item').unwrap();
+        }
+        $('.justified-gallery').justifiedGallery();
+      }
+    });</script><!--!--><!--!-->
+  <script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+  <script src="/js/pjax.js"></script><!--!--><!--!--><!--!-->
+  <script data-pjax src="/js/main.js" defer></script>
+  <div class="searchbox">
+    <div class="searchbox-container">
+      <div class="searchbox-header">
+        <div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div>
+        <a class="searchbox-close" href="javascript:;">×</a>
+      </div>
+      <div class="searchbox-body"></div>
+    </div>
+  </div>
+  <script data-pjax src="/js/insight.js" defer></script>
+  <script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+      loadInsight({ "contentUrl": "/content.json" }, { "hint": "想要查找什么...", "untitled": "(无标题)", "posts": "文章", "pages": "页面", "categories": "分类", "tags": "标签" });
+    });</script>
+</body>
+
+</html>

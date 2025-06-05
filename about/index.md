@@ -1,6 +1,6 @@
 ---
 thumbnail: https://cdn.jsdelivr.net/gh/removeif/blog_image/img/2020/20201030172650.png
-date: 2018-11-11 08:24:49
+date: 2025-6-5 08:24:49
 comments: false
 ---
 
@@ -18,9 +18,8 @@ comments: false
 
 ->>>>>>>>>>>>>>>>>>>>
 个人信息：
-计算机科学与技术专业
-从事JAVA后端开发
-码畜一枚
+软件工程专业
+从事游戏客户端开发
 坚信代码改变世界
 
 <br>
