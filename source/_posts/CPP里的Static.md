@@ -73,3 +73,25 @@ A::getInstance().setup();
 优化：
 
 把static的定义放在getInstance()函数里：
+```cpp
+class A {
+public: 
+	// 外界只能通过这个函数得到唯一的这个A
+	static A& getInstance(return a;);
+	
+	// 成员函数
+	setup() {...}
+	
+private:
+	A();
+	A(const A& rhs);
+	// static A a; 去掉了
+};
+
+// 在函数里的静态数据 好处：只有当有人调用到的时候才会分配内存
+A& A::getInstance() {
+// 在这里进行定义（获得内存）
+	static A a;
+	return a;
+} 
+```
