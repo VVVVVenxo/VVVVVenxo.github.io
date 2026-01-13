@@ -33,7 +33,7 @@ index_img: https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q
 default_top_img: https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=80
 
 avatar:
-  img: https://lh3.googleusercontent.com/a/ACg8ocIQldXs-nudxFVZahP5o7kbC5wBEuOI68oSn3XnRW2LA47asB8=s96-c
+  img: /img/Avatar.jpg
   effect: true
 
 index_card_style: card
