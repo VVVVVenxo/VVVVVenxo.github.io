@@ -1,11 +1,11 @@
 ---
-title: C++整体框架
+title: C++里的Static
 toc: true
 tag: C++
 
 ---
 
-在一个数据or函数前面加一个static关键字 就会变成静态的。
+在一个数据or函数前面加一个static关键字 就会变成静态的
 
 相同的函数 通过传入不同的this ptr（地址），才可以处理到不同的数据
 
