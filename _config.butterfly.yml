@@ -224,25 +224,25 @@ font:
   font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
   code-font-family: '"Cascadia Code", "Fira Code", Consolas, Monaco, monospace'
 
-background: "linear-gradient(180deg, #f5f7fa 0%, #e8ecf0 100%)"
+background: "linear-gradient(180deg, #FFFFFF 0%, #F5F5F7 100%)"
 
 footer_bg: true
 
 theme_color:
   enable: true
-  main: '#2563eb'
-  paginator: '#3b82f6'
-  button_hover: '#1d4ed8'
-  text_selection: '#bfdbfe'
-  link_color: '#2563eb'
+  main: '#333333'
+  paginator: '#555555'
+  button_hover: '#000000'
+  text_selection: '#d1d5db'
+  link_color: '#333333'
   meta_color: '#6b7280'
   hr_color: '#e5e7eb'
   code_foreground: '#dc2626'
   code_background: 'rgba(0,0,0,.03)'
-  toc_color: '#2563eb'
-  blockquote_padding_color: '#2563eb'
-  blockquote_background_color: '#eff6ff'
-  scrollbar_color: '#2563eb'
+  toc_color: '#333333'
+  blockquote_padding_color: '#333333'
+  blockquote_background_color: '#f3f4f6'
+  scrollbar_color: '#333333'
 
 category_ui:
 tag_ui:
