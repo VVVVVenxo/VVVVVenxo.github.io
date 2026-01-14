@@ -2,7 +2,7 @@
 title: CSharp 的 ref 和 out
 toc: true
 categories:
-  - 知识搬运
+  - 技术分享
   - C#
 tags:
   - 基础

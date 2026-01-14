@@ -322,9 +322,9 @@ inject:
           if (banner && banner.classList.contains('full_page')) {
             const buttonsHTML = `
               <div class="custom-banner-buttons">
-                <a href="/categories/知识搬运/" class="custom-btn">知识搬运</a>
+                <a href="/categories/个人项目/" class="custom-btn">个人项目</a>
+                <a href="/categories/技术分享/" class="custom-btn">技术分享</a>
                 <a href="/categories/业余爱好/" class="custom-btn">业余爱好</a>
-                <a href="/categories/心情随笔/" class="custom-btn">心情随笔</a>
                 <a href="/categories/捣鼓教程/" class="custom-btn">捣鼓教程</a>
               </div>
             `;
