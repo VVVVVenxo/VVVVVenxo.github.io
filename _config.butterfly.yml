@@ -223,25 +223,25 @@ font:
   font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
   code-font-family: '"Cascadia Code", "Fira Code", Consolas, Monaco, monospace'
 
-background: "linear-gradient(180deg, #FFFFFF 0%, #F5F5F7 100%)"
+background: "linear-gradient(180deg, #eceff4 0%, #e5e9f0 100%)"
 
 footer_bg: true
 
 theme_color:
   enable: true
-  main: '#333333'
-  paginator: '#555555'
-  button_hover: '#000000'
-  text_selection: '#d1d5db'
-  link_color: '#333333'
-  meta_color: '#6b7280'
-  hr_color: '#e5e7eb'
-  code_foreground: '#dc2626'
-  code_background: 'rgba(0,0,0,.03)'
-  toc_color: '#333333'
-  blockquote_padding_color: '#333333'
-  blockquote_background_color: '#f3f4f6'
-  scrollbar_color: '#333333'
+  main: '#5e81ac'
+  paginator: '#81a1c1'
+  button_hover: '#4c6c94'
+  text_selection: '#88c0d0'
+  link_color: '#5e81ac'
+  meta_color: '#4c566a'
+  hr_color: '#d8dee9'
+  code_foreground: '#bf616a'
+  code_background: '#e5e9f0'
+  toc_color: '#5e81ac'
+  blockquote_padding_color: '#5e81ac'
+  blockquote_background_color: '#e5e9f0'
+  scrollbar_color: '#81a1c1'
 
 category_ui:
 tag_ui:
@@ -254,10 +254,11 @@ inject:
     - <meta name="referrer" content="no-referrer">
     - |
       <style>
-        #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #333; }
-        #article-container li { font-size: 18px; line-height: 1.8; }
+        #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #2e3440; }
+        #article-container li { font-size: 18px; line-height: 1.8; color: #2e3440; }
         .recent-posts .recent-post-item { padding: 20px 30px !important; }
         #page-header.not-top-img { margin-bottom: 10px; }
+        body { color: #2e3440; }
       </style>
   bottom:
 
