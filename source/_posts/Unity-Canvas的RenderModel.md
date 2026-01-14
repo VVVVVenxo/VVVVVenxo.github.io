@@ -5,6 +5,7 @@ categories:
   - 技术笔记
   - Unity
 cover: /img/covers/game.jpg
+date: 2025-06-05
 tags:
   - UGUI
   - Canvas
