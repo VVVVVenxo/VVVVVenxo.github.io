@@ -1,5 +1,5 @@
 ---
-title: C# 中的 ref 和 out
+title: CSharp 的 ref 和 out
 toc: true
 categories:
   - 编程语言
