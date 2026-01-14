@@ -44,11 +44,11 @@ cover:
   archives_enable: true
   position: both
   default_cover:
-    - https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80
-    - https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80
-    - https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80
-    - https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80
-    - https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&q=80
+    - https://images.unsplash.com/photo-1736608030283-e189874a7a8f?q=80&w=1920&auto=format&fit=crop
+    - https://images.unsplash.com/photo-1736467396783-65d38c644d71?q=80&w=1920&auto=format&fit=crop
+    - https://images.unsplash.com/photo-1735606403217-1906a5b822d5?q=80&w=1920&auto=format&fit=crop
+    - https://images.unsplash.com/photo-1735596489437-14237f3737b6?q=80&w=1920&auto=format&fit=crop
+    - https://images.unsplash.com/photo-1736173070453-241513227914?q=80&w=1920&auto=format&fit=crop
 
 post_meta:
   page:
