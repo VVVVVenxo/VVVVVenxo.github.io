@@ -1,5 +1,7 @@
 # Butterfly 主题配置 - https://butterfly.js.org/
 
+favicon: /img/favicon.ico
+
 nav:
   logo:
   display_title: true
@@ -229,25 +231,25 @@ font:
   font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
   code-font-family: '"Cascadia Code", "Fira Code", Consolas, Monaco, monospace'
 
-background: "linear-gradient(180deg, #eceff4 0%, #e5e9f0 100%)"
+background: "#fafafa"
 
 footer_bg: true
 
 theme_color:
   enable: true
-  main: '#5e81ac'
-  paginator: '#81a1c1'
-  button_hover: '#4c6c94'
-  text_selection: '#88c0d0'
-  link_color: '#5e81ac'
-  meta_color: '#4c566a'
-  hr_color: '#d8dee9'
-  code_foreground: '#bf616a'
-  code_background: '#e5e9f0'
-  toc_color: '#5e81ac'
-  blockquote_padding_color: '#5e81ac'
-  blockquote_background_color: '#e5e9f0'
-  scrollbar_color: '#81a1c1'
+  main: '#007aff'
+  paginator: '#007aff'
+  button_hover: '#0051d5'
+  text_selection: '#b3d7ff'
+  link_color: '#007aff'
+  meta_color: '#8e8e93'
+  hr_color: '#e5e5ea'
+  code_foreground: '#ff3b30'
+  code_background: '#f2f2f7'
+  toc_color: '#007aff'
+  blockquote_padding_color: '#007aff'
+  blockquote_background_color: '#f2f2f7'
+  scrollbar_color: '#007aff'
 
 category_ui:
 tag_ui:
@@ -260,11 +262,11 @@ inject:
     - <meta name="referrer" content="no-referrer">
     - |
       <style>
-        #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #2e3440; }
-        #article-container li { font-size: 18px; line-height: 1.8; color: #2e3440; }
+        #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #1d1d1f; }
+        #article-container li { font-size: 18px; line-height: 1.8; color: #1d1d1f; }
         .recent-posts .recent-post-item { padding: 20px 30px !important; }
         #page-header.not-top-img { margin-bottom: 10px; }
-        body { color: #2e3440; }
+        body { color: #1d1d1f; }
       </style>
     - |
       <style>
