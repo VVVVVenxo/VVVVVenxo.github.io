@@ -5,6 +5,7 @@ categories:
   - 技术笔记
   - C++
 cover: /img/covers/keyboard.jpg
+date: 2025-06-05
 tags:
   - 面向对象
   - 多态
