@@ -39,15 +39,21 @@ avatar:
 index_card_style: card
 
 cover:
-  index_enable: false
-  aside_enable: false
-  archives_enable: false
+  index_enable: true
+  aside_enable: true
+  archives_enable: true
   position: both
   default_cover:
-    - https://api.ixiaowai.cn/gqapi/gqapi.php
-    - https://api.ixiaowai.cn/mcapi/mcapi.php
-    - https://bing.img.run/rand_1366x768.php
-    - https://picsum.photos/1920/1080?random=1
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/1.avif
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/2.avif
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/3.avif
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/4.avif
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/5.avif
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/6.avif
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/7.avif
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/8.avif
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/9.avif
+    - https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/10.avif
 
 post_meta:
   page:
