@@ -1,11 +1,19 @@
 ---
-title: C++里的Static
+title: C++中的Static
 toc: true
-tag: C++
-
+categories:
+  - 编程语言
+  - C++
+tags:
+  - 关键字
+  - static
+  - 单例模式
+description: 理解 C++ 中 static 关键字的作用：静态数据成员、静态成员函数，以及如何利用 static 实现单例模式。
 ---
 
-在一个数据or函数前面加一个static关键字 就会变成静态的
+## Static 关键字概述
+
+在一个数据或函数前面加一个 `static` 关键字，就会变成静态的。
 
 相同的函数 通过传入不同的this ptr（地址），才可以处理到不同的数据
 

@@ -1,5 +1,14 @@
 ---
 title: C++整体框架
+toc: true
+sticky: 1
+categories:
+  - 编程语言
+  - C++
+tags:
+  - 学习路线
+  - 框架
+description: 基于《C++ Primer》第五版构建的 C++ 学习框架，涵盖基础、标准库、类设计工具和 C++11 新特性。
 ---
 
 > 本框架基于Primer C++第五版进行构建，正在逐步施工中，会超链接到已经完成的文章。
