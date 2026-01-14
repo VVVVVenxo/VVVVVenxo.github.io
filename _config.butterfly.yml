@@ -105,8 +105,19 @@ aside:
       text: Follow Me
       link: https://github.com/VVVVVenxo
   card_announcement:
-    enable: false
-    content:
+    enable: true
+    content: |
+      <div style="text-align: left; font-size: 14px; line-height: 1.9;">
+        <b>🎓 个人简介</b><br>
+        <span style="color: #666;">软件工程 · 叠纸游戏实习</span><br><br>
+        <b>兴趣方向：</b><br>
+        • 🎮 游戏开发<br>
+        • 🤖 人工智能<br>
+        • 🎨 计算机图形学<br><br>
+        <b>技术栈：</b><br>
+        • C++ / C# / Python<br>
+        • Unity / Unreal Engine
+      </div>
   card_recent_post:
     enable: true
     limit: 5
