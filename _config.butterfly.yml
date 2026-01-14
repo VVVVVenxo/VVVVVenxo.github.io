@@ -266,7 +266,69 @@ inject:
         #page-header.not-top-img { margin-bottom: 10px; }
         body { color: #2e3440; }
       </style>
+    - |
+      <style>
+        .custom-banner-buttons {
+          position: absolute;
+          top: 65%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          display: flex;
+          gap: 20px;
+          flex-wrap: wrap;
+          justify-content: center;
+          z-index: 2;
+          max-width: 90%;
+        }
+        .custom-btn {
+          padding: 14px 32px;
+          background: rgba(255,255,255,0.12);
+          border: 2px solid rgba(255,255,255,0.85);
+          border-radius: 10px;
+          color: white;
+          text-decoration: none;
+          font-size: 17px;
+          font-weight: 500;
+          backdrop-filter: blur(12px);
+          transition: all 0.35s ease;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .custom-btn:hover {
+          background: rgba(255,255,255,0.95);
+          color: #2563eb;
+          transform: translateY(-4px);
+          box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+          border-color: white;
+        }
+        @media screen and (max-width: 768px) {
+          .custom-banner-buttons {
+            gap: 12px;
+            top: 70%;
+          }
+          .custom-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+          }
+        }
+      </style>
   bottom:
+    - |
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const banner = document.querySelector('#page-header');
+          if (banner && banner.classList.contains('full_page')) {
+            const buttonsHTML = `
+              <div class="custom-banner-buttons">
+                <a href="/categories/知识搬运/" class="custom-btn">知识搬运</a>
+                <a href="/categories/业余爱好/" class="custom-btn">业余爱好</a>
+                <a href="/categories/心情随笔/" class="custom-btn">心情随笔</a>
+                <a href="/categories/捣鼓教程/" class="custom-btn">捣鼓教程</a>
+              </div>
+            `;
+            banner.insertAdjacentHTML('beforeend', buttonsHTML);
+          }
+        });
+      </script>
 
 CDN:
   third_party_provider: jsdelivr

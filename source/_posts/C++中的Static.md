@@ -2,7 +2,7 @@
 title: C++中的Static
 toc: true
 categories:
-  - 编程语言
+  - 知识搬运
   - C++
 tags:
   - 关键字

@@ -3,7 +3,7 @@ title: C++整体框架
 toc: true
 sticky: 1
 categories:
-  - 编程语言
+  - 知识搬运
   - C++
 tags:
   - 学习路线
