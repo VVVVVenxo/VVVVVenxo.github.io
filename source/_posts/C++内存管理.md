@@ -2,7 +2,7 @@
 title: C++内存管理
 toc: true
 categories:
-  - 知识搬运
+  - 技术分享
   - C++
 tags:
   - 内存管理
