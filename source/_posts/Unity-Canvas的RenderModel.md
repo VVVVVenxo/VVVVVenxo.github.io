@@ -1,10 +1,30 @@
 ---
-title: Unity-Canvas的RenderModel
+title: Unity Canvas 的渲染模式
 toc: true
-tag: Unity
+categories:
+  - 游戏开发
+  - Unity
+tags:
+  - UGUI
+  - Canvas
+  - 渲染
+description: 详解 Unity Canvas 的三种渲染模式：Screen Space-Overlay、Screen Space-Camera 和 World Space，以及它们的适用场景。
 ---
 
+## Canvas 渲染模式
 
-1. Screen Space -OverLay:只显示所创建的canvas中的内容，即只渲染画布。
-2. Screen Space-Camera：只显示相机所渲染的区域，当保证camera的projection是perspective（透视模式）而不是（orthogonality）正交模式的时候通过调整canvas中image或其他物体的Rotation可以制作3D立体效果的UI，但是这种模式下不可以更改Canvas的ReactTransform,只能通过相机来调整canvas的显示位置和显示大小。
-3. World Space：canvas的ReacTransform完全可以编辑并且把canvas完全当成一个普通的类似于Cube的物体在场景中进行渲染，仔细考虑一下这种模式，如果你把canvas赋给游戏人物，那么你会发现这种模式适合给人物做血条或者在场景中一直在游戏人物的头顶显示人物名称。
+### 1. Screen Space - Overlay
+
+只显示所创建的 Canvas 中的内容，即只渲染画布。UI 始终覆盖在屏幕最上层。
+
+### 2. Screen Space - Camera
+
+只显示相机所渲染的区域。当相机的 Projection 设置为 Perspective（透视模式）而非 Orthographic（正交模式）时，通过调整 Canvas 中 Image 或其他物体的 Rotation，可以制作 3D 立体效果的 UI。
+
+但在这种模式下不可以更改 Canvas 的 RectTransform，只能通过相机来调整 Canvas 的显示位置和大小。
+
+### 3. World Space
+
+Canvas 的 RectTransform 完全可编辑，Canvas 被当作一个普通的 3D 物体（类似 Cube）在场景中渲染。
+
+**适用场景**：如果把 Canvas 挂载到游戏角色上，这种模式非常适合制作角色头顶的血条或名称显示。
