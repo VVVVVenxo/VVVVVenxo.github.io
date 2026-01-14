@@ -4,6 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - Unity
+cover: /img/covers/game.jpg
 tags:
   - UGUI
   - Canvas
