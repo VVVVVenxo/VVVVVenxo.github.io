@@ -8,7 +8,7 @@ type: "about"
 
 你好，我是 VVVVVenxo！
 
-- 位置：江苏，中国
+- 位置：上海，中国
 - 座右铭：To be a rock and not to roll.
 
 ## 联系方式
