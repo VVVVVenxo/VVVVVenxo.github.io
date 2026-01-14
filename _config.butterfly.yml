@@ -252,6 +252,7 @@ pjax:
 
 inject:
   head:
+    - <meta name="referrer" content="no-referrer">
   bottom:
 
 CDN:
