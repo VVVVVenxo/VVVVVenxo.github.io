@@ -2,7 +2,7 @@
 title: CSharp 的 ref 和 out
 toc: true
 categories:
-  - 编程语言
+  - 知识搬运
   - C#
 tags:
   - 基础

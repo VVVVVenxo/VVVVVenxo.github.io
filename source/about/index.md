@@ -18,8 +18,8 @@ type: "about"
 
 ### 技术栈
 
-- **语言**：C++、C#、Python
-- **引擎**：Unity
+- **语言**：C++、C#、Python、Java
+- **引擎**：Unity、Unreal Engine
 
 ## 座右铭
 

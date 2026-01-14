@@ -2,7 +2,7 @@
 title: Unity Canvas 的渲染模式
 toc: true
 categories:
-  - 游戏开发
+  - 业余爱好
   - Unity
 tags:
   - UGUI

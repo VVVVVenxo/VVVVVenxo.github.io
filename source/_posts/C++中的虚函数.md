@@ -2,7 +2,7 @@
 title: C++中的虚函数
 toc: true
 categories:
-  - 编程语言
+  - 知识搬运
   - C++
 tags:
   - 面向对象
