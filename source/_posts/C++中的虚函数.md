@@ -2,7 +2,7 @@
 title: C++中的虚函数
 toc: true
 categories:
-  - 技术分享
+  - 技术笔记
   - C++
 tags:
   - 面向对象

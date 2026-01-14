@@ -2,7 +2,7 @@
 title: C++关键字
 toc: true
 categories:
-  - 技术分享
+  - 技术笔记
   - C++
 tags:
   - 关键字
