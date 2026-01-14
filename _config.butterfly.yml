@@ -252,13 +252,11 @@ pjax:
 inject:
   head:
     - <meta name="referrer" content="no-referrer">
-    - <style>
-        /* 优化正文阅读体验 */
+    - |
+      <style>
         #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #333; }
         #article-container li { font-size: 18px; line-height: 1.8; }
-        /* 让首页文章卡片更紧凑 */
         .recent-posts .recent-post-item { padding: 20px 30px !important; }
-        /* 隐藏文章页顶部图后的标题调整 */
         #page-header.not-top-img { margin-bottom: 10px; }
       </style>
   bottom:
