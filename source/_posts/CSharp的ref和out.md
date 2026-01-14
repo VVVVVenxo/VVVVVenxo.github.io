@@ -4,6 +4,8 @@ toc: true
 categories:
   - 技术笔记
   - C#
+cover: /img/covers/earth.jpg
+
 tags:
   - 基础
   - 参数传递

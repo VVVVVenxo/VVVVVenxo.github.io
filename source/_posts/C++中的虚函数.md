@@ -4,6 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - C++
+cover: /img/covers/keyboard.jpg
 tags:
   - 面向对象
   - 多态

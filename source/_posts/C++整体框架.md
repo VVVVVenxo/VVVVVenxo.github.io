@@ -5,6 +5,7 @@ sticky: 1
 categories:
   - 技术笔记
   - C++
+cover: /img/covers/code_dark.jpg
 tags:
   - 学习路线
   - 框架
