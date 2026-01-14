@@ -44,11 +44,10 @@ cover:
   archives_enable: true
   position: both
   default_cover:
-    - https://images.unsplash.com/photo-1736608030283-e189874a7a8f?q=80&w=1920&auto=format&fit=crop
-    - https://images.unsplash.com/photo-1736467396783-65d38c644d71?q=80&w=1920&auto=format&fit=crop
-    - https://images.unsplash.com/photo-1735606403217-1906a5b822d5?q=80&w=1920&auto=format&fit=crop
-    - https://images.unsplash.com/photo-1735596489437-14237f3737b6?q=80&w=1920&auto=format&fit=crop
-    - https://images.unsplash.com/photo-1736173070453-241513227914?q=80&w=1920&auto=format&fit=crop
+    - https://api.ixiaowai.cn/gqapi/gqapi.php
+    - https://api.ixiaowai.cn/mcapi/mcapi.php
+    - https://bing.img.run/rand_1366x768.php
+    - https://picsum.photos/1920/1080?random=1
 
 post_meta:
   page:
