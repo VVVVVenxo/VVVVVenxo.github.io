@@ -314,7 +314,10 @@ inject:
   bottom:
     - |
       <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function insertBannerButtons() {
+          const oldButtons = document.querySelector('.custom-banner-buttons');
+          if (oldButtons) oldButtons.remove();
+          
           const banner = document.querySelector('#page-header');
           if (banner && banner.classList.contains('full_page')) {
             const buttonsHTML = `
@@ -327,7 +330,10 @@ inject:
             `;
             banner.insertAdjacentHTML('beforeend', buttonsHTML);
           }
-        });
+        }
+
+        document.addEventListener('DOMContentLoaded', insertBannerButtons);
+        document.addEventListener('pjax:complete', insertBannerButtons);
       </script>
 
 CDN:
