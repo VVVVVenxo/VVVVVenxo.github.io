@@ -109,17 +109,19 @@ aside:
     content: |
       <div style="text-align: left; font-size: 14px; line-height: 1.9;">
         <b>🎓 软件工程</b><br><br>
-        <b>实习经历：</b><br>
+        <b>💼 实习经历：</b><br>
         • 游族网络<br>
         <span style="color:#888; font-size:12px;">2025.06 - 2025.08</span><br>
         • XD 网络<br>
         <span style="color:#888; font-size:12px;">2025.08 - 2026.01</span><br>
         • 叠纸游戏（在职）<br>
         <span style="color:#888; font-size:12px;">2026.01 - 至今</span><br><br>
-        <b>兴趣方向：</b><br>
+        <b>🔥 兴趣方向：</b><br>
         • 🎮 游戏开发<br>
         • 🤖 人工智能<br>
-        • 🎨 计算机图形学
+        • 🎨 计算机图形学<br><br>
+        <hr style="border:none; border-top:1px dashed #ccc; margin:8px 0;">
+        <center style="color:#999; font-size:12px;">--- 请不要开盒我 ---</center>
       </div>
   card_recent_post:
     enable: true
