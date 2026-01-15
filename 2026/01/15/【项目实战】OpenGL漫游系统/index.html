@@ -1,0 +1,788 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【项目实战】基于OpenGL的大规模自然场景实时漫游系统 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基于C++与Modern OpenGL构建的大规模自然场景实时漫游系统，实现了地形渲染、水体仿真、天空盒、日夜循环、LOD优化、视锥体剔除、SSAO等核心功能，是一个具备&quot;游戏级&quot;视觉表现的室外场景漫游系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【项目实战】基于OpenGL的大规模自然场景实时漫游系统">
+<meta property="og:url" content="https://vvvvvenxo.github.io/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
+<meta property="og:description" content="基于C++与Modern OpenGL构建的大规模自然场景实时漫游系统，实现了地形渲染、水体仿真、天空盒、日夜循环、LOD优化、视锥体剔除、SSAO等核心功能，是一个具备&quot;游戏级&quot;视觉表现的室外场景漫游系统。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/code_dark.jpg">
+<meta property="article:published_time" content="2026-01-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-15T10:26:29.234Z">
+<meta property="article:author" content="VVVVVenxo">
+<meta property="article:tag" content="OpenGL">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="图形学">
+<meta property="article:tag" content="毕业设计">
+<meta property="article:tag" content="地形渲染">
+<meta property="article:tag" content="GLSL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/code_dark.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【项目实战】基于OpenGL的大规模自然场景实时漫游系统",
+  "url": "https://vvvvvenxo.github.io/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/",
+  "image": "https://vvvvvenxo.github.io/img/covers/code_dark.jpg",
+  "datePublished": "2026-01-15T00:00:00.000Z",
+  "dateModified": "2026-01-15T10:26:29.234Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "VVVVVenxo",
+      "url": "https://VVVVVenxo.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【项目实战】基于OpenGL的大规模自然场景实时漫游系统',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="referrer" content="no-referrer"><style>
+  #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #1d1d1f; }
+  #article-container li { font-size: 18px; line-height: 1.8; color: #1d1d1f; }
+  .recent-posts .recent-post-item { padding: 20px 30px !important; }
+  #page-header.not-top-img { margin-bottom: 10px; }
+  body { color: #1d1d1f; }
+</style>
+<style>
+  .custom-banner-buttons {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 2;
+    max-width: 90%;
+  }
+  .custom-btn {
+    padding: 14px 32px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.85);
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+    backdrop-filter: blur(12px);
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .custom-btn:hover {
+    background: rgba(255,255,255,0.95);
+    color: #2563eb;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    border-color: white;
+  }
+  @media screen and (max-width: 768px) {
+    .custom-banner-buttons {
+      gap: 12px;
+      top: 70%;
+    }
+    .custom-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+</style>
+<meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #fafafa;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/code_dark.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【项目实战】基于OpenGL的大规模自然场景实时漫游系统</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【项目实战】基于OpenGL的大规模自然场景实时漫游系统</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-15T00:00:00.000Z" title="发表于 2026-01-15 00:00:00">2026-01-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-15T10:26:29.234Z" title="更新于 2026-01-15 10:26:29">2026-01-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">项目实战</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>15分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p><strong>基于OpenGL的大规模自然场景实时漫游系统</strong> 是一个使用 C++17 与 Modern OpenGL (Core Profile 4.5+) 从零构建的室外场景漫游系统。项目实现了地形渲染、水体仿真、天空盒、日夜循环光照等核心功能，并通过 LOD 和视锥体剔除进行性能优化，具备”游戏级”的视觉表现与实时交互能力。</p>
+<blockquote>
+<p>GitHub 地址: <a target="_blank" rel="noopener" href="https://github.com/VVenox/RoamingSystem">RoamingSystem</a></p>
+</blockquote>
+<h2 id="项目特点"><a href="#项目特点" class="headerlink" title="项目特点"></a>项目特点</h2><ul>
+<li><strong>地形渲染</strong>：高度图解析、网格生成、多纹理混合（草地&#x2F;岩石&#x2F;雪地）、法线贴图</li>
+<li><strong>性能优化</strong>：4级LOD系统、视锥体剔除（Frustum Culling）</li>
+<li><strong>水体仿真</strong>：反射&#x2F;折射、Fresnel效果、DuDv波浪扭曲、岸边泡沫</li>
+<li><strong>环境系统</strong>：立方体贴图天空盒、日夜循环动态光照</li>
+<li><strong>后处理效果</strong>：SSAO屏幕空间环境光遮蔽、距离雾效</li>
+<li><strong>编辑器系统</strong>：ImGui实时参数调节、设置持久化（INI格式）</li>
+</ul>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>技术&#x2F;工具</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>编程语言</td>
+<td>C++</td>
+<td>17</td>
+</tr>
+<tr>
+<td>图形API</td>
+<td>OpenGL</td>
+<td>Core Profile 4.5+</td>
+</tr>
+<tr>
+<td>着色语言</td>
+<td>GLSL</td>
+<td>4.50</td>
+</tr>
+<tr>
+<td>窗口管理</td>
+<td>GLFW</td>
+<td>3.x</td>
+</tr>
+<tr>
+<td>数学库</td>
+<td>GLM</td>
+<td>-</td>
+</tr>
+<tr>
+<td>图像加载</td>
+<td>stb_image</td>
+<td>-</td>
+</tr>
+<tr>
+<td>UI框架</td>
+<td>Dear ImGui</td>
+<td>-</td>
+</tr>
+<tr>
+<td>开发环境</td>
+<td>Visual Studio</td>
+<td>2022</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Application Layer                        │</span><br><span class="line">│              (main.cpp - 程序入口与Game Loop)                │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│                     Editor Layer                            │</span><br><span class="line">│          (ImGui 编辑器 - 参数调节、性能监控)                   │</span><br><span class="line">├───────────────┬─────────────────┬───────────────────────────┤</span><br><span class="line">│   Terrain     │   Water         │   Environment             │</span><br><span class="line">│   System      │   System        │   System                  │</span><br><span class="line">│  (地形渲染)    │  (水体仿真)      │  (天空盒/光照)             │</span><br><span class="line">├───────────────┴─────────────────┴───────────────────────────┤</span><br><span class="line">│                    Core Engine Layer                        │</span><br><span class="line">│    Camera │ Shader │ Texture │ Mesh │ Frustum │ LOD        │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│                    Platform Layer                           │</span><br><span class="line">│              GLFW │ GLAD │ GLM │ stb_image                  │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">RoamingSystem/</span><br><span class="line">├── src/</span><br><span class="line">│   ├── main.cpp                    # 程序入口</span><br><span class="line">│   ├── Application.h/cpp           # 应用框架基类（Game Loop、GLFW、ImGui）</span><br><span class="line">│   ├── RoamingApp.h/cpp            # 主应用类（渲染逻辑）</span><br><span class="line">│   ├── Core/                       # 核心引擎组件</span><br><span class="line">│   │   ├── Camera.h                # 第一人称摄像机</span><br><span class="line">│   │   ├── Shader.h/cpp            # 着色器程序管理</span><br><span class="line">│   │   ├── Texture.h/cpp           # 2D纹理加载</span><br><span class="line">│   │   ├── Cubemap.h/cpp           # 立方体贴图（天空盒）</span><br><span class="line">│   │   └── Mesh.h/cpp              # VAO/VBO/EBO封装</span><br><span class="line">│   ├── Terrain/                    # 地形渲染系统</span><br><span class="line">│   │   ├── HeightmapLoader.h/cpp   # 高度图加载</span><br><span class="line">│   │   ├── Terrain.h/cpp           # 地形主接口（门面类）</span><br><span class="line">│   │   ├── ChunkedTerrain.h/cpp    # 分块管理</span><br><span class="line">│   │   ├── TerrainChunk.h/cpp      # 单个地形块（4级LOD）</span><br><span class="line">│   │   └── Frustum.h/cpp           # 视锥体剔除</span><br><span class="line">│   ├── Water/                      # 水体渲染系统</span><br><span class="line">│   │   ├── Water.h/cpp             # 水面网格与渲染</span><br><span class="line">│   │   └── WaterFramebuffers.h/cpp # 反射/折射FBO</span><br><span class="line">│   ├── Environment/                # 环境系统</span><br><span class="line">│   │   ├── Skybox.h/cpp            # 天空盒渲染</span><br><span class="line">│   │   └── Lighting.h/cpp          # 日夜循环光照系统</span><br><span class="line">│   ├── PostProcess/                # 后处理效果</span><br><span class="line">│   │   └── SSAO.h/cpp              # 环境光遮蔽</span><br><span class="line">│   └── Editor/                     # 场景编辑器</span><br><span class="line">│       └── SceneSettings.h/cpp     # 参数序列化（INI格式）</span><br><span class="line">├── shaders/                        # GLSL着色器</span><br><span class="line">│   ├── terrain.vert/frag           # 地形着色器</span><br><span class="line">│   ├── water.vert/frag             # 水面着色器</span><br><span class="line">│   ├── skybox.vert/frag            # 天空盒着色器</span><br><span class="line">│   ├── gbuffer.vert/frag           # G-Buffer（SSAO用）</span><br><span class="line">│   ├── ssao.vert/frag              # SSAO计算</span><br><span class="line">│   └── ssao_blur.frag              # SSAO模糊</span><br><span class="line">├── assets/                         # 资源文件</span><br><span class="line">│   ├── heightmaps/                 # 高度图</span><br><span class="line">│   ├── textures/                   # 纹理</span><br><span class="line">│   └── skybox/                     # 天空盒</span><br><span class="line">└── scripts/</span><br><span class="line">    └── package.bat                 # 打包脚本</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="核心模块详解"><a href="#核心模块详解" class="headerlink" title="核心模块详解"></a>核心模块详解</h2><h3 id="1-地形渲染系统-Terrain-System"><a href="#1-地形渲染系统-Terrain-System" class="headerlink" title="1. 地形渲染系统 (Terrain System)"></a>1. 地形渲染系统 (Terrain System)</h3><p>地形系统是项目中最复杂的模块，负责从高度图生成可渲染的3D地形，支持多纹理混合和法线贴图。</p>
+<h4 id="1-1-高度图加载"><a href="#1-1-高度图加载" class="headerlink" title="1.1 高度图加载"></a>1.1 高度图加载</h4><p><strong>原理</strong>：读取灰度PNG图像，每个像素的灰度值 (0-255) 映射为高度值。</p>
+<ul>
+<li>使用 <code>stb_image</code> 加载图像</li>
+<li>遍历像素，将灰度值归一化到 [0, 1]</li>
+<li>支持双线性插值获取任意坐标高度</li>
+</ul>
+<h4 id="1-2-网格生成"><a href="#1-2-网格生成" class="headerlink" title="1.2 网格生成"></a>1.2 网格生成</h4><p>根据高度图尺寸创建顶点网格，每个顶点包含：位置、法线、纹理坐标、切线（用于法线贴图）。</p>
+<p><strong>顶点数据结构</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每个顶点包含 11 个 float</span></span><br><span class="line"><span class="comment">// Position (3) + Normal (3) + TexCoord (2) + Tangent (3)</span></span><br><span class="line">vertices.<span class="built_in">push_back</span>(worldX);      <span class="comment">// 位置 X</span></span><br><span class="line">vertices.<span class="built_in">push_back</span>(worldY);      <span class="comment">// 位置 Y（高度）</span></span><br><span class="line">vertices.<span class="built_in">push_back</span>(worldZ);      <span class="comment">// 位置 Z</span></span><br><span class="line">vertices.<span class="built_in">push_back</span>(normal.x);    <span class="comment">// 法线</span></span><br><span class="line">vertices.<span class="built_in">push_back</span>(normal.y);</span><br><span class="line">vertices.<span class="built_in">push_back</span>(normal.z);</span><br><span class="line">vertices.<span class="built_in">push_back</span>(u);           <span class="comment">// 纹理坐标</span></span><br><span class="line">vertices.<span class="built_in">push_back</span>(v);</span><br><span class="line">vertices.<span class="built_in">push_back</span>(tangent.x);   <span class="comment">// 切线（TBN矩阵用）</span></span><br><span class="line">vertices.<span class="built_in">push_back</span>(tangent.y);</span><br><span class="line">vertices.<span class="built_in">push_back</span>(tangent.z);</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-法线计算（中心差分法）"><a href="#1-3-法线计算（中心差分法）" class="headerlink" title="1.3 法线计算（中心差分法）"></a>1.3 法线计算（中心差分法）</h4><p>使用相邻顶点的高度差计算法线向量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">glm::vec3 <span class="title">TerrainChunk::calculateNormal</span><span class="params">(<span class="type">const</span> HeightmapLoader&amp; heightmap,</span></span></span><br><span class="line"><span class="params"><span class="function">                                        <span class="type">int</span> x, <span class="type">int</span> z, <span class="type">float</span> cellSize, <span class="type">float</span> maxHeight)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> width = heightmap.<span class="built_in">getWidth</span>();</span><br><span class="line">    <span class="type">int</span> height = heightmap.<span class="built_in">getGridHeight</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 采样四个相邻点的高度</span></span><br><span class="line">    <span class="type">float</span> hL = heightmap.<span class="built_in">getHeight</span>(std::<span class="built_in">max</span>(<span class="number">0</span>, x - <span class="number">1</span>), z) * maxHeight;  <span class="comment">// 左</span></span><br><span class="line">    <span class="type">float</span> hR = heightmap.<span class="built_in">getHeight</span>(std::<span class="built_in">min</span>(width - <span class="number">1</span>, x + <span class="number">1</span>), z) * maxHeight;  <span class="comment">// 右</span></span><br><span class="line">    <span class="type">float</span> hD = heightmap.<span class="built_in">getHeight</span>(x, std::<span class="built_in">max</span>(<span class="number">0</span>, z - <span class="number">1</span>)) * maxHeight;  <span class="comment">// 下</span></span><br><span class="line">    <span class="type">float</span> hU = heightmap.<span class="built_in">getHeight</span>(x, std::<span class="built_in">min</span>(height - <span class="number">1</span>, z + <span class="number">1</span>)) * maxHeight;  <span class="comment">// 上</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 中心差分公式：N = normalize(hL - hR, 2Δ, hD - hU)</span></span><br><span class="line">    <span class="function">glm::vec3 <span class="title">normal</span><span class="params">(hL - hR, <span class="number">2.0f</span> * cellSize, hD - hU)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> glm::<span class="built_in">normalize</span>(normal);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-4-多纹理混合"><a href="#1-4-多纹理混合" class="headerlink" title="1.4 多纹理混合"></a>1.4 多纹理混合</h4><p>基于 <strong>高度 + 坡度</strong> 的混合策略，使用 <code>smoothstep</code> 实现平滑过渡：</p>
+<table>
+<thead>
+<tr>
+<th>纹理</th>
+<th>混合条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>草地 (Grass)</td>
+<td>低海拔 + 平坦区域</td>
+</tr>
+<tr>
+<td>岩石 (Rock)</td>
+<td>中等海拔 + 陡峭坡度</td>
+</tr>
+<tr>
+<td>雪地 (Snow)</td>
+<td>高海拔区域</td>
+</tr>
+</tbody></table>
+<p><strong>着色器实现</strong>：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 计算坡度（0 = 平坦, 1 = 垂直）</span></span><br><span class="line"><span class="type">float</span> slope = <span class="number">1.0</span> - <span class="built_in">dot</span>(geometryNormal, <span class="type">vec3</span>(<span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 归一化高度</span></span><br><span class="line"><span class="type">float</span> normalizedHeight = vHeight / uMaxHeight;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 计算混合权重</span></span><br><span class="line"><span class="type">float</span> grassWeight = <span class="built_in">smoothstep</span>(uGrassMaxHeight + <span class="number">0.1</span>, uGrassMaxHeight - <span class="number">0.1</span>, normalizedHeight);</span><br><span class="line">grassWeight *= <span class="built_in">smoothstep</span>(uSlopeThreshold + <span class="number">0.1</span>, uSlopeThreshold - <span class="number">0.1</span>, slope);</span><br><span class="line"></span><br><span class="line"><span class="type">float</span> snowWeight = <span class="built_in">smoothstep</span>(uRockMaxHeight - <span class="number">0.1</span>, uRockMaxHeight + <span class="number">0.1</span>, normalizedHeight);</span><br><span class="line"></span><br><span class="line"><span class="type">float</span> rockWeight = <span class="number">1.0</span> - grassWeight - snowWeight;</span><br><span class="line">rockWeight = <span class="built_in">max</span>(rockWeight, <span class="built_in">smoothstep</span>(uSlopeThreshold - <span class="number">0.1</span>, uSlopeThreshold + <span class="number">0.2</span>, slope));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 归一化权重</span></span><br><span class="line"><span class="type">float</span> totalWeight = grassWeight + rockWeight + snowWeight + <span class="number">0.001</span>;</span><br><span class="line">grassWeight /= totalWeight;</span><br><span class="line">rockWeight /= totalWeight;</span><br><span class="line">snowWeight /= totalWeight;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 混合纹理</span></span><br><span class="line"><span class="type">vec3</span> albedo = grassColor * grassWeight + rockColor * rockWeight + snowColor * snowWeight;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-5-法线贴图"><a href="#1-5-法线贴图" class="headerlink" title="1.5 法线贴图"></a>1.5 法线贴图</h4><p>使用 TBN 矩阵（Tangent-Bitangent-Normal）将切线空间法线转换到世界空间：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (uUseNormalMaps)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 采样并混合法线贴图</span></span><br><span class="line">    <span class="type">vec3</span> grassNormal = <span class="built_in">texture</span>(uGrassNormalMap, tiledUV).rgb * <span class="number">2.0</span> - <span class="number">1.0</span>;</span><br><span class="line">    <span class="type">vec3</span> rockNormal = <span class="built_in">texture</span>(uRockNormalMap, tiledUV).rgb * <span class="number">2.0</span> - <span class="number">1.0</span>;</span><br><span class="line">    <span class="type">vec3</span> snowNormal = <span class="built_in">texture</span>(uSnowNormalMap, tiledUV).rgb * <span class="number">2.0</span> - <span class="number">1.0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="type">vec3</span> tangentNormal = grassNormal * grassWeight + </span><br><span class="line">                         rockNormal * rockWeight + </span><br><span class="line">                         snowNormal * snowWeight;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 应用法线贴图强度</span></span><br><span class="line">    tangentNormal.xy *= uNormalMapStrength;</span><br><span class="line">    tangentNormal = <span class="built_in">normalize</span>(tangentNormal);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// TBN矩阵变换到世界空间</span></span><br><span class="line">    normal = <span class="built_in">normalize</span>(vTBN * tangentNormal);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-LOD系统-Level-of-Detail"><a href="#2-LOD系统-Level-of-Detail" class="headerlink" title="2. LOD系统 (Level of Detail)"></a>2. LOD系统 (Level of Detail)</h3><p>根据摄像机距离动态选择不同精度的网格，大幅减少远处地形的渲染开销。</p>
+<h4 id="2-1-分块架构"><a href="#2-1-分块架构" class="headerlink" title="2.1 分块架构"></a>2.1 分块架构</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ChunkedTerrain</span><br><span class="line">    ├── Frustum (视锥体剔除)</span><br><span class="line">    └── TerrainChunk[] (N×N 个地形块)</span><br><span class="line">            └── LOD Meshes[4] (每块 4 级精度)</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-LOD级别参数"><a href="#2-2-LOD级别参数" class="headerlink" title="2.2 LOD级别参数"></a>2.2 LOD级别参数</h4><table>
+<thead>
+<tr>
+<th>LOD</th>
+<th>顶点步长</th>
+<th>相对三角形数</th>
+<th>适用距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>1</td>
+<td>100%</td>
+<td>0-100m</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>25%</td>
+<td>100-200m</td>
+</tr>
+<tr>
+<td>2</td>
+<td>4</td>
+<td>6.25%</td>
+<td>200-400m</td>
+</tr>
+<tr>
+<td>3</td>
+<td>8</td>
+<td>1.56%</td>
+<td>400m+</td>
+</tr>
+</tbody></table>
+<h4 id="2-3-LOD网格生成"><a href="#2-3-LOD网格生成" class="headerlink" title="2.3 LOD网格生成"></a>2.3 LOD网格生成</h4><p>通过步长控制顶点采样密度：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">TerrainChunk::generateLODMesh</span><span class="params">(<span class="comment">/* ... */</span>, <span class="type">int</span> lodLevel)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// LOD0=1, LOD1=2, LOD2=4, LOD3=8</span></span><br><span class="line">    <span class="type">int</span> step = <span class="number">1</span> &lt;&lt; lodLevel;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 按步长采样顶点</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> z = startZ; z &lt;= startZ + chunkSize &amp;&amp; z &lt; hmHeight; z += step)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x = startX; x &lt;= startX + chunkSize &amp;&amp; x &lt; hmWidth; x += step)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 生成顶点...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-4-LOD选择算法"><a href="#2-4-LOD选择算法" class="headerlink" title="2.4 LOD选择算法"></a>2.4 LOD选择算法</h4><p>基于块中心到摄像机的距离选择合适的LOD级别：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">ChunkedTerrain::calculateLOD</span><span class="params">(<span class="type">float</span> distance)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// m_lodDistances = &#123; 100.0f, 200.0f, 400.0f, 800.0f &#125;</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (distance &lt; m_lodDistances[i])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">3</span>;  <span class="comment">// 最低精度</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-视锥体剔除-Frustum-Culling"><a href="#3-视锥体剔除-Frustum-Culling" class="headerlink" title="3. 视锥体剔除 (Frustum Culling)"></a>3. 视锥体剔除 (Frustum Culling)</h3><p>跳过摄像机看不到的地形块，进一步提升渲染性能。</p>
+<h4 id="3-1-平面提取（Gribb-Hartmann方法）"><a href="#3-1-平面提取（Gribb-Hartmann方法）" class="headerlink" title="3.1 平面提取（Gribb&#x2F;Hartmann方法）"></a>3.1 平面提取（Gribb&#x2F;Hartmann方法）</h4><p>从 ViewProjection 矩阵直接提取6个裁剪平面：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Frustum::update</span><span class="params">(<span class="type">const</span> glm::mat4&amp; vp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Left plane</span></span><br><span class="line">    m_planes[LEFT].x = vp[<span class="number">0</span>][<span class="number">3</span>] + vp[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">    m_planes[LEFT].y = vp[<span class="number">1</span>][<span class="number">3</span>] + vp[<span class="number">1</span>][<span class="number">0</span>];</span><br><span class="line">    m_planes[LEFT].z = vp[<span class="number">2</span>][<span class="number">3</span>] + vp[<span class="number">2</span>][<span class="number">0</span>];</span><br><span class="line">    m_planes[LEFT].w = vp[<span class="number">3</span>][<span class="number">3</span>] + vp[<span class="number">3</span>][<span class="number">0</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Right plane</span></span><br><span class="line">    m_planes[RIGHT].x = vp[<span class="number">0</span>][<span class="number">3</span>] - vp[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">    m_planes[RIGHT].y = vp[<span class="number">1</span>][<span class="number">3</span>] - vp[<span class="number">1</span>][<span class="number">0</span>];</span><br><span class="line">    m_planes[RIGHT].z = vp[<span class="number">2</span>][<span class="number">3</span>] - vp[<span class="number">2</span>][<span class="number">0</span>];</span><br><span class="line">    m_planes[RIGHT].w = vp[<span class="number">3</span>][<span class="number">3</span>] - vp[<span class="number">3</span>][<span class="number">0</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Bottom, Top, Near, Far 类似...</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 归一化平面</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; COUNT; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">normalizePlane</span>(m_planes[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-AABB可见性测试"><a href="#3-2-AABB可见性测试" class="headerlink" title="3.2 AABB可见性测试"></a>3.2 AABB可见性测试</h4><p>使用 P-Vertex 方法快速判断包围盒是否在视锥体内：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">Frustum::isBoxVisible</span><span class="params">(<span class="type">const</span> glm::vec3&amp; min, <span class="type">const</span> glm::vec3&amp; max)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; COUNT; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">const</span> glm::vec4&amp; plane = m_planes[i];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 找到离平面最近的点 (p-vertex)</span></span><br><span class="line">        glm::vec3 pVertex;</span><br><span class="line">        pVertex.x = (plane.x &gt;= <span class="number">0.0f</span>) ? max.x : min.x;</span><br><span class="line">        pVertex.y = (plane.y &gt;= <span class="number">0.0f</span>) ? max.y : min.y;</span><br><span class="line">        pVertex.z = (plane.z &gt;= <span class="number">0.0f</span>) ? max.z : min.z;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果最近点在平面外侧，整个AABB不可见</span></span><br><span class="line">        <span class="type">float</span> distance = glm::<span class="built_in">dot</span>(glm::<span class="built_in">vec3</span>(plane), pVertex) + plane.w;</span><br><span class="line">        <span class="keyword">if</span> (distance &lt; <span class="number">0.0f</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-性能提升数据"><a href="#3-3-性能提升数据" class="headerlink" title="3.3 性能提升数据"></a>3.3 性能提升数据</h4><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>无优化</th>
+<th>有剔除+LOD</th>
+<th>提升</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>512×512 全可见</td>
+<td>520K三角形</td>
+<td>~150K</td>
+<td>3.5×</td>
+</tr>
+<tr>
+<td>512×512 部分可见</td>
+<td>520K三角形</td>
+<td>~80K</td>
+<td>6.5×</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="4-水体渲染系统-Water-System"><a href="#4-水体渲染系统-Water-System" class="headerlink" title="4. 水体渲染系统 (Water System)"></a>4. 水体渲染系统 (Water System)</h3><p>实现了游戏级的逼真水面效果，包括反射、折射、Fresnel效果和动态波浪。</p>
+<h4 id="4-1-反射与折射原理"><a href="#4-1-反射与折射原理" class="headerlink" title="4.1 反射与折射原理"></a>4.1 反射与折射原理</h4><p>水面效果需要两次额外的场景渲染：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────────┐     ┌──────────────────┐</span><br><span class="line">│   反射渲染        │     │   折射渲染        │</span><br><span class="line">│  翻转摄像机      │     │  正常摄像机       │</span><br><span class="line">│  裁剪水面以下     │     │  裁剪水面以上     │</span><br><span class="line">│  结果：倒影      │     │  结果：水下场景   │</span><br><span class="line">└──────────────────┘     └──────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-2-裁剪平面技术"><a href="#4-2-裁剪平面技术" class="headerlink" title="4.2 裁剪平面技术"></a>4.2 裁剪平面技术</h4><p>使用 <code>gl_ClipDistance</code> 实现硬件级裁剪：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 顶点着色器</span></span><br><span class="line"><span class="keyword">uniform</span> <span class="type">vec4</span> uClipPlane;</span><br><span class="line"><span class="built_in">gl_ClipDistance</span>[<span class="number">0</span>] = <span class="built_in">dot</span>(worldPos, uClipPlane);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 反射时: uClipPlane = vec4(0, 1, 0, -waterHeight)  // 裁剪水下</span></span><br><span class="line"><span class="comment">// 折射时: uClipPlane = vec4(0, -1, 0, waterHeight)  // 裁剪水上</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-Fresnel效果"><a href="#4-3-Fresnel效果" class="headerlink" title="4.3 Fresnel效果"></a>4.3 Fresnel效果</h4><p>视线与水面夹角越小，反射越强：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Fresnel效果 - 掠射角更多反射</span></span><br><span class="line"><span class="type">vec3</span> viewVector = <span class="built_in">normalize</span>(vToCamera);</span><br><span class="line"><span class="type">float</span> refractiveFactor = <span class="built_in">dot</span>(viewVector, <span class="type">vec3</span>(<span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.0</span>));</span><br><span class="line">refractiveFactor = <span class="built_in">pow</span>(refractiveFactor, <span class="number">0.5</span>);</span><br><span class="line">refractiveFactor = <span class="built_in">clamp</span>(refractiveFactor, <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 混合反射和折射</span></span><br><span class="line">FragColor = <span class="built_in">mix</span>(reflectColor, refractColor, refractiveFactor);</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-4-DuDv波浪扭曲"><a href="#4-4-DuDv波浪扭曲" class="headerlink" title="4.4 DuDv波浪扭曲"></a>4.4 DuDv波浪扭曲</h4><p>使用 DuDv 贴图对纹理坐标进行偏移，产生动态波纹效果：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 动画纹理坐标</span></span><br><span class="line"><span class="type">float</span> moveFactor = uTime * waveSpeed;</span><br><span class="line"><span class="type">vec2</span> distortedTexCoord = <span class="built_in">texture</span>(uDudvMap, <span class="type">vec2</span>(vTexCoord.x + moveFactor, vTexCoord.y)).rg * <span class="number">0.1</span>;</span><br><span class="line">distortedTexCoord = vTexCoord + <span class="type">vec2</span>(distortedTexCoord.x, distortedTexCoord.y + moveFactor);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 采样DuDv贴图获取扭曲</span></span><br><span class="line"><span class="type">vec2</span> totalDistortion = (<span class="built_in">texture</span>(uDudvMap, distortedTexCoord).rg * <span class="number">2.0</span> - <span class="number">1.0</span>) * uWaveStrength;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 应用扭曲到纹理坐标</span></span><br><span class="line">reflectTexCoord += totalDistortion;</span><br><span class="line">refractTexCoord += totalDistortion;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-5-岸边泡沫"><a href="#4-5-岸边泡沫" class="headerlink" title="4.5 岸边泡沫"></a>4.5 岸边泡沫</h4><p>基于深度差计算水深，浅水区域显示泡沫：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 计算水深</span></span><br><span class="line"><span class="type">float</span> floorDistance = <span class="comment">/* 地面深度 */</span>;</span><br><span class="line"><span class="type">float</span> waterDistance = <span class="comment">/* 水面深度 */</span>;</span><br><span class="line"><span class="type">float</span> waterDepth = floorDistance - waterDistance;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 泡沫强度基于深度</span></span><br><span class="line"><span class="type">float</span> foamFactor = <span class="number">1.0</span> - <span class="built_in">clamp</span>(waterDepth / uFoamDepth, <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 程序化泡沫噪声（带动画）</span></span><br><span class="line"><span class="type">float</span> foamNoise = <span class="comment">/* 噪声计算 */</span>;</span><br><span class="line"><span class="type">float</span> foam = foamFactor * <span class="built_in">smoothstep</span>(<span class="number">0.3</span>, <span class="number">0.7</span>, foamNoise * foamFactor + foamFactor * <span class="number">0.5</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 混合泡沫颜色</span></span><br><span class="line">FragColor.rgb = <span class="built_in">mix</span>(FragColor.rgb, uFoamColor, foam * uFoamIntensity);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="5-天空盒系统-Skybox-System"><a href="#5-天空盒系统-Skybox-System" class="headerlink" title="5. 天空盒系统 (Skybox System)"></a>5. 天空盒系统 (Skybox System)</h3><h4 id="5-1-实现原理"><a href="#5-1-实现原理" class="headerlink" title="5.1 实现原理"></a>5.1 实现原理</h4><ol>
+<li>使用立方体贴图 (Cubemap) 存储6个方向的天空图像</li>
+<li>渲染一个包围摄像机的立方体</li>
+<li>移除视图矩阵的平移分量，确保天空盒始终”无限远”</li>
+</ol>
+<h4 id="5-2-深度测试技巧"><a href="#5-2-深度测试技巧" class="headerlink" title="5.2 深度测试技巧"></a>5.2 深度测试技巧</h4><figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 顶点着色器</span></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    vTexCoord = aPos;</span><br><span class="line">    </span><br><span class="line">    <span class="type">vec4</span> pos = uProjection * uView * <span class="type">vec4</span>(aPos, <span class="number">1.0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将深度设为1.0（最远），z = w，透视除法后 z/w = 1.0</span></span><br><span class="line">    <span class="built_in">gl_Position</span> = pos.xyww;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>渲染时使用 <code>GL_LEQUAL</code> 深度测试：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glDepthFunc</span>(GL_LEQUAL);  <span class="comment">// 允许深度=1.0的片段通过</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-3-动态颜色混合"><a href="#5-3-动态颜色混合" class="headerlink" title="5.3 动态颜色混合"></a>5.3 动态颜色混合</h4><p>天空盒颜色随日夜循环变化：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uniform</span> <span class="type">vec3</span> uSkyColor;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">float</span> uBlendFactor;</span><br><span class="line"><span class="type">vec3</span> finalColor = <span class="built_in">mix</span>(cubemapColor, uSkyColor, uBlendFactor);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="6-动态光照系统-Lighting-System"><a href="#6-动态光照系统-Lighting-System" class="headerlink" title="6. 动态光照系统 (Lighting System)"></a>6. 动态光照系统 (Lighting System)</h3><p>实现了完整的日夜循环系统。</p>
+<h4 id="6-1-日夜循环时间模型"><a href="#6-1-日夜循环时间模型" class="headerlink" title="6.1 日夜循环时间模型"></a>6.1 日夜循环时间模型</h4><table>
+<thead>
+<tr>
+<th>时间</th>
+<th>太阳角度</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>6:00</td>
+<td>0° (地平线)</td>
+<td>日出，暖橙色光</td>
+</tr>
+<tr>
+<td>12:00</td>
+<td>90° (正上方)</td>
+<td>正午，白色强光</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>180° (地平线)</td>
+<td>日落，金橙色光</td>
+</tr>
+<tr>
+<td>0:00</td>
+<td>-90° (地下)</td>
+<td>午夜，微弱蓝光</td>
+</tr>
+</tbody></table>
+<h4 id="6-2-太阳位置计算"><a href="#6-2-太阳位置计算" class="headerlink" title="6.2 太阳位置计算"></a>6.2 太阳位置计算</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">glm::vec3 <span class="title">Lighting::getSunDirection</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 时间转角度：6点=0°，12点=90°，18点=180°</span></span><br><span class="line">    <span class="type">float</span> angle = (m_timeOfDay - <span class="number">6.0f</span>) / <span class="number">12.0f</span> * glm::<span class="built_in">pi</span>&lt;<span class="type">float</span>&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 太阳从东向西移动</span></span><br><span class="line">    <span class="keyword">return</span> glm::<span class="built_in">normalize</span>(glm::<span class="built_in">vec3</span>(</span><br><span class="line">        <span class="built_in">cos</span>(angle),   <span class="comment">// x: 东西方向</span></span><br><span class="line">        <span class="built_in">sin</span>(angle),   <span class="comment">// y: 高度</span></span><br><span class="line">        <span class="number">-0.3f</span>         <span class="comment">// z: 略微偏移</span></span><br><span class="line">    ));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-3-动态颜色计算"><a href="#6-3-动态颜色计算" class="headerlink" title="6.3 动态颜色计算"></a>6.3 动态颜色计算</h4><p>根据太阳高度插值不同时段的颜色：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">glm::vec3 <span class="title">Lighting::getSunColor</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">float</span> sunHeight = <span class="built_in">getSunHeight</span>();</span><br><span class="line">    </span><br><span class="line">    glm::vec3 noonColor = glm::<span class="built_in">vec3</span>(<span class="number">1.0f</span>, <span class="number">1.0f</span>, <span class="number">0.95f</span>);      <span class="comment">// 正午：暖白色</span></span><br><span class="line">    glm::vec3 sunsetColor = glm::<span class="built_in">vec3</span>(<span class="number">1.0f</span>, <span class="number">0.6f</span>, <span class="number">0.3f</span>);     <span class="comment">// 日落：暖橙色</span></span><br><span class="line">    glm::vec3 nightColor = glm::<span class="built_in">vec3</span>(<span class="number">0.2f</span>, <span class="number">0.2f</span>, <span class="number">0.4f</span>);      <span class="comment">// 夜晚：冷蓝色</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (sunHeight &gt; <span class="number">0.3f</span>)</span><br><span class="line">        <span class="keyword">return</span> noonColor;                                     <span class="comment">// 白天</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (sunHeight &gt; <span class="number">0.0f</span>)</span><br><span class="line">        <span class="keyword">return</span> glm::<span class="built_in">mix</span>(sunsetColor, noonColor, sunHeight / <span class="number">0.3f</span>);  <span class="comment">// 日出/日落</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (sunHeight &gt; <span class="number">-0.3f</span>)</span><br><span class="line">        <span class="keyword">return</span> glm::<span class="built_in">mix</span>(nightColor, sunsetColor, (sunHeight + <span class="number">0.3f</span>) / <span class="number">0.3f</span>);  <span class="comment">// 黄昏</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> nightColor;                                    <span class="comment">// 夜晚</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="7-SSAO后处理-Screen-Space-Ambient-Occlusion"><a href="#7-SSAO后处理-Screen-Space-Ambient-Occlusion" class="headerlink" title="7. SSAO后处理 (Screen Space Ambient Occlusion)"></a>7. SSAO后处理 (Screen Space Ambient Occlusion)</h3><p>屏幕空间环境光遮蔽，增强场景立体感，让角落和缝隙产生柔和阴影。</p>
+<h4 id="7-1-算法流程"><a href="#7-1-算法流程" class="headerlink" title="7.1 算法流程"></a>7.1 算法流程</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐</span><br><span class="line">│  G-Buffer    │ --&gt; │  SSAO Calc   │ --&gt; │  Blur        │ --&gt; │  Apply       │</span><br><span class="line">│  Pass        │     │  Pass        │     │  Pass        │     │  Pass        │</span><br><span class="line">├──────────────┤     ├──────────────┤     ├──────────────┤     ├──────────────┤</span><br><span class="line">│ 渲染场景到    │     │ 在半球内采样  │     │ 4x4盒式模糊   │     │ 应用到环境光 │</span><br><span class="line">│ 位置+法线纹理 │     │ 计算遮蔽因子  │     │ 去除噪点     │     │              │</span><br><span class="line">└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-2-核心参数"><a href="#7-2-核心参数" class="headerlink" title="7.2 核心参数"></a>7.2 核心参数</h4><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>radius</td>
+<td>0.5</td>
+<td>采样半径，越大影响范围越广</td>
+</tr>
+<tr>
+<td>bias</td>
+<td>0.025</td>
+<td>深度偏移，防止自遮挡伪影</td>
+</tr>
+<tr>
+<td>intensity</td>
+<td>1.0</td>
+<td>遮蔽强度，控制暗化程度</td>
+</tr>
+<tr>
+<td>kernelSize</td>
+<td>32</td>
+<td>采样点数量，越多越平滑但越慢</td>
+</tr>
+</tbody></table>
+<h4 id="7-3-应用到地形着色器"><a href="#7-3-应用到地形着色器" class="headerlink" title="7.3 应用到地形着色器"></a>7.3 应用到地形着色器</h4><figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取SSAO因子</span></span><br><span class="line"><span class="type">float</span> ssaoFactor = <span class="number">1.0</span>;</span><br><span class="line"><span class="keyword">if</span> (uSSAOEnabled)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">vec2</span> screenUV = <span class="built_in">gl_FragCoord</span>.xy / <span class="type">vec2</span>(<span class="built_in">textureSize</span>(uSSAOTexture, <span class="number">0</span>));</span><br><span class="line">    <span class="type">float</span> ssao = <span class="built_in">texture</span>(uSSAOTexture, screenUV).r;</span><br><span class="line">    ssaoFactor = <span class="built_in">mix</span>(<span class="number">1.0</span>, ssao, uSSAOIntensity);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 环境光乘以遮蔽因子</span></span><br><span class="line"><span class="type">vec3</span> ambient = uAmbientColor * albedo * ssaoFactor;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="渲染管线"><a href="#渲染管线" class="headerlink" title="渲染管线"></a>渲染管线</h2><p>每帧渲染的完整流程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">1. 更新逻辑 (deltaTime)</span><br><span class="line">   ├── 处理输入</span><br><span class="line">   ├── 更新摄像机位置</span><br><span class="line">   └── 更新日夜循环时间</span><br><span class="line"></span><br><span class="line">2. G-Buffer Pass (SSAO预渲染)</span><br><span class="line">   └── 输出位置和法线纹理</span><br><span class="line"></span><br><span class="line">3. SSAO Pass</span><br><span class="line">   ├── 半球采样计算遮蔽因子</span><br><span class="line">   └── 4x4盒式模糊去噪</span><br><span class="line"></span><br><span class="line">4. 水体预渲染 (如果启用水体)</span><br><span class="line">   ├── 绑定反射FBO</span><br><span class="line">   │   ├── 计算反射摄像机位置（Y轴镜像）</span><br><span class="line">   │   ├── 设置裁剪平面（裁剪水下）</span><br><span class="line">   │   └── 渲染场景（天空盒、地形）</span><br><span class="line">   │</span><br><span class="line">   └── 绑定折射FBO</span><br><span class="line">       ├── 设置裁剪平面（裁剪水上）</span><br><span class="line">       └── 渲染场景（地形）</span><br><span class="line"></span><br><span class="line">5. 主场景渲染</span><br><span class="line">   ├── 渲染天空盒</span><br><span class="line">   ├── 渲染地形（含SSAO、雾效）</span><br><span class="line">   └── 渲染水面（使用反射/折射纹理）</span><br><span class="line"></span><br><span class="line">6. UI渲染</span><br><span class="line">   └── ImGui面板</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="代码统计"><a href="#代码统计" class="headerlink" title="代码统计"></a>代码统计</h2><table>
+<thead>
+<tr>
+<th>模块</th>
+<th>文件数</th>
+<th>代码行数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Application</td>
+<td>6</td>
+<td>~944</td>
+</tr>
+<tr>
+<td>Core</td>
+<td>11</td>
+<td>~863</td>
+</tr>
+<tr>
+<td>Terrain</td>
+<td>10</td>
+<td>~809</td>
+</tr>
+<tr>
+<td>Water</td>
+<td>4</td>
+<td>~371</td>
+</tr>
+<tr>
+<td>Environment</td>
+<td>4</td>
+<td>~346</td>
+</tr>
+<tr>
+<td>PostProcess</td>
+<td>2</td>
+<td>~300</td>
+</tr>
+<tr>
+<td>Editor</td>
+<td>2</td>
+<td>~177</td>
+</tr>
+<tr>
+<td><strong>C++ 小计</strong></td>
+<td><strong>39</strong></td>
+<td><strong>~3,510</strong></td>
+</tr>
+<tr>
+<td>GLSL 着色器</td>
+<td>12</td>
+<td>~306</td>
+</tr>
+<tr>
+<td><strong>项目总计</strong></td>
+<td><strong>51</strong></td>
+<td><strong>~3,816</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="操作说明"><a href="#操作说明" class="headerlink" title="操作说明"></a>操作说明</h2><table>
+<thead>
+<tr>
+<th>按键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>W&#x2F;A&#x2F;S&#x2F;D</td>
+<td>前后左右移动</td>
+</tr>
+<tr>
+<td>Shift</td>
+<td>加速移动（3倍速度）</td>
+</tr>
+<tr>
+<td>鼠标移动</td>
+<td>视角旋转</td>
+</tr>
+<tr>
+<td>滚轮</td>
+<td>调整视野 (FOV)</td>
+</tr>
+<tr>
+<td>Space</td>
+<td>切换鼠标捕获</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>切换线框模式</td>
+</tr>
+<tr>
+<td>ESC</td>
+<td>退出程序</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="编辑器界面"><a href="#编辑器界面" class="headerlink" title="编辑器界面"></a>编辑器界面</h2><p>基于 ImGui 实现的实时参数调节面板：</p>
+<table>
+<thead>
+<tr>
+<th>面板</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Performance</strong></td>
+<td>FPS、帧时间、顶点数、三角形数、GPU信息</td>
+</tr>
+<tr>
+<td><strong>Camera</strong></td>
+<td>位置显示、移动速度、地面行走模式</td>
+</tr>
+<tr>
+<td><strong>Terrain</strong></td>
+<td>纹理平铺、混合参数、法线贴图强度</td>
+</tr>
+<tr>
+<td><strong>Water</strong></td>
+<td>水面高度、波浪参数、颜色、泡沫设置</td>
+</tr>
+<tr>
+<td><strong>Lighting</strong></td>
+<td>时间控制、日夜循环开关、光照强度</td>
+</tr>
+<tr>
+<td><strong>Settings</strong></td>
+<td>保存&#x2F;加载设置（INI格式）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h2><blockquote>
+<p>待补充：运行程序后截取效果图，建议包含以下场景：</p>
+<ul>
+<li>正午阳光下的地形全景</li>
+<li>日落&#x2F;日出时的天空颜色变化</li>
+<li>水面反射与波浪效果</li>
+<li>SSAO开启&#x2F;关闭对比</li>
+<li>编辑器界面展示</li>
+</ul>
+</blockquote>
+<!-- 
+将截图放入 source/img/posts/ 目录，然后取消下方注释：
+![地形全景](/img/posts/roaming-terrain.jpg)
+![水体效果](/img/posts/roaming-water.jpg)
+![日落效果](/img/posts/roaming-sunset.jpg)
+![编辑器界面](/img/posts/roaming-editor.jpg)
+-->
+
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本项目从零实现了一个完整的大规模自然场景实时漫游系统，主要技术成果包括：</p>
+<p><strong>核心功能</strong>：</p>
+<ul>
+<li>基于高度图的地形生成与多纹理混合</li>
+<li>4级LOD系统与视锥体剔除优化</li>
+<li>逼真的水体渲染（反射&#x2F;折射&#x2F;Fresnel&#x2F;波浪&#x2F;泡沫）</li>
+<li>天空盒与日夜循环动态光照</li>
+<li>SSAO屏幕空间环境光遮蔽</li>
+</ul>
+<p><strong>技术难点与收获</strong>：</p>
+<ul>
+<li>深入理解 OpenGL 渲染管线与着色器编程</li>
+<li>掌握大规模场景的性能优化技术（LOD、剔除）</li>
+<li>学习了多种图形学算法的实际应用</li>
+</ul>
+<p><strong>可扩展方向</strong>：</p>
+<ul>
+<li>植被系统（草地、树木的实例化渲染）</li>
+<li>天气系统（雨、雪、云的动态效果）</li>
+<li>阴影系统（级联阴影贴图 CSM）</li>
+</ul>
+<hr>
+<h2 id="许可协议"><a href="#许可协议" class="headerlink" title="许可协议"></a>许可协议</h2><p>本项目采用 MIT License 开源协议。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/">https://vvvvvenxo.github.io/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OpenGL/">OpenGL</a><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a><a class="post-meta__tags" href="/tags/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/">毕业设计</a><a class="post-meta__tags" href="/tags/%E5%9C%B0%E5%BD%A2%E6%B8%B2%E6%9F%93/">地形渲染</a><a class="post-meta__tags" href="/tags/GLSL/">GLSL</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/code_dark.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/06/05/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/" title="【随笔】学习方法论"><img class="cover" src="/img/covers/learning.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【随笔】学习方法论</div></div><div class="info-2"><div class="info-item-1">建立知识体系的方法结构化将知识按照层级、模块进行组织，形成清晰的知识树。 时间线按照技术或概念的发展历程来理解，了解其演进过程。 流程化将复杂的知识点拆解为可执行的步骤，便于实践和记忆。 学习小贴士 3W 学习法：What（是什么）、Why（为什么）、How（怎么做） 多问为什么：深入理解本质，而非浅尝辄止  </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div style="text-align: left; font-size: 14px; line-height: 1.9;">
+  <b>🎓 软件工程</b><br><br>
+  <b>💼 实习经历：</b><br>
+  • 游族网络<br>
+  <span style="color:#888; font-size:12px;">2025.06 - 2025.08</span><br>
+  • XD 网络<br>
+  <span style="color:#888; font-size:12px;">2025.08 - 2026.01</span><br>
+  • 叠纸游戏（在职）<br>
+  <span style="color:#888; font-size:12px;">2026.01 - 至今</span><br><br>
+  <b>🔥 兴趣方向：</b><br>
+  • 🎮 游戏开发<br>
+  • 🤖 人工智能<br>
+  • 🎨 计算机图形学<br><br>
+  <hr style="border:none; border-top:1px dashed #ccc; margin:8px 0;">
+  <center style="color:#999; font-size:12px;">--- 请不要开盒我 ---</center>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">项目简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%89%B9%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">项目特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88"><span class="toc-number">3.</span> <span class="toc-text">技术栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84"><span class="toc-number">4.</span> <span class="toc-text">系统架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">5.</span> <span class="toc-text">目录结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3"><span class="toc-number">6.</span> <span class="toc-text">核心模块详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9C%B0%E5%BD%A2%E6%B8%B2%E6%9F%93%E7%B3%BB%E7%BB%9F-Terrain-System"><span class="toc-number">6.1.</span> <span class="toc-text">1. 地形渲染系统 (Terrain System)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E9%AB%98%E5%BA%A6%E5%9B%BE%E5%8A%A0%E8%BD%BD"><span class="toc-number">6.1.1.</span> <span class="toc-text">1.1 高度图加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E7%BD%91%E6%A0%BC%E7%94%9F%E6%88%90"><span class="toc-number">6.1.2.</span> <span class="toc-text">1.2 网格生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-%E6%B3%95%E7%BA%BF%E8%AE%A1%E7%AE%97%EF%BC%88%E4%B8%AD%E5%BF%83%E5%B7%AE%E5%88%86%E6%B3%95%EF%BC%89"><span class="toc-number">6.1.3.</span> <span class="toc-text">1.3 法线计算（中心差分法）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-%E5%A4%9A%E7%BA%B9%E7%90%86%E6%B7%B7%E5%90%88"><span class="toc-number">6.1.4.</span> <span class="toc-text">1.4 多纹理混合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-%E6%B3%95%E7%BA%BF%E8%B4%B4%E5%9B%BE"><span class="toc-number">6.1.5.</span> <span class="toc-text">1.5 法线贴图</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-LOD%E7%B3%BB%E7%BB%9F-Level-of-Detail"><span class="toc-number">6.2.</span> <span class="toc-text">2. LOD系统 (Level of Detail)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E5%88%86%E5%9D%97%E6%9E%B6%E6%9E%84"><span class="toc-number">6.2.1.</span> <span class="toc-text">2.1 分块架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-LOD%E7%BA%A7%E5%88%AB%E5%8F%82%E6%95%B0"><span class="toc-number">6.2.2.</span> <span class="toc-text">2.2 LOD级别参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-LOD%E7%BD%91%E6%A0%BC%E7%94%9F%E6%88%90"><span class="toc-number">6.2.3.</span> <span class="toc-text">2.3 LOD网格生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-LOD%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95"><span class="toc-number">6.2.4.</span> <span class="toc-text">2.4 LOD选择算法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%A7%86%E9%94%A5%E4%BD%93%E5%89%94%E9%99%A4-Frustum-Culling"><span class="toc-number">6.3.</span> <span class="toc-text">3. 视锥体剔除 (Frustum Culling)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E5%B9%B3%E9%9D%A2%E6%8F%90%E5%8F%96%EF%BC%88Gribb-Hartmann%E6%96%B9%E6%B3%95%EF%BC%89"><span class="toc-number">6.3.1.</span> <span class="toc-text">3.1 平面提取（Gribb&#x2F;Hartmann方法）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-AABB%E5%8F%AF%E8%A7%81%E6%80%A7%E6%B5%8B%E8%AF%95"><span class="toc-number">6.3.2.</span> <span class="toc-text">3.2 AABB可见性测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%95%B0%E6%8D%AE"><span class="toc-number">6.3.3.</span> <span class="toc-text">3.3 性能提升数据</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%B0%B4%E4%BD%93%E6%B8%B2%E6%9F%93%E7%B3%BB%E7%BB%9F-Water-System"><span class="toc-number">6.4.</span> <span class="toc-text">4. 水体渲染系统 (Water System)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E5%8F%8D%E5%B0%84%E4%B8%8E%E6%8A%98%E5%B0%84%E5%8E%9F%E7%90%86"><span class="toc-number">6.4.1.</span> <span class="toc-text">4.1 反射与折射原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E8%A3%81%E5%89%AA%E5%B9%B3%E9%9D%A2%E6%8A%80%E6%9C%AF"><span class="toc-number">6.4.2.</span> <span class="toc-text">4.2 裁剪平面技术</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-Fresnel%E6%95%88%E6%9E%9C"><span class="toc-number">6.4.3.</span> <span class="toc-text">4.3 Fresnel效果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-DuDv%E6%B3%A2%E6%B5%AA%E6%89%AD%E6%9B%B2"><span class="toc-number">6.4.4.</span> <span class="toc-text">4.4 DuDv波浪扭曲</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-5-%E5%B2%B8%E8%BE%B9%E6%B3%A1%E6%B2%AB"><span class="toc-number">6.4.5.</span> <span class="toc-text">4.5 岸边泡沫</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%A4%A9%E7%A9%BA%E7%9B%92%E7%B3%BB%E7%BB%9F-Skybox-System"><span class="toc-number">6.5.</span> <span class="toc-text">5. 天空盒系统 (Skybox System)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">6.5.1.</span> <span class="toc-text">5.1 实现原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-%E6%B7%B1%E5%BA%A6%E6%B5%8B%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="toc-number">6.5.2.</span> <span class="toc-text">5.2 深度测试技巧</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-%E5%8A%A8%E6%80%81%E9%A2%9C%E8%89%B2%E6%B7%B7%E5%90%88"><span class="toc-number">6.5.3.</span> <span class="toc-text">5.3 动态颜色混合</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%8A%A8%E6%80%81%E5%85%89%E7%85%A7%E7%B3%BB%E7%BB%9F-Lighting-System"><span class="toc-number">6.6.</span> <span class="toc-text">6. 动态光照系统 (Lighting System)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E6%97%A5%E5%A4%9C%E5%BE%AA%E7%8E%AF%E6%97%B6%E9%97%B4%E6%A8%A1%E5%9E%8B"><span class="toc-number">6.6.1.</span> <span class="toc-text">6.1 日夜循环时间模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E5%A4%AA%E9%98%B3%E4%BD%8D%E7%BD%AE%E8%AE%A1%E7%AE%97"><span class="toc-number">6.6.2.</span> <span class="toc-text">6.2 太阳位置计算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-%E5%8A%A8%E6%80%81%E9%A2%9C%E8%89%B2%E8%AE%A1%E7%AE%97"><span class="toc-number">6.6.3.</span> <span class="toc-text">6.3 动态颜色计算</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-SSAO%E5%90%8E%E5%A4%84%E7%90%86-Screen-Space-Ambient-Occlusion"><span class="toc-number">6.7.</span> <span class="toc-text">7. SSAO后处理 (Screen Space Ambient Occlusion)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B"><span class="toc-number">6.7.1.</span> <span class="toc-text">7.1 算法流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0"><span class="toc-number">6.7.2.</span> <span class="toc-text">7.2 核心参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-%E5%BA%94%E7%94%A8%E5%88%B0%E5%9C%B0%E5%BD%A2%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-number">6.7.3.</span> <span class="toc-text">7.3 应用到地形着色器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF"><span class="toc-number">7.</span> <span class="toc-text">渲染管线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%BB%9F%E8%AE%A1"><span class="toc-number">8.</span> <span class="toc-text">代码统计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E8%AF%B4%E6%98%8E"><span class="toc-number">9.</span> <span class="toc-text">操作说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%BE%91%E5%99%A8%E7%95%8C%E9%9D%A2"><span class="toc-number">10.</span> <span class="toc-text">编辑器界面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="toc-number">11.</span> <span class="toc-text">效果展示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">12.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B8%E5%8F%AF%E5%8D%8F%E8%AE%AE"><span class="toc-number">13.</span> <span class="toc-text">许可协议</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"><img src="/img/covers/code_dark.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"/></a><div class="content"><a class="title" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统">【项目实战】基于OpenGL的大规模自然场景实时漫游系统</a><time datetime="2026-01-15T00:00:00.000Z" title="发表于 2026-01-15 00:00:00">2026-01-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91Static%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】Static 关键字"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】Static 关键字"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91Static%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】Static 关键字">【C++】Static 关键字</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】关键字"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】关键字"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】关键字">【C++】关键字</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="【C++】内存管理"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】内存管理"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="【C++】内存管理">【C++】内存管理</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E8%99%9A%E5%87%BD%E6%95%B0/" title="【C++】虚函数"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】虚函数"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E8%99%9A%E5%87%BD%E6%95%B0/" title="【C++】虚函数">【C++】虚函数</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script>
+  function insertBannerButtons() {
+    const oldButtons = document.querySelector('.custom-banner-buttons');
+    if (oldButtons) oldButtons.remove();
+    
+    const banner = document.querySelector('#page-header');
+    if (banner && banner.classList.contains('full_page')) {
+      const buttonsHTML = `
+        <div class="custom-banner-buttons">
+          <a href="/categories/技术笔记/" class="custom-btn">技术笔记</a>
+          <a href="/categories/项目实战/" class="custom-btn">项目实战</a>
+          <a href="/categories/随笔杂谈/" class="custom-btn">随笔杂谈</a>
+        </div>
+      `;
+      banner.insertAdjacentHTML('beforeend', buttonsHTML);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', insertBannerButtons);
+  document.addEventListener('pjax:complete', insertBannerButtons);
+</script>
+<script>
+  function renameAnnouncement() {
+    const title = document.querySelector('.card-announcement .item-headline');
+    if (title) title.innerHTML = '<i class="fas fa-bullhorn"></i> 个人简介';
+  }
+  document.addEventListener('DOMContentLoaded', renameAnnouncement);
+  document.addEventListener('pjax:complete', renameAnnouncement);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
