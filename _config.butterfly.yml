@@ -347,6 +347,15 @@ inject:
         document.addEventListener('DOMContentLoaded', insertBannerButtons);
         document.addEventListener('pjax:complete', insertBannerButtons);
       </script>
+    - |
+      <script>
+        function renameAnnouncement() {
+          const title = document.querySelector('.card-announcement .item-headline');
+          if (title) title.textContent = '个人简介';
+        }
+        document.addEventListener('DOMContentLoaded', renameAnnouncement);
+        document.addEventListener('pjax:complete', renameAnnouncement);
+      </script>
 
 CDN:
   third_party_provider: jsdelivr
