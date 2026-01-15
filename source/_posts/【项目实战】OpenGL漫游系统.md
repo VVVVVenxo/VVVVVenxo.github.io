@@ -4,7 +4,7 @@ toc: true
 categories:
   - 项目实战
   - 图形学
-cover: /img/covers/code_dark.jpg
+cover: /img/covers/Roaming.jpg
 date: 2026-01-15
 tags:
   - OpenGL
