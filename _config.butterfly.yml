@@ -267,8 +267,8 @@ theme_color:
   blockquote_background_color: '#f2f2f7'
   scrollbar_color: '#007aff'
 
-category_ui:
-tag_ui:
+category_ui: index
+tag_ui: index
 
 pjax:
   enable: true
