@@ -108,15 +108,18 @@ aside:
     enable: true
     content: |
       <div style="text-align: left; font-size: 14px; line-height: 1.9;">
-        <b>🎓 个人简介</b><br>
-        <span style="color: #666;">软件工程 · 叠纸游戏实习</span><br><br>
+        <b>🎓 软件工程</b><br><br>
+        <b>实习经历：</b><br>
+        • 游族网络<br>
+        <span style="color:#888; font-size:12px;">2025.06 - 2025.08</span><br>
+        • XD 网络<br>
+        <span style="color:#888; font-size:12px;">2025.08 - 2026.01</span><br>
+        • 叠纸游戏（在职）<br>
+        <span style="color:#888; font-size:12px;">2026.01 - 至今</span><br><br>
         <b>兴趣方向：</b><br>
         • 🎮 游戏开发<br>
         • 🤖 人工智能<br>
-        • 🎨 计算机图形学<br><br>
-        <b>技术栈：</b><br>
-        • C++ / C# / Python<br>
-        • Unity / Unreal Engine
+        • 🎨 计算机图形学
       </div>
   card_recent_post:
     enable: true
@@ -351,7 +354,7 @@ inject:
       <script>
         function renameAnnouncement() {
           const title = document.querySelector('.card-announcement .item-headline');
-          if (title) title.textContent = '个人简介';
+          if (title) title.innerHTML = '<i class="fas fa-bullhorn"></i> 个人简介';
         }
         document.addEventListener('DOMContentLoaded', renameAnnouncement);
         document.addEventListener('pjax:complete', renameAnnouncement);
