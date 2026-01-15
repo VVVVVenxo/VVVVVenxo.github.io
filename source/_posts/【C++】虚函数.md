@@ -1,5 +1,5 @@
 ---
-title: C++中的虚函数
+title: 【C++】虚函数
 toc: true
 categories:
   - 技术笔记

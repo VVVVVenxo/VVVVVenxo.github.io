@@ -1,5 +1,5 @@
 ---
-title: C++内存管理
+title: 【C++】内存管理
 toc: true
 categories:
   - 技术笔记

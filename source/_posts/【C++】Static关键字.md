@@ -1,5 +1,5 @@
 ---
-title: C++中的Static
+title: 【C++】Static 关键字
 toc: true
 categories:
   - 技术笔记
