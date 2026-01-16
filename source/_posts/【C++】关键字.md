@@ -1,5 +1,5 @@
 ---
-title: 【C++】常用关键字
+title: 【C++】关键字
 toc: true
 categories:
   - 技术笔记
@@ -9,9 +9,10 @@ date: 2025-06-05
 tags:
   - 关键字
   - const
+  - static
   - extern
   - explicit
-description: 详解 C++ 常用关键字：const 的多种用法、extern 的外部链接与 C 兼容、explicit 禁止隐式转换。
+description: 详解 C++ 常用关键字：const、static、extern、explicit 的用法与应用场景。
 ---
 
 ## const 关键字
@@ -90,6 +91,71 @@ const Container cc;
 c[0] = 10;   // 调用非 const 版本
 int v = cc[0]; // 调用 const 版本
 ```
+
+---
+
+## static 关键字
+
+`static` 用于声明静态成员，使数据或函数与对象脱离，在内存中只有一份。
+
+### static 的三种场景
+
+| 场景 | 作用 |
+|------|------|
+| 文件作用域 | 限制变量/函数只在本文件可见 |
+| 函数作用域 | 局部静态变量，只初始化一次 |
+| 类作用域 | 静态成员，所有对象共享 |
+
+### 静态成员
+
+```cpp
+class Account {
+public:
+    static double rate;
+    static void set_rate(const double& x) { rate = x; }
+};
+
+// 必须在类外定义静态成员（分配内存）
+double Account::rate = 8.0;
+
+int main() {
+    Account::set_rate(5.0);  // 通过类名调用
+    
+    Account a;
+    a.set_rate(7.0);         // 通过对象调用
+}
+```
+
+### 静态函数的特点
+
+- **没有 this 指针**
+- 只能访问静态成员
+- 可以通过类名或对象调用
+
+### 单例模式
+
+利用静态成员实现单例模式：
+
+```cpp
+class Singleton {
+public:
+    static Singleton& getInstance() {
+        static Singleton instance;  // 局部静态，延迟初始化
+        return instance;
+    }
+    
+    void doSomething() { /* ... */ }
+    
+private:
+    Singleton() {}                           // 私有构造
+    Singleton(const Singleton&) = delete;    // 禁止拷贝
+};
+
+// 使用
+Singleton::getInstance().doSomething();
+```
+
+**局部静态的优势**：只有在首次调用时才分配内存，避免浪费。
 
 ---
 
@@ -186,6 +252,6 @@ public:
 | 关键字 | 作用 | 典型场景 |
 |--------|------|----------|
 | `const` | 定义不可修改的值 | 常量、只读参数、const 成员函数 |
+| `static` | 静态存储/链接 | 静态成员、单例模式、局部持久变量 |
 | `extern` | 声明外部定义的变量/函数 | 跨文件共享全局变量、C 兼容 |
 | `explicit` | 禁止隐式类型转换 | 单参数构造函数、类型转换运算符 |
-| `static` | 静态存储/链接 | 详见 [【C++】Static 关键字](/posts/cpp-static/) |
