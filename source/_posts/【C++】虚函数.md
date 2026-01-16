@@ -106,6 +106,47 @@ p->speak();  // 输出 "Derived"（运行时多态）
 
 ---
 
+## 构造/析构函数中调用虚函数
+
+在基类的构造函数或析构函数中调用虚函数，**无法实现多态**。
+
+### 为什么不能实现多态？
+
+| 阶段 | 原因 |
+|------|------|
+| **构造期间** | 先构造父类，再构造子类。在父类构造期间，子类的成员尚未初始化，此时调用子类的虚函数会访问未初始化的数据 |
+| **析构期间** | 先析构子类，再析构父类。在父类析构期间，子类的成员已被销毁，此时无法再调用子类的虚函数 |
+
+### 示例
+
+```cpp
+class Base {
+public:
+    Base() { 
+        init();  // 调用的是 Base::init()，不是 Derived::init()
+    }
+    virtual void init() { cout << "Base::init" << endl; }
+};
+
+class Derived : public Base {
+public:
+    Derived() : value(42) {}
+    void init() override { 
+        cout << "Derived::init, value = " << value << endl; 
+    }
+private:
+    int value;
+};
+
+Derived d;  // 输出 "Base::init"（不是 "Derived::init"）
+```
+
+### 结论
+
+从语法上讲，在构造/析构函数中调用虚函数是合法的，但往往达不到预期效果。如果需要在构造时执行子类特定的初始化逻辑，应考虑使用工厂模式或两阶段初始化。
+
+---
+
 ## 在 C 语言中模拟虚函数
 
 C 语言没有虚函数机制，但可以手动模拟：
