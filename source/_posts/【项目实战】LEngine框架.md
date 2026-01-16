@@ -39,18 +39,18 @@ description: LEngine 是一个模块化、可热更新的 Unity 客户端游戏�
 │                        业务逻辑层 (Game)                          │
 │              具体游戏逻辑、UI实现、玩法系统等                        │
 ├─────────────────────────────────────────────────────────────────┤
-│                     热更新层 (LEngine.HotFix)                     │
-│  GameManager | UIManager | GameStateMgr | TableMgr | ECCore     │
-│  SceneModule | RenderManager | PerfMgr                          │
+│                       热更新层 (HotFix)                           │
+│  GameManager | UIManager | GameStateMgr | SConfigMgr | ECCore   │
+│  SceneModule | PerfMgr | ETMgr                                  │
 ├─────────────────────────────────────────────────────────────────┤
-│                      模块层 (LEngine.Module)                      │
+│                   模块层 (Stable.Runtime.Module)                  │
 │  ResourceModule | FsmModule | AudioModule | TimerModule         │
 │  ObjectPoolModule | ProcedureModule | UpdateDriver              │
 ├─────────────────────────────────────────────────────────────────┤
-│                       核心层 (LEngine.Core)                       │
+│                 核心层 (Stable.Runtime.Core/TEngine)              │
 │  ModuleSystem | Log | GameEvent | MemoryPool | GameTime         │
 ├─────────────────────────────────────────────────────────────────┤
-│                      网络层 (LEngine.ETCore)                      │
+│                     网络层 (Stable.ETCore)                        │
 │                   基于ET框架的网络通信实现                          │
 ├─────────────────────────────────────────────────────────────────┤
 │                       启动层 (Launcher)                           │
@@ -62,18 +62,23 @@ description: LEngine 是一个模块化、可热更新的 Unity 客户端游戏�
 
 ```
 Assets/
-├── LEngine/                    # 核心框架（不可热更）
-│   ├── Core/                   # 核心层
-│   ├── Module/                 # 模块层
-│   ├── Procedure/              # 启动流程
-│   ├── Launcher/               # 启动器
-│   ├── ETCore/                 # 网络核心
-│   └── Extension/              # 扩展
-├── LEngine.HotFix/             # 热更新层
-│   ├── Framework/              # 框架代码
-│   ├── Common/                 # 通用工具
-│   └── Example/                # 示例代码
-└── Plugins/                    # 第三方插件
+├── Scripts/
+│   ├── Stable/                 # 稳定层（不可热更）
+│   │   ├── Runtime/            # 运行时核心
+│   │   │   ├── Core/           # 核心层（ModuleSystem、Log、GameEvent 等）
+│   │   │   └── Module/         # 模块层（Resource、Audio、Timer 等）
+│   │   ├── ETCore/             # ET 网络核心
+│   │   ├── Procedure/          # 启动流程
+│   │   └── Editor/             # 编辑器扩展
+│   └── HotFix/                 # 热更新层
+│       ├── Framework/          # 框架代码（UIManager、GameStateMgr 等）
+│       │   ├── UIMgr/          # UI 管理系统
+│       │   ├── GameState/      # 游戏状态管理
+│       │   ├── ECCore/         # 实体组件系统
+│       │   └── SConfig/        # 配置表系统
+│       └── Common/             # 通用工具（单例、工具类等）
+├── Launcher/                   # 启动器
+└── ThirdParty/                 # 第三方插件
 ```
 
 ## 核心模块详解
@@ -514,13 +519,23 @@ GameModule.Timer.RemoveTimer(timerId);
 游戏启动流程管理，确保资源初始化、热更下载、程序集加载按顺序执行。
 
 ```
-ProcedureLaunch
+ProcedureLaunch (启动)
     ↓
 ProcedureInitPackage (初始化资源包)
+    ↓
+ProcedureInitResources (初始化资源)
+    ↓
+ProcedureClearCache (清理缓存，可选)
     ↓
 ProcedureCreateDownloader (创建下载器)
     ↓
 ProcedureDownloadFile (下载资源)
+    ↓
+ProcedureDownloadOver (下载完成)
+    ↓
+ProcedurePreload (预加载)
+    ↓
+ProcedureSplash (闪屏)
     ↓
 ProcedureLoadAssembly (加载热更程序集)
     ↓
@@ -531,38 +546,12 @@ GameApp.Entrance() (热更入口)
 
 ---
 
-### 10. RenderManager 渲染管理
-
-URP 渲染管线统一管理器，提供渲染参数的读写接口。
-
-```csharp
-// 获取渲染管理器
-var renderMgr = GameManager.RenderManager;
-
-// 阴影控制
-renderMgr.SetShadowDistance(50f);
-renderMgr.SetShadowCascadeCount(4);
-
-// 渲染质量
-renderMgr.SetRenderScale(0.8f);
-renderMgr.SetMSAA(4);
-renderMgr.SetHDR(true);
-
-// 后处理
-renderMgr.SetPostProcessing(true);
-
-// 质量等级
-renderMgr.SetQualityLevel(2);
-```
-
----
-
 ## LEngine vs GameplayFrameWork 对比
 
 | 对比项 | GameplayFrameWork | LEngine |
 |--------|-------------------|---------|
 | **定位** | 学习/小型项目 | 中大型商业项目 |
-| **架构** | 单层单例模式 | Core/Module/HotFix 三层架构 |
+| **架构** | 单层单例模式 | Stable/HotFix 分层架构 |
 | **资源管理** | Unity Resources | YooAsset（热更、加密、多模式） |
 | **异步支持** | 协程 + 回调 | UniTask async/await |
 | **热更新** | 不支持 | HybridCLR 代码热更 |
@@ -571,12 +560,11 @@ renderMgr.SetQualityLevel(2);
 | **对象池** | 简单 Dictionary | 容量、过期时间、自动释放 |
 | **状态管理** | 无 | GameStateMgr 完整状态机 |
 | **网络** | 无 | ET 高性能网络框架 |
-| **配置表** | 无 | MemoryPack 高性能序列化 |
+| **配置表** | 无 | SConfig 配置表系统 |
 | **实体系统** | 无 | 轻量级 EC 系统 |
 | **流程控制** | 无 | ProcedureModule 启动流程 |
-| **渲染管理** | 无 | URP 参数统一管理 |
 | **日志系统** | Debug.Log | 统一 Log 系统 |
-| **依赖项** | DOTween | YooAsset + UniTask + MemoryPack |
+| **依赖项** | DOTween | YooAsset + UniTask + DOTween |
 
 ---
 
@@ -649,11 +637,10 @@ renderMgr.SetQualityLevel(2);
 
 **LEngine** 额外提供：
 - ET 网络框架
-- MemoryPack 配置表
+- SConfig 配置表系统
 - EC 实体组件系统
 - 流程管理
-- 渲染参数管理
-- 性能监控
+- 性能监控（PerfMgr）
 
 ---
 
@@ -681,19 +668,28 @@ public partial class GameApp
 {
     private static async void StartGameLogic()
     {
-        // 注册基础管理器
+        // 1. 注册基础管理器
         await GameManager.RegisterBaseManagersAsync();
+        GameManager.PerfMgr.DoInit();
         
-        // 注册游戏管理器
+        // 2. 设置扩展状态注册回调（可选，在 GameStateMgr 初始化前设置）
+        // GameStateMgr.OnRegisterExtensionStates = RegisterBusinessStates;
+        
+        // 3. 注册游戏管理器（UIManager、GameStateMgr 等）
+        // 注意：GameStateMgr 会自动注册 LoginState、LoadingState、PlayingState
         GameManager.RegisterGameManagers();
         
-        // 注册状态
-        GameManager.GameStateMgr.RegisterState<LoginState>();
-        GameManager.GameStateMgr.RegisterState<LoadingState>();
-        GameManager.GameStateMgr.RegisterState<PlayingState>();
-        
-        // 启动状态机
+        // 4. 启动状态机
         GameManager.GameStateMgr.Start<LoginState>();
+    }
+    
+    /// <summary>
+    /// 注册业务层自定义状态（由 GameStateMgr 回调）
+    /// </summary>
+    private static void RegisterBusinessStates(GameStateMgr stateMgr)
+    {
+        // 注册业务层的自定义状态
+        // stateMgr.RegisterState<YourCustomState>();
     }
 }
 ```
@@ -725,13 +721,15 @@ EventMgr.Dispatcher.DispatchEvent("EventName", data);
 
 **LEngine** 是 **GameplayFrameWork** 的商业级升级版本，主要升级点包括：
 
-- 三层架构支持代码热更新
+- Stable/HotFix 分层架构支持代码热更新
 - YooAsset 资源热更新方案
-- 完整的游戏状态机
-- 高级 UI 框架
+- 完整的游戏状态机（GameStateMgr）
+- 高级 UI 框架（窗口栈、消息中心、特性标注）
 - UniTask 异步支持
 - 强类型事件系统
 - ET 网络框架集成
+- SConfig 配置表系统
+- 性能监控（PerfMgr）
 
 如果你正在开发中大型商业游戏项目，LEngine 提供了更完善的基础设施，让你专注于业务逻辑开发。
 
