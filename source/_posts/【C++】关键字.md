@@ -15,6 +15,10 @@ tags:
 description: 详解 C++ 常用关键字：const、static、extern、explicit 的用法与应用场景。
 ---
 
+本文介绍 C++ 中几个常用关键字的用法：`const`（常量）、`static`（静态）、`extern`（外部链接）、`explicit`（禁止隐式转换）。
+
+---
+
 ## const 关键字
 
 `const` 用于定义常量，表示该值不可被修改。
