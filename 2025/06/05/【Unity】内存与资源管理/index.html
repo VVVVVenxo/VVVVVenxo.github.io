@@ -1,0 +1,623 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【Unity】内存与资源管理 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="详解 Unity 内存与资源管理：资源加载、对象池、GC 原理与优化、AB 包热更新。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Unity】内存与资源管理">
+<meta property="og:url" content="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%86%85%E5%AD%98%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
+<meta property="og:description" content="详解 Unity 内存与资源管理：资源加载、对象池、GC 原理与优化、AB 包热更新。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/game.jpg">
+<meta property="article:published_time" content="2025-06-05T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-16T04:26:32.705Z">
+<meta property="article:author" content="VVVVVenxo">
+<meta property="article:tag" content="资源加载">
+<meta property="article:tag" content="对象池">
+<meta property="article:tag" content="GC">
+<meta property="article:tag" content="热更新">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/game.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【Unity】内存与资源管理",
+  "url": "https://vvvvvenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%86%85%E5%AD%98%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/",
+  "image": "https://vvvvvenxo.github.io/img/covers/game.jpg",
+  "datePublished": "2025-06-05T00:00:00.000Z",
+  "dateModified": "2026-01-16T04:26:32.705Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "VVVVVenxo",
+      "url": "https://VVVVVenxo.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%86%85%E5%AD%98%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【Unity】内存与资源管理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="referrer" content="no-referrer"><style>
+  #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #1d1d1f; }
+  #article-container li { font-size: 18px; line-height: 1.8; color: #1d1d1f; }
+  .recent-posts .recent-post-item { padding: 20px 30px !important; }
+  #page-header.not-top-img { margin-bottom: 10px; }
+  body { color: #1d1d1f; }
+</style>
+<style>
+  .custom-banner-buttons {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 2;
+    max-width: 90%;
+  }
+  .custom-btn {
+    padding: 14px 32px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.85);
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+    backdrop-filter: blur(12px);
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .custom-btn:hover {
+    background: rgba(255,255,255,0.95);
+    color: #2563eb;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    border-color: white;
+  }
+  @media screen and (max-width: 768px) {
+    .custom-banner-buttons {
+      gap: 12px;
+      top: 70%;
+    }
+    .custom-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+</style>
+<meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #fafafa;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">81</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/game.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【Unity】内存与资源管理</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【Unity】内存与资源管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-16T04:26:32.705Z" title="更新于 2026-01-16 04:26:32">2026-01-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Unity/">Unity</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Resources-资源加载"><a href="#Resources-资源加载" class="headerlink" title="Resources 资源加载"></a>Resources 资源加载</h2><p>通过代码动态加载 <code>Resources</code> 文件夹下指定路径的资源。</p>
+<h3 id="同步加载"><a href="#同步加载" class="headerlink" title="同步加载"></a>同步加载</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TextAsset ta = Resources.Load&lt;TextAsset&gt;(<span class="string">&quot;Tex/TextJPG&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：预设体加载后<strong>必须实例化</strong>：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GameObject prefab = Resources.Load&lt;GameObject&gt;(<span class="string">&quot;Prefabs/Enemy&quot;</span>);</span><br><span class="line">GameObject enemy = Instantiate(prefab);  <span class="comment">// 实例化</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="异步加载"><a href="#异步加载" class="headerlink" title="异步加载"></a>异步加载</h3><p>同步加载大资源会造成程序卡顿。异步加载内部新开线程，不阻塞主线程。</p>
+<h4 id="方式一：事件监听"><a href="#方式一：事件监听" class="headerlink" title="方式一：事件监听"></a>方式一：事件监听</h4><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    ResourceRequest rq = Resources.LoadAsync&lt;Texture&gt;(<span class="string">&quot;Tex/TextJPG&quot;</span>);</span><br><span class="line">    rq.completed += LoadOver;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">LoadOver</span>(<span class="params">AsyncOperation rq</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    Texture tex = (rq <span class="keyword">as</span> ResourceRequest).asset <span class="keyword">as</span> Texture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方式二：协程"><a href="#方式二：协程" class="headerlink" title="方式二：协程"></a>方式二：协程</h4><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">IEnumerator <span class="title">LoadResource</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    ResourceRequest rq = Resources.LoadAsync&lt;Texture&gt;(<span class="string">&quot;Tex/TextJPG&quot;</span>);</span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">return</span> rq;</span><br><span class="line">    </span><br><span class="line">    Texture tex = rq.asset <span class="keyword">as</span> Texture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="ScriptableObject"><a href="#ScriptableObject" class="headerlink" title="ScriptableObject"></a>ScriptableObject</h2><p>ScriptableObject 是一种<strong>轻量级数据容器</strong>，用于共享配置数据或资源。</p>
+<table>
+<thead>
+<tr>
+<th>特点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>不挂载到 GameObject</td>
+<td>减少场景内存占用</td>
+</tr>
+<tr>
+<td>数据持久化</td>
+<td>修改后数据会保存</td>
+</tr>
+<tr>
+<td>多处共享</td>
+<td>多个对象引用同一份数据</td>
+</tr>
+</tbody></table>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
+<li>配置表（技能参数、关卡数据）</li>
+<li>共享资源（物品数据库）</li>
+<li>事件通道（ScriptableObject Event）</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">CreateAssetMenu(fileName = <span class="string">&quot;SkillData&quot;</span>, menuName = <span class="string">&quot;Data/Skill&quot;</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SkillData</span> : <span class="title">ScriptableObject</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> skillName;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> damage;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">float</span> cooldown;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="对象池（Object-Pool）"><a href="#对象池（Object-Pool）" class="headerlink" title="对象池（Object Pool）"></a>对象池（Object Pool）</h2><p>对象池通过<strong>重复利用已创建的对象</strong>，减少频繁的实例化和销毁。</p>
+<h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><ul>
+<li>子弹、敌人、特效</li>
+<li>其他频繁生成销毁的对象</li>
+</ul>
+<h3 id="实现示例"><a href="#实现示例" class="headerlink" title="实现示例"></a>实现示例</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">GameObjectPool</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">SerializeField</span>] <span class="keyword">private</span> GameObject prefab;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;GameObject&gt; pool = <span class="keyword">new</span> Queue&lt;GameObject&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> GameObject <span class="title">Get</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        GameObject obj;</span><br><span class="line">        <span class="keyword">if</span> (pool.Count &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            obj = pool.Dequeue();</span><br><span class="line">            obj.SetActive(<span class="literal">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            obj = Instantiate(prefab);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Return</span>(<span class="params">GameObject obj</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        obj.SetActive(<span class="literal">false</span>);</span><br><span class="line">        pool.Enqueue(obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：对象池不能解决实例化卡顿，只是把卡顿<strong>提前</strong>到预热阶段。</p>
+<hr>
+<h2 id="AB-包与热更新"><a href="#AB-包与热更新" class="headerlink" title="AB 包与热更新"></a>AB 包与热更新</h2><p>AB 包是<strong>特定于平台的资产压缩包</strong>，包括模型、贴图、预设体等。</p>
+<table>
+<thead>
+<tr>
+<th>作用</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>减小包体</td>
+<td>资源按需下载</td>
+</tr>
+<tr>
+<td>热更新</td>
+<td>无需重新发布即可更新资源</td>
+</tr>
+<tr>
+<td>按需加载</td>
+<td>只加载需要的资源</td>
+</tr>
+</tbody></table>
+<h3 id="加载示例"><a href="#加载示例" class="headerlink" title="加载示例"></a>加载示例</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AssetBundle bundle = AssetBundle.LoadFromFile(path);</span><br><span class="line">GameObject prefab = bundle.LoadAsset&lt;GameObject&gt;(<span class="string">&quot;EnemyPrefab&quot;</span>);</span><br><span class="line">bundle.Unload(<span class="literal">false</span>);  <span class="comment">// 不卸载已加载的资源</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="GC-概述"><a href="#GC-概述" class="headerlink" title="GC 概述"></a>GC 概述</h2><p>作为游戏程序员，需要了解三种 GC：</p>
+<table>
+<thead>
+<tr>
+<th>GC 类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unity GC（Mono Runtime GC）</td>
+<td>Unity 使用的 GC</td>
+</tr>
+<tr>
+<td>C# GC（CLR GC）</td>
+<td>.NET 标准 GC</td>
+</tr>
+<tr>
+<td>Lua GC</td>
+<td>Lua 脚本的 GC</td>
+</tr>
+</tbody></table>
+<h3 id="GC-与堆内存的关系"><a href="#GC-与堆内存的关系" class="headerlink" title="GC 与堆内存的关系"></a>GC 与堆内存的关系</h3><p>Unity 的托管堆内存由 Mono 分配和管理。<strong>“托管”</strong> 意味着 Mono 可以自动调整堆大小、适时调用 GC。</p>
+<blockquote>
+<p><strong>优化 GC &#x3D; 优化堆内存 &#x3D; 减少堆内存分配 + 及时回收</strong></p>
+</blockquote>
+<hr>
+<h2 id="GC-触发时机"><a href="#GC-触发时机" class="headerlink" title="GC 触发时机"></a>GC 触发时机</h2><h3 id="被动触发"><a href="#被动触发" class="headerlink" title="被动触发"></a>被动触发</h3><p>GC 会不时自动运行（频率因平台而异）。</p>
+<h3 id="主动触发"><a href="#主动触发" class="headerlink" title="主动触发"></a>主动触发</h3><table>
+<thead>
+<tr>
+<th>接口</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Resources.UnloadUnusedAssets()</code></td>
+<td>Mono GC，内部会调用 <code>GC.Collect()</code></td>
+</tr>
+<tr>
+<td><code>GC.Collect()</code></td>
+<td>C# GC</td>
+</tr>
+<tr>
+<td><code>Resources.UnloadAsset()</code></td>
+<td>强制卸载资源（无论是否在使用）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="分代回收原理"><a href="#分代回收原理" class="headerlink" title="分代回收原理"></a>分代回收原理</h2><p>CLR 为每个托管堆对象定义<strong>代数（Generation）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>代</th>
+<th>说明</th>
+<th>预算容量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第 0 代</td>
+<td>新创建的对象</td>
+<td>256KB - 4MB</td>
+</tr>
+<tr>
+<td>第 1 代</td>
+<td>经历过 1 次 GC 未被回收</td>
+<td>512KB - 4MB</td>
+</tr>
+<tr>
+<td>第 2 代</td>
+<td>经历过 2 次以上 GC 未被回收</td>
+<td>不受限制</td>
+</tr>
+</tbody></table>
+<p><strong>优势</strong>：优先回收第 0 代（大部分新对象生命周期短），避免直接清理整个堆导致的卡顿。</p>
+<hr>
+<h2 id="GC-优化方法"><a href="#GC-优化方法" class="headerlink" title="GC 优化方法"></a>GC 优化方法</h2><h3 id="一、字符串操作"><a href="#一、字符串操作" class="headerlink" title="一、字符串操作"></a>一、字符串操作</h3><p>使用 <code>StringBuilder</code> 并重用：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> StringBuilder _builder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">string</span> <span class="title">Concatenate</span>(<span class="params"><span class="built_in">string</span> a, <span class="built_in">string</span> b</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _builder.Clear();</span><br><span class="line">    _builder.Append(a).Append(b);</span><br><span class="line">    <span class="keyword">return</span> _builder.ToString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、集合与循环"><a href="#二、集合与循环" class="headerlink" title="二、集合与循环"></a>二、集合与循环</h3><p>预分配集合并重用：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;<span class="built_in">int</span>&gt; _list = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Update</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    _list.Clear();  <span class="comment">// 重用而非重新创建</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++)</span><br><span class="line">        _list.Add(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对 <code>List</code> 或数组使用 <code>for</code> 循环（<code>foreach</code> 遍历 Dictionary 可能产生 GC）。</p>
+<h3 id="三、委托与-Lambda"><a href="#三、委托与-Lambda" class="headerlink" title="三、委托与 Lambda"></a>三、委托与 Lambda</h3><p>Lambda 捕获局部变量会产生闭包分配：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 避免：捕获局部变量产生 GC</span></span><br><span class="line"><span class="built_in">int</span> count = <span class="number">0</span>;</span><br><span class="line">InvokeAction(() =&gt; &#123; count++; &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 建议：使用静态方法</span></span><br><span class="line">InvokeAction(StaticMethod);</span><br></pre></td></tr></table></figure>
+
+<h3 id="四、装箱（Boxing）"><a href="#四、装箱（Boxing）" class="headerlink" title="四、装箱（Boxing）"></a>四、装箱（Boxing）</h3><p>使用泛型约束避免装箱：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>优化</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>String.Format(&quot;&#123;0&#125;&quot;, cost)</code></td>
+<td>使用 <code>$&quot;&#123;cost&#125;&quot;</code> 或 <code>ToString()</code></td>
+</tr>
+<tr>
+<td><code>yield return 0</code></td>
+<td>使用 <code>yield return null</code></td>
+</tr>
+<tr>
+<td>LINQ 和正则表达式</td>
+<td>热点代码中尽量少用</td>
+</tr>
+</tbody></table>
+<h3 id="五、Unity-API-优化"><a href="#五、Unity-API-优化" class="headerlink" title="五、Unity API 优化"></a>五、Unity API 优化</h3><table>
+<thead>
+<tr>
+<th>原写法</th>
+<th>优化写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>gameObject.tag == &quot;Player&quot;</code></td>
+<td><code>gameObject.CompareTag(&quot;Player&quot;)</code></td>
+</tr>
+<tr>
+<td><code>GetComponent&lt;T&gt;()</code> 每帧调用</td>
+<td>缓存引用</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="GC-优化总结"><a href="#GC-优化总结" class="headerlink" title="GC 优化总结"></a>GC 优化总结</h2><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>优化方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>字符串</td>
+<td>使用 <code>StringBuilder</code>，避免拼接</td>
+</tr>
+<tr>
+<td>集合</td>
+<td>预分配、<code>Clear()</code> 重用</td>
+</tr>
+<tr>
+<td>循环</td>
+<td>用 <code>for</code> 代替 <code>foreach</code></td>
+</tr>
+<tr>
+<td>委托</td>
+<td>避免 Lambda 捕获变量</td>
+</tr>
+<tr>
+<td>装箱</td>
+<td>使用泛型，避免值类型转 <code>object</code></td>
+</tr>
+<tr>
+<td>对象</td>
+<td>使用对象池</td>
+</tr>
+<tr>
+<td>时机</td>
+<td>在 Loading 时手动触发 GC</td>
+</tr>
+<tr>
+<td>缓存</td>
+<td>缓存组件引用、减少 API 调用</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="Mono-与-IL2CPP"><a href="#Mono-与-IL2CPP" class="headerlink" title="Mono 与 IL2CPP"></a>Mono 与 IL2CPP</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Mono</th>
+<th>IL2CPP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>编译方式</td>
+<td>JIT（即时编译）</td>
+<td>AOT（预先编译）</td>
+</tr>
+<tr>
+<td>运行效率</td>
+<td>较低</td>
+<td>较高</td>
+</tr>
+<tr>
+<td>包体大小</td>
+<td>较小</td>
+<td>较大</td>
+</tr>
+<tr>
+<td>热更新</td>
+<td>支持</td>
+<td>需要特殊处理</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="资源管理最佳实践"><a href="#资源管理最佳实践" class="headerlink" title="资源管理最佳实践"></a>资源管理最佳实践</h2><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>小型资源、原型开发</td>
+<td><code>Resources.Load</code></td>
+</tr>
+<tr>
+<td>大型项目、需要热更新</td>
+<td>AssetBundle 或 Addressables</td>
+</tr>
+<tr>
+<td>频繁创建销毁的对象</td>
+<td>对象池</td>
+</tr>
+<tr>
+<td>共享配置数据</td>
+<td>ScriptableObject</td>
+</tr>
+<tr>
+<td>大资源加载</td>
+<td>异步加载 + Loading 界面</td>
+</tr>
+<tr>
+<td>GC 优化</td>
+<td>在 Loading 时手动触发</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%86%85%E5%AD%98%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/">https://vvvvvenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%86%85%E5%AD%98%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD/">资源加载</a><a class="post-meta__tags" href="/tags/%E5%AF%B9%E8%B1%A1%E6%B1%A0/">对象池</a><a class="post-meta__tags" href="/tags/GC/">GC</a><a class="post-meta__tags" href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/">热更新</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/game.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/05/%E3%80%90Unity%E3%80%91%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/" title="【Unity】动画系统"><img class="cover" src="/img/covers/game.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【Unity】动画系统</div></div><div class="info-2"><div class="info-item-1">Animator vs AnimationUnity 提供两套动画系统：    特性 Animator Animation    系统 Mecanim（新） Legacy（旧）   状态机 ✅ 支持 ❌ 不支持   Blend Tree ✅ 支持 ❌ 不支持   层级混合 ✅ 支持 ❌ 不支持   控制复杂度 复杂 简单   适用场景 角色动作 UI 动效、简单动画    Animator 系统Animator ControllerAnimator Controller 是动画状态机的核心，定义了：  动画状态（State） 状态之间的过渡（Transition） 过渡条件（Parameters）  状态机结构1234567891011┌─────────────────────────────────────────────────────┐│              Animator Controller                     ││                                                     ││  ┌─────...</div></div></div></a><a class="pagination-related" href="/2025/06/05/%E3%80%90Unity%E3%80%91UI%E4%B8%8E%E6%B8%B2%E6%9F%93%E4%BC%98%E5%8C%96/" title="【Unity】UI与渲染优化"><img class="cover" src="/img/covers/game.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【Unity】UI与渲染优化</div></div><div class="info-2"><div class="info-item-1">Canvas 渲染模式Screen Space - OverlayUI 元素直接渲染到屏幕上，不依赖任何相机，始终覆盖在所有 3D 场景内容之上。 特点：  渲染层级最高，不会被场景中的任何物体遮挡 Canvas 会自动适配屏幕分辨率 无法实现 UI 与 3D 物体的穿插效果  适用场景：常规 HUD 界面、弹窗、菜单等需要始终显示在最前方的 UI。  Screen Space - CameraUI 元素由指定的相机进行渲染，Canvas 会被放置在相机前方的一个平面上。 特点：  可以控制 UI 与其他渲染层的前后关系 当相机设置为 Perspective（透视模式） 时，调整 UI 元素的 Rotation 可以呈现 3D 立体效果 Canvas 的 RectTransform 不可直接编辑，需通过相机或 Plane Distance 参数调整  适用场景：需要 UI 与粒子特效、3D 模型产生层级穿插的界面，或需要透视效果的 UI 动画。  World SpaceCanvas 作为普通的 3D 物体存在于世界空间中，其 RectTransform 完全可编辑。 特点：  会...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91LEngine%E6%A1%86%E6%9E%B6/" title="【项目实战】LEngine 框架"><img class="cover" src="/img/covers/game2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-15</div><div class="info-item-2">【项目实战】LEngine 框架</div></div><div class="info-2"><div class="info-item-1">项目简介LEngine 是一个模块化、可热更新的 Unity 客户端游戏框架，专为中大型商业游戏项目设计。框架采用清晰的分层架构，将代码分为核心层、模块层和热更新层，支持基于 HybridCLR 的代码热更新方案。  GitHub 地址: LEngine  框架特点 模块化架构：清晰的 Core&#x2F;Module&#x2F;HotFix 三层分层设计 热更新支持：基于 HybridCLR 的代码热更新方案 资源管理：基于 YooAsset 的资源加载、热更新、对象池管理 UI 框架：分层窗口管理、窗口栈、消息中心、自动资源管理 状态机系统：完整的游戏状态管理、流程控制 网络框架：基于 ET 的高性能网络通信 配置表系统：基于 MemoryPack 的高性能配置表读取  框架架构123456789101112131415161718192021┌─────────────────────────────────────────────────────────────────┐│                        业务逻辑层 (Game)              ...</div></div></div></a><a class="pagination-related" href="/2025/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91GameplayFrameWork%E6%A1%86%E6%9E%B6/" title="【项目实战】GameplayFrameWork 框架"><img class="cover" src="/img/covers/game2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-15</div><div class="info-item-2">【项目实战】GameplayFrameWork 框架</div></div><div class="info-2"><div class="info-item-1">项目简介GameplayFrameWork 是一个轻量级、模块化的 Unity 游戏开发基础框架。该框架采用单例模式作为核心架构，封装了游戏开发中最常用的功能模块，帮助开发者快速搭建游戏项目的基础设施，专注于业务逻辑开发。  GitHub 地址: GameplayFrameWork  框架特点 模块化设计：各模块高度解耦，可按需使用 单例模式架构：统一的管理器访问方式 异步加载支持：资源、场景均支持异步加载 事件驱动：基于观察者模式的事件中心，实现系统间解耦通信 对象池优化：减少频繁创建销毁带来的性能开销 开箱即用：集成 DOTween 动画库、Input System 等常用插件  框架架构1234567891011121314151617GameplayFrameWork/├── Assets/│   ├── Scripts/│   │   ├── ProjectBase/           # 框架核心模块│   │   │   ├── Base/              # 单例模式基类│   │   │   ├── Event/             # 事件中心...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">81</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div style="text-align: left; font-size: 14px; line-height: 1.9;">
+  <b>🎓 软件工程</b><br><br>
+  <b>💼 实习经历：</b><br>
+  • 游族网络<br>
+  <span style="color:#888; font-size:12px;">2025.06 - 2025.08</span><br>
+  • XD 网络<br>
+  <span style="color:#888; font-size:12px;">2025.08 - 2026.01</span><br>
+  • 叠纸游戏（在职）<br>
+  <span style="color:#888; font-size:12px;">2026.01 - 至今</span><br><br>
+  <b>🔥 兴趣方向：</b><br>
+  • 🎮 游戏开发<br>
+  • 🤖 人工智能<br>
+  • 🎨 计算机图形学<br><br>
+  <hr style="border:none; border-top:1px dashed #ccc; margin:8px 0;">
+  <center style="color:#999; font-size:12px;">--- 请不要开盒我 ---</center>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Resources-%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">Resources 资源加载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.1.</span> <span class="toc-text">同步加载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.2.</span> <span class="toc-text">异步加载</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC"><span class="toc-number">1.2.1.</span> <span class="toc-text">方式一：事件监听</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E5%8D%8F%E7%A8%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">方式二：协程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ScriptableObject"><span class="toc-number">2.</span> <span class="toc-text">ScriptableObject</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.1.</span> <span class="toc-text">使用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%B1%A0%EF%BC%88Object-Pool%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">对象池（Object Pool）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">3.1.</span> <span class="toc-text">适用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.2.</span> <span class="toc-text">实现示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AB-%E5%8C%85%E4%B8%8E%E7%83%AD%E6%9B%B4%E6%96%B0"><span class="toc-number">4.</span> <span class="toc-text">AB 包与热更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.1.</span> <span class="toc-text">加载示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GC-%E6%A6%82%E8%BF%B0"><span class="toc-number">5.</span> <span class="toc-text">GC 概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GC-%E4%B8%8E%E5%A0%86%E5%86%85%E5%AD%98%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">5.1.</span> <span class="toc-text">GC 与堆内存的关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GC-%E8%A7%A6%E5%8F%91%E6%97%B6%E6%9C%BA"><span class="toc-number">6.</span> <span class="toc-text">GC 触发时机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A2%AB%E5%8A%A8%E8%A7%A6%E5%8F%91"><span class="toc-number">6.1.</span> <span class="toc-text">被动触发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E5%8A%A8%E8%A7%A6%E5%8F%91"><span class="toc-number">6.2.</span> <span class="toc-text">主动触发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E4%BB%A3%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86"><span class="toc-number">7.</span> <span class="toc-text">分代回收原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GC-%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">GC 优化方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C"><span class="toc-number">8.1.</span> <span class="toc-text">一、字符串操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%9B%86%E5%90%88%E4%B8%8E%E5%BE%AA%E7%8E%AF"><span class="toc-number">8.2.</span> <span class="toc-text">二、集合与循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%A7%94%E6%89%98%E4%B8%8E-Lambda"><span class="toc-number">8.3.</span> <span class="toc-text">三、委托与 Lambda</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%A3%85%E7%AE%B1%EF%BC%88Boxing%EF%BC%89"><span class="toc-number">8.4.</span> <span class="toc-text">四、装箱（Boxing）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81Unity-API-%E4%BC%98%E5%8C%96"><span class="toc-number">8.5.</span> <span class="toc-text">五、Unity API 优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GC-%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93"><span class="toc-number">9.</span> <span class="toc-text">GC 优化总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mono-%E4%B8%8E-IL2CPP"><span class="toc-number">10.</span> <span class="toc-text">Mono 与 IL2CPP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">11.</span> <span class="toc-text">资源管理最佳实践</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"><img src="/img/covers/Roaming.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"/></a><div class="content"><a class="title" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统">【项目实战】基于OpenGL的大规模自然场景实时漫游系统</a><time datetime="2026-01-15T00:00:00.000Z" title="发表于 2026-01-15 00:00:00">2026-01-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/" title="【C++】值语义与移动"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】值语义与移动"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/" title="【C++】值语义与移动">【C++】值语义与移动</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】关键字"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】关键字"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】关键字">【C++】关键字</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="【C++】内存管理"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】内存管理"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="【C++】内存管理">【C++】内存管理</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/" title="【C++】整体框架"><img src="/img/covers/code_dark.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】整体框架"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/" title="【C++】整体框架">【C++】整体框架</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script>
+  function insertBannerButtons() {
+    const oldButtons = document.querySelector('.custom-banner-buttons');
+    if (oldButtons) oldButtons.remove();
+    
+    const banner = document.querySelector('#page-header');
+    if (banner && banner.classList.contains('full_page')) {
+      const buttonsHTML = `
+        <div class="custom-banner-buttons">
+          <a href="/categories/技术笔记/" class="custom-btn">技术笔记</a>
+          <a href="/categories/项目实战/" class="custom-btn">项目实战</a>
+          <a href="/categories/随笔杂谈/" class="custom-btn">随笔杂谈</a>
+        </div>
+      `;
+      banner.insertAdjacentHTML('beforeend', buttonsHTML);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', insertBannerButtons);
+  document.addEventListener('pjax:complete', insertBannerButtons);
+</script>
+<script>
+  function renameAnnouncement() {
+    const title = document.querySelector('.card-announcement .item-headline');
+    if (title) title.innerHTML = '<i class="fas fa-bullhorn"></i> 个人简介';
+  }
+  document.addEventListener('DOMContentLoaded', renameAnnouncement);
+  document.addEventListener('pjax:complete', renameAnnouncement);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
