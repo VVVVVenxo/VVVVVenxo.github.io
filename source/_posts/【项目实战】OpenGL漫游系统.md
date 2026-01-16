@@ -76,8 +76,9 @@ description: 基于C++与Modern OpenGL构建的大规模自然场景实时漫游
 RoamingSystem/
 ├── src/
 │   ├── main.cpp                    # 程序入口
-│   ├── Application.h/cpp           # 应用框架基类（Game Loop、GLFW、ImGui）
-│   ├── RoamingApp.h/cpp            # 主应用类（渲染逻辑）
+│   ├── App/                        # 应用层
+│   │   ├── Application.h/cpp       # 应用框架基类（Game Loop、GLFW、ImGui）
+│   │   └── RoamingApp.h/cpp        # 主应用类（渲染逻辑）
 │   ├── Core/                       # 核心引擎组件
 │   │   ├── Camera.h                # 第一人称摄像机
 │   │   ├── Shader.h/cpp            # 着色器程序管理
@@ -111,6 +112,11 @@ RoamingSystem/
 │   ├── heightmaps/                 # 高度图
 │   ├── textures/                   # 纹理
 │   └── skybox/                     # 天空盒
+├── third_party/                    # 第三方库
+│   └── imgui/                      # Dear ImGui
+├── docs/                           # 文档
+│   ├── Technical/                  # 技术文档
+│   └── Paper/                      # 论文相关
 └── scripts/
     └── package.bat                 # 打包脚本
 ```
