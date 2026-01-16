@@ -1,0 +1,385 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【CSharp】迭代器 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="理解 C# 迭代器模式：IEnumerable&#x2F;IEnumerator 接口、foreach 的本质，以及 yield return 语法糖的实现原理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CSharp】迭代器">
+<meta property="og:url" content="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E8%BF%AD%E4%BB%A3%E5%99%A8/index.html">
+<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
+<meta property="og:description" content="理解 C# 迭代器模式：IEnumerable&#x2F;IEnumerator 接口、foreach 的本质，以及 yield return 语法糖的实现原理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/earth.jpg">
+<meta property="article:published_time" content="2025-06-05T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-16T03:32:23.693Z">
+<meta property="article:author" content="VVVVVenxo">
+<meta property="article:tag" content="迭代器">
+<meta property="article:tag" content="yield">
+<meta property="article:tag" content="foreach">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/earth.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【CSharp】迭代器",
+  "url": "https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E8%BF%AD%E4%BB%A3%E5%99%A8/",
+  "image": "https://vvvvvenxo.github.io/img/covers/earth.jpg",
+  "datePublished": "2025-06-05T00:00:00.000Z",
+  "dateModified": "2026-01-16T03:32:23.693Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "VVVVVenxo",
+      "url": "https://VVVVVenxo.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E8%BF%AD%E4%BB%A3%E5%99%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【CSharp】迭代器',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="referrer" content="no-referrer"><style>
+  #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #1d1d1f; }
+  #article-container li { font-size: 18px; line-height: 1.8; color: #1d1d1f; }
+  .recent-posts .recent-post-item { padding: 20px 30px !important; }
+  #page-header.not-top-img { margin-bottom: 10px; }
+  body { color: #1d1d1f; }
+</style>
+<style>
+  .custom-banner-buttons {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 2;
+    max-width: 90%;
+  }
+  .custom-btn {
+    padding: 14px 32px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.85);
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+    backdrop-filter: blur(12px);
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .custom-btn:hover {
+    background: rgba(255,255,255,0.95);
+    color: #2563eb;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    border-color: white;
+  }
+  @media screen and (max-width: 768px) {
+    .custom-banner-buttons {
+      gap: 12px;
+      top: 70%;
+    }
+    .custom-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+</style>
+<meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #fafafa;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">63</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/earth.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【CSharp】迭代器</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【CSharp】迭代器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-16T03:32:23.693Z" title="更新于 2026-01-16 03:32:23">2026-01-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/C/">C#</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">817</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="什么是迭代器？"><a href="#什么是迭代器？" class="headerlink" title="什么是迭代器？"></a>什么是迭代器？</h2><p>迭代器（Iterator）是一种设计模式，提供一种方法顺序访问聚合对象中的各个元素，而又<strong>不暴露内部结构</strong>。</p>
+<p>在 C# 中，迭代器通过 <code>IEnumerable</code> 和 <code>IEnumerator</code> 接口实现。</p>
+<hr>
+<h2 id="IEnumerable-与-IEnumerator"><a href="#IEnumerable-与-IEnumerator" class="headerlink" title="IEnumerable 与 IEnumerator"></a>IEnumerable 与 IEnumerator</h2><h3 id="接口定义"><a href="#接口定义" class="headerlink" title="接口定义"></a>接口定义</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 可枚举对象</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IEnumerable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">IEnumerator <span class="title">GetEnumerator</span>()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 枚举器</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IEnumerator</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">object</span> Current &#123; <span class="keyword">get</span>; &#125;    <span class="comment">// 当前元素</span></span><br><span class="line">    <span class="function"><span class="built_in">bool</span> <span class="title">MoveNext</span>()</span>;           <span class="comment">// 移动到下一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Reset</span>()</span>;              <span class="comment">// 重置到初始位置</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="手动实现示例"><a href="#手动实现示例" class="headerlink" title="手动实现示例"></a>手动实现示例</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyCollection</span> : <span class="title">IEnumerable</span>, <span class="title">IEnumerator</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">string</span>[] items = &#123; <span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span> &#125;;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> position = <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// IEnumerable</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IEnumerator <span class="title">GetEnumerator</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Reset();  <span class="comment">// 每次获取枚举器时重置</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// IEnumerator - 当前元素</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">object</span> Current</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; <span class="keyword">return</span> items[position]; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// IEnumerator - 移动到下一个</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">MoveNext</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        position++;</span><br><span class="line">        <span class="keyword">return</span> position &lt; items.Length;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// IEnumerator - 重置</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Reset</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        position = <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="foreach-的本质"><a href="#foreach-的本质" class="headerlink" title="foreach 的本质"></a>foreach 的本质</h2><p><code>foreach</code> 循环是语法糖，编译器会将其转换为对迭代器接口的调用。</p>
+<h3 id="foreach-语法"><a href="#foreach-语法" class="headerlink" title="foreach 语法"></a>foreach 语法</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> collection)</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(item);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译器展开后"><a href="#编译器展开后" class="headerlink" title="编译器展开后"></a>编译器展开后</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">IEnumerator enumerator = collection.GetEnumerator();</span><br><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span> (enumerator.MoveNext())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> item = enumerator.Current;</span><br><span class="line">        Console.WriteLine(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">finally</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 如果实现了 IDisposable，则调用 Dispose</span></span><br><span class="line">    <span class="keyword">if</span> (enumerator <span class="keyword">is</span> IDisposable disposable)</span><br><span class="line">    &#123;</span><br><span class="line">        disposable.Dispose();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h3><ol>
+<li>调用 <code>GetEnumerator()</code> 获取枚举器</li>
+<li>调用 <code>MoveNext()</code> 移动到下一个元素</li>
+<li>如果 <code>MoveNext()</code> 返回 <code>true</code>，获取 <code>Current</code> 赋值给循环变量</li>
+<li>重复步骤 2-3，直到 <code>MoveNext()</code> 返回 <code>false</code></li>
+</ol>
+<hr>
+<h2 id="yield-return-语法糖"><a href="#yield-return-语法糖" class="headerlink" title="yield return 语法糖"></a>yield return 语法糖</h2><p>C# 2.0 引入了 <code>yield</code> 关键字，可以更简洁地实现迭代器。</p>
+<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyCollection</span> : <span class="title">IEnumerable</span>&lt;<span class="title">string</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">string</span>[] items = &#123; <span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span> &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IEnumerator&lt;<span class="built_in">string</span>&gt; <span class="title">GetEnumerator</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; items.Length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">yield</span> <span class="keyword">return</span> items[i];  <span class="comment">// 暂停并返回当前值</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    IEnumerator IEnumerable.GetEnumerator() =&gt; GetEnumerator();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="yield-的工作原理"><a href="#yield-的工作原理" class="headerlink" title="yield 的工作原理"></a>yield 的工作原理</h3><p><code>yield return</code> 会让方法”暂停”，保留当前状态：</p>
+<ol>
+<li>第一次调用 <code>MoveNext()</code> 时，执行到第一个 <code>yield return</code></li>
+<li>返回值赋给 <code>Current</code>，方法暂停</li>
+<li>下次调用 <code>MoveNext()</code> 时，从暂停处继续执行</li>
+<li>遇到下一个 <code>yield return</code> 或方法结束</li>
+</ol>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> IEnumerable&lt;<span class="built_in">int</span>&gt; <span class="title">GetNumbers</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;开始&quot;</span>);</span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;第一个之后&quot;</span>);</span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;第二个之后&quot;</span>);</span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;结束&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line"><span class="keyword">foreach</span> (<span class="function"><span class="keyword">var</span> num <span class="keyword">in</span> <span class="title">GetNumbers</span>())</span></span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">$&quot;得到: <span class="subst">&#123;num&#125;</span>&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line"><span class="comment">// 开始</span></span><br><span class="line"><span class="comment">// 得到: 1</span></span><br><span class="line"><span class="comment">// 第一个之后</span></span><br><span class="line"><span class="comment">// 得到: 2</span></span><br><span class="line"><span class="comment">// 第二个之后</span></span><br><span class="line"><span class="comment">// 得到: 3</span></span><br><span class="line"><span class="comment">// 结束</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="yield-break"><a href="#yield-break" class="headerlink" title="yield break"></a>yield break</h3><p>用于提前终止迭代：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> IEnumerable&lt;<span class="built_in">int</span>&gt; <span class="title">GetNumbersUntilZero</span>(<span class="params"><span class="built_in">int</span>[] numbers</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> num <span class="keyword">in</span> numbers)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (num == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">yield</span> <span class="keyword">break</span>;  <span class="comment">// 终止迭代</span></span><br><span class="line">        <span class="keyword">yield</span> <span class="keyword">return</span> num;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="延迟执行（Lazy-Evaluation）"><a href="#延迟执行（Lazy-Evaluation）" class="headerlink" title="延迟执行（Lazy Evaluation）"></a>延迟执行（Lazy Evaluation）</h2><p>使用 <code>yield</code> 实现的迭代器具有<strong>延迟执行</strong>特性：元素只在需要时才计算。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> IEnumerable&lt;<span class="built_in">int</span>&gt; <span class="title">GetInfiniteNumbers</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">yield</span> <span class="keyword">return</span> i++;  <span class="comment">// 无限序列</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 只取前 5 个</span></span><br><span class="line"><span class="keyword">foreach</span> (<span class="function"><span class="keyword">var</span> num <span class="keyword">in</span> <span class="title">GetInfiniteNumbers</span>().<span class="title">Take</span>(<span class="params"><span class="number">5</span></span>))</span></span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(num);  <span class="comment">// 0, 1, 2, 3, 4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>节省内存：不需要一次性生成所有元素</li>
+<li>支持无限序列</li>
+<li>与 LINQ 完美配合</li>
+</ul>
+<hr>
+<h2 id="泛型版本"><a href="#泛型版本" class="headerlink" title="泛型版本"></a>泛型版本</h2><p>实际开发中推荐使用泛型版本：</p>
+<table>
+<thead>
+<tr>
+<th>接口</th>
+<th>泛型版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>IEnumerable</code></td>
+<td><code>IEnumerable&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>IEnumerator</code></td>
+<td><code>IEnumerator&lt;T&gt;</code></td>
+</tr>
+</tbody></table>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyList</span>&lt;<span class="title">T</span>&gt; : <span class="title">IEnumerable</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> T[] items;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IEnumerator&lt;T&gt; <span class="title">GetEnumerator</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> items)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">yield</span> <span class="keyword">return</span> item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    IEnumerator IEnumerable.GetEnumerator() =&gt; GetEnumerator();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E8%BF%AD%E4%BB%A3%E5%99%A8/">https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E8%BF%AD%E4%BB%A3%E5%99%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%BF%AD%E4%BB%A3%E5%99%A8/">迭代器</a><a class="post-meta__tags" href="/tags/yield/">yield</a><a class="post-meta__tags" href="/tags/foreach/">foreach</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/earth.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/05/%E3%80%90Unity%E3%80%91Canvas%E6%B8%B2%E6%9F%93%E6%A8%A1%E5%BC%8F/" title="【Unity】Canvas 渲染模式"><img class="cover" src="/img/covers/game.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【Unity】Canvas 渲染模式</div></div><div class="info-2"><div class="info-item-1">Canvas 渲染模式1. Screen Space - OverlayUI 元素直接渲染到屏幕上，不依赖任何相机，始终覆盖在所有 3D 场景内容之上。 特点：  渲染层级最高，不会被场景中的任何物体遮挡 Canvas 会自动适配屏幕分辨率 无法实现 UI 与 3D 物体的穿插效果  适用场景：常规 HUD 界面、弹窗、菜单等需要始终显示在最前方的 UI。  2. Screen Space - CameraUI 元素由指定的相机进行渲染，Canvas 会被放置在相机前方的一个平面上（通过 Plane Distance 参数控制距离）。 特点：  可以控制 UI 与其他渲染层的前后关系 当相机设置为 Perspective（透视模式） 时，调整 UI 元素的 Rotation 可以呈现 3D 立体效果 Canvas 的 RectTransform 不可直接编辑，需通过相机或 Plane Distance 参数调整显示效果  适用场景：需要 UI 与粒子特效、3D 模型产生层级穿插的界面，或需要透视效果的 UI 动画。  3. World SpaceCanvas 作为普通的 3D 物...</div></div></div></a><a class="pagination-related" href="/2025/06/05/%E3%80%90CSharp%E3%80%91.NET%E5%B9%B3%E5%8F%B0/" title="【CSharp】.NET 平台"><img class="cover" src="/img/covers/earth.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【CSharp】.NET 平台</div></div><div class="info-2"><div class="info-item-1">.NET 平台概述.NET 是微软推出的开发平台，支持多种编程语言（C#、F#、VB.NET 等）开发各类应用程序。 核心组件12345678910111213141516171819┌─────────────────────────────────────────────────────────┐│                    开发语言层                            ││         C#      F#      VB.NET      C++/CLI            │└─────────────────────────────────────────────────────────┘                           ↓ 编译┌─────────────────────────────────────────────────────────┐│                    CIL (中间语言)                        ││               Common Inter...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">63</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div style="text-align: left; font-size: 14px; line-height: 1.9;">
+  <b>🎓 软件工程</b><br><br>
+  <b>💼 实习经历：</b><br>
+  • 游族网络<br>
+  <span style="color:#888; font-size:12px;">2025.06 - 2025.08</span><br>
+  • XD 网络<br>
+  <span style="color:#888; font-size:12px;">2025.08 - 2026.01</span><br>
+  • 叠纸游戏（在职）<br>
+  <span style="color:#888; font-size:12px;">2026.01 - 至今</span><br><br>
+  <b>🔥 兴趣方向：</b><br>
+  • 🎮 游戏开发<br>
+  • 🤖 人工智能<br>
+  • 🎨 计算机图形学<br><br>
+  <hr style="border:none; border-top:1px dashed #ccc; margin:8px 0;">
+  <center style="color:#999; font-size:12px;">--- 请不要开盒我 ---</center>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%BF%AD%E4%BB%A3%E5%99%A8%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">什么是迭代器？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IEnumerable-%E4%B8%8E-IEnumerator"><span class="toc-number">2.</span> <span class="toc-text">IEnumerable 与 IEnumerator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%AE%9A%E4%B9%89"><span class="toc-number">2.1.</span> <span class="toc-text">接口定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text">手动实现示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#foreach-%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="toc-number">3.</span> <span class="toc-text">foreach 的本质</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#foreach-%E8%AF%AD%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">foreach 语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E5%B1%95%E5%BC%80%E5%90%8E"><span class="toc-number">3.2.</span> <span class="toc-text">编译器展开后</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">3.3.</span> <span class="toc-text">执行流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#yield-return-%E8%AF%AD%E6%B3%95%E7%B3%96"><span class="toc-number">4.</span> <span class="toc-text">yield return 语法糖</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text">基本用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yield-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">4.2.</span> <span class="toc-text">yield 的工作原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yield-break"><span class="toc-number">4.3.</span> <span class="toc-text">yield break</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%B6%E8%BF%9F%E6%89%A7%E8%A1%8C%EF%BC%88Lazy-Evaluation%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">延迟执行（Lazy Evaluation）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">5.1.</span> <span class="toc-text">优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B%E7%89%88%E6%9C%AC"><span class="toc-number">6.</span> <span class="toc-text">泛型版本</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"><img src="/img/covers/Roaming.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"/></a><div class="content"><a class="title" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统">【项目实战】基于OpenGL的大规模自然场景实时漫游系统</a><time datetime="2026-01-15T00:00:00.000Z" title="发表于 2026-01-15 00:00:00">2026-01-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91Static%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】Static 关键字"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】Static 关键字"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91Static%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】Static 关键字">【C++】Static 关键字</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="【C++】内存管理"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】内存管理"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="【C++】内存管理">【C++】内存管理</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%B7%A6%E5%80%BC%E4%B8%8E%E5%8F%B3%E5%80%BC/" title="【C++】左值与右值"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】左值与右值"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%B7%A6%E5%80%BC%E4%B8%8E%E5%8F%B3%E5%80%BC/" title="【C++】左值与右值">【C++】左值与右值</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】常用关键字"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】常用关键字"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】常用关键字">【C++】常用关键字</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script>
+  function insertBannerButtons() {
+    const oldButtons = document.querySelector('.custom-banner-buttons');
+    if (oldButtons) oldButtons.remove();
+    
+    const banner = document.querySelector('#page-header');
+    if (banner && banner.classList.contains('full_page')) {
+      const buttonsHTML = `
+        <div class="custom-banner-buttons">
+          <a href="/categories/技术笔记/" class="custom-btn">技术笔记</a>
+          <a href="/categories/项目实战/" class="custom-btn">项目实战</a>
+          <a href="/categories/随笔杂谈/" class="custom-btn">随笔杂谈</a>
+        </div>
+      `;
+      banner.insertAdjacentHTML('beforeend', buttonsHTML);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', insertBannerButtons);
+  document.addEventListener('pjax:complete', insertBannerButtons);
+</script>
+<script>
+  function renameAnnouncement() {
+    const title = document.querySelector('.card-announcement .item-headline');
+    if (title) title.innerHTML = '<i class="fas fa-bullhorn"></i> 个人简介';
+  }
+  document.addEventListener('DOMContentLoaded', renameAnnouncement);
+  document.addEventListener('pjax:complete', renameAnnouncement);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

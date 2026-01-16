@@ -1,0 +1,410 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【C++】智能指针 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="详解 C++ 智能指针：shared_ptr、unique_ptr 和 weak_ptr 的原理、使用场景及如何解决内存泄漏和循环引用问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【C++】智能指针">
+<meta property="og:url" content="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/index.html">
+<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
+<meta property="og:description" content="详解 C++ 智能指针：shared_ptr、unique_ptr 和 weak_ptr 的原理、使用场景及如何解决内存泄漏和循环引用问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/keyboard.jpg">
+<meta property="article:published_time" content="2025-06-05T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-16T03:32:23.693Z">
+<meta property="article:author" content="VVVVVenxo">
+<meta property="article:tag" content="内存管理">
+<meta property="article:tag" content="智能指针">
+<meta property="article:tag" content="RAII">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/keyboard.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【C++】智能指针",
+  "url": "https://vvvvvenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/",
+  "image": "https://vvvvvenxo.github.io/img/covers/keyboard.jpg",
+  "datePublished": "2025-06-05T00:00:00.000Z",
+  "dateModified": "2026-01-16T03:32:23.693Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "VVVVVenxo",
+      "url": "https://VVVVVenxo.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【C++】智能指针',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="referrer" content="no-referrer"><style>
+  #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #1d1d1f; }
+  #article-container li { font-size: 18px; line-height: 1.8; color: #1d1d1f; }
+  .recent-posts .recent-post-item { padding: 20px 30px !important; }
+  #page-header.not-top-img { margin-bottom: 10px; }
+  body { color: #1d1d1f; }
+</style>
+<style>
+  .custom-banner-buttons {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 2;
+    max-width: 90%;
+  }
+  .custom-btn {
+    padding: 14px 32px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.85);
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+    backdrop-filter: blur(12px);
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .custom-btn:hover {
+    background: rgba(255,255,255,0.95);
+    color: #2563eb;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    border-color: white;
+  }
+  @media screen and (max-width: 768px) {
+    .custom-banner-buttons {
+      gap: 12px;
+      top: 70%;
+    }
+    .custom-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+</style>
+<meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #fafafa;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">63</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/keyboard.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【C++】智能指针</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【C++】智能指针</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-16T03:32:23.693Z" title="更新于 2026-01-16 03:32:23">2026-01-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/C/">C++</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">751</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="为什么需要智能指针？"><a href="#为什么需要智能指针？" class="headerlink" title="为什么需要智能指针？"></a>为什么需要智能指针？</h2><p>手动管理内存（<code>new</code>&#x2F;<code>delete</code>）容易导致：</p>
+<ul>
+<li><strong>内存泄漏</strong>：忘记释放内存</li>
+<li><strong>悬空指针</strong>：释放后继续使用</li>
+<li><strong>重复释放</strong>：同一块内存被释放多次</li>
+</ul>
+<p>智能指针利用 <strong>RAII（资源获取即初始化）</strong> 机制，在对象离开作用域时自动调用析构函数释放内存。</p>
+<hr>
+<h2 id="三种智能指针"><a href="#三种智能指针" class="headerlink" title="三种智能指针"></a>三种智能指针</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>所有权</th>
+<th>引用计数</th>
+<th>典型场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>shared_ptr</code></td>
+<td>共享</td>
+<td>有</td>
+<td>多个对象共享同一资源</td>
+</tr>
+<tr>
+<td><code>unique_ptr</code></td>
+<td>独占</td>
+<td>无</td>
+<td>资源只能有一个所有者</td>
+</tr>
+<tr>
+<td><code>weak_ptr</code></td>
+<td>无所有权</td>
+<td>观察</td>
+<td>打破循环引用</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="shared-ptr：共享所有权"><a href="#shared-ptr：共享所有权" class="headerlink" title="shared_ptr：共享所有权"></a>shared_ptr：共享所有权</h2><p>多个 <code>shared_ptr</code> 可以指向同一个对象，通过<strong>引用计数</strong>管理生命周期。当最后一个 <code>shared_ptr</code> 销毁时，对象被释放。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> sp1 = std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="number">42</span>);  <span class="comment">// 引用计数 = 1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span> sp2 = sp1;   <span class="comment">// 引用计数 = 2</span></span><br><span class="line">    <span class="keyword">auto</span> sp3 = sp1;   <span class="comment">// 引用计数 = 3</span></span><br><span class="line">&#125;  <span class="comment">// sp2, sp3 离开作用域，引用计数 = 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// sp1 离开作用域时，引用计数 = 0，内存被释放</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sp.<span class="built_in">use_count</span>()  <span class="comment">// 获取引用计数</span></span><br><span class="line">sp.<span class="built_in">reset</span>()      <span class="comment">// 释放所有权，引用计数 -1</span></span><br><span class="line">sp.<span class="built_in">get</span>()        <span class="comment">// 获取原始指针</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="unique-ptr：独占所有权"><a href="#unique-ptr：独占所有权" class="headerlink" title="unique_ptr：独占所有权"></a>unique_ptr：独占所有权</h2><p>同一时间只能有一个 <code>unique_ptr</code> 拥有对象。<strong>不能拷贝，只能移动</strong>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> up1 = std::<span class="built_in">make_unique</span>&lt;<span class="type">int</span>&gt;(<span class="number">42</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// auto up2 = up1;  // 编译错误！不能拷贝</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> up2 = std::<span class="built_in">move</span>(up1);  <span class="comment">// 转移所有权</span></span><br><span class="line"><span class="comment">// 此时 up1 == nullptr</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><ul>
+<li>工厂函数返回值</li>
+<li>类成员的独占资源</li>
+<li>容器中存储多态对象</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">std::unique_ptr&lt;Widget&gt; <span class="title">createWidget</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">make_unique</span>&lt;Widget&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="weak-ptr：弱引用"><a href="#weak-ptr：弱引用" class="headerlink" title="weak_ptr：弱引用"></a>weak_ptr：弱引用</h2><p><code>weak_ptr</code> 是对 <code>shared_ptr</code> 管理对象的弱引用，<strong>不增加引用计数</strong>，用于解决循环引用问题。</p>
+<h3 id="循环引用问题"><a href="#循环引用问题" class="headerlink" title="循环引用问题"></a>循环引用问题</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>;  <span class="comment">// 前向声明</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    std::shared_ptr&lt;B&gt; ptrB;</span><br><span class="line">    ~<span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;A destroyed&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    std::shared_ptr&lt;A&gt; ptrA;  <span class="comment">// 循环引用！</span></span><br><span class="line">    ~<span class="built_in">B</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;B destroyed&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> a = std::<span class="built_in">make_shared</span>&lt;A&gt;();</span><br><span class="line">    <span class="keyword">auto</span> b = std::<span class="built_in">make_shared</span>&lt;B&gt;();</span><br><span class="line">    a-&gt;ptrB = b;</span><br><span class="line">    b-&gt;ptrA = a;</span><br><span class="line">    <span class="comment">// 离开作用域时，A 和 B 都不会被释放！（内存泄漏）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-weak-ptr-解决"><a href="#使用-weak-ptr-解决" class="headerlink" title="使用 weak_ptr 解决"></a>使用 weak_ptr 解决</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    std::weak_ptr&lt;A&gt; ptrA;  <span class="comment">// 改为 weak_ptr</span></span><br><span class="line">    ~<span class="built_in">B</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;B destroyed&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 现在可以正常释放</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="weak-ptr-常用操作"><a href="#weak-ptr-常用操作" class="headerlink" title="weak_ptr 常用操作"></a>weak_ptr 常用操作</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">std::shared_ptr&lt;<span class="type">int</span>&gt; sp = std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="number">42</span>);</span><br><span class="line">std::weak_ptr&lt;<span class="type">int</span>&gt; wp = sp;</span><br><span class="line"></span><br><span class="line">wp.<span class="built_in">expired</span>()   <span class="comment">// 检查对象是否已被释放</span></span><br><span class="line">wp.<span class="built_in">lock</span>()      <span class="comment">// 获取 shared_ptr（如果对象还在）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">auto</span> locked = wp.<span class="built_in">lock</span>()) &#123;</span><br><span class="line">    <span class="comment">// 安全使用 *locked</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="使用建议"><a href="#使用建议" class="headerlink" title="使用建议"></a>使用建议</h2><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐使用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>资源独占，无需共享</td>
+<td><code>unique_ptr</code></td>
+</tr>
+<tr>
+<td>多处共享同一资源</td>
+<td><code>shared_ptr</code></td>
+</tr>
+<tr>
+<td>打破循环引用、缓存、观察者</td>
+<td><code>weak_ptr</code></td>
+</tr>
+<tr>
+<td>优先使用</td>
+<td><code>make_shared</code> &#x2F; <code>make_unique</code></td>
+</tr>
+</tbody></table>
+<p><strong>注意</strong>：避免用原始指针初始化多个智能指针，会导致重复释放。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>* raw = <span class="keyword">new</span> <span class="built_in">int</span>(<span class="number">42</span>);</span><br><span class="line"><span class="function">std::shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">sp1</span><span class="params">(raw)</span></span>;</span><br><span class="line"><span class="function">std::shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">sp2</span><span class="params">(raw)</span></span>;  <span class="comment">// 危险！两个独立的引用计数</span></span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/">https://vvvvvenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理</a><a class="post-meta__tags" href="/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/">智能指针</a><a class="post-meta__tags" href="/tags/RAII/">RAII</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/keyboard.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/05/%E3%80%90C++%E3%80%91%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" title="【C++】类型转换"><img class="cover" src="/img/covers/keyboard.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【C++】类型转换</div></div><div class="info-2"><div class="info-item-1">四种类型转换关键字C++ 提供了四种类型转换运算符，用于替代 C 风格的强制类型转换，提供更明确的语义和更好的类型安全。 总览对比   转换类型 用途 安全性 检查时机    const_cast 去除&#x2F;添加 const 属性 中 编译期   static_cast 基本类型转换、类层次向上&#x2F;向下转换 中 编译期   dynamic_cast 类层次安全向下转换 高 运行期   reinterpret_cast 任意类型的二进制重新解释 低 无检查    const_cast用于去除或添加 const 属性，只能用于指针或引用。 12345678const int a = 10;int* p = const_cast&lt;int*&gt;(&amp;a);  // 去除 const*p = 20;  // 未定义行为（修改真正的 const 对象）int b = 10;const int* cp = &amp;b;int* mp = const_cast&lt;int*&gt;(cp);  // 合法，b 本身不是 const*mp = 30;  // OK...</div></div></div></a><a class="pagination-related" href="/2025/06/05/%E3%80%90C++%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/" title="【C++】整体框架"><img class="cover" src="/img/covers/code_dark.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【C++】整体框架</div></div><div class="info-2"><div class="info-item-1"> 本框架基于Primer C++第五版进行构建，正在逐步施工中，会超链接到已经完成的文章。  C++基础 变量 字符串 表达式 语句 函数类  C++标准库 IO库 顺序容器 泛型算法 关联容器 动态内存  C++类设计者的工具 拷贝控制 重载运算与类型转换 OOP程序设计 模板与泛型  C++11新特性 lambda表达式 auto nullptr  </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="【C++】内存管理"><img class="cover" src="/img/covers/keyboard.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-05</div><div class="info-item-2">【C++】内存管理</div></div><div class="info-2"><div class="info-item-1">C++ 中的内存分区   区域 说明    堆 (Heap) 使用 malloc&#x2F;free 动态分配和释放，能分配较大内存   栈 (Stack) 为函数局部变量分配内存，由系统自动管理，分配较小   全局&#x2F;静态区 存储全局变量和静态变量   常量区 存放常量（字符串字面量等）   自由存储区 通过 new&#x2F;delete 分配释放，可能是堆或内存池   堆和自由存储区的区别堆是 C 和操作系统的术语，自由存储区是 C++ 的术语，指通过 new&#x2F;delete 动态分配和释放对象的抽象概念。C++ 通常用堆实现自由存储，但程序员可以通过重载 operator new，改用其他内存实现（如对象池）。 堆和栈的区别   特性 堆 栈    管理方式 手动申请&#x2F;释放 系统自动管理   可分配大小 较大（32位约4GB） 较小（约1MB）   内存碎片 会产生 不会产生   分配效率 较低 较高   增长方向 低地址 → 高地址 高地址 → 低地址    内存泄漏 (Memory Leak)程序在运行过程中分配了内存空间，但在不再使用时没有...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">63</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div style="text-align: left; font-size: 14px; line-height: 1.9;">
+  <b>🎓 软件工程</b><br><br>
+  <b>💼 实习经历：</b><br>
+  • 游族网络<br>
+  <span style="color:#888; font-size:12px;">2025.06 - 2025.08</span><br>
+  • XD 网络<br>
+  <span style="color:#888; font-size:12px;">2025.08 - 2026.01</span><br>
+  • 叠纸游戏（在职）<br>
+  <span style="color:#888; font-size:12px;">2026.01 - 至今</span><br><br>
+  <b>🔥 兴趣方向：</b><br>
+  • 🎮 游戏开发<br>
+  • 🤖 人工智能<br>
+  • 🎨 计算机图形学<br><br>
+  <hr style="border:none; border-top:1px dashed #ccc; margin:8px 0;">
+  <center style="color:#999; font-size:12px;">--- 请不要开盒我 ---</center>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">为什么需要智能指针？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">2.</span> <span class="toc-text">三种智能指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-ptr%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%89%80%E6%9C%89%E6%9D%83"><span class="toc-number">3.</span> <span class="toc-text">shared_ptr：共享所有权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">3.1.</span> <span class="toc-text">常用操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unique-ptr%EF%BC%9A%E7%8B%AC%E5%8D%A0%E6%89%80%E6%9C%89%E6%9D%83"><span class="toc-number">4.</span> <span class="toc-text">unique_ptr：独占所有权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">4.1.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#weak-ptr%EF%BC%9A%E5%BC%B1%E5%BC%95%E7%94%A8"><span class="toc-number">5.</span> <span class="toc-text">weak_ptr：弱引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-number">5.1.</span> <span class="toc-text">循环引用问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-weak-ptr-%E8%A7%A3%E5%86%B3"><span class="toc-number">5.2.</span> <span class="toc-text">使用 weak_ptr 解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#weak-ptr-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">5.3.</span> <span class="toc-text">weak_ptr 常用操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="toc-number">6.</span> <span class="toc-text">使用建议</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"><img src="/img/covers/Roaming.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"/></a><div class="content"><a class="title" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统">【项目实战】基于OpenGL的大规模自然场景实时漫游系统</a><time datetime="2026-01-15T00:00:00.000Z" title="发表于 2026-01-15 00:00:00">2026-01-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91Static%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】Static 关键字"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】Static 关键字"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91Static%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】Static 关键字">【C++】Static 关键字</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="【C++】内存管理"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】内存管理"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="【C++】内存管理">【C++】内存管理</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%B7%A6%E5%80%BC%E4%B8%8E%E5%8F%B3%E5%80%BC/" title="【C++】左值与右值"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】左值与右值"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%B7%A6%E5%80%BC%E4%B8%8E%E5%8F%B3%E5%80%BC/" title="【C++】左值与右值">【C++】左值与右值</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】常用关键字"><img src="/img/covers/keyboard.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【C++】常用关键字"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90C++%E3%80%91%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/" title="【C++】常用关键字">【C++】常用关键字</a><time datetime="2025-06-05T00:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script>
+  function insertBannerButtons() {
+    const oldButtons = document.querySelector('.custom-banner-buttons');
+    if (oldButtons) oldButtons.remove();
+    
+    const banner = document.querySelector('#page-header');
+    if (banner && banner.classList.contains('full_page')) {
+      const buttonsHTML = `
+        <div class="custom-banner-buttons">
+          <a href="/categories/技术笔记/" class="custom-btn">技术笔记</a>
+          <a href="/categories/项目实战/" class="custom-btn">项目实战</a>
+          <a href="/categories/随笔杂谈/" class="custom-btn">随笔杂谈</a>
+        </div>
+      `;
+      banner.insertAdjacentHTML('beforeend', buttonsHTML);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', insertBannerButtons);
+  document.addEventListener('pjax:complete', insertBannerButtons);
+</script>
+<script>
+  function renameAnnouncement() {
+    const title = document.querySelector('.card-announcement .item-headline');
+    if (title) title.innerHTML = '<i class="fas fa-bullhorn"></i> 个人简介';
+  }
+  document.addEventListener('DOMContentLoaded', renameAnnouncement);
+  document.addEventListener('pjax:complete', renameAnnouncement);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
