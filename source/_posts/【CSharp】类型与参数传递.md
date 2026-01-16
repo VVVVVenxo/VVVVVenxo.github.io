@@ -1,5 +1,5 @@
 ---
-title: 【CSharp】值类型与引用类型
+title: 【CSharp】类型与参数传递
 toc: true
 categories:
   - 技术笔记
@@ -9,9 +9,10 @@ date: 2025-06-05
 tags:
   - 值类型
   - 引用类型
-  - struct
-  - class
-description: 理解 C# 中值类型与引用类型的区别：内存分配、参数传递行为，以及 struct 和 class 的对比。
+  - 参数传递
+  - ref
+  - out
+description: 理解 C# 中值类型与引用类型的区别、参数传递行为，以及 ref 和 out 关键字的用法。
 ---
 
 ## 值类型 vs 引用类型
@@ -68,7 +69,7 @@ description: 理解 C# 中值类型与引用类型的区别：内存分配、参
 
 ## 参数传递
 
-### 值类型参数
+### 值类型参数（值传递）
 
 传递值类型时，传递的是**值的副本**，修改不影响原值：
 
@@ -113,7 +114,48 @@ Modify(str);
 Console.WriteLine(str);  // 输出: original（未改变）
 ```
 
-**原因**：修改 `string` 会创建新对象，原引用不变。
+---
+
+## ref 和 out 关键字
+
+两者都是引用传递，实现上都是指针，区别在于**语义**。
+
+### ref 关键字
+
+`ref` 表示引用传递，函数内可以读取也可以修改。变量在传参前**必须初始化**。
+
+```csharp
+void AddTen(ref int number)
+{
+    number += 10;  // 可以读取，也可以修改
+}
+
+int value = 5;       // 必须先初始化
+AddTen(ref value);   // value 变为 15
+```
+
+### out 关键字
+
+`out` 表示输出参数（变相的多返回值）。变量在传参前**不需要初始化**，但函数内**必须赋值**。
+
+```csharp
+void GetValues(out int x, out int y)
+{
+    x = 10;  // 函数内必须赋值
+    y = 20;
+}
+
+int a, b;                  // 不需要初始化
+GetValues(out a, out b);   // a = 10, b = 20
+```
+
+### ref vs out 对比
+
+| 特性 | ref | out |
+|------|-----|-----|
+| 传参前是否需要初始化 | 是 | 否 |
+| 函数内是否必须赋值 | 否 | 是 |
+| 典型用途 | 修改已有变量 | 返回多个值 |
 
 ---
 
@@ -129,28 +171,22 @@ Console.WriteLine(str);  // 输出: original（未改变）
 | 赋值行为 | 复制全部数据 | 复制引用 |
 | 性能 | 小对象更快 | 大对象更合适 |
 
-### C# 中的 struct
+### struct 示例
 
 ```csharp
 struct Point
 {
     public int X;
     public int Y;
-    
-    public Point(int x, int y)
-    {
-        X = x;
-        Y = y;
-    }
 }
 
-Point p1 = new Point(10, 20);
+Point p1 = new Point { X = 10, Y = 20 };
 Point p2 = p1;  // 复制整个结构体
 p2.X = 100;
 Console.WriteLine(p1.X);  // 输出: 10（p1 未受影响）
 ```
 
-### C# 中的 class
+### class 示例
 
 ```csharp
 class PointClass
@@ -165,48 +201,14 @@ p2.X = 100;
 Console.WriteLine(p1.X);  // 输出: 100（p1 也改变了）
 ```
 
----
+### 何时使用 struct？
 
-## C++ 中的 struct vs class
-
-在 C++ 中，`struct` 和 `class` 几乎没有区别：
-
-| 特性 | struct | class |
-|------|--------|-------|
-| 默认访问权限 | `public` | `private` |
-| 默认继承方式 | `public` | `private` |
-| 其他功能 | 完全相同 | 完全相同 |
-
-```cpp
-// C++ 中两者功能完全相同
-struct MyStruct {
-    int value;  // 默认 public
-};
-
-class MyClass {
-    int value;  // 默认 private
-};
-```
-
-**对比 C#**：C# 中 `struct` 是值类型，`class` 是引用类型，差异巨大。
-
----
-
-## 何时使用 struct？
-
-### 推荐使用 struct 的场景
-
-- 数据量小（一般建议 16 字节以下）
-- 不需要继承
-- 表示单个值（如坐标、颜色）
-- 经常作为参数传递的小型数据
-
-### 推荐使用 class 的场景
-
-- 需要继承或多态
-- 对象较大
-- 需要引用语义
-- 生命周期需要跨越作用域
+| 场景 | 推荐类型 |
+|------|----------|
+| 数据量小（< 16 字节） | struct |
+| 不需要继承 | struct |
+| 需要继承或多态 | class |
+| 对象较大 | class |
 
 ---
 
@@ -216,18 +218,17 @@ class MyClass {
 
 ```csharp
 int value = 42;
-object boxed = value;     // 装箱：值类型 → 引用类型
-int unboxed = (int)boxed; // 拆箱：引用类型 → 值类型
+object boxed = value;     // 装箱
+int unboxed = (int)boxed; // 拆箱
 ```
 
-**性能影响**：装箱/拆箱有性能开销，应尽量避免。使用泛型可以避免装箱。
+**性能影响**：装箱/拆箱有性能开销，使用泛型可以避免：
 
 ```csharp
 // 避免装箱
 List<int> list = new List<int>();  // 泛型，无装箱
-list.Add(42);
 
 // 会装箱
-ArrayList oldList = new ArrayList();  // 非泛型
+ArrayList oldList = new ArrayList();
 oldList.Add(42);  // int 被装箱为 object
 ```
