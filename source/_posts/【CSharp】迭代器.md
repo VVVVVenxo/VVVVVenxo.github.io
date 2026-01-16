@@ -77,6 +77,32 @@ public class MyCollection : IEnumerable, IEnumerator
 }
 ```
 
+### 泛型版本
+
+实际开发中推荐使用泛型版本，提供类型安全：
+
+| 接口 | 泛型版本 |
+|------|----------|
+| `IEnumerable` | `IEnumerable<T>` |
+| `IEnumerator` | `IEnumerator<T>` |
+
+```csharp
+public class MyList<T> : IEnumerable<T>
+{
+    private T[] items;
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        foreach (var item in items)
+        {
+            yield return item;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+```
+
 ---
 
 ## foreach 的本质
@@ -227,31 +253,3 @@ foreach (var num in GetInfiniteNumbers().Take(5))
 - 节省内存：不需要一次性生成所有元素
 - 支持无限序列
 - 与 LINQ 完美配合
-
----
-
-## 泛型版本
-
-实际开发中推荐使用泛型版本：
-
-| 接口 | 泛型版本 |
-|------|----------|
-| `IEnumerable` | `IEnumerable<T>` |
-| `IEnumerator` | `IEnumerator<T>` |
-
-```csharp
-public class MyList<T> : IEnumerable<T>
-{
-    private T[] items;
-
-    public IEnumerator<T> GetEnumerator()
-    {
-        foreach (var item in items)
-        {
-            yield return item;
-        }
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-}
-```

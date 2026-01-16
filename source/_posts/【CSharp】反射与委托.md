@@ -32,6 +32,33 @@ description: 理解 C# 中的反射机制、委托与事件的区别，以及如
 - 序列化/反序列化
 - 依赖注入框架
 
+### 基本用法
+
+```csharp
+using System;
+using System.Reflection;
+
+public class MyClass
+{
+    private int value = 42;
+    public void SayHello(string name) => Console.WriteLine($"Hello, {name}!");
+}
+
+// 获取类型信息
+Type type = typeof(MyClass);
+
+// 动态创建实例
+object obj = Activator.CreateInstance(type);
+
+// 动态调用方法
+MethodInfo method = type.GetMethod("SayHello");
+method.Invoke(obj, new object[] { "World" });  // 输出: Hello, World!
+
+// 访问私有字段
+FieldInfo field = type.GetField("value", BindingFlags.NonPublic | BindingFlags.Instance);
+Console.WriteLine(field.GetValue(obj));  // 输出: 42
+```
+
 ---
 
 ## 委托（Delegate）
