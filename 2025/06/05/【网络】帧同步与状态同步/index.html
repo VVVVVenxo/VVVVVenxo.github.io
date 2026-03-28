@@ -1,0 +1,531 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【网络】帧同步与状态同步 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="详解游戏网络同步的两种主流方案：帧同步与状态同步的核心区别、优缺点对比，以及适用的游戏类型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【网络】帧同步与状态同步">
+<meta property="og:url" content="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E5%B8%A7%E5%90%8C%E6%AD%A5%E4%B8%8E%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5/index.html">
+<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
+<meta property="og:description" content="详解游戏网络同步的两种主流方案：帧同步与状态同步的核心区别、优缺点对比，以及适用的游戏类型。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/code_dark.jpg">
+<meta property="article:published_time" content="2025-06-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-18T06:32:03.502Z">
+<meta property="article:author" content="VVVVVenxo">
+<meta property="article:tag" content="网络同步">
+<meta property="article:tag" content="帧同步">
+<meta property="article:tag" content="状态同步">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/code_dark.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【网络】帧同步与状态同步",
+  "url": "https://vvvvvenxo.github.io/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E5%B8%A7%E5%90%8C%E6%AD%A5%E4%B8%8E%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5/",
+  "image": "https://vvvvvenxo.github.io/img/covers/code_dark.jpg",
+  "datePublished": "2025-06-04T16:00:00.000Z",
+  "dateModified": "2026-01-18T06:32:03.502Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "VVVVVenxo",
+      "url": "https://VVVVVenxo.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E5%B8%A7%E5%90%8C%E6%AD%A5%E4%B8%8E%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【网络】帧同步与状态同步',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="referrer" content="no-referrer"><style>
+  #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #1d1d1f; }
+  #article-container li { font-size: 18px; line-height: 1.8; color: #1d1d1f; }
+  .recent-posts .recent-post-item { padding: 20px 30px !important; }
+  #page-header.not-top-img { margin-bottom: 10px; }
+  body { color: #1d1d1f; }
+</style>
+<style>
+  .custom-banner-buttons {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 2;
+    max-width: 90%;
+  }
+  .custom-btn {
+    padding: 14px 32px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.85);
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+    backdrop-filter: blur(12px);
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .custom-btn:hover {
+    background: rgba(255,255,255,0.95);
+    color: #2563eb;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    border-color: white;
+  }
+  @media screen and (max-width: 768px) {
+    .custom-banner-buttons {
+      gap: 12px;
+      top: 70%;
+    }
+    .custom-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+</style>
+<meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #fafafa;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">87</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/code_dark.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【网络】帧同步与状态同步</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【网络】帧同步与状态同步</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-04T16:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-18T06:32:03.502Z" title="更新于 2026-01-18 14:32:03">2026-01-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E7%BD%91%E7%BB%9C/">网络</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">994</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="核心区别"><a href="#核心区别" class="headerlink" title="核心区别"></a>核心区别</h2><p>帧同步与状态同步最大的区别在于<strong>战斗逻辑的执行位置</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>同步方式</th>
+<th>战斗逻辑位置</th>
+<th>网络协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>帧同步</strong></td>
+<td>客户端</td>
+<td>一般基于 UDP</td>
+</tr>
+<tr>
+<td><strong>状态同步</strong></td>
+<td>服务端</td>
+<td>一般基于 TCP</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="帧同步（Lockstep）"><a href="#帧同步（Lockstep）" class="headerlink" title="帧同步（Lockstep）"></a>帧同步（Lockstep）</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><ul>
+<li>服务端<strong>只转发操作</strong>，不做任何逻辑处理</li>
+<li>所有客户端执行相同的输入，得到相同的结果</li>
+<li>要求逻辑<strong>严格确定性</strong>（Deterministic）</li>
+</ul>
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌─────────┐     操作输入     ┌─────────┐     广播操作     ┌─────────┐</span><br><span class="line">│ Client1 │ ───────────────► │ Server  │ ───────────────► │ Client2 │</span><br><span class="line">└─────────┘                  └─────────┘                  └─────────┘</span><br><span class="line">     │                            │                            │</span><br><span class="line">     │   执行逻辑                 │ (只转发)                   │ 执行逻辑</span><br><span class="line">     ▼                            │                            ▼</span><br><span class="line">  游戏状态                        │                         游戏状态</span><br></pre></td></tr></table></figure>
+
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>开发难度低（客户端独立开发）</li>
+<li>流量小（只传输操作）</li>
+<li>天然支持回放</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>客户端作弊难防</li>
+<li>浮点误差可能导致不同步</li>
+<li>断线重连复杂</li>
+</ul>
+<h3 id="代表游戏"><a href="#代表游戏" class="headerlink" title="代表游戏"></a>代表游戏</h3><ul>
+<li>王者荣耀</li>
+<li>魔兽争霸 3</li>
+<li>格斗游戏</li>
+<li>FPS 游戏</li>
+</ul>
+<hr>
+<h2 id="状态同步"><a href="#状态同步" class="headerlink" title="状态同步"></a>状态同步</h2><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><ul>
+<li>服务端执行战斗逻辑，计算游戏状态</li>
+<li>客户端是服务端数据的<strong>表现层</strong></li>
+<li>服务端定期同步状态给客户端</li>
+</ul>
+<h3 id="流程-1"><a href="#流程-1" class="headerlink" title="流程"></a>流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌─────────┐     操作输入     ┌─────────┐     状态数据     ┌─────────┐</span><br><span class="line">│ Client1 │ ───────────────► │ Server  │ ───────────────► │ Client2 │</span><br><span class="line">└─────────┘                  └─────────┘                  └─────────┘</span><br><span class="line">     │                            │                            │</span><br><span class="line">     │   表现层                   │ 执行逻辑                   │ 表现层</span><br><span class="line">     ▼                            ▼                            ▼</span><br><span class="line">  渲染游戏                    游戏状态                      渲染游戏</span><br></pre></td></tr></table></figure>
+
+<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>玩家作弊困难（服务端权威）</li>
+<li>断线重连简单（直接同步状态）</li>
+<li>允许小误差，定时纠正</li>
+</ul>
+<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>流量更大（需要发送状态数据）</li>
+<li>开发难度高（前后端配合）</li>
+<li>需要处理预测和回滚</li>
+</ul>
+<h3 id="代表游戏-1"><a href="#代表游戏-1" class="headerlink" title="代表游戏"></a>代表游戏</h3><ul>
+<li>MMO 游戏（魔兽世界）</li>
+<li>需要强反外挂的游戏</li>
+</ul>
+<hr>
+<h2 id="详细对比"><a href="#详细对比" class="headerlink" title="详细对比"></a>详细对比</h2><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>帧同步</th>
+<th>状态同步</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>确定性</strong></td>
+<td>严格确定</td>
+<td>允许小误差，定时纠正</td>
+</tr>
+<tr>
+<td><strong>响应速度</strong></td>
+<td>传统帧锁定需等待；乐观帧锁定可立即响应但需回滚</td>
+<td>可做预测立即响应；不做预测则响应 &#x3D; RTT</td>
+</tr>
+<tr>
+<td><strong>带宽流量</strong></td>
+<td>低，只传操作；随人数增加</td>
+<td>高，需传状态；可压缩优化</td>
+</tr>
+<tr>
+<td><strong>延迟适应</strong></td>
+<td>低延迟要求；高延迟下体验下降</td>
+<td>适应性高；高延迟可能位置突变</td>
+</tr>
+<tr>
+<td><strong>开发难度</strong></td>
+<td>初期简单；后期调 bug 困难（浮点误差、随机数、执行顺序）</td>
+<td>框架复杂；但问题定位容易</td>
+</tr>
+<tr>
+<td><strong>玩家数量</strong></td>
+<td>适合少量玩家（ACT、MOBA）</td>
+<td>可多可少</td>
+</tr>
+<tr>
+<td><strong>跨平台</strong></td>
+<td>不适合（浮点误差）；可用定点数</td>
+<td>适合（有权威服务器）</td>
+</tr>
+<tr>
+<td><strong>反外挂</strong></td>
+<td>不利反外挂；无法防透视</td>
+<td>效果较好；仍无法防透视</td>
+</tr>
+<tr>
+<td><strong>中途加入&#x2F;断线重连</strong></td>
+<td>复杂，需播放帧数据追进度</td>
+<td>简单，直接同步状态</td>
+</tr>
+<tr>
+<td><strong>客户端性能</strong></td>
+<td>需跑完整逻辑和渲染</td>
+<td>可灵活裁剪逻辑</td>
+</tr>
+<tr>
+<td><strong>离线回放</strong></td>
+<td>天然支持，回放文件小</td>
+<td>需记录状态，回放文件大</td>
+</tr>
+<tr>
+<td><strong>实时回放</strong></td>
+<td>复杂，需序列化全场状态</td>
+<td>相对简单，记录快照</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="选型建议"><a href="#选型建议" class="headerlink" title="选型建议"></a>选型建议</h2><table>
+<thead>
+<tr>
+<th>游戏类型</th>
+<th>推荐方案</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MOBA</td>
+<td>帧同步</td>
+<td>玩家少、实时性要求高</td>
+</tr>
+<tr>
+<td>FPS</td>
+<td>帧同步 + 服务端校验</td>
+<td>高实时性、需要反外挂</td>
+</tr>
+<tr>
+<td>格斗游戏</td>
+<td>帧同步 + GGPO 回滚</td>
+<td>极低延迟要求</td>
+</tr>
+<tr>
+<td>MMO</td>
+<td>状态同步</td>
+<td>大量玩家、需要强反外挂</td>
+</tr>
+<tr>
+<td>休闲游戏</td>
+<td>状态同步</td>
+<td>开发简单、作弊风险低</td>
+</tr>
+<tr>
+<td>RTS</td>
+<td>帧同步</td>
+<td>大量单位、流量考虑</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="混合方案"><a href="#混合方案" class="headerlink" title="混合方案"></a>混合方案</h2><p>实际项目中常采用混合方案：</p>
+<ul>
+<li><strong>帧同步 + 服务端校验</strong>：服务端也跑一份逻辑，用于反外挂</li>
+<li><strong>状态同步 + 客户端预测</strong>：客户端预测执行，服务端确认后纠正</li>
+<li><strong>关键数据状态同步 + 表现帧同步</strong>：关键逻辑服务端算，表现细节客户端算</li>
+</ul>
+<hr>
+<h2 id="确定性问题（帧同步）"><a href="#确定性问题（帧同步）" class="headerlink" title="确定性问题（帧同步）"></a>确定性问题（帧同步）</h2><p>帧同步要求所有客户端执行结果完全一致，需要注意：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>浮点误差</td>
+<td>使用定点数（Fixed Point）</td>
+</tr>
+<tr>
+<td>随机数</td>
+<td>使用确定性随机（种子同步）</td>
+</tr>
+<tr>
+<td>执行顺序</td>
+<td>确保逻辑执行顺序一致</td>
+</tr>
+<tr>
+<td>物理引擎</td>
+<td>使用确定性物理库</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E5%B8%A7%E5%90%8C%E6%AD%A5%E4%B8%8E%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5/">https://vvvvvenxo.github.io/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E5%B8%A7%E5%90%8C%E6%AD%A5%E4%B8%8E%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%90%8C%E6%AD%A5/">网络同步</a><a class="post-meta__tags" href="/tags/%E5%B8%A7%E5%90%8C%E6%AD%A5/">帧同步</a><a class="post-meta__tags" href="/tags/%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5/">状态同步</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/code_dark.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/05/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81%E5%8E%8B%E7%BC%A9%E7%B3%BB%E7%BB%9F/" title="【项目实战】哈夫曼编码压缩系统"><img class="cover" src="/img/covers/keyboard.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【项目实战】哈夫曼编码压缩系统</div></div><div class="info-2"><div class="info-item-1">项目概述这是一个基于哈夫曼编码算法实现的文件压缩&#x2F;解压工具，作为数据结构课程设计项目。 功能特性   功能 说明    文件压缩 使用哈夫曼编码对文本文件进行压缩   文件解压 将压缩文件还原为原始文本   文件比较 验证解压后的文件与原文件是否一致   压缩率显示 压缩完成后显示压缩率   项目结构12345678HuffmanCompression/├── CMakeLists.txt          # CMake 构建配置├── compressionDefine.h     # 头文件：数据结构和常量定义├── main.cpp                # 程序入口和菜单交互├── menu.cpp                # 菜单显示├── Compression.cpp         # 压缩功能实现├── Decompression.cpp       # 解压功能实现└── Check.cpp               # 文件比较功能   核心数据结构哈夫曼树节点1234567typedef struct HTNode&#123; ...</div></div></div></a><a class="pagination-related" href="/2025/06/05/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E5%93%88%E5%B8%8C%E8%A1%A8/" title="【数据结构】哈希表"><img class="cover" src="/img/covers/code_dark.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【数据结构】哈希表</div></div><div class="info-2"><div class="info-item-1">什么是哈希表？哈希表（Hash Table）是一种通过哈希函数将键（Key）映射到数组索引位置的数据结构，能够实现快速的查找、插入和删除操作。 基本结构12345678910111213┌──────────────────────────────────────┐│  Key  ──► Hash Function ──► Index   │└──────────────────────────────────────┘  &quot;apple&quot; ──► hash(&quot;apple&quot;) ──► 3  &quot;banana&quot; ──► hash(&quot;banana&quot;) ──► 7  &quot;cherry&quot; ──► hash(&quot;cherry&quot;) ──► 1数组:  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┐  │   │cherry│   │apple│   │   │   │banana│   │  └───┴───┴───┴───┴───┴───┴───┴──...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">87</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div style="text-align: left; font-size: 14px; line-height: 1.9;">
+  <b>🎓 软件工程</b><br><br>
+  <b>💼 实习经历</b><br>
+  • 叠纸游戏（在职）<br>
+  <span style="color:#888; font-size:12px;">2026.01 - 至今</span><br>
+  • XD 网络<br>
+  <span style="color:#888; font-size:12px;">2025.08 - 2026.01</span><br>
+  • 游族网络<br>
+  <span style="color:#888; font-size:12px;">2025.06 - 2025.08</span><br>
+  <b>🔥 兴趣方向</b><br>
+  • 🎮 游戏开发<br>
+  • 🤖 人工智能<br>
+  • 🎨 计算机图形学<br><br>
+  <hr style="border:none; border-top:1px dashed #ccc; margin:8px 0;">
+  <center style="color:#999; font-size:12px;">--- 请不要开盒我 ---</center>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB"><span class="toc-number">1.</span> <span class="toc-text">核心区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A7%E5%90%8C%E6%AD%A5%EF%BC%88Lockstep%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">帧同步（Lockstep）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">2.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B"><span class="toc-number">2.2.</span> <span class="toc-text">流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">2.3.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">2.4.</span> <span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E8%A1%A8%E6%B8%B8%E6%88%8F"><span class="toc-number">2.5.</span> <span class="toc-text">代表游戏</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5"><span class="toc-number">3.</span> <span class="toc-text">状态同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-1"><span class="toc-number">3.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B-1"><span class="toc-number">3.2.</span> <span class="toc-text">流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9-1"><span class="toc-number">3.3.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9-1"><span class="toc-number">3.4.</span> <span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E8%A1%A8%E6%B8%B8%E6%88%8F-1"><span class="toc-number">3.5.</span> <span class="toc-text">代表游戏</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E5%AF%B9%E6%AF%94"><span class="toc-number">4.</span> <span class="toc-text">详细对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E5%9E%8B%E5%BB%BA%E8%AE%AE"><span class="toc-number">5.</span> <span class="toc-text">选型建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E6%96%B9%E6%A1%88"><span class="toc-number">6.</span> <span class="toc-text">混合方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AE%E5%AE%9A%E6%80%A7%E9%97%AE%E9%A2%98%EF%BC%88%E5%B8%A7%E5%90%8C%E6%AD%A5%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">确定性问题（帧同步）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/28/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E6%9C%80%E8%BF%91%E7%9A%84%E6%89%80%E6%80%9D%E6%89%80%E6%83%B3/" title="最近的所思所想"><img src="https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/1.avif" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="最近的所思所想"/></a><div class="content"><a class="title" href="/2026/03/28/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E6%9C%80%E8%BF%91%E7%9A%84%E6%89%80%E6%80%9D%E6%89%80%E6%83%B3/" title="最近的所思所想">最近的所思所想</a><time datetime="2026-03-27T16:00:00.000Z" title="发表于 2026-03-28 00:00:00">2026-03-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"><img src="/img/covers/Roaming.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"/></a><div class="content"><a class="title" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统">【项目实战】基于OpenGL的大规模自然场景实时漫游系统</a><time datetime="2026-01-14T16:00:00.000Z" title="发表于 2026-01-15 00:00:00">2026-01-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/" title="【随笔】学习方法论"><img src="/img/covers/learning.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【随笔】学习方法论"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/" title="【随笔】学习方法论">【随笔】学习方法论</a><time datetime="2025-06-04T16:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="【网络】游戏客户端网络基础"><img src="/img/covers/game.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【网络】游戏客户端网络基础"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="【网络】游戏客户端网络基础">【网络】游戏客户端网络基础</a><time datetime="2025-06-04T16:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90Unity%E3%80%91Canvas%E6%B8%B2%E6%9F%93%E6%A8%A1%E5%BC%8F/" title="【Unity】Canvas 渲染模式"><img src="/img/covers/game.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【Unity】Canvas 渲染模式"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90Unity%E3%80%91Canvas%E6%B8%B2%E6%9F%93%E6%A8%A1%E5%BC%8F/" title="【Unity】Canvas 渲染模式">【Unity】Canvas 渲染模式</a><time datetime="2025-06-04T16:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script>
+  function insertBannerButtons() {
+    const oldButtons = document.querySelector('.custom-banner-buttons');
+    if (oldButtons) oldButtons.remove();
+    
+    const banner = document.querySelector('#page-header');
+    if (banner && banner.classList.contains('full_page')) {
+      const buttonsHTML = `
+        <div class="custom-banner-buttons">
+          <a href="/categories/技术笔记/" class="custom-btn">技术笔记</a>
+          <a href="/categories/项目实战/" class="custom-btn">项目实战</a>
+          <a href="/categories/随笔杂谈/" class="custom-btn">随笔杂谈</a>
+        </div>
+      `;
+      banner.insertAdjacentHTML('beforeend', buttonsHTML);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', insertBannerButtons);
+  document.addEventListener('pjax:complete', insertBannerButtons);
+</script>
+<script>
+  function renameAnnouncement() {
+    const title = document.querySelector('.card-announcement .item-headline');
+    if (title) title.innerHTML = '<i class="fas fa-bullhorn"></i> 个人简介';
+  }
+  document.addEventListener('DOMContentLoaded', renameAnnouncement);
+  document.addEventListener('pjax:complete', renameAnnouncement);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

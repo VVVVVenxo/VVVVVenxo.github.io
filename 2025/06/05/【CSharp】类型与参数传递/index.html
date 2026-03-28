@@ -1,0 +1,504 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【CSharp】类型与参数传递 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="理解 C# 中值类型与引用类型的区别、参数传递行为，以及 ref 和 out 关键字的用法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CSharp】类型与参数传递">
+<meta property="og:url" content="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/index.html">
+<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
+<meta property="og:description" content="理解 C# 中值类型与引用类型的区别、参数传递行为，以及 ref 和 out 关键字的用法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/earth.jpg">
+<meta property="article:published_time" content="2025-06-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-18T06:32:03.498Z">
+<meta property="article:author" content="VVVVVenxo">
+<meta property="article:tag" content="参数传递">
+<meta property="article:tag" content="值类型">
+<meta property="article:tag" content="引用类型">
+<meta property="article:tag" content="ref">
+<meta property="article:tag" content="out">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/earth.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【CSharp】类型与参数传递",
+  "url": "https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/",
+  "image": "https://vvvvvenxo.github.io/img/covers/earth.jpg",
+  "datePublished": "2025-06-04T16:00:00.000Z",
+  "dateModified": "2026-01-18T06:32:03.498Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "VVVVVenxo",
+      "url": "https://VVVVVenxo.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【CSharp】类型与参数传递',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="referrer" content="no-referrer"><style>
+  #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #1d1d1f; }
+  #article-container li { font-size: 18px; line-height: 1.8; color: #1d1d1f; }
+  .recent-posts .recent-post-item { padding: 20px 30px !important; }
+  #page-header.not-top-img { margin-bottom: 10px; }
+  body { color: #1d1d1f; }
+</style>
+<style>
+  .custom-banner-buttons {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 2;
+    max-width: 90%;
+  }
+  .custom-btn {
+    padding: 14px 32px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.85);
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+    backdrop-filter: blur(12px);
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .custom-btn:hover {
+    background: rgba(255,255,255,0.95);
+    color: #2563eb;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    border-color: white;
+  }
+  @media screen and (max-width: 768px) {
+    .custom-banner-buttons {
+      gap: 12px;
+      top: 70%;
+    }
+    .custom-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+</style>
+<meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #fafafa;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">87</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/earth.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【CSharp】类型与参数传递</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【CSharp】类型与参数传递</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-04T16:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-18T06:32:03.498Z" title="更新于 2026-01-18 14:32:03">2026-01-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/C/">C#</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">907</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="值类型-vs-引用类型"><a href="#值类型-vs-引用类型" class="headerlink" title="值类型 vs 引用类型"></a>值类型 vs 引用类型</h2><h3 id="基本区别"><a href="#基本区别" class="headerlink" title="基本区别"></a>基本区别</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>值类型</th>
+<th>引用类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>存储位置</td>
+<td>栈（Stack）</td>
+<td>堆（Heap）</td>
+</tr>
+<tr>
+<td>存储内容</td>
+<td>实际数据</td>
+<td>对象的引用（地址）</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td>0 &#x2F; false &#x2F; ‘\0’</td>
+<td>null</td>
+</tr>
+<tr>
+<td>赋值行为</td>
+<td>复制值</td>
+<td>复制引用</td>
+</tr>
+<tr>
+<td>继承</td>
+<td>隐式继承 <code>System.ValueType</code></td>
+<td>继承 <code>System.Object</code></td>
+</tr>
+</tbody></table>
+<h3 id="常见类型分类"><a href="#常见类型分类" class="headerlink" title="常见类型分类"></a>常见类型分类</h3><table>
+<thead>
+<tr>
+<th>值类型</th>
+<th>引用类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int</code>, <code>float</code>, <code>double</code>, <code>decimal</code></td>
+<td><code>string</code></td>
+</tr>
+<tr>
+<td><code>bool</code>, <code>char</code></td>
+<td><code>class</code></td>
+</tr>
+<tr>
+<td><code>struct</code></td>
+<td><code>interface</code></td>
+</tr>
+<tr>
+<td><code>enum</code></td>
+<td><code>delegate</code></td>
+</tr>
+<tr>
+<td>元组（值元组）</td>
+<td>数组 <code>[]</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h2><h3 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h3><p>值类型的数据直接存储在栈上（作为局部变量时）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">栈 (Stack)</span><br><span class="line">┌─────────────┐</span><br><span class="line">│  int a = 10 │  ← 直接存储值 10</span><br><span class="line">├─────────────┤</span><br><span class="line">│  int b = 20 │  ← 直接存储值 20</span><br><span class="line">└─────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><p>引用类型在栈上存储引用，实际对象在堆上：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">栈 (Stack)              堆 (Heap)</span><br><span class="line">┌─────────────┐         ┌─────────────────┐</span><br><span class="line">│  obj ───────┼────────►│  实际对象数据    │</span><br><span class="line">└─────────────┘         └─────────────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h2><h3 id="值类型参数（值传递）"><a href="#值类型参数（值传递）" class="headerlink" title="值类型参数（值传递）"></a>值类型参数（值传递）</h3><p>传递值类型时，传递的是<strong>值的副本</strong>，修改不影响原值：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Modify</span>(<span class="params"><span class="built_in">int</span> x</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    x = <span class="number">100</span>;  <span class="comment">// 修改的是副本</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> a = <span class="number">10</span>;</span><br><span class="line">Modify(a);</span><br><span class="line">Console.WriteLine(a);  <span class="comment">// 输出: 10（未改变）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="引用类型参数"><a href="#引用类型参数" class="headerlink" title="引用类型参数"></a>引用类型参数</h3><p>传递引用类型时，传递的是<strong>引用的副本</strong>，可以修改对象内容：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Modify</span>(<span class="params"><span class="built_in">int</span>[] arr</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    arr[<span class="number">0</span>] = <span class="number">100</span>;  <span class="comment">// 修改堆上的对象</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span>[] nums = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> &#125;;</span><br><span class="line">Modify(nums);</span><br><span class="line">Console.WriteLine(nums[<span class="number">0</span>]);  <span class="comment">// 输出: 100（已改变）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="string-的特殊性"><a href="#string-的特殊性" class="headerlink" title="string 的特殊性"></a>string 的特殊性</h3><p>虽然 <code>string</code> 是引用类型，但它具有<strong>不可变性</strong>（Immutable）：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Modify</span>(<span class="params"><span class="built_in">string</span> s</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    s = <span class="string">&quot;modified&quot;</span>;  <span class="comment">// 创建了新的 string 对象</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">string</span> str = <span class="string">&quot;original&quot;</span>;</span><br><span class="line">Modify(str);</span><br><span class="line">Console.WriteLine(str);  <span class="comment">// 输出: original（未改变）</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="ref-和-out-关键字"><a href="#ref-和-out-关键字" class="headerlink" title="ref 和 out 关键字"></a>ref 和 out 关键字</h2><p>两者都是引用传递，实现上都是指针，区别在于<strong>语义</strong>。</p>
+<h3 id="ref-关键字"><a href="#ref-关键字" class="headerlink" title="ref 关键字"></a>ref 关键字</h3><p><code>ref</code> 表示引用传递，函数内可以读取也可以修改。变量在传参前<strong>必须初始化</strong>。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AddTen</span>(<span class="params"><span class="keyword">ref</span> <span class="built_in">int</span> number</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    number += <span class="number">10</span>;  <span class="comment">// 可以读取，也可以修改</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> <span class="keyword">value</span> = <span class="number">5</span>;       <span class="comment">// 必须先初始化</span></span><br><span class="line">AddTen(<span class="keyword">ref</span> <span class="keyword">value</span>);   <span class="comment">// value 变为 15</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="out-关键字"><a href="#out-关键字" class="headerlink" title="out 关键字"></a>out 关键字</h3><p><code>out</code> 表示输出参数（变相的多返回值）。变量在传参前<strong>不需要初始化</strong>，但函数内<strong>必须赋值</strong>。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">GetValues</span>(<span class="params"><span class="keyword">out</span> <span class="built_in">int</span> x, <span class="keyword">out</span> <span class="built_in">int</span> y</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    x = <span class="number">10</span>;  <span class="comment">// 函数内必须赋值</span></span><br><span class="line">    y = <span class="number">20</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> a, b;                  <span class="comment">// 不需要初始化</span></span><br><span class="line">GetValues(<span class="keyword">out</span> a, <span class="keyword">out</span> b);   <span class="comment">// a = 10, b = 20</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="ref-vs-out-对比"><a href="#ref-vs-out-对比" class="headerlink" title="ref vs out 对比"></a>ref vs out 对比</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>ref</th>
+<th>out</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>传参前是否需要初始化</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>函数内是否必须赋值</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>典型用途</td>
+<td>修改已有变量</td>
+<td>返回多个值</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="struct-vs-class"><a href="#struct-vs-class" class="headerlink" title="struct vs class"></a>struct vs class</h2><h3 id="基本对比"><a href="#基本对比" class="headerlink" title="基本对比"></a>基本对比</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>struct（值类型）</th>
+<th>class（引用类型）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>继承</td>
+<td>不支持继承</td>
+<td>支持继承</td>
+</tr>
+<tr>
+<td>默认构造函数</td>
+<td>不能定义无参构造（C# 10 前）</td>
+<td>可以定义</td>
+</tr>
+<tr>
+<td>可为 null</td>
+<td>否（除非 Nullable）</td>
+<td>是</td>
+</tr>
+<tr>
+<td>赋值行为</td>
+<td>复制全部数据</td>
+<td>复制引用</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>小对象更快</td>
+<td>大对象更合适</td>
+</tr>
+</tbody></table>
+<h3 id="struct-示例"><a href="#struct-示例" class="headerlink" title="struct 示例"></a>struct 示例</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> Point</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> X;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point p1 = <span class="keyword">new</span> Point &#123; X = <span class="number">10</span>, Y = <span class="number">20</span> &#125;;</span><br><span class="line">Point p2 = p1;  <span class="comment">// 复制整个结构体</span></span><br><span class="line">p2.X = <span class="number">100</span>;</span><br><span class="line">Console.WriteLine(p1.X);  <span class="comment">// 输出: 10（p1 未受影响）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="class-示例"><a href="#class-示例" class="headerlink" title="class 示例"></a>class 示例</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">PointClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> X;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PointClass p1 = <span class="keyword">new</span> PointClass &#123; X = <span class="number">10</span>, Y = <span class="number">20</span> &#125;;</span><br><span class="line">PointClass p2 = p1;  <span class="comment">// 复制引用</span></span><br><span class="line">p2.X = <span class="number">100</span>;</span><br><span class="line">Console.WriteLine(p1.X);  <span class="comment">// 输出: 100（p1 也改变了）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="何时使用-struct？"><a href="#何时使用-struct？" class="headerlink" title="何时使用 struct？"></a>何时使用 struct？</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据量小（&lt; 16 字节）</td>
+<td>struct</td>
+</tr>
+<tr>
+<td>不需要继承</td>
+<td>struct</td>
+</tr>
+<tr>
+<td>需要继承或多态</td>
+<td>class</td>
+</tr>
+<tr>
+<td>对象较大</td>
+<td>class</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h2><p>值类型转换为引用类型时发生<strong>装箱（Boxing）</strong>，反之为<strong>拆箱（Unboxing）</strong>：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> <span class="keyword">value</span> = <span class="number">42</span>;</span><br><span class="line"><span class="built_in">object</span> boxed = <span class="keyword">value</span>;     <span class="comment">// 装箱</span></span><br><span class="line"><span class="built_in">int</span> unboxed = (<span class="built_in">int</span>)boxed; <span class="comment">// 拆箱</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>性能影响</strong>：装箱&#x2F;拆箱有性能开销，使用泛型可以避免：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 避免装箱</span></span><br><span class="line">List&lt;<span class="built_in">int</span>&gt; list = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();  <span class="comment">// 泛型，无装箱</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 会装箱</span></span><br><span class="line">ArrayList oldList = <span class="keyword">new</span> ArrayList();</span><br><span class="line">oldList.Add(<span class="number">42</span>);  <span class="comment">// int 被装箱为 object</span></span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/">https://vvvvvenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/">参数传递</a><a class="post-meta__tags" href="/tags/%E5%80%BC%E7%B1%BB%E5%9E%8B/">值类型</a><a class="post-meta__tags" href="/tags/%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/">引用类型</a><a class="post-meta__tags" href="/tags/ref/">ref</a><a class="post-meta__tags" href="/tags/out/">out</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/earth.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/05/%E3%80%90CSharp%E3%80%91%E5%8F%8D%E5%B0%84%E4%B8%8E%E5%A7%94%E6%89%98/" title="【CSharp】反射与委托"><img class="cover" src="/img/covers/earth.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【CSharp】反射与委托</div></div><div class="info-2"><div class="info-item-1">反射（Reflection）反射是一种在运行时获取类型信息、动态创建对象、调用方法等操作的机制。 反射的优缺点   优点 缺点    动态调用方法和属性，代码更灵活 可以随意访问私有属性和方法，存在安全漏洞   与运行时代码不产生耦合 性能开销大，存在类型转换成本   易于开发插件和测试工具 代码难以读懂和维护   常见使用场景 编辑器扩展工具 热更新框架 序列化&#x2F;反序列化 依赖注入框架  基本用法12345678910111213141516171819202122using System;using System.Reflection;public class MyClass&#123;    private int value = 42;    public void SayHello(string name) =&gt; Console.WriteLine($&quot;Hello, &#123;name&#125;!&quot;);&#125;// 获取类型信息Type type = typeof(MyClass);// 动态创建实例object obj = ...</div></div></div></a><a class="pagination-related" href="/2025/06/05/%E3%80%90CSharp%E3%80%91%E8%BF%AD%E4%BB%A3%E5%99%A8/" title="【CSharp】迭代器"><img class="cover" src="/img/covers/earth.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【CSharp】迭代器</div></div><div class="info-2"><div class="info-item-1">什么是迭代器？迭代器（Iterator）是一种设计模式，提供一种方法顺序访问聚合对象中的各个元素，而又不暴露内部结构。 在 C# 中，迭代器通过 IEnumerable 和 IEnumerator 接口实现。  IEnumerable 与 IEnumerator接口定义12345678910111213// 可枚举对象public interface IEnumerable&#123;    IEnumerator GetEnumerator();&#125;// 枚举器public interface IEnumerator&#123;    object Current &#123; get; &#125;    // 当前元素    bool MoveNext();           // 移动到下一个元素    void Reset();              // 重置到初始位置&#125;  手动实现示例12345678910111213141516171819202122232425262728293031public class MyCollection :...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/06/05/%E3%80%90CSharp%E3%80%91ref%E5%92%8Cout%E5%85%B3%E9%94%AE%E5%AD%97/" title="【CSharp】ref 和 out 关键字"><img class="cover" src="/img/covers/earth.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-05</div><div class="info-item-2">【CSharp】ref 和 out 关键字</div></div><div class="info-2"><div class="info-item-1">ref 和 out 的区别这两个都是引用，实现上都是指针，区别在于语义。 ref 关键字ref 是引用，你在函数内可能会获取值，也可能会赋值。C# 要求变量在使用前必须初始化，因此 ref 修饰的变量在传参前就必须先初始化。 12345678void AddTen(ref int number)&#123;    number += 10; // 可以读取，也可以修改&#125;// 调用时int value = 5;       // 必须先初始化AddTen(ref value);   // value 变为 15  out 关键字out 是输出（变相的多返回值），为了解决早年 C# 没有元组的多返回值问题。它在语义上表示离开函数时一定会被赋值，因此在传参之前变量不必初始化，但在函数内一定要赋值，以保证语义正确。 123456789void GetValues(out int x, out int y)&#123;    x = 10;  // 函数内必须赋值    y = 20;  // 函数内必须赋值&#125;// 调用时int a, b;              /...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">87</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div style="text-align: left; font-size: 14px; line-height: 1.9;">
+  <b>🎓 软件工程</b><br><br>
+  <b>💼 实习经历</b><br>
+  • 叠纸游戏（在职）<br>
+  <span style="color:#888; font-size:12px;">2026.01 - 至今</span><br>
+  • XD 网络<br>
+  <span style="color:#888; font-size:12px;">2025.08 - 2026.01</span><br>
+  • 游族网络<br>
+  <span style="color:#888; font-size:12px;">2025.06 - 2025.08</span><br>
+  <b>🔥 兴趣方向</b><br>
+  • 🎮 游戏开发<br>
+  • 🤖 人工智能<br>
+  • 🎨 计算机图形学<br><br>
+  <hr style="border:none; border-top:1px dashed #ccc; margin:8px 0;">
+  <center style="color:#999; font-size:12px;">--- 请不要开盒我 ---</center>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%BC%E7%B1%BB%E5%9E%8B-vs-%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">值类型 vs 引用类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.</span> <span class="toc-text">基本区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%B1%BB%E5%9E%8B%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">常见类型分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="toc-number">2.</span> <span class="toc-text">内存分配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">值类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">引用类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="toc-number">3.</span> <span class="toc-text">参数传递</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%80%BC%E7%B1%BB%E5%9E%8B%E5%8F%82%E6%95%B0%EF%BC%88%E5%80%BC%E4%BC%A0%E9%80%92%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">值类型参数（值传递）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E5%8F%82%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">引用类型参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#string-%E7%9A%84%E7%89%B9%E6%AE%8A%E6%80%A7"><span class="toc-number">3.3.</span> <span class="toc-text">string 的特殊性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ref-%E5%92%8C-out-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">4.</span> <span class="toc-text">ref 和 out 关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ref-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">4.1.</span> <span class="toc-text">ref 关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#out-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">4.2.</span> <span class="toc-text">out 关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ref-vs-out-%E5%AF%B9%E6%AF%94"><span class="toc-number">4.3.</span> <span class="toc-text">ref vs out 对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#struct-vs-class"><span class="toc-number">5.</span> <span class="toc-text">struct vs class</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%AF%B9%E6%AF%94"><span class="toc-number">5.1.</span> <span class="toc-text">基本对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#struct-%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.2.</span> <span class="toc-text">struct 示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#class-%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.3.</span> <span class="toc-text">class 示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%95%E6%97%B6%E4%BD%BF%E7%94%A8-struct%EF%BC%9F"><span class="toc-number">5.4.</span> <span class="toc-text">何时使用 struct？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1"><span class="toc-number">6.</span> <span class="toc-text">装箱与拆箱</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/28/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E6%9C%80%E8%BF%91%E7%9A%84%E6%89%80%E6%80%9D%E6%89%80%E6%83%B3/" title="最近的所思所想"><img src="https://cdn.jsdelivr.net/gh/VVVVVenxo/VVVVVenxo.github.io@main/source/img/covers/1.avif" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="最近的所思所想"/></a><div class="content"><a class="title" href="/2026/03/28/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E6%9C%80%E8%BF%91%E7%9A%84%E6%89%80%E6%80%9D%E6%89%80%E6%83%B3/" title="最近的所思所想">最近的所思所想</a><time datetime="2026-03-27T16:00:00.000Z" title="发表于 2026-03-28 00:00:00">2026-03-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"><img src="/img/covers/Roaming.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【项目实战】基于OpenGL的大规模自然场景实时漫游系统"/></a><div class="content"><a class="title" href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/" title="【项目实战】基于OpenGL的大规模自然场景实时漫游系统">【项目实战】基于OpenGL的大规模自然场景实时漫游系统</a><time datetime="2026-01-14T16:00:00.000Z" title="发表于 2026-01-15 00:00:00">2026-01-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/" title="【随笔】学习方法论"><img src="/img/covers/learning.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【随笔】学习方法论"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/" title="【随笔】学习方法论">【随笔】学习方法论</a><time datetime="2025-06-04T16:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="【网络】游戏客户端网络基础"><img src="/img/covers/game.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【网络】游戏客户端网络基础"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="【网络】游戏客户端网络基础">【网络】游戏客户端网络基础</a><time datetime="2025-06-04T16:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/%E3%80%90Unity%E3%80%91Canvas%E6%B8%B2%E6%9F%93%E6%A8%A1%E5%BC%8F/" title="【Unity】Canvas 渲染模式"><img src="/img/covers/game.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【Unity】Canvas 渲染模式"/></a><div class="content"><a class="title" href="/2025/06/05/%E3%80%90Unity%E3%80%91Canvas%E6%B8%B2%E6%9F%93%E6%A8%A1%E5%BC%8F/" title="【Unity】Canvas 渲染模式">【Unity】Canvas 渲染模式</a><time datetime="2025-06-04T16:00:00.000Z" title="发表于 2025-06-05 00:00:00">2025-06-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script>
+  function insertBannerButtons() {
+    const oldButtons = document.querySelector('.custom-banner-buttons');
+    if (oldButtons) oldButtons.remove();
+    
+    const banner = document.querySelector('#page-header');
+    if (banner && banner.classList.contains('full_page')) {
+      const buttonsHTML = `
+        <div class="custom-banner-buttons">
+          <a href="/categories/技术笔记/" class="custom-btn">技术笔记</a>
+          <a href="/categories/项目实战/" class="custom-btn">项目实战</a>
+          <a href="/categories/随笔杂谈/" class="custom-btn">随笔杂谈</a>
+        </div>
+      `;
+      banner.insertAdjacentHTML('beforeend', buttonsHTML);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', insertBannerButtons);
+  document.addEventListener('pjax:complete', insertBannerButtons);
+</script>
+<script>
+  function renameAnnouncement() {
+    const title = document.querySelector('.card-announcement .item-headline');
+    if (title) title.innerHTML = '<i class="fas fa-bullhorn"></i> 个人简介';
+  }
+  document.addEventListener('DOMContentLoaded', renameAnnouncement);
+  document.addEventListener('pjax:complete', renameAnnouncement);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
