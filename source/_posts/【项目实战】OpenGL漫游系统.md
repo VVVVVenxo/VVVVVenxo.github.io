@@ -6,6 +6,7 @@ categories:
   - 图形学
 cover: /img/covers/Roaming.jpg
 date: 2026-01-15
+updated: 2026-07-25
 tags:
   - OpenGL
   - C++
@@ -20,7 +21,7 @@ description: 基于C++与Modern OpenGL构建的大规模自然场景实时漫游
 
 **基于OpenGL的大规模自然场景实时漫游系统** 是一个使用 C++17 与 Modern OpenGL (Core Profile 4.5+) 从零构建的室外场景漫游系统。项目实现了地形渲染、水体仿真、天空盒、日夜循环光照等核心功能，并通过 LOD 和视锥体剔除进行性能优化，具备"游戏级"的视觉表现与实时交互能力。
 
-> GitHub 地址: [RoamingSystem](https://github.com/VVenox/RoamingSystem)
+> GitHub 地址: [RoamingSystem](https://github.com/VVVVVenxo/RoamingSystem)
 
 ## 项目特点
 
@@ -426,13 +427,19 @@ FragColor = mix(reflectColor, refractColor, refractiveFactor);
 
 #### 4.4 DuDv波浪扭曲
 
-使用 DuDv 贴图对纹理坐标进行偏移，产生动态波纹效果：
+使用 DuDv 贴图对纹理坐标进行偏移，产生动态波纹效果。波速（`uWaveSpeed`）与水面纹理平铺密度（`uTiling`）均为 uniform 参数，可在编辑器中实时调节：
 
 ```glsl
+uniform float uWaveSpeed;
+uniform float uTiling;
+
+// 水面UV按平铺密度缩放
+vec2 tiledUV = vTexCoord * uTiling;
+
 // 动画纹理坐标
-float moveFactor = uTime * waveSpeed;
-vec2 distortedTexCoord = texture(uDudvMap, vec2(vTexCoord.x + moveFactor, vTexCoord.y)).rg * 0.1;
-distortedTexCoord = vTexCoord + vec2(distortedTexCoord.x, distortedTexCoord.y + moveFactor);
+float moveFactor = uTime * uWaveSpeed;
+vec2 distortedTexCoord = texture(uDudvMap, vec2(tiledUV.x + moveFactor, tiledUV.y)).rg * 0.1;
+distortedTexCoord = tiledUV + vec2(distortedTexCoord.x, distortedTexCoord.y + moveFactor);
 
 // 采样DuDv贴图获取扭曲
 vec2 totalDistortion = (texture(uDudvMap, distortedTexCoord).rg * 2.0 - 1.0) * uWaveStrength;
@@ -442,21 +449,30 @@ reflectTexCoord += totalDistortion;
 refractTexCoord += totalDistortion;
 ```
 
+> 早期版本中波速是着色器内的常量（`const float waveSpeed = 0.03`），且扭曲直接基于原始 UV。后续迭代将两者提升为 uniform，修复了编辑器中 Wave Speed / Tiling 滑条不生效的问题。
+
 #### 4.5 岸边泡沫
 
-基于深度差计算水深，浅水区域显示泡沫：
+基于深度差计算水深，浅水区域显示泡沫。地面深度从折射Pass的深度纹理采样，两者均需从非线性深度还原为线性距离：
 
 ```glsl
-// 计算水深
-float floorDistance = /* 地面深度 */;
-float waterDistance = /* 水面深度 */;
+// 从深度缓冲还原线性距离
+float depth = texture(uDepthMap, refractTexCoord).r;
+float floorDistance = 2.0 * near * far / (far + near - (2.0 * depth - 1.0) * (far - near));
+float waterDistance = 2.0 * near * far / (far + near - (2.0 * gl_FragCoord.z - 1.0) * (far - near));
 float waterDepth = floorDistance - waterDistance;
 
 // 泡沫强度基于深度
 float foamFactor = 1.0 - clamp(waterDepth / uFoamDepth, 0.0, 1.0);
 
-// 程序化泡沫噪声（带动画）
-float foamNoise = /* 噪声计算 */;
+// 程序化泡沫噪声（带动画，三层正弦波叠加）
+float moveFactor = uTime * uWaveSpeed;
+float noise1 = sin(tiledUV.x * 30.0 + moveFactor * 50.0) * 0.5 + 0.5;
+float noise2 = sin(tiledUV.y * 25.0 - moveFactor * 40.0) * 0.5 + 0.5;
+float noise3 = sin((tiledUV.x + tiledUV.y) * 20.0 + moveFactor * 30.0) * 0.5 + 0.5;
+float foamNoise = (noise1 * noise2 + noise3) * 0.5;
+
+// 噪声阈值软化边缘
 float foam = foamFactor * smoothstep(0.3, 0.7, foamNoise * foamFactor + foamFactor * 0.5);
 
 // 混合泡沫颜色
@@ -646,16 +662,16 @@ vec3 ambient = uAmbientColor * albedo * ssaoFactor;
 
 | 模块 | 文件数 | 代码行数 |
 |------|--------|----------|
-| Application | 6 | ~944 |
-| Core | 11 | ~863 |
-| Terrain | 10 | ~809 |
-| Water | 4 | ~371 |
-| Environment | 4 | ~346 |
-| PostProcess | 2 | ~300 |
-| Editor | 2 | ~177 |
-| **C++ 小计** | **39** | **~3,510** |
-| GLSL 着色器 | 12 | ~306 |
-| **项目总计** | **51** | **~3,816** |
+| Application (含main) | 5 | ~1,250 |
+| Core | 10 | ~1,078 |
+| Terrain | 10 | ~791 |
+| Water | 4 | ~465 |
+| Environment | 4 | ~474 |
+| PostProcess | 2 | ~455 |
+| Editor | 2 | ~250 |
+| **C++ 小计** | **37** | **~4,763** |
+| GLSL 着色器 | 13 | ~677 |
+| **项目总计** | **50** | **~5,440** |
 
 ---
 
@@ -682,28 +698,29 @@ vec3 ambient = uAmbientColor * albedo * ssaoFactor;
 | **Performance** | FPS、帧时间、顶点数、三角形数、GPU信息 |
 | **Camera** | 位置显示、移动速度、地面行走模式 |
 | **Terrain** | 纹理平铺、混合参数、法线贴图强度 |
-| **Water** | 水面高度、波浪参数、颜色、泡沫设置 |
-| **Lighting** | 时间控制、日夜循环开关、光照强度 |
+| **Water** | 水面高度、波速（Wave Speed）、波浪强度、平铺密度（Tiling）、颜色、泡沫设置 |
+| **Lighting** | 时间控制、日夜循环开关、光照强度（太阳/雾颜色随时间变化，面板中为只读展示） |
 | **Settings** | 保存/加载设置（INI格式） |
 
 ---
 
 ## 效果展示
 
-> 待补充：运行程序后截取效果图，建议包含以下场景：
-> - 正午阳光下的地形全景
-> - 日落/日出时的天空颜色变化
-> - 水面反射与波浪效果
-> - SSAO开启/关闭对比
-> - 编辑器界面展示
+**正午阳光下的地形全景**（512×512 高度图，草地/岩石/雪地三层混合，视锥体剔除 + LOD 后仅 12.7 万三角形，95 FPS）：
 
-<!-- 
-将截图放入 source/img/posts/ 目录，然后取消下方注释：
 ![地形全景](/img/posts/roaming-terrain.jpg)
+
+**水面反射与波浪效果**（反射/折射 + Fresnel + DuDv 扭曲）：
+
 ![水体效果](/img/posts/roaming-water.jpg)
+
+**日落时分的天空与光照变化**（日夜循环系统）：
+
 ![日落效果](/img/posts/roaming-sunset.jpg)
+
+**ImGui 编辑器界面**（实时参数调节与性能监控）：
+
 ![编辑器界面](/img/posts/roaming-editor.jpg)
--->
 
 ---
 
@@ -722,6 +739,9 @@ vec3 ambient = uAmbientColor * albedo * ssaoFactor;
 - 深入理解 OpenGL 渲染管线与着色器编程
 - 掌握大规模场景的性能优化技术（LOD、剔除）
 - 学习了多种图形学算法的实际应用
+
+**后续迭代记录**：
+- 2026-04：水体着色器重构——波速与平铺密度由常量提升为 uniform（`uWaveSpeed`/`uTiling`），修复编辑器滑条不生效问题；单通道灰度纹理增加 swizzle 处理；Sun/Fog 颜色改为只读展示防止误编辑
 
 **可扩展方向**：
 - 植被系统（草地、树木的实例化渲染）
