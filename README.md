@@ -28,12 +28,16 @@
   <img src="https://skillicons.dev/icons?i=cpp,cs,python,java,unity,unreal,git,visualstudio,vscode" />
 </p>
 
+<div align="center">
+
 | 类别 | 技术 |
-|------|------|
+|:------:|:------:|
 | **编程语言** | C++, C#, Python, Java |
 | **游戏引擎** | Unity, Unreal Engine |
 | **图形API** | OpenGL |
 | **框架/工具** | YooAsset, HybridCLR, DOTween, UniTask |
+
+</div>
 
 ---
 
@@ -41,7 +45,7 @@
 
 <table>
   <tr>
-    <td width="33%">
+    <td width="50%">
       <h3 align="center">🎯 LEngine</h3>
       <p align="center">
         <a href="https://github.com/VVVVVenxo/LEngine">
@@ -50,16 +54,7 @@
       </p>
       <p>模块化、可热更新的 Unity 客户端游戏框架，专为中大型商业项目设计。支持 HybridCLR 热更新、YooAsset 资源管理、状态机系统、ET 网络框架。</p>
     </td>
-    <td width="33%">
-      <h3 align="center">🎮 GameplayFrameWork</h3>
-      <p align="center">
-        <a href="https://github.com/VVVVVenxo/GameplayFrameWork">
-          <img src="https://img.shields.io/badge/Unity-轻量级游戏框架-green?style=for-the-badge&logo=unity" />
-        </a>
-      </p>
-      <p>轻量级 Unity 游戏开发基础框架，包含事件中心、资源管理、对象池、UI管理、音频管理、A*寻路等核心模块。适合学习和小型项目。</p>
-    </td>
-    <td width="33%">
+    <td width="50%">
       <h3 align="center">🌄 RoamingSystem</h3>
       <p align="center">
         <a href="https://github.com/VVVVVenxo/RoamingSystem">
