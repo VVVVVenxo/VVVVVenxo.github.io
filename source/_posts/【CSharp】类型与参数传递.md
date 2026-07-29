@@ -232,3 +232,30 @@ List<int> list = new List<int>();  // 泛型，无装箱
 ArrayList oldList = new ArrayList();
 oldList.Add(42);  // int 被装箱为 object
 ```
+
+---
+
+## Dictionary 底层原理
+
+`Dictionary<TKey, TValue>` 是最常用的引用类型集合之一，理解其底层有助于写出高性能代码。
+
+### 内部结构
+
+Dictionary 内部维护了两个数组：
+
+- **`buckets`（桶）**：存储 entries 的索引；
+- **`entries`（实体）**：真正存储键值对数据。
+
+查找流程：通过 Key 的 `GetHashCode()` 计算出哈希值，取余后找到对应的 bucket，再顺着 bucket 定位到 entries。
+
+### 哈希冲突
+
+解决哈希冲突的方法是**拉链法（Chaining）**，但在 C# 的实现中并不是用真正的链表，而是用**数组索引模拟链表**——每个 entry 里有一个 `Next` 指针（索引），指向冲突链上的下一个元素。
+
+### 扩容机制
+
+Dictionary 扩容时会创建一个**大两倍的新数组**并重新 Hash（Rehash），这个过程非常耗时。因此如果能预估容量，最好在构造时就指定初始大小，避免多次扩容。
+
+### 遍历的 GC 陷阱
+
+为了避免 GC，遍历字典时尽量不用 `foreach`——老版本 Unity 中 `Dictionary` 的 `GetEnumerator()` 会产生迭代器垃圾。
