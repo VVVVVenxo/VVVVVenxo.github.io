@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - C#
-cover: /img/covers/earth.jpg
+cover: /img/covers/gen/CSharp-反射与委托.png
 date: 2025-06-05
 tags:
   - 反射

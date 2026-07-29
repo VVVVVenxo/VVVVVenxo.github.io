@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - Unity
-cover: /img/covers/game2.jpg
+cover: /img/covers/gen/Unity-DrawCall与合批优化.png
 date: 2026-07-28
 tags:
   - Unity

@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - C++
-cover: /img/covers/keyboard.jpg
+cover: /img/covers/gen/C-虚函数.png
 date: 2025-06-05
 tags:
   - 面向对象

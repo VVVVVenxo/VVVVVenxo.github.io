@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - Unity
-cover: /img/covers/game.jpg
+cover: /img/covers/gen/Unity-物理系统.png
 date: 2025-06-05
 tags:
   - 物理

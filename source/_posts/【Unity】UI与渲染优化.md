@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - Unity
-cover: /img/covers/game.jpg
+cover: /img/covers/gen/Unity-UI与渲染优化.png
 date: 2025-06-05
 tags:
   - UGUI

@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - Unity
-cover: /img/covers/6.avif
+cover: /img/covers/gen/Unity-资源加载与热更新.png
 date: 2026-07-28
 tags:
   - Unity

@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - C++
-cover: /img/covers/5.avif
+cover: /img/covers/gen/C-STL与容器底层.png
 date: 2026-07-28
 tags:
   - C++

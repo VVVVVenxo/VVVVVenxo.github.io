@@ -5,7 +5,7 @@ sticky: 1
 categories:
   - 技术笔记
   - C++
-cover: /img/covers/code_dark.jpg
+cover: /img/covers/gen/C-整体框架.png
 date: 2025-06-05
 tags:
   - 学习路线

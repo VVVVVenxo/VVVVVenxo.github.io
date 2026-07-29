@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - C++
-cover: /img/covers/keyboard.jpg
+cover: /img/covers/gen/C-值语义与移动.png
 date: 2025-06-05
 tags:
   - C++11

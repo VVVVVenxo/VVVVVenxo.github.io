@@ -4,7 +4,7 @@ toc: true
 categories:
   - 项目实战
   - Unity
-cover: /img/covers/game2.jpg
+cover: /img/covers/gen/项目实战-GameplayFrameWork-框架.png
 date: 2025-01-15
 tags:
   - Unity

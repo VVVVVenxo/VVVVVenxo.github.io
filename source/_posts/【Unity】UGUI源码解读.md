@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - Unity
-cover: /img/covers/keyboard.jpg
+cover: /img/covers/gen/Unity-UGUI-源码解读.png
 date: 2026-07-29
 tags:
   - Unity

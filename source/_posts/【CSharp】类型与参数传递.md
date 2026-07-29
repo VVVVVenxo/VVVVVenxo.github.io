@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - C#
-cover: /img/covers/earth.jpg
+cover: /img/covers/gen/CSharp-类型与参数传递.png
 date: 2025-06-05
 tags:
   - 值类型

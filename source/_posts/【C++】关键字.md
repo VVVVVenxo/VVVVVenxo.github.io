@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - C++
-cover: /img/covers/keyboard.jpg
+cover: /img/covers/gen/C-关键字.png
 date: 2025-06-05
 tags:
   - 关键字

@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - Unity
-cover: /img/covers/4.avif
+cover: /img/covers/gen/Unity-GC原理与优化.png
 date: 2026-07-28
 tags:
   - Unity

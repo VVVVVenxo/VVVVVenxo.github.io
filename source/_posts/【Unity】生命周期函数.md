@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - Unity
-cover: /img/covers/game.jpg
+cover: /img/covers/gen/Unity-生命周期函数.png
 date: 2025-06-05
 tags:
   - 生命周期
