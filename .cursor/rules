@@ -9,11 +9,15 @@ VVVenoxBlog/
 ├── source/
 │   ├── _posts/          # 文章目录
 │   ├── img/             # 全局图片（banner、头像、封面）
+│   │   └── covers/gen/  # 程序化生成的文章封面（勿手动改）
 │   └── about/           # 关于页面
+├── scripts/             # 封面生成脚本（见「文章封面」章节）
 ├── _config.yml          # Hexo 主配置
 ├── _config.butterfly.yml # Butterfly 主题配置
 └── .github/workflows/   # GitHub Actions 自动部署
 ```
+
+分支说明：源文件在 `source` 分支（默认分支，在此写作与提交）；`gh-pages` 是 Actions 构建产物，线上服务从它读取，勿手动改。
 
 ## 新建文章
 
@@ -68,7 +72,33 @@ description: 50-100字的文章摘要，用于 SEO 和文章卡片展示
 
 ### 可选字段
 - `sticky: 1` - 置顶文章
-- `cover: /img/covers/xxx.avif` - 自定义封面图
+- `cover: /img/covers/xxx.jpg` - 自定义封面图。**通常不用写**——留空则由封面脚本按分类自动生成（见下）。只有当文章有真实关联图（如项目截图）时才手动指定。
+- `updated: 2026-07-25` - 更新时间（重大修改时加）
+
+## 文章封面（重要）
+
+封面**程序化生成**，统一采用「三色极光霓虹 + 全息轨道 + 霓虹标题」骨架，并按分类切换中景元素与调色板；标题 hash 会稳定改变极光曲线、轨道角度和粒子位置，避免同分类撞图。写文章时 **front-matter 不用写 `cover:`**，交给脚本。
+
+### 发布流程
+
+写好 md 放 `source/_posts/` 后，仓库根目录执行：
+
+```bash
+bash scripts/new-cover.sh     # 给缺 cover 的文章生成封面（SVG + PNG），并写回 cover 字段
+git add -A
+git commit -m "新增文章：xxx"
+git push origin source        # 推送后 Actions 自动构建部署
+```
+
+`new-cover.sh` 只处理没有 `cover:` 的文章，已有封面的会跳过（尊重手动指定，如项目实战用真实截图）。
+
+### 其他用法
+
+- 改配色/风格后全部重刷：`bash scripts/new-cover.sh --all`
+- 分类三色调色板定义在 `scripts/gen_covers.py` 的 `PALETTES`，中景类型定义在 `VARIANTS`；新增分类时各加一行
+- `--all` 只重绘自动生成的封面，永远保留手动指定的真实项目截图
+- 依赖：Python 3 + 本机 Chrome/Chromium/Edge（脚本自动探测）
+- 完整说明见 `scripts/README.md`
 
 ## 注意事项
 
@@ -78,7 +108,7 @@ description: 50-100字的文章摘要，用于 SEO 和文章卡片展示
 
 ## 部署
 
-推送到 `main` 分支后，GitHub Actions 会自动构建并部署到 `gh-pages` 分支。
+推送到 `source` 分支后，GitHub Actions 会自动构建并部署到 `gh-pages` 分支（线上服务源）。约 30 秒完成。
 
 ## 本地预览
 
