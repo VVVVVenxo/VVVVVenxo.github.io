@@ -4,7 +4,7 @@ toc: true
 categories:
   - 技术笔记
   - Unity
-cover: /img/covers/code_dark.jpg
+cover: /img/covers/4.avif
 date: 2026-07-28
 tags:
   - Unity
