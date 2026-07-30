@@ -34,6 +34,8 @@ PALETTES = {
     "计算机基础": ("#0b1739", "#20103a", "#67e8f9", "#818cf8", "#d8b4fe"),
     "随笔杂谈": ("#30200b", "#29102d", "#fbbf24", "#fb7185", "#c084fc"),
     "项目实战": ("#2d0c1c", "#101735", "#fb7185", "#8b5cf6", "#22d3ee"),
+    "AI Coding": ("#041427", "#120a2c", "#38bdf8", "#22d3ee", "#a855f7"),
+    "AI Agent": ("#04121f", "#180a2a", "#5eead4", "#818cf8", "#e879f9"),
 }
 DEFAULT_PALETTE = ("#101827", "#1e1033", "#67e8f9", "#818cf8", "#f472b6")
 
@@ -48,6 +50,8 @@ VARIANTS = {
     "数据结构": "nodes",
     "计算机基础": "circuit",
     "随笔杂谈": "stars",
+    "AI Coding": "circuit",
+    "AI Agent": "nodes",
 }
 
 
@@ -228,7 +232,7 @@ def make_svg(title, top, sub):
     seed = hashlib.sha256(title.encode()).hexdigest()
     clean_title = re.sub(r"^【.+?】", "", title)
     category_label = top if top == sub else f"{top} / {sub}"
-    font_size = 112 if len(clean_title) <= 6 else 92 if len(clean_title) <= 9 else 72 if len(clean_title) <= 13 else 56
+    font_size = 112 if len(clean_title) <= 6 else 92 if len(clean_title) <= 9 else 72 if len(clean_title) <= 13 else 56 if len(clean_title) <= 17 else 44
 
     y1 = number(seed[0:8], 385, 455)
     y2 = number(seed[8:16], 145, 205)
