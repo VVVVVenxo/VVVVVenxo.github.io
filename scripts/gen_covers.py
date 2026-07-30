@@ -252,14 +252,15 @@ def make_svg(title, top, sub):
   <radialGradient id="bg" cx="50%" cy="45%" r="82%"><stop stop-color="{bg1}"/><stop offset=".52" stop-color="{bg2}"/><stop offset="1" stop-color="#02030a"/></radialGradient>
   <linearGradient id="auroraA" x1="0" y1="0" x2="1" y2="0"><stop stop-color="{c1}" stop-opacity="0"/><stop offset=".25" stop-color="{c1}" stop-opacity=".82"/><stop offset=".56" stop-color="{c2}" stop-opacity=".70"/><stop offset=".82" stop-color="{c3}" stop-opacity=".72"/><stop offset="1" stop-color="{c3}" stop-opacity="0"/></linearGradient>
   <linearGradient id="auroraB" x1="0" y1="0" x2="1" y2="0"><stop stop-color="{c3}" stop-opacity="0"/><stop offset=".42" stop-color="{c2}" stop-opacity=".56"/><stop offset=".75" stop-color="{c1}" stop-opacity=".58"/><stop offset="1" stop-color="{c1}" stop-opacity="0"/></linearGradient>
-  <linearGradient id="titleGradient" x1="0" y1="0" x2="1" y2="0"><stop stop-color="{c1}"/><stop offset=".5" stop-color="{c2}"/><stop offset="1" stop-color="{c3}"/></linearGradient>
+  <linearGradient id="neonGradient" x1="0" y1="0" x2="1" y2="0"><stop stop-color="{c1}"/><stop offset=".5" stop-color="{c2}"/><stop offset="1" stop-color="{c3}"/></linearGradient>
+  <linearGradient id="titleGradient" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#effcff"/><stop offset=".5" stop-color="#ecebff"/><stop offset="1" stop-color="#fff0fb"/></linearGradient>
   <linearGradient id="prismGradient" x1="0" y1="0" x2="1" y2="1"><stop stop-color="{c1}" stop-opacity=".48"/><stop offset=".5" stop-color="{c2}" stop-opacity=".10"/><stop offset="1" stop-color="{c3}" stop-opacity=".44"/></linearGradient>
   <linearGradient id="glassGradient" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".13"/><stop offset=".48" stop-color="#fff" stop-opacity=".035"/><stop offset="1" stop-color="{c2}" stop-opacity=".12"/></linearGradient>
   <filter id="blur48"><feGaussianBlur stdDeviation="48"/></filter>
   <filter id="blur22"><feGaussianBlur stdDeviation="22"/></filter>
   <filter id="lineGlow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   <filter id="softGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-  <filter id="titleGlow"><feGaussianBlur stdDeviation="11" result="b1"/><feGaussianBlur stdDeviation="3" result="b2"/><feMerge><feMergeNode in="b1"/><feMergeNode in="b2"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="titleGlow" x="-30%" y="-50%" width="160%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
   <radialGradient id="vignette" cx="50%" cy="50%" r="73%"><stop offset=".58" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".70"/></radialGradient>
 </defs>
 <rect width="1200" height="630" fill="url(#bg)"/>
@@ -268,9 +269,9 @@ def make_svg(title, top, sub):
 {particle_svg}
 {orbit_svg}
 {middle_svg}
-<text x="{title_x-4}" y="322" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif" font-size="{font_size}" font-weight="900" fill="{c1}" opacity=".22" text-anchor="{title_anchor}">{esc(clean_title)}</text>
-<text x="{title_x+4}" y="322" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif" font-size="{font_size}" font-weight="900" fill="{c3}" opacity=".20" text-anchor="{title_anchor}">{esc(clean_title)}</text>
-<text x="{title_x}" y="322" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif" font-size="{font_size}" font-weight="900" fill="url(#titleGradient)" text-anchor="{title_anchor}" filter="url(#titleGlow)">{esc(clean_title)}</text>
+<rect x="170" y="210" width="860" height="150" rx="75" fill="#02040c" opacity=".18" filter="url(#blur22)"/>
+<text x="{title_x}" y="322" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif" font-size="{font_size}" font-weight="900" fill="url(#neonGradient)" opacity=".72" text-anchor="{title_anchor}" filter="url(#titleGlow)">{esc(clean_title)}</text>
+<text x="{title_x}" y="322" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif" font-size="{font_size}" font-weight="900" fill="url(#titleGradient)" stroke="#090b18" stroke-width="1.2" paint-order="stroke" text-anchor="{title_anchor}">{esc(clean_title)}</text>
 <rect x="450" y="354" width="300" height="44" rx="22" fill="#070a18" opacity=".64" stroke="{c2}" stroke-opacity=".42"/>
 <text x="600" y="383" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif" font-size="20" fill="#eef2ff" text-anchor="middle" letter-spacing="5">{esc(category_label)}</text>
 <rect width="1200" height="630" fill="url(#vignette)" pointer-events="none"/>
