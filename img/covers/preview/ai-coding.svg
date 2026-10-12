@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Claude Code 盘活技术博客</title>
+  <desc id="desc">从明确任务开始，经 Claude Code 修改和测试，再由人工复核；复核结果反馈到下一轮任务。</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#B7C3BF" stroke-width="1" opacity=".18"/></pattern>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#267B76"/></marker>
+    <marker id="arrowAmber" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#C67842"/></marker>
+  </defs>
+  <rect width="1200" height="630" fill="#E8ECE9"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <path d="M585 72V558" stroke="#B7C3BF" stroke-width="1.5"/>
+  <text x="78" y="104" fill="#456168" font-family="Microsoft YaHei,Noto Sans SC,sans-serif" font-size="22" font-weight="600">AI 探索 / AI Coding</text>
+  <path d="M80 128H132" stroke="#267B76" stroke-width="5"/>
+  <text x="76" y="248" fill="#17333B" font-family="Microsoft YaHei,Noto Sans SC,sans-serif" font-size="61" font-weight="700" letter-spacing="-1">Claude Code</text>
+  <text x="76" y="322" fill="#17333B" font-family="Microsoft YaHei,Noto Sans SC,sans-serif" font-size="61" font-weight="700" letter-spacing="-1">盘活一个荒废的</text>
+  <text x="76" y="396" fill="#17333B" font-family="Microsoft YaHei,Noto Sans SC,sans-serif" font-size="61" font-weight="700" letter-spacing="-1">技术博客</text>
+  <text x="80" y="469" fill="#5B6E72" font-family="Microsoft YaHei,Noto Sans SC,sans-serif" font-size="22">自动化执行，人工把关</text>
+  <text x="650" y="137" fill="#456168" font-family="Microsoft YaHei,Noto Sans SC,sans-serif" font-size="21" font-weight="600">一次真实的协作循环</text>
+  <path d="M650 164H1115" stroke="#AEBBB6" stroke-width="1.5"/>
+  <g font-family="Microsoft YaHei,Noto Sans SC,sans-serif">
+    <rect x="646" y="238" width="128" height="82" fill="#F5F6F2" stroke="#9EAEA9" stroke-width="2"/>
+    <text x="710" y="273" text-anchor="middle" fill="#17333B" font-size="21" font-weight="700">任务</text>
+    <text x="710" y="300" text-anchor="middle" fill="#687A7D" font-size="16">目标与约束</text>
+    <rect x="825" y="238" width="166" height="82" fill="#DCE9E4" stroke="#267B76" stroke-width="2.5"/>
+    <text x="908" y="273" text-anchor="middle" fill="#17333B" font-size="21" font-weight="700">Claude Code</text>
+    <text x="908" y="300" text-anchor="middle" fill="#456168" font-size="16">读取 · 计划 · 修改</text>
+    <rect x="1042" y="238" width="128" height="82" fill="#F5F6F2" stroke="#9EAEA9" stroke-width="2"/>
+    <text x="1106" y="273" text-anchor="middle" fill="#17333B" font-size="21" font-weight="700">代码库</text>
+    <text x="1106" y="300" text-anchor="middle" fill="#687A7D" font-size="16">变更与测试</text>
+    <path d="M775 279H813" stroke="#267B76" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M992 279H1030" stroke="#267B76" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M1106 322V390H906" fill="none" stroke="#267B76" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <rect x="824" y="370" width="166" height="78" fill="#F5F6F2" stroke="#C67842" stroke-width="2.5"/>
+    <text x="907" y="403" text-anchor="middle" fill="#17333B" font-size="21" font-weight="700">人工复核</text>
+    <text x="907" y="429" text-anchor="middle" fill="#687A7D" font-size="16">决策 · 脱敏 · 发布</text>
+    <path d="M823 409H710V331" fill="none" stroke="#C67842" stroke-width="2.5" marker-end="url(#arrowAmber)"/>
+  </g>
+  <text x="650" y="520" fill="#687A7D" font-family="Microsoft YaHei,Noto Sans SC,sans-serif" font-size="18">每一步都有明确的责任边界</text>
+</svg>
