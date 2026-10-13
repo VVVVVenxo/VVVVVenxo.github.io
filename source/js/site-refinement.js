@@ -27,10 +27,18 @@
 
     document.body.classList.add('site-editorial-home');
     if (!pageHeader || !recentPosts) return;
+    if (pageHeader.classList.contains('full_page') && !pageHeader.querySelector('.cat-opening-link')) {
+      const entry = document.createElement('a');
+      entry.className = 'cat-opening-link';
+      entry.href = '#engineering-notes';
+      entry.textContent = '阅读工程手记';
+      pageHeader.appendChild(entry);
+    }
 
     if (!document.querySelector('.site-refinement-intro')) {
       const intro = document.createElement('section');
       intro.className = 'site-refinement-intro';
+      intro.id = 'engineering-notes';
       intro.setAttribute('aria-label', '站点介绍');
       intro.innerHTML = `
         <div class="site-refinement-mast"><span>VVVVVenxo</span><small>ENGINEERING NOTEBOOK / EST. 2024</small></div>
@@ -52,6 +60,9 @@
       pageHeader.insertAdjacentElement('afterend', intro);
     }
 
+    const profileHeading = document.querySelector('#aside-content .card-announcement .item-headline');
+    if (profileHeading) profileHeading.innerHTML = '<i class="fas fa-user"></i><span>个人简介</span>';
+
     if (!recentPosts.dataset.editorial) {
       const list = recentPosts.querySelector('.recent-post-items');
       const items = list ? Array.from(list.querySelectorAll(':scope > .recent-post-item:not(.ads-wrap)')) : [];
@@ -63,14 +74,7 @@
       }
     }
 
-    const announcement = document.querySelector('#aside-content .card-announcement');
-    if (announcement && !announcement.dataset.refined) {
-      announcement.dataset.refined = 'true';
-      const heading = announcement.querySelector('.item-headline');
-      const content = announcement.querySelector('.announcement_content');
-      if (heading) heading.innerHTML = '<i class="fas fa-book-open"></i><span>写作主题</span>';
-      if (content) content.innerHTML = '<ul class="site-refinement-topics"><li>C++ 与 C# 基础</li><li>Unity 客户端架构</li><li>网络同步与实时系统</li><li>图形渲染与工程实践</li></ul>';
-    }
+
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applyHomeRefinements, { once: true });

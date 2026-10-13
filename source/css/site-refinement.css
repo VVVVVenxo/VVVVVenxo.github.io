@@ -80,12 +80,13 @@ a { color:var(--site-accent); }
 /* Editorial home: article summaries lead; covers act as supporting illustrations. */
 body.site-editorial-home #page-header { border-bottom: 0; }
 body.site-editorial-home #content-inner.layout:not(.post) {
-  display: block;
+  display: flex;
+  align-items: flex-start;
   max-width: 1208px;
   padding: 0 24px 52px;
 }
-body.site-editorial-home #content-inner.layout:not(.post) > #recent-posts { width: 100%; max-width:1160px; margin:0 auto; }
-body.site-editorial-home #content-inner.layout:not(.post) > #aside-content { display: none; }
+body.site-editorial-home #content-inner.layout:not(.post) > #recent-posts { width:calc(100% - 282px); min-width:0; margin:0; }
+body.site-editorial-home #content-inner.layout:not(.post) > #aside-content { display:block; width:282px; padding-left:24px; }
 .site-refinement-intro {
   grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
   grid-template-areas: "mast mast" "copy diagram";
@@ -175,7 +176,7 @@ body.site-editorial-home #footer { background: transparent !important; }
 body.site-editorial-home :focus-visible { outline: 2px solid var(--site-accent); outline-offset: 3px; }
 
 @media (max-width: 900px) {
-  body.site-editorial-home #content-inner.layout:not(.post) { padding: 0 18px 42px; }
+  body.site-editorial-home #content-inner.layout:not(.post) { display:block; padding: 0 18px 42px; }
   body.site-editorial-home #content-inner.layout:not(.post) > #recent-posts { width: 100%; }
   body.site-editorial-home #content-inner.layout:not(.post) > #aside-content { display: none; }
   .site-refinement-intro { gap: 24px; }
@@ -253,3 +254,59 @@ body.site-editorial-home #recent-posts .site-refinement-featured .recent-post-in
   font-size:.88em;
   overflow-wrap:anywhere;
 }
+
+/* Personal identity stays in the opening and sidebar; reading remains quiet. */
+.avatar-img, .avatar-img img,
+#aside-content .card-info .avatar-img img { border-radius:50%; }
+.avatar-img { overflow:hidden; }
+body.site-editorial-home #aside-content .card-recent-post,
+body.site-editorial-home #aside-content .card-tags { display:none; }
+#aside-content .profile-note { text-align:left; font-size:14px; line-height:1.85; }
+#aside-content .profile-note p { margin:.6em 0; }
+body.site-editorial-home #page-header.full_page {
+  height:100vh;
+  height:100svh;
+  min-height:540px;
+  background-position:center 55%;
+  background-attachment:scroll;
+}
+body.site-editorial-home #page-header.full_page::before { background:rgba(20,30,25,.08); }
+body.site-editorial-home #page-header.full_page #site-info { top:18%; }
+body.site-editorial-home #page-header.full_page #site-title {
+  color:#fff;
+  font-family:Georgia,"Noto Serif SC","Songti SC",serif;
+  font-weight:500;
+  font-size:clamp(30px,4vw,54px);
+  text-shadow:0 2px 14px rgba(0,0,0,.35);
+}
+body.site-editorial-home #page-header.full_page #site-subtitle { color:#fff; font-size:18px; }
+.cat-opening-link {
+  position:absolute;
+  bottom:72px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:12px 22px;
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:24px;
+  background:rgba(37,52,49,.65);
+  color:#fff;
+  font-size:14px;
+  backdrop-filter:blur(8px);
+}
+.cat-opening-link:hover { background:rgba(37,52,49,.9); color:#fff; }
+.cat-opening-link:focus-visible { outline:2px solid white; outline-offset:4px; }
+#content-inner { scroll-margin-top:72px; }
+@media(max-width:900px) {
+  body.site-editorial-home #content-inner.layout:not(.post) > #recent-posts { width:100%; }
+  body.site-editorial-home #content-inner.layout:not(.post) > #aside-content { display:none; }
+}
+@media(max-width:600px) {
+  body.site-editorial-home #page-header.full_page { min-height:480px; }
+  body.site-editorial-home #page-header.full_page #site-info { top:17%; }
+}
+@media(prefers-reduced-motion:no-preference) {
+  body.site-editorial-home #page-header.full_page #site-info { animation:cat-opening-in .7s ease-out both; }
+  @keyframes cat-opening-in { from { opacity:0; translate:0 10px; } to { opacity:1; translate:0 0; } }
+}
+
+#engineering-notes { scroll-margin-top:58px; }
