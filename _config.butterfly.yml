@@ -29,7 +29,7 @@ social:
   fab fa-steam: https://steamcommunity.com/profiles/76561198863443106/ || Steam
 
 # 首页大图
-index_img: /img/banner.jpg
+index_img: false
 
 # 文章默认封面
 default_top_img: false
@@ -39,6 +39,10 @@ avatar:
   effect: false
 
 index_card_style: card
+index_layout: 4
+index_post_content:
+  method: 1
+  length: 180
 
 cover:
   index_enable: true
@@ -59,11 +63,11 @@ cover:
 
 post_meta:
   page:
-    date_type: both
-    date_format: relative
+    date_type: created
+    date_format: YYYY-MM-DD
     categories: true
-    tags: true
-    label: true
+    tags: false
+    label: false
   post:
     date_type: both
     date_format: relative
@@ -107,48 +111,37 @@ aside:
   card_announcement:
     enable: true
     content: |
-      <div style="text-align: left; font-size: 14px; line-height: 1.9;">
-        <b>🎓 软件工程</b><br><br>
-        <b>💼 工作 / 实习经历</b><br>
-        • 上海某游戏大厂（转正 · 游戏客户端）<br>
-        <span style="color:#888; font-size:12px;">2026.01 - 至今</span><br>
-        • XD 网络<br>
-        <span style="color:#888; font-size:12px;">2025.08 - 2026.01</span><br>
-        • 游族网络<br>
-        <span style="color:#888; font-size:12px;">2025.06 - 2025.08</span><br>
-        <b>🔥 兴趣方向</b><br>
-        • 🎮 游戏开发<br>
-        • 🤖 人工智能<br>
-        • 🎨 计算机图形学<br><br>
-        <hr style="border:none; border-top:1px dashed #ccc; margin:8px 0;">
-        <center style="color:#999; font-size:12px;">--- 请不要开盒我 ---</center>
+      <div class="profile-note">
+        <p>软件工程背景，专注游戏客户端开发。</p>
+        <p><strong>关注</strong> Unity 架构、网络同步与实时渲染。</p>
+        <p class="profile-note__meta">游戏开发 · AI 工具 · 图形技术</p>
       </div>
   card_recent_post:
     enable: true
-    limit: 5
+    limit: 3
     sort: date
     sort_order:
   card_categories:
     enable: true
-    limit: 8
+    limit: 5
     expand: none
     sort_order:
   card_tags:
     enable: true
-    limit: 40
-    color: true
-    orderby: random
+    limit: 12
+    color: false
+    orderby: name
     order: 1
     sort_order:
   card_archives:
-    enable: true
+    enable: false
     type: monthly
     format: MMMM YYYY
     order: -1
-    limit: 8
+    limit: 5
     sort_order:
   card_webinfo:
-    enable: true
+    enable: false
     post_count: true
     last_push_date: true
     sort_order:
@@ -242,30 +235,30 @@ beautify:
   title-prefix-icon-color: '#49B1F5'
 
 font:
-  global-font-size: 18px
-  code-font-size: 16px
-  font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+  global-font-size: 17px
+  code-font-size: 15px
+  font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif'
   code-font-family: '"Cascadia Code", "Fira Code", Consolas, Monaco, monospace'
 
-background: "#fafafa"
+background: "#F1F4F1"
 
 footer_bg: true
 
 theme_color:
   enable: true
-  main: '#007aff'
-  paginator: '#007aff'
-  button_hover: '#0051d5'
-  text_selection: '#b3d7ff'
-  link_color: '#007aff'
-  meta_color: '#8e8e93'
-  hr_color: '#e5e5ea'
-  code_foreground: '#ff3b30'
-  code_background: '#f2f2f7'
-  toc_color: '#007aff'
-  blockquote_padding_color: '#007aff'
-  blockquote_background_color: '#f2f2f7'
-  scrollbar_color: '#007aff'
+  main: '#2F766A'
+  paginator: '#2F766A'
+  button_hover: '#245D55'
+  text_selection: '#C9DDD5'
+  link_color: '#2F766A'
+  meta_color: '#77847F'
+  hr_color: '#DCE3DD'
+  code_foreground: '#B45F3E'
+  code_background: '#EAF0EB'
+  toc_color: '#2F766A'
+  blockquote_padding_color: '#2F766A'
+  blockquote_background_color: '#EAF0EB'
+  scrollbar_color: '#2F766A'
 
 category_ui: index
 tag_ui: index
@@ -276,91 +269,9 @@ pjax:
 inject:
   head:
     - <meta name="referrer" content="no-referrer">
-    - |
-      <style>
-        #article-container p { font-size: 18px; line-height: 2; margin: 1.5em 0; color: #1d1d1f; }
-        #article-container li { font-size: 18px; line-height: 1.8; color: #1d1d1f; }
-        .recent-posts .recent-post-item { padding: 20px 30px !important; }
-        #page-header.not-top-img { margin-bottom: 10px; }
-        body { color: #1d1d1f; }
-      </style>
-    - |
-      <style>
-        .custom-banner-buttons {
-          position: absolute;
-          top: 65%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          display: flex;
-          gap: 20px;
-          flex-wrap: wrap;
-          justify-content: center;
-          z-index: 2;
-          max-width: 90%;
-        }
-        .custom-btn {
-          padding: 14px 32px;
-          background: rgba(255,255,255,0.12);
-          border: 2px solid rgba(255,255,255,0.85);
-          border-radius: 10px;
-          color: white;
-          text-decoration: none;
-          font-size: 17px;
-          font-weight: 500;
-          backdrop-filter: blur(12px);
-          transition: all 0.35s ease;
-          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .custom-btn:hover {
-          background: rgba(255,255,255,0.95);
-          color: #2563eb;
-          transform: translateY(-4px);
-          box-shadow: 0 12px 25px rgba(0,0,0,0.35);
-          border-color: white;
-        }
-        @media screen and (max-width: 768px) {
-          .custom-banner-buttons {
-            gap: 12px;
-            top: 70%;
-          }
-          .custom-btn {
-            padding: 10px 20px;
-            font-size: 14px;
-          }
-        }
-      </style>
+    - <link rel="stylesheet" href="/css/site-refinement.css">
   bottom:
-    - |
-      <script>
-        function insertBannerButtons() {
-          const oldButtons = document.querySelector('.custom-banner-buttons');
-          if (oldButtons) oldButtons.remove();
-          
-          const banner = document.querySelector('#page-header');
-          if (banner && banner.classList.contains('full_page')) {
-            const buttonsHTML = `
-              <div class="custom-banner-buttons">
-                <a href="/categories/技术笔记/" class="custom-btn">技术笔记</a>
-                <a href="/categories/项目实战/" class="custom-btn">项目实战</a>
-                <a href="/categories/随笔杂谈/" class="custom-btn">随笔杂谈</a>
-              </div>
-            `;
-            banner.insertAdjacentHTML('beforeend', buttonsHTML);
-          }
-        }
-
-        document.addEventListener('DOMContentLoaded', insertBannerButtons);
-        document.addEventListener('pjax:complete', insertBannerButtons);
-      </script>
-    - |
-      <script>
-        function renameAnnouncement() {
-          const title = document.querySelector('.card-announcement .item-headline');
-          if (title) title.innerHTML = '<i class="fas fa-bullhorn"></i> 个人简介';
-        }
-        document.addEventListener('DOMContentLoaded', renameAnnouncement);
-        document.addEventListener('pjax:complete', renameAnnouncement);
-      </script>
+    - <script src="/js/site-refinement.js" defer></script>
 
 CDN:
   third_party_provider: jsdelivr

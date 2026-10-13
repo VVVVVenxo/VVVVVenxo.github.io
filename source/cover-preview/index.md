@@ -1,19 +1,85 @@
 ---
-title: 封面设计预览
-date: 2026-10-12 00:00:00
+title: 编辑部手记 · 封面预览
+date: 2026-10-13 00:00:00
 comments: false
+top_img: false
+aside: false
 ---
 
-这一版尝试把封面从霓虹背景改成「工程笔记」：冷灰纸面、左侧标题、右侧主题结构图。**这里只做效果预览，不会替换文章现有封面。**
-
-## 排序算法
-
-![排序算法封面：比较序列并把最小值放入有序区](/img/covers/preview/sorting.png)
-
-## C++ 内存管理
-
-![C++ 内存管理封面：栈区指针指向堆区对象](/img/covers/preview/cpp-memory.png)
-
-## Claude Code 工作流
-
-![Claude Code 封面：任务、代码修改、测试与人工复核](/img/covers/preview/ai-coding.png)
+<section class="site-design-preview" aria-label="博客首页视觉改版方向">
+  <style>
+    body:has(.site-design-preview) { background:#f1f4f1; }
+    body:has(.site-design-preview) #page-header.not-top-img { height:58px; margin:0; border-bottom:1px solid #d8e0da; }
+    body:has(.site-design-preview) #content-inner.layout { display:block; max-width:1160px; padding:30px 20px 48px; }
+    body:has(.site-design-preview) #content-inner.layout > .site-design-preview { width:100%; }
+    body:has(.site-design-preview) #content-inner.layout > #aside-content { display:none; }
+    body:has(.site-design-preview) #footer { background:transparent; }
+    .site-design-preview { --ink:#253431; --muted:#667570; --line:#d8e0da; --accent:#2f766a; --surface:#fafbf8; color:var(--ink); font-family:"Segoe UI","Microsoft YaHei",sans-serif; }
+    .site-design-preview * { box-sizing:border-box; }
+    .site-design-preview__mast { display:flex; justify-content:space-between; padding:0 0 14px; border-bottom:1px solid var(--ink); font:600 16px Georgia,"Noto Serif SC",serif; }
+    .site-design-preview__mast small { color:var(--muted); font:9px "Segoe UI",sans-serif; letter-spacing:.13em; }
+    .site-design-preview__hero { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr); align-items:center; gap:40px; padding:54px 0 42px; border-bottom:1px solid var(--line); }
+    .site-design-preview__eyebrow { margin:0 0 15px; color:var(--accent); font-size:10px; font-weight:650; letter-spacing:.13em; }
+    .site-design-preview h1 { margin:0; color:var(--ink); font:500 clamp(38px,5vw,58px)/1.17 Georgia,"Noto Serif SC","Songti SC",serif; letter-spacing:-.04em; }
+    .site-design-preview__lead { max-width:520px; margin:18px 0 0; color:var(--muted); font-size:14px; line-height:1.9; }
+    .site-design-preview__topics { display:flex; flex-wrap:wrap; gap:7px; margin-top:19px; }
+    .site-design-preview__topics span { padding:6px 9px; border:1px solid var(--line); background:var(--surface); color:var(--muted); font-size:10px; }
+    .site-design-preview__diagram { padding:12px; background:#e6eee8; }
+    .site-design-preview__diagram svg { display:block; width:100%; height:auto; }
+    .site-design-preview__section { display:flex; justify-content:space-between; align-items:baseline; padding:25px 0 13px; }
+    .site-design-preview__section h2 { margin:0; font:600 17px Georgia,"Noto Serif SC",serif; }
+    .site-design-preview__section span { color:var(--muted); font-size:9px; letter-spacing:.1em; }
+    .site-design-preview__feature { display:grid; grid-template-columns:1fr .9fr; min-height:210px; border:1px solid var(--line); background:var(--surface); }
+    .site-design-preview__copy { align-self:center; padding:26px; }
+    .site-design-preview__copy h3 { margin:10px 0; font:500 27px/1.35 Georgia,"Noto Serif SC",serif; }
+    .site-design-preview__copy p:last-child { color:var(--muted); font-size:12px; line-height:1.8; }
+    .site-design-preview__feature-art { display:grid; place-items:center; min-height:210px; background:#e6eee8; }
+    .site-design-preview__feature-art svg,.site-design-preview__cover svg { display:block; width:100%; height:100%; }
+    .site-design-preview__grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; border:1px solid var(--line); background:var(--line); }
+    .site-design-preview__card { min-width:0; background:var(--surface); }
+    .site-design-preview__cover { aspect-ratio:1.8/1; overflow:hidden; background:#e5ece6; }
+    .site-design-preview__card-copy { padding:13px 15px 16px; }
+    .site-design-preview__category { color:var(--accent); font-size:9px; letter-spacing:.09em; }
+    .site-design-preview__card h3 { margin:7px 0; font-size:14px; line-height:1.5; }
+    .site-design-preview__card p { margin:0; color:var(--muted); font-size:11px; line-height:1.7; }
+    .site-design-preview__footer { display:flex; justify-content:space-between; margin-top:23px; padding-top:13px; border-top:1px solid var(--line); color:var(--muted); font-size:11px; }
+    @media(max-width:760px) { .site-design-preview__hero { grid-template-columns:1fr; gap:24px; padding:42px 0 32px; } .site-design-preview__grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:520px) { body:has(.site-design-preview) #content-inner.layout { padding:18px 12px 34px; } .site-design-preview__mast small { max-width:130px; text-align:right; font-size:8px; } .site-design-preview__hero { gap:18px; } .site-design-preview__feature { grid-template-columns:1fr; } .site-design-preview__feature-art { min-height:170px; } .site-design-preview__grid { grid-template-columns:1fr; } .site-design-preview__cover { aspect-ratio:1.9/1; } .site-design-preview__footer { flex-direction:column; gap:7px; } }
+    .site-design-preview img { display:block; width:100%; height:100%; margin:0 !important; object-fit:contain; }
+    .site-design-preview__originals { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .site-design-preview__originals a { display:block; color:var(--ink); }
+    .site-design-preview__originals img { height:auto; }
+    .site-design-preview__originals span { display:block; padding-top:8px; font-size:13px; }
+    body:has(.site-design-preview) #page { background:transparent; box-shadow:none; padding:0; }
+    body:has(.site-design-preview) #page > .page-title { display:none; }
+    #article-container .site-design-preview p { font-size:14px; line-height:1.85; }
+    .site-design-preview .headerlink { display:none; }
+    #article-container .site-design-preview :is(h1,h2,h3)::before { content:none; }
+    body:has(.site-design-preview) #article-container { max-width:none; }
+    body:has(.site-design-preview) #page { width:100% !important; }
+    @media(max-width:520px) { .site-design-preview__originals { grid-template-columns:1fr; } }
+    [data-theme="dark"] body:has(.site-design-preview) { background:var(--site-paper); }
+    [data-theme="dark"] .site-design-preview { --ink:var(--site-ink); --muted:var(--site-muted); --line:var(--site-line); --accent:var(--site-accent); --surface:var(--site-surface); }
+  </style>
+  <header class="site-design-preview__mast"><span>VVVVVenxo</span><small>ENGINEERING NOTEBOOK / EST. 2024</small></header>
+  <section class="site-design-preview__hero">
+    <div><p class="site-design-preview__eyebrow">GAME CLIENT ENGINEERING</p><h1>游戏客户端<br>工程手记</h1><p class="site-design-preview__lead">从语言、引擎到实时系统。这里记录实现过程、关键原理，以及工程中的真实取舍。</p><div class="site-design-preview__topics"><span>C++ / C#</span><span>Unity</span><span>网络同步</span><span>图形渲染</span></div></div>
+    <div class="site-design-preview__diagram"><svg viewBox="0 0 480 290" role="img" aria-label="客户端输入、游戏循环、渲染与 GPU 的系统关系"><g fill="none" stroke="#9bb3a8" stroke-width="1.5"><path d="M85 78H200V135H330M85 215H200V160H330M200 135V160M330 135V160H410"/></g><g fill="#fafbf8" stroke="#6f9588" stroke-width="2"><rect x="44" y="57" width="82" height="42"/><rect x="44" y="194" width="82" height="42"/><rect x="164" y="119" width="100" height="55"/><rect x="310" y="115" width="84" height="43"/><rect x="390" y="143" width="58" height="34"/></g><g fill="#253431" font-family="Arial,sans-serif" font-size="12" text-anchor="middle"><text x="85" y="83">INPUT</text><text x="85" y="220">STATE</text><text x="214" y="150">GAME LOOP</text><text x="352" y="141">RENDER</text><text x="419" y="164">GPU</text></g><circle cx="200" cy="135" r="4" fill="#bc7950"/><circle cx="330" cy="160" r="4" fill="#bc7950"/></svg></div>
+  </section>
+  <div class="site-design-preview__section"><h2>精选文章</h2><span>TECHNICAL NOTES / SELECTED</span></div>
+  <article class="site-design-preview__feature"><div class="site-design-preview__copy"><p class="site-design-preview__eyebrow">C++ / MEMORY</p><h3>C++ 内存管理</h3><p>从内存分区到 RAII 与智能指针，建立可靠的资源所有权模型。</p></div><div class="site-design-preview__feature-art"><img src="/img/covers/gen/C-内存管理-thumb.svg" alt="C-内存管理的主题图解" width="600" height="360" loading="lazy"></div></article>
+  <div class="site-design-preview__section"><h2>最近更新</h2><span>RECENT ENTRIES</span></div>
+  <div class="site-design-preview__grid">
+    <article class="site-design-preview__card"><div class="site-design-preview__cover"><img src="/img/covers/gen/网络-游戏客户端网络基础-thumb.svg" alt="网络-游戏客户端网络基础的主题图解" width="600" height="360" loading="lazy"></div><div class="site-design-preview__card-copy"><span class="site-design-preview__category">NETWORK / MULTIPLAYER</span><h3>游戏客户端网络</h3><p>理解客户端、服务端与同步策略之间的数据流动。</p></div></article>
+    <article class="site-design-preview__card"><div class="site-design-preview__cover"><img src="/img/covers/gen/Unity-DrawCall与合批优化-thumb.svg" alt="Unity-DrawCall与合批优化的主题图解" width="600" height="360" loading="lazy"></div><div class="site-design-preview__card-copy"><span class="site-design-preview__category">UNITY / PERFORMANCE</span><h3>Unity 渲染与性能</h3><p>从 Draw Call 与合批机制，重新看待运行时成本。</p></div></article>
+    <article class="site-design-preview__card"><div class="site-design-preview__cover"><img src="/img/covers/gen/AI探索-我如何用-Claude-Code-盘活一个荒废的博客-thumb.svg" alt="AI探索-我如何用-Claude-Code-盘活一个荒废的博客的主题图解" width="600" height="360" loading="lazy"></div><div class="site-design-preview__card-copy"><span class="site-design-preview__category">AI / ENGINEERING</span><h3>AI 驱动的博客工作流</h3><p>让自动化承担重复工作，人继续负责关键判断。</p></div></article>
+  </div>
+  <div class="site-design-preview__section"><h2>封面原图</h2><span>点击查看完整尺寸</span></div>
+  <div class="site-design-preview__originals">
+    <a href="/img/covers/gen/C-内存管理.png"><img src="/img/covers/gen/C-内存管理.png" alt="C++ 内存管理封面" width="1200" height="630" loading="lazy"><span>C++ 内存管理</span></a>
+    <a href="/img/covers/gen/算法-排序算法大全.png"><img src="/img/covers/gen/算法-排序算法大全.png" alt="排序算法封面" width="1200" height="630" loading="lazy"><span>排序算法</span></a>
+    <a href="/img/covers/gen/AI探索-给技术博客做一套自动化封面生成系统.png"><img src="/img/covers/gen/AI探索-给技术博客做一套自动化封面生成系统.png" alt="自动化封面生成系统封面" width="1200" height="630" loading="lazy"><span>自动化封面生成系统</span></a>
+    <a href="/img/covers/gen/Unity-GC原理与优化.png"><img src="/img/covers/gen/Unity-GC原理与优化.png" alt="GC 原理与优化封面" width="1200" height="630" loading="lazy"><span>GC 原理与优化</span></a>
+  </div>
+  <footer class="site-design-preview__footer"><span>记录做过的工程，也解释清楚关键取舍。</span><span>持续更新 · 上海</span></footer>
+</section>

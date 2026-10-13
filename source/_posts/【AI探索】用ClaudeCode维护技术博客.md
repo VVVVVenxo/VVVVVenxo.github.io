@@ -94,7 +94,7 @@ git filter-repo --replace-text replace.txt --force
 ```bash
 # 1. 写好 md，放进 source/_posts/，front-matter 不用管封面
 # 2. 一键生成封面
-bash scripts/new-cover.sh
+bash tools/covers/new-cover.sh
 # 3. 提交推送，GitHub Actions 自动构建部署
 git add -A && git commit -m "新增文章：xxx" && git push origin source
 ```
