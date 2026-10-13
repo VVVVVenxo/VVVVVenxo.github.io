@@ -319,3 +319,13 @@ body .pace .pace-progress {
 body .pace .pace-progress-inner {
   box-shadow:0 0 8px var(--site-accent),0 0 4px var(--site-accent);
 }
+
+/* Keep the permalink clickable while displaying Chinese characters readably. */
+.post-copyright__type .post-copyright-info,
+.post-copyright__type .post-copyright-info a {
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+.post-copyright__type .post-copyright-info a {
+  display:inline;
+}
