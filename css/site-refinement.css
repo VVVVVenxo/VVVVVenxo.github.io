@@ -310,3 +310,12 @@ body.site-editorial-home #page-header.full_page #site-subtitle { color:#fff; fon
 }
 
 #engineering-notes { scroll-margin-top:58px; }
+
+/* Match Butterfly's top loading indicator to the site accent instead of Pace's blue default. */
+body .pace .pace-progress {
+  background:var(--site-accent) !important;
+  box-shadow:0 0 8px color-mix(in srgb,var(--site-accent) 45%,transparent);
+}
+body .pace .pace-progress-inner {
+  box-shadow:0 0 8px var(--site-accent),0 0 4px var(--site-accent);
+}
