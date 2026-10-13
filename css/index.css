@@ -2053,7 +2053,7 @@ figure.highlight pre .javascript .function {
 .container code {
   padding: 2px 5px;
   background: #eaf0eb;
-  color: #b45f3e;
+  color: #2f6659;
 }
 .container pre {
   padding: 10px 20px;
@@ -5131,7 +5131,7 @@ figure.highlight pre .javascript .function {
   position: absolute;
   top: calc(50% - 7px);
   left: 0;
-  color: #f47466;
+  color: #2f766a;
   content: '\f0c1';
   line-height: 1;
   -webkit-transition: all 0.2s ease-out;

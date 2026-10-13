@@ -237,3 +237,19 @@ body.site-editorial-home :focus-visible { outline: 2px solid var(--site-accent);
 [data-theme="dark"] #page-header.not-top-img #nav,
 [data-theme="dark"] #page-header.nav-fixed #nav { background:rgba(34,49,44,.96); }
 body.site-editorial-home #recent-posts .site-refinement-featured .recent-post-info { position:static; transform:none; }
+
+/* Quiet article details: match the editorial palette without recoloring syntax blocks. */
+#article-container :is(h1,h2,h3,h4,h5,h6)::before,
+#article-container :is(h1,h2,h3,h4,h5,h6):hover::before {
+  color:var(--site-accent);
+  opacity:.65;
+}
+#article-container code:not(pre code):not(figure code) {
+  padding:.12em .35em;
+  border:1px solid var(--site-line);
+  border-radius:4px;
+  background:var(--site-soft);
+  color:var(--site-accent);
+  font-size:.88em;
+  overflow-wrap:anywhere;
+}
