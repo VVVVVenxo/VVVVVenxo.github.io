@@ -231,8 +231,8 @@ Open_Graph_meta:
 beautify:
   enable: true
   field: site
-  title-prefix-icon: '\f0c1'
-  title-prefix-icon-color: '#49B1F5'
+  title_prefix_icon: '\f0c1'
+  title_prefix_icon_color: '#2F766A'
 
 font:
   global-font-size: 17px
@@ -253,7 +253,7 @@ theme_color:
   link_color: '#2F766A'
   meta_color: '#77847F'
   hr_color: '#DCE3DD'
-  code_foreground: '#B45F3E'
+  code_foreground: '#2F6659'
   code_background: '#EAF0EB'
   toc_color: '#2F766A'
   blockquote_padding_color: '#2F766A'
