@@ -329,3 +329,114 @@ body .pace .pace-progress-inner {
 .post-copyright__type .post-copyright-info a {
   display:inline;
 }
+
+
+/* Technical code panels use the paper palette by day and retain contrast at night. */
+:root {
+  --code-panel-bg:#e8eee9;
+  --code-panel-toolbar:#e0e8e2;
+  --code-panel-gutter:#e8eee9;
+  --code-panel-ink:#30423c;
+  --code-panel-muted:#7d8983;
+  --code-panel-line:#cbd7cf;
+  --code-panel-teal:#2f766a;
+  --code-panel-warm:#98643f;
+  --code-panel-green:#55764d;
+  --code-panel-blue:#526f96;
+  --code-panel-purple:#75628d;
+  --code-panel-selection:#c9ddd588;
+}
+[data-theme="dark"] {
+  --code-panel-bg:#202c28;
+  --code-panel-toolbar:#263631;
+  --code-panel-gutter:#202c28;
+  --code-panel-ink:#dce6df;
+  --code-panel-muted:#94a69c;
+  --code-panel-line:#3b5047;
+  --code-panel-teal:#8ecbb6;
+  --code-panel-warm:#d6a174;
+  --code-panel-green:#b3ce91;
+  --code-panel-blue:#a5c0ed;
+  --code-panel-purple:#c5a9df;
+  --code-panel-selection:#40655788;
+}
+#article-container figure.highlight {
+  margin:1.15em 0 1.5em;
+  overflow:hidden;
+  border:1px solid var(--code-panel-line);
+  border-radius:8px;
+  background:var(--code-panel-bg);
+  color:var(--code-panel-ink);
+  box-shadow:none;
+}
+#article-container figure.highlight .highlight-tools {
+  min-height:34px;
+  height:34px;
+  padding:0 10px;
+  border-bottom:1px solid var(--code-panel-line);
+  background:var(--code-panel-toolbar);
+  color:var(--code-panel-muted);
+  font-size:12px;
+}
+#article-container figure.highlight .highlight-tools .macStyle { display:none; }
+#article-container figure.highlight .highlight-tools .code-lang {
+  padding-left:2px;
+  color:var(--code-panel-muted);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.015em;
+  text-transform:none;
+}
+#article-container figure.highlight .highlight-tools i {
+  border-radius:4px;
+  color:var(--code-panel-muted);
+}
+#article-container figure.highlight .highlight-tools i:hover { color:var(--code-panel-teal); }
+#article-container figure.highlight table { background:transparent; }
+#article-container figure.highlight .gutter pre {
+  padding:9px 11px;
+  border:0;
+  border-right:1px solid var(--code-panel-line);
+  border-radius:0;
+  background:var(--code-panel-gutter);
+  color:var(--code-panel-muted);
+}
+#article-container figure.highlight .code pre {
+  padding:9px 15px;
+  border:0;
+  border-radius:0;
+  background:var(--code-panel-bg);
+  color:var(--code-panel-ink);
+  line-height:1.75;
+  tab-size:2;
+}
+#article-container figure.highlight pre .comment { color:var(--code-panel-muted); }
+#article-container figure.highlight pre .variable,
+#article-container figure.highlight pre .attribute,
+#article-container figure.highlight pre .regexp,
+#article-container figure.highlight pre .tag .name,
+#article-container figure.highlight pre .css .class,
+#article-container figure.highlight pre .css .pseudo { color:var(--code-panel-warm); }
+#article-container figure.highlight pre .number,
+#article-container figure.highlight pre .preprocessor,
+#article-container figure.highlight pre .literal,
+#article-container figure.highlight pre .constant,
+#article-container figure.highlight pre .built_in { color:var(--code-panel-warm); }
+#article-container figure.highlight pre .string,
+#article-container figure.highlight pre .value,
+#article-container figure.highlight pre .addition { color:var(--code-panel-green); }
+#article-container figure.highlight pre .keyword,
+#article-container figure.highlight pre .tag,
+#article-container figure.highlight pre .type { color:var(--code-panel-teal); }
+#article-container figure.highlight pre .function,
+#article-container figure.highlight pre .title { color:var(--code-panel-blue); }
+#article-container figure.highlight pre .meta,
+#article-container figure.highlight pre .selector-tag { color:var(--code-panel-purple); }
+#article-container figure.highlight pre .deletion { color:var(--code-panel-warm); }
+#article-container figure.highlight pre .marked { background:var(--code-panel-selection); }
+#article-container figure.highlight::-webkit-scrollbar-thumb,
+#article-container figure.highlight table::-webkit-scrollbar-thumb { background:var(--code-panel-line); }
+@media(max-width:600px) {
+  #article-container figure.highlight .code pre { padding-right:12px; padding-left:12px; }
+  #article-container figure.highlight .highlight-tools { min-height:32px; height:32px; }
+}
