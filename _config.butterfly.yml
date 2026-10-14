@@ -15,8 +15,8 @@ menu:
   关于: /about/ || fas fa-heart
 
 code_blocks:
-  theme: darker
-  macStyle: true
+  theme: light
+  macStyle: false
   height_limit: 300
   word_wrap: false
   copy: true
