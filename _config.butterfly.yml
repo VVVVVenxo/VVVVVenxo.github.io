@@ -269,7 +269,7 @@ pjax:
 inject:
   head:
     - <meta name="referrer" content="no-referrer">
-    - <link rel="stylesheet" href="/css/site-refinement.css">
+    - <link rel="stylesheet" href="/css/site-refinement.css?v=20261016">
   bottom:
     - <script src="/js/site-refinement.js" defer></script>
 
