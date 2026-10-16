@@ -171,10 +171,17 @@ copy:
     enable: false
     limit_count: 50
 
-local_search:
-  enable: true
-  preload: false
-  CDN:
+search:
+  use: local_search
+  placeholder: 搜索文章、Unity、C++、C#…
+  local_search:
+    preload: false
+    top_n_per_article: 2
+    unescape: false
+    pagination:
+      enable: false
+      hitsPerPage: 8
+    CDN:
 
 math:
   enable: false
@@ -269,9 +276,9 @@ pjax:
 inject:
   head:
     - <meta name="referrer" content="no-referrer">
-    - <link rel="stylesheet" href="/css/site-refinement.css?v=20261016">
+    - <link rel="stylesheet" href="/css/site-refinement.css?v=20261016-2">
   bottom:
-    - <script src="/js/site-refinement.js" defer></script>
+    - <script src="/js/site-refinement.js?v=20261016-2" defer></script>
 
 CDN:
   third_party_provider: jsdelivr

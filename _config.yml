@@ -104,3 +104,6 @@ deploy:
   type: git
   repo: git@github.com:VVVVVenxo/VVVVVenxo.github.io.git
   branch: gh-pages
+
+search:
+  path: search.json

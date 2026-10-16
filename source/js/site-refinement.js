@@ -11,10 +11,64 @@
     return section;
   };
 
+  const applyPostMobileToc = () => {
+    document.querySelectorAll('.site-mobile-toc').forEach(node => node.remove());
+
+    const post = document.getElementById('post');
+    const article = document.getElementById('article-container');
+    const cardToc = document.querySelector('#card-toc .toc-content');
+    if (!post || !article || !cardToc) return;
+
+    const sourceList = cardToc.querySelector('ol.toc');
+    if (!sourceList || !sourceList.children.length) return;
+
+    const details = document.createElement('details');
+    details.className = 'site-mobile-toc';
+
+    const count = sourceList.querySelectorAll('.toc-link').length;
+    const summary = document.createElement('summary');
+    summary.className = 'site-mobile-toc__summary';
+    summary.innerHTML = `
+      <span class="site-mobile-toc__title"><i class="fas fa-stream" aria-hidden="true"></i><span>文章目录</span></span>
+      <span class="site-mobile-toc__meta">${count} 节</span>
+    `;
+
+    const body = document.createElement('nav');
+    body.className = 'site-mobile-toc__body';
+    body.setAttribute('aria-label', '文章目录');
+    body.appendChild(sourceList.cloneNode(true));
+
+    body.addEventListener('click', event => {
+      const link = event.target.closest('a.toc-link');
+      if (!link) return;
+      const href = link.getAttribute('href') || '';
+      if (!href.startsWith('#')) return;
+      const targetId = decodeURIComponent(href.slice(1));
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      event.preventDefault();
+      details.open = false;
+      if (window.btf && typeof window.btf.scrollToDest === 'function' && typeof window.btf.getEleTop === 'function') {
+        window.btf.scrollToDest(window.btf.getEleTop(target), 300);
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      if (window.btf && typeof window.btf.updateAnchor === 'function') {
+        window.btf.updateAnchor(href);
+      }
+    });
+
+    details.append(summary, body);
+    post.insertBefore(details, article);
+  };
+
   const applyHomeRefinements = () => {
     if (!document.body) return;
     const pageHeader = document.querySelector('#page-header');
     const recentPosts = document.querySelector('#recent-posts');
+
+    applyPostMobileToc();
 
     if (!isEditorialHome()) {
       document.body.classList.remove('site-editorial-home');
@@ -73,8 +127,6 @@
         recentPosts.dataset.editorial = 'true';
       }
     }
-
-
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applyHomeRefinements, { once: true });
