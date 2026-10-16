@@ -191,7 +191,7 @@ fancybox: true
 preloader:
   enable: true
   source: 2
-  pace_css_url:
+  pace_css_url: /css/pace-theme-editorial.css
 
 wordcount:
   enable: true
