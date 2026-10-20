@@ -5,13 +5,18 @@
 ## 项目结构
 
 ```
-VVVenoxBlog/
+VVVVVenxo.github.io/
 ├── source/
 │   ├── _posts/          # 文章目录
+│   ├── css/             # 站点定制样式（site-refinement.css、pace-theme-editorial.css）
+│   ├── js/              # 站点定制交互（site-refinement.js：杂志风首页与移动端目录）
 │   ├── img/             # 全局图片（banner、头像、封面）
-│   │   └── covers/gen/  # 程序化生成的文章封面（勿手动改）
+│   │   ├── covers/gen/  # 程序化生成的文章封面与缩略图（勿手动改）
+│   │   └── posts/       # 文章配图
+│   ├── cover-preview/   # 编辑部手记 · 封面与版式预览页
 │   └── about/           # 关于页面
-├── scripts/             # 封面生成脚本（见「文章封面」章节）
+├── scripts/             # Hexo 构建插件（cover-thumbnails.js、local-search-index.js、seo-feeds.js）
+├── tools/covers/        # 封面生成工具（gen_covers.py、svg2png.py、new-cover.sh）
 ├── _config.yml          # Hexo 主配置
 ├── _config.butterfly.yml # Butterfly 主题配置
 └── .github/workflows/   # GitHub Actions 自动部署
@@ -48,7 +53,7 @@ hexo new "文章标题"
 | 一级分类 | 说明 | 示例 |
 |----------|------|------|
 | 技术笔记 | 技术学习内容 | C++、C#、Unity、网络、图形学 |
-| 项目实战 | 个人项目、实习复盘 | Demo 开发记录、工作总结 |
+| 项目实战 | 个人项目、工程复盘 | 框架开发记录、架构总结 |
 | AI探索 | AI 如何改变真实工程实践 | AI Coding、AI Agent、AI 游戏开发 |
 | 随笔杂谈 | 非技术内容 | 方法论、读书笔记、生活感悟 |
 
@@ -78,28 +83,28 @@ description: 50-100字的文章摘要，用于 SEO 和文章卡片展示
 
 ## 文章封面（重要）
 
-封面**程序化生成**，统一采用「三色极光霓虹 + 全息轨道 + 霓虹标题」骨架，并按分类切换中景元素与调色板；标题 hash 会稳定改变极光曲线、轨道角度和粒子位置，避免同分类撞图。写文章时 **front-matter 不用写 `cover:`**，交给脚本。
+封面**程序化生成**，采用编辑部技术手记风格（浅灰绿纸面 + 深墨标题 + 青绿主色与暖橙重点）：左侧排版分类、标题与主题说明，右侧根据分类与标题关键词绘制 SVG 技术图解。同时生成 `1200×630` 完整封面（SVG + PNG，用于正文顶部与社交分享）和 `600×360` 仅含图解的 `-thumb.svg` 列表缩略图（由 `scripts/cover-thumbnails.js` 在构建时自动替换）。写文章时 **front-matter 不用写 `cover:`**，交给脚本。
 
 ### 发布流程
 
 写好 md 放 `source/_posts/` 后，仓库根目录执行：
 
 ```bash
-bash scripts/new-cover.sh     # 给缺 cover 的文章生成封面（SVG + PNG），并写回 cover 字段
+bash tools/covers/new-cover.sh     # 给缺 cover 的文章生成封面（SVG + PNG + thumb.svg），并写回 cover 字段
 git add -A
 git commit -m "新增文章：xxx"
-git push origin source        # 推送后 Actions 自动构建部署
+git push origin source             # 推送后 Actions 自动构建部署
 ```
 
 `new-cover.sh` 只处理没有 `cover:` 的文章，已有封面的会跳过（尊重手动指定，如项目实战用真实截图）。
 
 ### 其他用法
 
-- 改配色/风格后全部重刷：`bash scripts/new-cover.sh --all`
-- 分类三色调色板定义在 `scripts/gen_covers.py` 的 `PALETTES`，中景类型定义在 `VARIANTS`；新增分类时各加一行
-- `--all` 只重绘自动生成的封面，永远保留手动指定的真实项目截图
+- 改配色/图解后全部重刷：`bash tools/covers/new-cover.sh --all`
+- 主题匹配与 SVG 图解定义在 `tools/covers/gen_covers.py` 的 `select_variant` 与 `diagram_*`；新增主题时补充映射并运行单元测试：`python -m unittest discover -s tools/covers -p "test_*.py"`
+- `--all` 只重绘 `/img/covers/gen/` 下的自动封面，永远保留手动指定的真实项目截图
 - 依赖：Python 3 + 本机 Chrome/Chromium/Edge（脚本自动探测）
-- 完整说明见 `scripts/README.md`
+- 完整说明见 `tools/covers/README.md`
 
 ## 注意事项
 

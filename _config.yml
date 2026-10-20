@@ -4,9 +4,16 @@
 
 # Site
 title: VVVVVenxo's Blog
-subtitle: ''
-description: ''
+subtitle: '游戏客户端工程手记'
+description: '专注游戏客户端开发，记录 C++、C#、Unity 架构、网络同步、实时渲染与 AI 工程实践。'
 keywords:
+  - 游戏客户端开发
+  - Unity
+  - C++
+  - C#
+  - 网络同步
+  - 图形渲染
+  - AI Coding
 author: VVVVVenxo
 language: zh-CN
 timezone: ''
