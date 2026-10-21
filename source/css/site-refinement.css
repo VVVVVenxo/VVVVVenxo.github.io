@@ -613,3 +613,89 @@ body.site-editorial-home #page-header.full_page #site-subtitle { color:#fff; fon
     color:var(--site-muted);
   }
 }
+
+/* Progressive image appearance & editorial figure polish in articles. */
+#article-container img {
+  border-radius:6px;
+  transition:opacity .28s ease;
+}
+@media(prefers-reduced-motion:no-preference) {
+  #article-container img:not(.is-loaded) {
+    opacity:.92;
+  }
+  #article-container img.is-loaded {
+    opacity:1;
+  }
+}
+
+/* Giscus comment section aligned with the editorial layout. */
+#post-comment {
+  max-width:820px;
+  margin:28px auto 0;
+  padding-top:8px;
+}
+#post-comment .comment-head .comment-headline {
+  color:var(--site-ink);
+  font-family:Georgia,"Noto Serif SC","Songti SC",serif;
+  font-size:1.15em;
+  font-weight:600;
+}
+#post-comment .comment-head .comment-headline i {
+  color:var(--site-accent);
+}
+#giscus-wrap {
+  margin-top:14px;
+}
+
+/* Knowledge roadmap cards on the About page. */
+.site-roadmap-grid {
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:16px;
+  margin:20px 0 26px;
+}
+.site-roadmap-card {
+  padding:20px 22px;
+  border:1px solid var(--site-line);
+  border-radius:8px;
+  background:var(--site-surface);
+  transition:border-color .2s ease, transform .2s ease;
+}
+.site-roadmap-card:hover {
+  transform:translateY(-2px);
+  border-color:#a8c0b5;
+}
+.site-roadmap-card__eyebrow {
+  margin-bottom:6px;
+  color:var(--site-accent);
+  font-size:11px;
+  font-weight:650;
+  letter-spacing:.12em;
+}
+#article-container .site-roadmap-card h3 {
+  margin:0 0 8px;
+  color:var(--site-ink);
+  font-family:Georgia,"Noto Serif SC","Songti SC",serif;
+  font-size:1.18em;
+}
+#article-container .site-roadmap-card p {
+  margin:0 0 12px;
+  color:var(--site-muted);
+  font-size:14px;
+  line-height:1.7;
+}
+#article-container .site-roadmap-card ul {
+  margin:0;
+  padding-left:18px;
+}
+#article-container .site-roadmap-card li {
+  margin:4px 0;
+  font-size:14.5px;
+  line-height:1.65;
+}
+@media(max-width:720px) {
+  .site-roadmap-grid {
+    grid-template-columns:1fr;
+  }
+}
+
