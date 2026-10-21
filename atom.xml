@@ -64,18 +64,18 @@
       <description>梳理 Unity 的资源加载体系——从 Resources、AssetBundle 到 Addressables，同步与异步加载的原理与陷阱，引用计数管理，以及 Lua 与 HybridCLR 两种热更新方案的对比。</description>
     </item>
     <item>
-      <title>【算法】图与搜索算法</title>
-      <link>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</link>
-      <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</guid>
-      <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
-      <description>梳理游戏开发中常用的图与搜索算法——A* 寻路、JPS 跳点搜索、广度/深度遍历，以及 AI 决策的两大方案行为树与状态机的对比。</description>
-    </item>
-    <item>
       <title>【算法】排序算法大全</title>
       <link>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</link>
       <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</guid>
       <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
       <description>系统梳理八大排序算法——选择、冒泡、插入、希尔、归并、快速、堆、计数排序，包含原理、复杂度、稳定性分析与 C# 代码实现，是游戏客户端开发的核心基础知识。</description>
+    </item>
+    <item>
+      <title>【算法】图与搜索算法</title>
+      <link>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</link>
+      <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</guid>
+      <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
+      <description>梳理游戏开发中常用的图与搜索算法——A* 寻路、JPS 跳点搜索、广度/深度遍历，以及 AI 决策的两大方案行为树与状态机的对比。</description>
     </item>
     <item>
       <title>【计算机基础】进程、内存与网络</title>

@@ -63,12 +63,25 @@
     post.insertBefore(details, article);
   };
 
+  const applyArticleImagePolish = () => {
+    const article = document.getElementById('article-container');
+    if (!article) return;
+    article.querySelectorAll('img').forEach(img => {
+      if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+      if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+      const markReady = () => img.classList.add('is-loaded');
+      if (img.complete) markReady();
+      else img.addEventListener('load', markReady, { once: true });
+    });
+  };
+
   const applyHomeRefinements = () => {
     if (!document.body) return;
     const pageHeader = document.querySelector('#page-header');
     const recentPosts = document.querySelector('#recent-posts');
 
     applyPostMobileToc();
+    applyArticleImagePolish();
 
     if (!isEditorialHome()) {
       document.body.classList.remove('site-editorial-home');
