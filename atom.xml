@@ -127,6 +127,13 @@
       <description>基于《C++ Primer》第五版与游戏客户端工程实践构建的 C++ 知识索引，串联本博客已完成的 C++ 核心专题文章。</description>
     </item>
     <item>
+      <title>【C++】类型转换</title>
+      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</link>
+      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</guid>
+      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
+      <description>详解 C++ 中的四种类型转换关键字：const_cast、static_cast、dynamic_cast 和 reinterpret_cast，分析它们的使用场景和区别。</description>
+    </item>
+    <item>
       <title>【C++】虚函数</title>
       <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E8%99%9A%E5%87%BD%E6%95%B0/</link>
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E8%99%9A%E5%87%BD%E6%95%B0/</guid>
@@ -139,13 +146,6 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91.NET%E5%B9%B3%E5%8F%B0/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>理解微软 .NET 平台的架构：CLI、CIL、CLR 的概念，以及如何实现跨语言和跨平台。</description>
-    </item>
-    <item>
-      <title>【C++】类型转换</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>详解 C++ 中的四种类型转换关键字：const_cast、static_cast、dynamic_cast 和 reinterpret_cast，分析它们的使用场景和区别。</description>
     </item>
   </channel>
 </rss>
