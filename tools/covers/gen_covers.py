@@ -40,6 +40,7 @@ CAPTIONS = {
     "ai-coding": "工具负责执行；人把握范围与最终判断",
     "ai-agent": "规划任务，调用工具，再依据反馈调整行动",
     "covers": "文章信息经过排版，生成可发布封面",
+    "pipeline": "三维顶点经过坐标变换与光栅化，最终着色为屏幕像素",
 }
 
 
@@ -362,7 +363,28 @@ def diagram_learning(reflection=False):
     return "".join(parts)
 
 
+def diagram_pipeline():
+    return "".join([
+        t(650, 205, "顶点变换 · 光栅化 · 片元着色", 21, INK, 650),
+        rule(650, 222, 1125, 222),
+        box(650, 286, 112, 82, "Vertex", PALE, SOFT, 17, "MVP 变换"),
+        box(792, 286, 118, 82, "Rasterize", MINT, TEAL, 16, "图元 · 插值"),
+        box(940, 286, 112, 82, "Fragment", "#F4E6D9", ORANGE, 16, "光照 · 采样"),
+        box(1078, 286, 74, 82, "Frame", PALE, TEAL, 15, "Z / Blend"),
+        rule(762, 327, 784, 327, TEAL, 2, marker="tealArrow"),
+        rule(910, 327, 932, 327, ORANGE, 2, marker="orangeArrow"),
+        rule(1052, 327, 1070, 327, TEAL, 2, marker="tealArrow"),
+        box(650, 412, 210, 52, "Uniform / CBuffer", PALE, SOFT, 14, mono=True),
+        box(892, 412, 260, 52, "Texture2D + BRDF Lighting", MINT, TEAL, 14, mono=True),
+        rule(755, 412, 706, 368, SOFT, 1.5, "4 4"),
+        rule(1022, 412, 996, 368, TEAL, 1.5, "4 4"),
+        t(650, 522, "可编程着色器与固定管线阶段协同生成最终画面", 16, MUTED),
+    ])
+
+
 def select_variant(top, sub, title):
+    if sub == "图形学" or "渲染管线" in title or "Shader" in title:
+        return "pipeline"
     if top == "AI探索":
         if "封面" in title: return "covers"
         return "ai-agent" if sub == "AI Agent" else "ai-coding"
@@ -419,6 +441,7 @@ def diagram_for(kind):
     if kind=="network": return diagram_network()
     if kind=="huffman": return diagram_huffman()
     if kind in ("ai-coding", "ai-agent", "covers"): return diagram_ai(kind)
+    if kind == "pipeline": return diagram_pipeline()
     if kind in ("learning","reflection-notes"): return diagram_learning(kind=="reflection-notes")
     return diagram_layers("architecture", "")
 
@@ -432,7 +455,8 @@ def diagram_heading(kind):
         "assets":"资源加载与释放","gc":"GC · 可达对象","render":"界面到渲染批次","frame-sync":"帧同步",
         "state-sync":"状态同步","network":"数据包从编码到抵达","huffman":"按频率构建前缀树",
         "ai-coding":"人机协作 · 工程回路","ai-agent":"Agent · 规划与工具调用",
-        "covers":"文章到封面的生成链路","learning":"学习闭环","reflection-notes":"经验与思考"}
+        "covers":"文章到封面的生成链路","pipeline":"顶点变换 · 光栅化 · 片元着色",
+        "learning":"学习闭环","reflection-notes":"经验与思考"}
     return names[kind]
 
 

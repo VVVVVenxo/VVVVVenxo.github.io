@@ -21,7 +21,7 @@ comments: false
 
 ## 知识图谱与阅读路线
 
-站点目前已收录 **36 篇** 体系化文章。如果你第一次来到这里，可以按下面的专题脉络检索阅读：
+站点目前已收录 **37 篇** 体系化文章。如果你第一次来到这里，可以按下面的专题脉络检索阅读：
 
 <div class="site-roadmap-grid">
   <div class="site-roadmap-card">
@@ -60,9 +60,10 @@ comments: false
 
   <div class="site-roadmap-card">
     <div class="site-roadmap-card__eyebrow">03 · ARCHITECTURE &amp; PROJECTS</div>
-    <h3>项目实战与客户端架构</h3>
-    <p>从零搭建商业级游戏框架、自然场景实时渲染漫游系统与基础系统工程实现。</p>
+    <h3>项目实战、图形学与客户端架构</h3>
+    <p>现代实时渲染管线与 Shader 编程、大规模自然场景漫游系统与商业级游戏客户端框架。</p>
     <ul>
+      <li><a href="/2026/10/21/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91%E7%8E%B0%E4%BB%A3%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E4%B8%8EShader%E7%BC%96%E7%A8%8B%E7%B2%BE%E8%A6%81/">【图形学】现代渲染管线与 Shader 编程精要（MVP / PBR / GPU 架构）</a></li>
       <li><a href="/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/">基于 OpenGL 的大规模自然场景实时漫游系统</a></li>
       <li><a href="/2025/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91LEngine%E6%A1%86%E6%9E%B6/">LEngine 游戏客户端核心框架设计与实现</a></li>
       <li><a href="/2025/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91GameplayFrameWork%E6%A1%86%E6%9E%B6/">GameplayFramework 模块化战斗与业务框架</a></li>
