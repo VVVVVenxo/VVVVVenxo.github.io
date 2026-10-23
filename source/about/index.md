@@ -21,7 +21,7 @@ comments: false
 
 ## 知识图谱与阅读路线
 
-站点目前已收录 **37 篇** 体系化文章。如果你第一次来到这里，可以按下面的专题脉络检索阅读：
+站点目前已收录 **38 篇** 体系化文章。如果你第一次来到这里，可以按下面的专题脉络检索阅读：
 
 <div class="site-roadmap-grid">
   <div class="site-roadmap-card">
@@ -29,6 +29,7 @@ comments: false
     <h3>Unity 引擎核心与性能优化</h3>
     <p>从生命周期、协程/多线程、UI 源码到合批渲染、内存管理与 xLua 热更新机制。</p>
     <ul>
+      <li><a href="/2026/10/22/%E3%80%90Unity%E3%80%91URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98/">URP 渲染管线架构与 RenderFeature 后处理实战</a></li>
       <li><a href="/2026/10/20/%E3%80%90Unity%E3%80%91Lua%E7%BC%96%E7%A8%8B%E4%B8%8ExLua%E7%83%AD%E6%9B%B4%E6%96%B0%E6%9C%BA%E5%88%B6/">Lua 编程与 xLua 热更新机制</a></li>
       <li><a href="/2026/07/29/%E3%80%90Unity%E3%80%91UGUI%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">UGUI 源码解读：Canvas、Layout 与事件</a></li>
       <li><a href="/2026/07/28/%E3%80%90Unity%E3%80%91DrawCall%E4%B8%8E%E5%90%88%E6%89%B9%E4%BC%98%E5%8C%96/">DrawCall 与合批优化（SRP Batcher / GPU Instancing）</a></li>
