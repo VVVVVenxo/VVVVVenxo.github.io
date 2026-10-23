@@ -26,7 +26,7 @@
       <link>https://VVVVVenxo.github.io/2026/10/20/%E3%80%90Unity%E3%80%91Lua%E7%BC%96%E7%A8%8B%E4%B8%8ExLua%E7%83%AD%E6%9B%B4%E6%96%B0%E6%9C%BA%E5%88%B6/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/20/%E3%80%90Unity%E3%80%91Lua%E7%BC%96%E7%A8%8B%E4%B8%8ExLua%E7%83%AD%E6%9B%B4%E6%96%B0%E6%9C%BA%E5%88%B6/</guid>
       <pubDate>Tue, 20 Oct 2026 00:00:00 GMT</pubDate>
-      <description>从 C# 客户端开发者视角系统梳理 Lua 核心语法与易错陷阱、标准库高频用法、基于 Metatable 的面向对象与 Mixin 组件复用模式，最后深入 xLua 的 Wrap 桥接、DelayWrapLoader 延迟注册、跨语言数据传递与 Hotfix 热补丁闭环。</description>
+      <description>梳理 Lua 核心语法、Table 底层与标准库、基于 Metatable 的面向对象与 Mixin 模式，以及 xLua 的 Wrap 桥接、延迟注册、跨语言数据传递与热更新机制。</description>
     </item>
     <item>
       <title>【AI探索】给技术博客做一套自动化封面生成系统</title>
@@ -134,18 +134,18 @@
       <description>深入理解 C++ 内存管理：内存分区、动态分配、常见问题、RAII 与智能指针、内存对齐。</description>
     </item>
     <item>
-      <title>【C++】整体框架</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>基于《C++ Primer》第五版与游戏客户端工程实践构建的 C++ 知识索引，串联本博客已完成的 C++ 核心专题文章。</description>
-    </item>
-    <item>
       <title>【C++】类型转换</title>
       <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</link>
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>详解 C++ 中的四种类型转换关键字：const_cast、static_cast、dynamic_cast 和 reinterpret_cast，分析它们的使用场景和区别。</description>
+    </item>
+    <item>
+      <title>【C++】整体框架</title>
+      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/</link>
+      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/</guid>
+      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
+      <description>基于《C++ Primer》第五版与游戏客户端工程实践构建的 C++ 知识索引，串联本博客已完成的 C++ 核心专题文章。</description>
     </item>
   </channel>
 </rss>
