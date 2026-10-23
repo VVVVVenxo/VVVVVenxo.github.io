@@ -12,7 +12,7 @@
       <link>https://VVVVVenxo.github.io/2026/10/21/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91%E7%8E%B0%E4%BB%A3%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E4%B8%8EShader%E7%BC%96%E7%A8%8B%E7%B2%BE%E8%A6%81/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/21/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91%E7%8E%B0%E4%BB%A3%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E4%B8%8EShader%E7%BC%96%E7%A8%8B%E7%B2%BE%E8%A6%81/</guid>
       <pubDate>Wed, 21 Oct 2026 00:00:00 GMT</pubDate>
-      <description>系统梳理现代实时图形渲染管线的完整数据流：从 CPU 应用阶段的剔除与合批、MVP 坐标空间变换矩阵推导、透视除法与重心坐标插值，到 GPU SIMT 架构下的 Shader 编程精要、PBR（Cook-Torrance BRDF）光照模型实现，以及 Early-Z、Overdraw 与分支发散等核心性能调优准则。</description>
+      <description>梳理实时渲染管线的完整流程：从 CPU 剔除与渲染排序、MVP 坐标空间变换、光栅化插值与 Early-Z，到 Unity URP HLSL 结构、PBR（Cook-Torrance BRDF）光照实现及 GPU 硬件层面的 Shader 性能优化。</description>
     </item>
     <item>
       <title>【Unity】Lua编程与xLua热更新机制</title>
@@ -106,6 +106,13 @@
       <description>基于C++与Modern OpenGL构建的大规模自然场景实时漫游系统，实现了地形渲染、水体仿真、天空盒、日夜循环、LOD优化、视锥体剔除、SSAO等核心功能，是一个具备&quot;游戏级&quot;视觉表现的室外场景漫游系统。</description>
     </item>
     <item>
+      <title>【C++】值语义与移动</title>
+      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/</link>
+      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/</guid>
+      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
+      <description>理解 C++ 值语义：从拷贝到移动的演进，掌握左值右值、深浅拷贝、移动语义，以及 Rule of Five/Zero。</description>
+    </item>
+    <item>
       <title>【C++】关键字</title>
       <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</link>
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</guid>
@@ -118,13 +125,6 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>深入理解 C++ 内存管理：内存分区、动态分配、常见问题、RAII 与智能指针、内存对齐。</description>
-    </item>
-    <item>
-      <title>【C++】值语义与移动</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>理解 C++ 值语义：从拷贝到移动的演进，掌握左值右值、深浅拷贝、移动语义，以及 Rule of Five/Zero。</description>
     </item>
     <item>
       <title>【C++】整体框架</title>
