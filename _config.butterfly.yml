@@ -197,14 +197,8 @@ search:
     CDN:
 
 math:
-  use: mathjax
-  per_page: false
-  hide_scrollbar: false
-  mathjax:
-    tags: none
-    enableMenu: false
-  katex:
-    copy_tex: false
+  enable: false
+  per_page: true
 
 lazyload:
   enable: false
