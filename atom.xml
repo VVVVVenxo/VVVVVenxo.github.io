@@ -8,6 +8,13 @@
     <managingEditor>VVVVVenxo</managingEditor>
     <atom:link href="https://VVVVVenxo.github.io/atom.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>【Unity】URP渲染管线架构与RenderFeature实战</title>
+      <link>https://VVVVVenxo.github.io/2026/10/22/%E3%80%90Unity%E3%80%91URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98/</link>
+      <guid>https://VVVVVenxo.github.io/2026/10/22/%E3%80%90Unity%E3%80%91URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98/</guid>
+      <pubDate>Thu, 22 Oct 2026 00:00:00 GMT</pubDate>
+      <description>解析 Unity URP（通用渲染管线）的核心架构、一帧渲染流程与 C# 调度机制，并通过完整的自定义 ScriptableRendererFeature 与 RTHandle 双缓冲 Kawase 模糊实战，掌握现代 Unity 渲染管线扩展与调试方法。</description>
+    </item>
+    <item>
       <title>【图形学】现代渲染管线与Shader编程精要</title>
       <link>https://VVVVVenxo.github.io/2026/10/21/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91%E7%8E%B0%E4%BB%A3%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E4%B8%8EShader%E7%BC%96%E7%A8%8B%E7%B2%BE%E8%A6%81/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/21/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91%E7%8E%B0%E4%BB%A3%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E4%B8%8EShader%E7%BC%96%E7%A8%8B%E7%B2%BE%E8%A6%81/</guid>
@@ -139,13 +146,6 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>详解 C++ 中的四种类型转换关键字：const_cast、static_cast、dynamic_cast 和 reinterpret_cast，分析它们的使用场景和区别。</description>
-    </item>
-    <item>
-      <title>【CSharp】.NET 平台</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91.NET%E5%B9%B3%E5%8F%B0/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90CSharp%E3%80%91.NET%E5%B9%B3%E5%8F%B0/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>理解微软 .NET 平台的架构：CLI、CIL、CLR 的概念，以及如何实现跨语言和跨平台。</description>
     </item>
   </channel>
 </rss>
