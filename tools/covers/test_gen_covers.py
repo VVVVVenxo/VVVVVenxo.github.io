@@ -44,6 +44,12 @@ class CoverTests(unittest.TestCase):
         self.assertEqual(''.join(lines), title)
         self.assertGreater(len(lines[-1]), 1)
 
+    def test_linux_cover_variant_and_title_wrap(self):
+        kind = covers.select_variant('技术笔记', '计算机基础', '【计算机基础】为什么开发云服务器首选 Linux')
+        self.assertEqual(kind, 'linux')
+        self.assertIn('Linux Kernel', covers.diagram_for(kind))
+        self.assertEqual(covers.wrap_title('为什么开发云服务器首选 Linux'), ['为什么开发云服务器', '首选 Linux'])
+
     def test_writing_preserves_crlf_and_body(self):
         with tempfile.TemporaryDirectory() as directory, patch.object(covers, 'GEN', directory):
             path = os.path.join(directory, 'post.md')

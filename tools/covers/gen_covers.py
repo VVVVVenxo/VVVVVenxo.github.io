@@ -41,6 +41,7 @@ CAPTIONS = {
     "ai-agent": "规划任务，调用工具，再依据反馈调整行动",
     "covers": "文章信息经过排版，生成可发布封面",
     "pipeline": "三维顶点经过坐标变换与光栅化，最终着色为屏幕像素",
+    "linux": "无 GUI 损耗，以纯文本配置与命令行驱动 7×24 小时持续构建",
 }
 
 
@@ -382,6 +383,23 @@ def diagram_pipeline():
     ])
 
 
+def diagram_linux():
+    return "".join([
+        t(650, 205, "无头服务 · 命令行 · 持续构建", 21, INK, 650),
+        rule(650, 222, 1125, 222),
+        box(650, 282, 134, 82, "SSH / CLI", PALE, SOFT, 17, "纯命令交互", True),
+        box(822, 282, 146, 82, "Linux Kernel", MINT, TEAL, 16, "Headless · 7×24"),
+        box(1006, 282, 138, 82, "CI / Build", "#F4E6D9", ORANGE, 17, "100% 算力投入"),
+        rule(784, 323, 814, 323, TEAL, 2, marker="tealArrow"),
+        rule(968, 323, 998, 323, ORANGE, 2, marker="orangeArrow"),
+        box(650, 408, 226, 54, "/etc/*.conf · 一切皆文件", PALE, SOFT, 14, mono=True),
+        box(904, 408, 240, 54, "systemd · Docker · crontab", MINT, TEAL, 14, mono=True),
+        rule(763, 408, 865, 364, SOFT, 1.5, "4 4"),
+        rule(1024, 408, 1055, 364, TEAL, 1.5, "4 4"),
+        t(650, 522, "零图形界面开销，配置与自动化全由文件与命令完成", 16, MUTED),
+    ])
+
+
 def select_variant(top, sub, title):
     if sub == "图形学" or "渲染管线" in title or "Shader" in title:
         return "pipeline"
@@ -392,7 +410,7 @@ def select_variant(top, sub, title):
     if top == "随笔杂谈": return "reflection-notes" if ("最近" in title or "所思所想" in title) else "learning"
     if sub == "算法": return "graph" if ("图" in title or "搜索" in title) else "sorting"
     if sub == "数据结构": return "hash" if "哈希" in title else "huffman"
-    if sub == "计算机基础": return "process"
+    if sub == "计算机基础": return "linux" if ("Linux" in title or "服务器" in title) else "process"
     if sub == "网络":
         if "帧同步" in title: return "frame-sync"
         if "状态同步" in title: return "state-sync"
@@ -442,6 +460,7 @@ def diagram_for(kind):
     if kind=="huffman": return diagram_huffman()
     if kind in ("ai-coding", "ai-agent", "covers"): return diagram_ai(kind)
     if kind == "pipeline": return diagram_pipeline()
+    if kind == "linux": return diagram_linux()
     if kind in ("learning","reflection-notes"): return diagram_learning(kind=="reflection-notes")
     return diagram_layers("architecture", "")
 
@@ -456,6 +475,7 @@ def diagram_heading(kind):
         "state-sync":"状态同步","network":"数据包从编码到抵达","huffman":"按频率构建前缀树",
         "ai-coding":"人机协作 · 工程回路","ai-agent":"Agent · 规划与工具调用",
         "covers":"文章到封面的生成链路","pipeline":"顶点变换 · 光栅化 · 片元着色",
+        "linux":"无头服务 · 命令行 · 持续构建",
         "learning":"学习闭环","reflection-notes":"经验与思考"}
     return names[kind]
 
@@ -476,6 +496,9 @@ def wrap_title(title, max_units=10.5):
             combined=lines[-2]+lines[-1]
             split=len(combined)//2
             lines[-2:]=[combined[:split],combined[split:]]
+        elif re.match(r"^[\u4e00-\u9fff]\s+[A-Za-z]", lines[-1]) and re.search(r"[\u4e00-\u9fff]$", lines[-2]):
+            lines[-1] = lines[-2][-1] + lines[-1]
+            lines[-2] = lines[-2][:-1]
     return lines or [title]
 
 
