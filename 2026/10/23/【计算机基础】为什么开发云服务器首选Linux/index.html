@@ -1,0 +1,325 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【计算机基础】为什么开发云服务器首选 Linux | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="结合项目部署开发云与自动化构建服务器的实践，总结为什么服务端与构建机清一色选择 Linux：零 GUI 资源损耗、7×24 高可用、一切皆文件与命令行驱动，以及开源工具链生态。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【计算机基础】为什么开发云服务器首选 Linux">
+<meta property="og:url" content="https://vvvvvenxo.github.io/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/index.html">
+<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
+<meta property="og:description" content="结合项目部署开发云与自动化构建服务器的实践，总结为什么服务端与构建机清一色选择 Linux：零 GUI 资源损耗、7×24 高可用、一切皆文件与命令行驱动，以及开源工具链生态。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89-Linux.png">
+<meta property="article:published_time" content="2026-10-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-10T09:55:16.705Z">
+<meta property="article:author" content="VVVVVenxo">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云服务器">
+<meta property="article:tag" content="CI&#x2F;CD">
+<meta property="article:tag" content="工程实践">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89-Linux.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【计算机基础】为什么开发云服务器首选 Linux",
+  "url": "https://vvvvvenxo.github.io/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/",
+  "image": "https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89-Linux.png",
+  "datePublished": "2026-10-22T16:00:00.000Z",
+  "dateModified": "2026-11-10T09:55:16.705Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "VVVVVenxo",
+      "url": "https://VVVVVenxo.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【计算机基础】为什么开发云服务器首选 Linux',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="referrer" content="no-referrer"><link rel="stylesheet" href="/css/site-refinement.css?v=20261020-1"><meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="/css/pace-theme-editorial.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #F1F4F1;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">125</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89-Linux.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【计算机基础】为什么开发云服务器首选 Linux</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【计算机基础】为什么开发云服务器首选 Linux</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-22T16:00:00.000Z" title="发表于 2026-10-23 00:00:00">2026-10-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-10T09:55:16.705Z" title="更新于 2026-11-10 17:55:16">2026-11-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">859</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>最近项目在部署开发云服务器，主要用于承载日常的自动化构建与开发环境。实际搭完一整套流程后，对“为什么服务端和构建机清一色选择 Linux”有了非常具象的体感。总结下来，核心在于以下四点。</p>
+<h2 id="一、无图形界面损耗，算力-100-留给构建"><a href="#一、无图形界面损耗，算力-100-留给构建" class="headerlink" title="一、无图形界面损耗，算力 100% 留给构建"></a>一、无图形界面损耗，算力 100% 留给构建</h2><p>构建机最核心的诉求是榨干 CPU、内存和磁盘 I&#x2F;O。</p>
+<p>带桌面环境（GUI）的系统即使什么都不干，窗口管理器和后台图形服务也会常驻消耗数 GB 内存与可观的 CPU 调度周期。而 Linux Server 默认以无头模式（Headless）运行，系统本身仅占用百兆级内存，不需要分出任何算力去渲染界面，所有硬件资源都可以毫无保留地投入到全天候的代码编译与资源打包中。</p>
+<h2 id="二、7×24-小时稳定在线，极少需要重启"><a href="#二、7×24-小时稳定在线，极少需要重启" class="headerlink" title="二、7×24 小时稳定在线，极少需要重启"></a>二、7×24 小时稳定在线，极少需要重启</h2><p>开发云和构建节点需要全天候待命，最忌讳意外中断。</p>
+<p>Linux 的内核空间与用户空间严格隔离，绝大多数软件升级、环境变更和服务调整，只需通过 <code>systemctl reload</code> 或 <code>restart</code> 重启对应进程即可生效。除了底层内核重大安全更新，系统几乎不需要重启，更不会出现因系统自动更新强制重启而把凌晨构建任务腰斩的情况。</p>
+<h2 id="三、一切皆文件，全链路命令行驱动"><a href="#三、一切皆文件，全链路命令行驱动" class="headerlink" title="三、一切皆文件，全链路命令行驱动"></a>三、一切皆文件，全链路命令行驱动</h2><p>在服务器上干活，效率最高的方式永远是命令行（CLI）：</p>
+<ul>
+<li><strong>改配置就是改文件</strong>：Linux 没有复杂的注册表黑盒，所有系统与服务配置都是纯文本文件。这意味着配置修改极其透明，甚至可以直接纳入 Git 进行版本管理与回滚。</li>
+<li><strong>所有操作皆可脚本化</strong>：既然所有操作都能用一条命令完成，那么把命令串起来就是自动化脚本。无论是远程 SSH 上去改一行参数，还是通过 CI&#x2F;CD 流水线触发无人值守构建，命令行都比点击图形界面快得多、稳得多。</li>
+</ul>
+<h2 id="四、免费开源，工具链的原生底座"><a href="#四、免费开源，工具链的原生底座" class="headerlink" title="四、免费开源，工具链的原生底座"></a>四、免费开源，工具链的原生底座</h2><p>Linux 开源免费，没有按实例或核心数计费的商业授权成本，当项目需要临时横向扩容多台构建节点时没有任何额外负担。</p>
+<p>更重要的是，现代工程工具链（Git、Docker、Nginx、各类 CI Runner）几乎都是围绕 Linux 原生构建的。在 Linux 下配环境、查日志、排障，社区方案最成熟，链路也最直接。</p>
+<h2 id="五、附：云端构建机最常用的三个支撑机制"><a href="#五、附：云端构建机最常用的三个支撑机制" class="headerlink" title="五、附：云端构建机最常用的三个支撑机制"></a>五、附：云端构建机最常用的三个支撑机制</h2><p>在实际部署中，配合下面三个原生机制，基本就能搭起一套稳固的构建环境：</p>
+<ol>
+<li><strong>后台与守护</strong>（<code>systemd</code> &#x2F; <code>tmux</code>）：将构建代理（Agent &#x2F; Runner）注册为 <code>systemd</code> 服务，开机自启、崩溃自动拉起；临时跑耗时任务则放进 <code>tmux</code> 会话，SSH 断开连接也不会中断任务。</li>
+<li><strong>定时任务</strong>（<code>crontab</code>）：一行配置即可设定每日凌晨定时拉取最新分支、执行全量构建并清理过期产物。</li>
+<li><strong>环境隔离</strong>（<code>Docker</code>）：宿主机保持精简干净，不同项目的编译环境和依赖封装在容器镜像里，随用随启，互不污染。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/">https://vvvvvenxo.github.io/2026/10/23/【计算机基础】为什么开发云服务器首选Linux/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/">云服务器</a><a class="post-meta__tags" href="/tags/CI-CD/">CI/CD</a><a class="post-meta__tags" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89-Linux.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/10/22/%E3%80%90Unity%E3%80%91URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98/" title="【Unity】URP渲染管线架构与RenderFeature实战"><img class="cover" src="/img/covers/gen/Unity-URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98-thumb.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post" loading="lazy" decoding="async"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【Unity】URP渲染管线架构与RenderFeature实战</div></div><div class="info-2"><div class="info-item-1">解析 Unity URP（通用渲染管线）的核心架构、一帧渲染流程与 C# 调度机制，并通过完整的自定义 ScriptableRendererFeature 与 RTHandle 双缓冲 Kawase 模糊实战，掌握现代 Unity 渲染管线扩展与调试方法。</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">125</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div class="profile-note">
+  <p>软件工程背景，专注游戏客户端开发。</p>
+  <p><strong>关注</strong> Unity 架构、网络同步与实时渲染。</p>
+  <p class="profile-note__meta">游戏开发 · AI 工具 · 图形技术</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%97%A0%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E6%8D%9F%E8%80%97%EF%BC%8C%E7%AE%97%E5%8A%9B-100-%E7%95%99%E7%BB%99%E6%9E%84%E5%BB%BA"><span class="toc-text">一、无图形界面损耗，算力 100% 留给构建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%817%C3%9724-%E5%B0%8F%E6%97%B6%E7%A8%B3%E5%AE%9A%E5%9C%A8%E7%BA%BF%EF%BC%8C%E6%9E%81%E5%B0%91%E9%9C%80%E8%A6%81%E9%87%8D%E5%90%AF"><span class="toc-text">二、7×24 小时稳定在线，极少需要重启</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%80%E5%88%87%E7%9A%86%E6%96%87%E4%BB%B6%EF%BC%8C%E5%85%A8%E9%93%BE%E8%B7%AF%E5%91%BD%E4%BB%A4%E8%A1%8C%E9%A9%B1%E5%8A%A8"><span class="toc-text">三、一切皆文件，全链路命令行驱动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%85%8D%E8%B4%B9%E5%BC%80%E6%BA%90%EF%BC%8C%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9A%84%E5%8E%9F%E7%94%9F%E5%BA%95%E5%BA%A7"><span class="toc-text">四、免费开源，工具链的原生底座</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%99%84%EF%BC%9A%E4%BA%91%E7%AB%AF%E6%9E%84%E5%BB%BA%E6%9C%BA%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E4%B8%AA%E6%94%AF%E6%92%91%E6%9C%BA%E5%88%B6"><span class="toc-text">五、附：云端构建机最常用的三个支撑机制</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/" title="【计算机基础】为什么开发云服务器首选 Linux"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89-Linux-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】为什么开发云服务器首选 Linux"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/" title="【计算机基础】为什么开发云服务器首选 Linux">【计算机基础】为什么开发云服务器首选 Linux</a><time datetime="2026-10-22T16:00:00.000Z" title="发表于 2026-10-23 00:00:00">2026-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/22/%E3%80%90Unity%E3%80%91URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98/" title="【Unity】URP渲染管线架构与RenderFeature实战"><img src="/img/covers/gen/Unity-URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【Unity】URP渲染管线架构与RenderFeature实战"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/22/%E3%80%90Unity%E3%80%91URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98/" title="【Unity】URP渲染管线架构与RenderFeature实战">【Unity】URP渲染管线架构与RenderFeature实战</a><time datetime="2026-10-21T16:00:00.000Z" title="发表于 2026-10-22 00:00:00">2026-10-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/21/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91%E7%8E%B0%E4%BB%A3%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E4%B8%8EShader%E7%BC%96%E7%A8%8B%E7%B2%BE%E8%A6%81/" title="【图形学】现代渲染管线与Shader编程精要"><img src="/img/covers/gen/%E5%9B%BE%E5%BD%A2%E5%AD%A6-%E7%8E%B0%E4%BB%A3%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E4%B8%8EShader%E7%BC%96%E7%A8%8B%E7%B2%BE%E8%A6%81-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【图形学】现代渲染管线与Shader编程精要"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/21/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91%E7%8E%B0%E4%BB%A3%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E4%B8%8EShader%E7%BC%96%E7%A8%8B%E7%B2%BE%E8%A6%81/" title="【图形学】现代渲染管线与Shader编程精要">【图形学】现代渲染管线与Shader编程精要</a><time datetime="2026-10-20T16:00:00.000Z" title="发表于 2026-10-21 00:00:00">2026-10-21</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = {"data-mapping":"pathname","data-strict":"0","data-reactions-enabled":"1","data-emit-metadata":"0","data-input-position":"top","data-lang":"zh-CN"}
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark_dimmed' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'VVVVVenxo/VVVVVenxo.github.io',
+      'data-repo-id': 'R_kgDOQ5Bk1Q',
+      'data-category-id': 'DIC_kwDOQ5Bk1c4DJO_-',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !true) {
+    if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script src="/js/site-refinement.js?v=20261020-1" defer></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:description\"]","link[rel=\"canonical\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章、Unity、C++、C#…" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.3"></script></div></div></body></html>
