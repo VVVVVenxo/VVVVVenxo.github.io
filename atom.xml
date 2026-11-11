@@ -127,6 +127,13 @@
       <description>理解 C++ 值语义：从拷贝到移动的演进，掌握左值右值、深浅拷贝、移动语义，以及 Rule of Five/Zero。</description>
     </item>
     <item>
+      <title>【C++】关键字</title>
+      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</link>
+      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</guid>
+      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
+      <description>详解 C++ 常用关键字：const、static、extern、explicit 的用法与应用场景。</description>
+    </item>
+    <item>
       <title>【C++】内存管理</title>
       <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</link>
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</guid>
@@ -139,13 +146,6 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>基于《C++ Primer》第五版与游戏客户端工程实践构建的 C++ 知识索引，串联本博客已完成的 C++ 核心专题文章。</description>
-    </item>
-    <item>
-      <title>【C++】关键字</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>详解 C++ 常用关键字：const、static、extern、explicit 的用法与应用场景。</description>
     </item>
   </channel>
 </rss>
