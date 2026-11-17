@@ -19,7 +19,7 @@
       <link>https://VVVVVenxo.github.io/2026/10/22/%E3%80%90Unity%E3%80%91URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/22/%E3%80%90Unity%E3%80%91URP%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%E6%9E%B6%E6%9E%84%E4%B8%8ERenderFeature%E5%AE%9E%E6%88%98/</guid>
       <pubDate>Thu, 22 Oct 2026 00:00:00 GMT</pubDate>
-      <description>用通俗直观的方式梳理 Unity URP（通用渲染管线）的核心设计、四个核心类与一帧渲染流程，并给出最简可用的 RenderFeature 自定义后处理代码模板与避坑要点。</description>
+      <description>记录 Unity URP（通用渲染管线）的核心改进、四个核心类的职责、单帧渲染流程，以及自定义 ScriptableRendererFeature 后处理的代码模板与注意事项。</description>
     </item>
     <item>
       <title>【图形学】现代渲染管线与Shader编程精要</title>
