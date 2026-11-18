@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="410" viewBox="0 0 860 410" role="img" aria-label="TCP三次握手建立连接与四次挥手释放连接时序图">
+  <rect width="860" height="410" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 5-3 · TCP 连接管理：三次握手（建立连接）与四次挥手（释放连接）</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <defs>
+    <marker id="arrTeal" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#287B73"/>
+    </marker>
+    <marker id="arrOrange" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#C47743"/>
+    </marker>
+  </defs>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Box: 3-Way Handshake -->
+    <rect x="28" y="62" width="390" height="328" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="223" y="88" fill="#17343B" font-weight="700" text-anchor="middle">1. 三次握手（建立连接）</text>
+
+    <rect x="52" y="102" width="96" height="30" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="100" y="122" fill="#17343B" font-weight="700" text-anchor="middle">客户 Client</text>
+    <rect x="296" y="102" width="104" height="30" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="348" y="122" fill="#17343B" font-weight="700" text-anchor="middle">服务器 Server</text>
+
+    <line x1="100" y1="132" x2="100" y2="328" stroke="#AEBDB7" stroke-width="1.8"/>
+    <line x1="348" y1="132" x2="348" y2="328" stroke="#AEBDB7" stroke-width="1.8"/>
+
+    <!-- Msg 1 -->
+    <text x="224" y="158" fill="#287B73" font-weight="700" text-anchor="middle">① SYN=1, seq=x</text>
+    <line x1="100" y1="166" x2="344" y2="178" stroke="#287B73" stroke-width="2" marker-end="url(#arrTeal)"/>
+
+    <!-- Msg 2 -->
+    <text x="224" y="218" fill="#C47743" font-weight="700" text-anchor="middle">② SYN=1, ACK=1, seq=y, ack=x+1</text>
+    <line x1="348" y1="226" x2="104" y2="238" stroke="#C47743" stroke-width="2" marker-end="url(#arrOrange)"/>
+
+    <!-- Msg 3 -->
+    <text x="224" y="278" fill="#287B73" font-weight="700" text-anchor="middle">③ ACK=1, seq=x+1, ack=y+1</text>
+    <line x1="100" y1="286" x2="344" y2="298" stroke="#287B73" stroke-width="2" marker-end="url(#arrTeal)"/>
+
+    <text x="100" y="348" fill="#287B73" font-weight="700" text-anchor="middle">ESTABLISHED</text>
+    <text x="348" y="348" fill="#287B73" font-weight="700" text-anchor="middle">ESTABLISHED</text>
+    <text x="223" y="376" fill="#61747A" text-anchor="middle">第 3 次握手防止历史失效连接请求造成服务端空等</text>
+
+    <!-- Right Box: 4-Way Wavehand -->
+    <rect x="442" y="62" width="390" height="328" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="637" y="88" fill="#17343B" font-weight="700" text-anchor="middle">2. 四次挥手（释放连接）</text>
+
+    <rect x="466" y="102" width="96" height="30" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="514" y="122" fill="#17343B" font-weight="700" text-anchor="middle">客户 Client</text>
+    <rect x="710" y="102" width="104" height="30" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="762" y="122" fill="#17343B" font-weight="700" text-anchor="middle">服务器 Server</text>
+
+    <line x1="514" y1="132" x2="514" y2="326" stroke="#AEBDB7" stroke-width="1.8"/>
+    <line x1="762" y1="132" x2="762" y2="326" stroke="#AEBDB7" stroke-width="1.8"/>
+
+    <!-- Wave 1 -->
+    <text x="638" y="150" fill="#287B73" font-weight="700" text-anchor="middle">① FIN=1, seq=u</text>
+    <line x1="514" y1="157" x2="758" y2="167" stroke="#287B73" stroke-width="2" marker-end="url(#arrTeal)"/>
+
+    <!-- Wave 2 -->
+    <text x="638" y="192" fill="#C47743" font-weight="700" text-anchor="middle">② ACK=1, seq=v, ack=u+1</text>
+    <line x1="762" y1="199" x2="518" y2="209" stroke="#C47743" stroke-width="2" marker-end="url(#arrOrange)"/>
+    <text x="638" y="232" fill="#61747A" text-anchor="middle">（Server 进入 CLOSE-WAIT，发完剩余数据）</text>
+
+    <!-- Wave 3 -->
+    <text x="638" y="258" fill="#C47743" font-weight="700" text-anchor="middle">③ FIN=1, ACK=1, seq=w, ack=u+1</text>
+    <line x1="762" y1="265" x2="518" y2="275" stroke="#C47743" stroke-width="2" marker-end="url(#arrOrange)"/>
+
+    <!-- Wave 4 -->
+    <text x="638" y="300" fill="#287B73" font-weight="700" text-anchor="middle">④ ACK=1, seq=u+1, ack=w+1</text>
+    <line x1="514" y1="307" x2="758" y2="317" stroke="#287B73" stroke-width="2" marker-end="url(#arrTeal)"/>
+
+    <rect x="454" y="330" width="128" height="26" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="518" y="348" fill="#C47743" font-weight="700" text-anchor="middle">TIME-WAIT (2MSL)</text>
+    <text x="762" y="348" fill="#17343B" font-weight="700" text-anchor="middle">CLOSED</text>
+    <text x="637" y="376" fill="#61747A" text-anchor="middle">等待 2MSL 确保末次 ACK 抵达并清空网络残留报文</text>
+  </g>
+</svg>
