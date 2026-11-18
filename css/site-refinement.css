@@ -638,6 +638,7 @@ body.site-editorial-home #page-header.full_page #site-subtitle { color:#fff; fon
 
 /* Progressive image appearance & editorial figure polish in articles. */
 #article-container img {
+  height:auto;
   border-radius:6px;
   transition:opacity .28s ease;
 }
