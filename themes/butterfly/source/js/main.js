@@ -550,7 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const $articleList = $article.querySelectorAll('h1,h2,h3,h4,h5,h6')
     let detectItem = ''
 
-    // Optimization: Cache header positions
+    // Keep header positions accurate even when lazy-loaded images expand layout
     let headerList = []
     const updateHeaderPositions = () => {
       headerList = Array.from($articleList).map(ele => ({
@@ -565,13 +565,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const findHeadPosition = top => {
       if (top === 0) return false
+      updateHeaderPositions()
 
       let currentId = ''
       let currentIndex = ''
 
       for (let i = 0; i < headerList.length; i++) {
         const item = headerList[i]
-        if (top > item.top - 80) {
+        if (top >= item.top - 85) {
           currentId = item.id ? '#' + encodeURI(item.id) : ''
           currentIndex = i
         } else {
