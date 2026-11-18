@@ -297,7 +297,8 @@ def diagram_network():
     return "".join([t(650,205,"数据包从编码到抵达",21,INK,650),rule(650,222,1125,222),
         box(656,302,134,82,"客户端",PALE,SOFT,18,"编码"),box(847,302,134,82,"网络",MINT,TEAL,18,"传输"),
         box(1038,302,106,82,"服务端",PALE,SOFT,17,"解析"),rule(790,324,838,324,TEAL,2,marker="tealArrow"),
-        rule(981,324,1029,324,TEAL,2,marker="tealArrow"),rule(1038,366,790,366,ORANGE,2,marker="orangeArrow"),
+        rule(981,324,1029,324,TEAL,2,marker="tealArrow"),rule(1038,362,990,362,ORANGE,2,marker="orangeArrow"),
+        rule(847,362,799,362,ORANGE,2,marker="orangeArrow"),
         t(656,432,"序列化",15,MUTED),t(847,432,"延迟 · 丢包 · 重传",15,MUTED),t(1038,432,"校验",15,MUTED),
         t(650,518,"协议决定数据如何可靠地抵达对端",17,MUTED)])
 
