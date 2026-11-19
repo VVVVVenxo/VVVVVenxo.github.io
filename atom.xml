@@ -8,9 +8,16 @@
     <managingEditor>VVVVVenxo</managingEditor>
     <atom:link href="https://VVVVVenxo.github.io/atom.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>【网络】计算机网络体系结构与核心协议</title>
-      <link>https://VVVVVenxo.github.io/2026/10/24/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E4%B8%8E%E6%A0%B8%E5%BF%83%E5%8D%8F%E8%AE%AE/</link>
-      <guid>https://VVVVVenxo.github.io/2026/10/24/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E4%B8%8E%E6%A0%B8%E5%BF%83%E5%8D%8F%E8%AE%AE/</guid>
+      <title>【计算机基础】离散数学</title>
+      <link>https://VVVVVenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/</link>
+      <guid>https://VVVVVenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/</guid>
+      <pubDate>Sun, 25 Oct 2026 00:00:00 GMT</pubDate>
+      <description>基于屈婉玲《离散数学》的系统复习笔记：涵盖数理逻辑（命题与一阶谓词逻辑、范式与推理）、集合与二元关系（关系性质、闭包、等价关系与偏序集哈斯图）、函数、图论及代数结构。</description>
+    </item>
+    <item>
+      <title>【计算机基础】计算机网络</title>
+      <link>https://VVVVVenxo.github.io/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</link>
+      <guid>https://VVVVVenxo.github.io/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</guid>
       <pubDate>Sat, 24 Oct 2026 00:00:00 GMT</pubDate>
       <description>基于《计算机网络（第 7 版）》的复习笔记：围绕五层协议体系结构（物理层、数据链路层、网络层、运输层、应用层），记录各层的核心概念、工作原理与协议机制。</description>
     </item>
@@ -139,13 +146,6 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>详解 C++ 常用关键字：const、static、extern、explicit 的用法与应用场景。</description>
-    </item>
-    <item>
-      <title>【C++】内存管理</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>深入理解 C++ 内存管理：内存分区、动态分配、常见问题、RAII 与智能指针、内存对齐。</description>
     </item>
   </channel>
 </rss>
