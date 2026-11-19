@@ -411,7 +411,11 @@ def select_variant(top, sub, title):
     if top == "随笔杂谈": return "reflection-notes" if ("最近" in title or "所思所想" in title) else "learning"
     if sub == "算法": return "graph" if ("图" in title or "搜索" in title) else "sorting"
     if sub == "数据结构": return "hash" if "哈希" in title else "huffman"
-    if sub == "计算机基础": return "linux" if ("Linux" in title or "服务器" in title) else "process"
+    if sub == "计算机基础":
+        if "Linux" in title or "服务器" in title: return "linux"
+        if "计算机网络" in title: return "network"
+        if "离散数学" in title: return "graph"
+        return "process"
     if sub == "网络":
         if "帧同步" in title: return "frame-sync"
         if "状态同步" in title: return "state-sync"
