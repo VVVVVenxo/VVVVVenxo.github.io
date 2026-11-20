@@ -134,18 +134,18 @@
       <description>基于C++与Modern OpenGL构建的大规模自然场景实时漫游系统，实现了地形渲染、水体仿真、天空盒、日夜循环、LOD优化、视锥体剔除、SSAO等核心功能，是一个具备&quot;游戏级&quot;视觉表现的室外场景漫游系统。</description>
     </item>
     <item>
-      <title>【C++】值语义与移动</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>理解 C++ 值语义：从拷贝到移动的演进，掌握左值右值、深浅拷贝、移动语义，以及 Rule of Five/Zero。</description>
-    </item>
-    <item>
       <title>【C++】关键字</title>
       <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</link>
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>详解 C++ 常用关键字：const、static、extern、explicit 的用法与应用场景。</description>
+    </item>
+    <item>
+      <title>【C++】值语义与移动</title>
+      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/</link>
+      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/</guid>
+      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
+      <description>理解 C++ 值语义：从拷贝到移动的演进，掌握左值右值、深浅拷贝、移动语义，以及 Rule of Five/Zero。</description>
     </item>
   </channel>
 </rss>
