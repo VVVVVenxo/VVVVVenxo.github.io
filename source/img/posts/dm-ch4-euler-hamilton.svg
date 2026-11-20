@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="欧拉图与哈密顿图的定义与核心判定定理对比">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 4-1 · 欧拉图（遍历所有边）与哈密顿图（遍历所有顶点）核心判定对比</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Card: Eulerian Graph -->
+    <rect x="28" y="64" width="388" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="222" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 欧拉图（Eulerian Graph · 一笔画每条边一次）</text>
+
+    <!-- Bowtie / Envelope Euler Graph illustration -->
+    <g stroke="#287B73" stroke-width="2" fill="none">
+      <polygon points="86,134 156,134 156,188 86,188"/>
+      <polygon points="86,134 121,110 156,134"/>
+      <line x1="86" y1="134" x2="156" y2="188"/>
+      <line x1="156" y1="134" x2="86" y2="188"/>
+    </g>
+    <g fill="#FAFBF8" stroke="#17343B" stroke-width="1.8">
+      <circle cx="121" cy="110" r="7"/><circle cx="86" cy="134" r="7"/><circle cx="156" cy="134" r="7"/>
+      <circle cx="86" cy="188" r="7"/><circle cx="156" cy="188" r="7"/>
+    </g>
+    <text x="121" y="210" fill="#61747A" text-anchor="middle">奇度点=2（半欧拉图）</text>
+
+    <!-- Rules on right of left card -->
+    <rect x="190" y="106" width="210" height="96" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="202" y="128" fill="#17343B" font-weight="700">无向连通图充要条件：</text>
+    <text x="202" y="150" fill="#287B73" font-weight="700">• 欧拉回路：0 个奇度顶点</text>
+    <text x="202" y="170" fill="#17343B">  （所有顶点度数全为偶数）</text>
+    <text x="202" y="190" fill="#C47743" font-weight="700">• 欧拉通路：0 或 2 个奇度点</text>
+
+    <rect x="46" y="220" width="354" height="98" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="60" y="244" fill="#17343B" font-weight="700">有向连通图充要条件：</text>
+    <text x="60" y="268" fill="#17343B">• 有向欧拉回路：所有顶点入度等于出度 d+(v) = d-(v)</text>
+    <text x="60" y="290" fill="#17343B">• 有向欧拉通路：恰有一点出度大 1、一点入度大 1，</text>
+    <text x="60" y="308" fill="#61747A">  其余所有顶点均满足入度等于出度</text>
+
+    <!-- Right Card: Hamiltonian Graph -->
+    <rect x="444" y="64" width="388" height="272" rx="6" fill="#FAFBF8" stroke="#C47743" stroke-width="1.5"/>
+    <text x="638" y="90" fill="#C47743" font-weight="700" text-anchor="middle">2. 哈密顿图（Hamiltonian · 遍历每个顶点一次）</text>
+
+    <!-- Necessary condition illustration: deleting V1 -->
+    <rect x="462" y="106" width="352" height="104" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="476" y="128" fill="#C47743" font-weight="700">必要条件（常用于证伪“某图不是哈密顿图”）：</text>
+    <text x="476" y="152" fill="#17343B" font-weight="700">对任意非空真子集 V1 ⊂ V，删去 V1 后的连通分支数：</text>
+    <text x="638" y="176" fill="#C47743" font-weight="700" text-anchor="middle">p(G - V1) ≤ |V1|</text>
+    <text x="476" y="198" fill="#61747A">推论：含割点或桥的图、|V1|≠|V2| 的二分图必非哈密顿图</text>
+
+    <!-- Sufficient condition -->
+    <rect x="462" y="222" width="352" height="96" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="476" y="244" fill="#287B73" font-weight="700">充分条件（Ore 定理，n ≥ 3 的无向简单图）：</text>
+    <text x="476" y="268" fill="#17343B">对任意两个不相邻顶点 u, v：</text>
+    <text x="476" y="290" fill="#287B73" font-weight="700">• 若 d(u) + d(v) ≥ n - 1 ⇒ 必存在哈密顿通路</text>
+    <text x="476" y="310" fill="#287B73" font-weight="700">• 若 d(u) + d(v) ≥ n     ⇒ 必为哈密顿图（含哈密顿回路）</text>
+  </g>
+</svg>
