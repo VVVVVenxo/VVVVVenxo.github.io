@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="KMP算法最长相等真前后缀与next和nextval数组推导">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 3-1 · KMP 模式匹配算法：最长相等真前后缀跳转与 next / nextval 数组推导</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: KMP Principle -->
+    <rect x="28" y="64" width="388" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="222" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. KMP 失配跳转原理（主串指针 i 永不回溯）</text>
+
+    <!-- Main string S -->
+    <text x="46" y="128" fill="#17343B" font-weight="700">主串 S：</text>
+    <rect x="108" y="110" width="66" height="26" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="141" y="128" fill="#287B73" font-weight="700" text-anchor="middle">a b</text>
+    <rect x="174" y="110" width="34" height="26" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="191" y="128" fill="#17343B" text-anchor="middle">a</text>
+    <rect x="208" y="110" width="66" height="26" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="241" y="128" fill="#287B73" font-weight="700" text-anchor="middle">a b</text>
+    <rect x="274" y="110" width="42" height="26" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="295" y="128" fill="#C47743" font-weight="700" text-anchor="middle">S[i]</text>
+
+    <!-- Pattern T before shift -->
+    <text x="46" y="166" fill="#17343B" font-weight="700">失配前：</text>
+    <rect x="108" y="148" width="66" height="26" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="141" y="166" fill="#287B73" font-weight="700" text-anchor="middle">a b</text>
+    <rect x="174" y="148" width="34" height="26" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="191" y="166" fill="#17343B" text-anchor="middle">a</text>
+    <rect x="208" y="148" width="66" height="26" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="241" y="166" fill="#287B73" font-weight="700" text-anchor="middle">a b</text>
+    <rect x="274" y="148" width="42" height="26" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="295" y="166" fill="#C47743" font-weight="700" text-anchor="middle">c(j=6)</text>
+
+    <!-- Pattern T after shift -->
+    <text x="46" y="204" fill="#287B73" font-weight="700">跳转后：</text>
+    <rect x="208" y="186" width="66" height="26" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="241" y="204" fill="#287B73" font-weight="700" text-anchor="middle">a b</text>
+    <rect x="274" y="186" width="42" height="26" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="295" y="204" fill="#287B73" font-weight="700" text-anchor="middle">a(j=3)</text>
+
+    <rect x="46" y="226" width="352" height="94" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="60" y="248" fill="#17343B" font-weight="700">已匹配前缀 "abaab" 最长相等真前后缀为 "ab" (L=2)：</text>
+    <text x="60" y="270" fill="#287B73" font-weight="700">• 1-based 下标公式：next[j] = L + 1（规定 next[1] = 0）</text>
+    <text x="60" y="292" fill="#C47743" font-weight="700">• 失配时 i 不动，模式串指针直接回退：j = next[6] = 3</text>
+    <text x="60" y="312" fill="#61747A">• 总时间复杂度由朴素 O(n × m) 降至线性 O(n + m)</text>
+
+    <!-- Right Panel: next and nextval Table -->
+    <rect x="436" y="64" width="396" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="634" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 模式串 T = "abaabcac" 的 next 与 nextval 求解表</text>
+
+    <!-- Table (x=452, w=364, 9 columns: label(68) + 8 cols * 37 = 364) -->
+    <rect x="452" y="106" width="364" height="32" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <g fill="#17343B" font-weight="700" text-anchor="middle">
+      <text x="486" y="127">下标 j</text>
+      <text x="538" y="127">1</text><text x="575" y="127">2</text><text x="612" y="127">3</text><text x="649" y="127">4</text>
+      <text x="686" y="127">5</text><text x="723" y="127">6</text><text x="760" y="127">7</text><text x="797" y="127">8</text>
+    </g>
+
+    <!-- Row 2: T[j] -->
+    <rect x="452" y="138" width="364" height="32" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1"/>
+    <g fill="#17343B" font-weight="700" text-anchor="middle">
+      <text x="486" y="159">模式串 T</text>
+      <text x="538" y="159">a</text><text x="575" y="159">b</text><text x="612" y="159">a</text><text x="649" y="159">a</text>
+      <text x="686" y="159">b</text><text x="723" y="159">c</text><text x="760" y="159">a</text><text x="797" y="159">c</text>
+    </g>
+
+    <!-- Row 3: L -->
+    <rect x="452" y="170" width="364" height="32" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1"/>
+    <g fill="#61747A" text-anchor="middle">
+      <text x="486" y="191" fill="#17343B" font-weight="700">前后缀 L</text>
+      <text x="538" y="191">-</text><text x="575" y="191">0</text><text x="612" y="191">0</text><text x="649" y="191">1</text>
+      <text x="686" y="191">1</text><text x="723" y="191">2</text><text x="760" y="191">0</text><text x="797" y="191">1</text>
+    </g>
+
+    <!-- Row 4: next[j] -->
+    <rect x="452" y="202" width="364" height="32" fill="#FAFBF8" stroke="#287B73" stroke-width="1.2"/>
+    <g fill="#287B73" font-weight="700" text-anchor="middle">
+      <text x="486" y="223">next[j]</text>
+      <text x="538" y="223">0</text><text x="575" y="223">1</text><text x="612" y="223">1</text><text x="649" y="223">2</text>
+      <text x="686" y="223">2</text><text x="723" y="223">3</text><text x="760" y="223">1</text><text x="797" y="223">2</text>
+    </g>
+
+    <!-- Row 5: nextval[j] -->
+    <rect x="452" y="234" width="364" height="32" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <g fill="#C47743" font-weight="700" text-anchor="middle">
+      <text x="486" y="255">nextval[j]</text>
+      <text x="538" y="255">0</text><text x="575" y="255">1</text><text x="612" y="255">0</text><text x="649" y="255">2</text>
+      <text x="686" y="255">1</text><text x="723" y="255">3</text><text x="760" y="255">0</text><text x="797" y="255">2</text>
+    </g>
+
+    <text x="456" y="290" fill="#17343B" font-weight="700">nextval 优化规则（消除相同字符无效跳转）：</text>
+    <text x="456" y="312" fill="#C47743" font-weight="700">若 T[j] == T[next[j]]，则 nextval[j] = nextval[next[j]]</text>
+  </g>
+</svg>
