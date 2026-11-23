@@ -8,6 +8,13 @@
     <managingEditor>VVVVVenxo</managingEditor>
     <atom:link href="https://VVVVVenxo.github.io/atom.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>【计算机基础】数据结构</title>
+      <link>https://VVVVVenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
+      <guid>https://VVVVVenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
+      <pubDate>Mon, 26 Oct 2026 00:00:00 GMT</pubDate>
+      <description>基于严蔚敏《数据结构》与 408 统考考点的系统复习笔记：涵盖线性表（顺序表与链表）、栈与循环队列、KMP 模式匹配、树与二叉树、图论算法、查找（AVL/红黑树/B+树/散列表）及内外部排序体系。</description>
+    </item>
+    <item>
       <title>【计算机基础】离散数学</title>
       <link>https://VVVVVenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/</guid>
@@ -139,13 +146,6 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%80%BC%E8%AF%AD%E4%B9%89%E4%B8%8E%E7%A7%BB%E5%8A%A8/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>理解 C++ 值语义：从拷贝到移动的演进，掌握左值右值、深浅拷贝、移动语义，以及 Rule of Five/Zero。</description>
-    </item>
-    <item>
-      <title>【C++】关键字</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C++%E3%80%91%E5%85%B3%E9%94%AE%E5%AD%97/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>详解 C++ 常用关键字：const、static、extern、explicit 的用法与应用场景。</description>
     </item>
   </channel>
 </rss>

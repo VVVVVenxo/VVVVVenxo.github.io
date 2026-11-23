@@ -1,0 +1,605 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【计算机基础】数据结构 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基于严蔚敏《数据结构》与 408 统考考点的系统复习笔记：涵盖线性表（顺序表与链表）、栈与循环队列、KMP 模式匹配、树与二叉树、图论算法、查找（AVL&#x2F;红黑树&#x2F;B+树&#x2F;散列表）及内外部排序体系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【计算机基础】数据结构">
+<meta property="og:url" content="https://vvvvvenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
+<meta property="og:description" content="基于严蔚敏《数据结构》与 408 统考考点的系统复习笔记：涵盖线性表（顺序表与链表）、栈与循环队列、KMP 模式匹配、树与二叉树、图论算法、查找（AVL&#x2F;红黑树&#x2F;B+树&#x2F;散列表）及内外部排序体系。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png">
+<meta property="article:published_time" content="2026-10-26T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-23T06:20:38.617Z">
+<meta property="article:author" content="VVVVVenxo">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="线性表">
+<meta property="article:tag" content="二叉树">
+<meta property="article:tag" content="图论算法">
+<meta property="article:tag" content="排序算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【计算机基础】数据结构",
+  "url": "https://vvvvvenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/",
+  "image": "https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png",
+  "datePublished": "2026-10-26T00:00:00.000Z",
+  "dateModified": "2026-11-23T06:20:38.617Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "VVVVVenxo",
+      "url": "https://VVVVVenxo.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【计算机基础】数据结构',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="referrer" content="no-referrer"><link rel="stylesheet" href="/css/site-refinement.css?v=20261024-1"><meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="/css/pace-theme-editorial.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #F1F4F1;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">136</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【计算机基础】数据结构</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【计算机基础】数据结构</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-26T00:00:00.000Z" title="发表于 2026-10-26 00:00:00">2026-10-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-23T06:20:38.617Z" title="更新于 2026-11-23 06:20:38">2026-11-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="第一章-绪论与线性表"><a href="#第一章-绪论与线性表" class="headerlink" title="第一章 绪论与线性表"></a>第一章 绪论与线性表</h2><h3 id="1-1-数据结构三要素与算法复杂度分析"><a href="#1-1-数据结构三要素与算法复杂度分析" class="headerlink" title="1.1 数据结构三要素与算法复杂度分析"></a>1.1 数据结构三要素与算法复杂度分析</h3><ol>
+<li><strong>数据结构的三要素</strong><ul>
+<li><strong>逻辑结构（Logical Structure）</strong>：数据元素之间的逻辑关系，与底层计算机存储无关，分为两大类四小类：<ol>
+<li><strong>线性结构</strong>：线性表、栈、队列、串、数组（元素间存在一对一的先后关系）。</li>
+<li><strong>非线性结构</strong>：<strong>集合</strong>（元素间除同属一个集合外无其他关系）、<strong>树形结构</strong>（一对多的层次关系）、<strong>图状结构 &#x2F; 网状结构</strong>（多对多的任意关联关系）。</li>
+</ol>
+</li>
+<li><strong>存储结构（物理结构，Physical Structure）</strong>：逻辑结构在计算机内存中的具体映像实现，共四种基本方式：<ol>
+<li><strong>顺序存储</strong>：逻辑上相邻的元素存储在物理地址连续的内存单元中（优点：支持 <code>O(1)</code> 随机访问、存储密度为 1；缺点：插入删除需搬移大量元素、会产生外部碎片）。</li>
+<li><strong>链式存储</strong>：借助指针域存放后继元素的存储地址，不要求物理地址连续（优点：插入删除只需修改指针、动态分配无外部碎片；缺点：不支持随机访问、只能顺序遍历、指针域占用额外空间导致存储密度 &lt; 1）。</li>
+<li><strong>索引存储</strong>：除存储数据元素外还建立附加索引表（关键字 → 物理地址），检索快但维护索引表有额外空间与修改开销。</li>
+<li><strong>散列（哈希）存储</strong>：根据元素关键字通过散列函数直接计算出该元素的存储地址，平均查找、插入、删除时间复杂度均为 <code>O(1)</code>。</li>
+</ol>
+</li>
+<li><strong>数据的运算</strong>：定义在逻辑结构上（声明运算功能），具体实现在存储结构上（确定算法步骤）。</li>
+</ul>
+</li>
+<li><strong>算法的时间复杂度与空间复杂度</strong><ul>
+<li><strong>时间复杂度 <code>T(n) = O(f(n))</code></strong>：衡量算法基本运算执行次数随问题规模 <code>n</code> 增长的渐进上界。</li>
+<li><strong>常见渐进时间复杂度从小到大排序（必背）</strong>：<br><strong><code>O(1) &lt; O(log2 n) &lt; O(n) &lt; O(n log2 n) &lt; O(n^2) &lt; O(n^3) &lt; O(2^n) &lt; O(n!) &lt; O(n^n)</code></strong></li>
+<li><strong>空间复杂度 <code>S(n) = O(g(n))</code></strong>：算法运行过程中临时开辟的<strong>辅助空间</strong>随问题规模 <code>n</code> 的增长率（递归算法的空间复杂度等于递归调用栈的最大深度 × 每次调用栈帧大小）。若所需辅助空间是与问题规模 <code>n</code> 无关的常数，则称该算法为<strong>原地工作（In-place，<code>S(n) = O(1)</code>）</strong>。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="1-2-顺序表与链表"><a href="#1-2-顺序表与链表" class="headerlink" title="1.2 顺序表与链表"></a>1.2 顺序表与链表</h3><ol>
+<li><strong>顺序表（Sequential List）</strong><ul>
+<li><strong>地址计算公式</strong>：设顺序表首元素 <code>a1</code>（或 <code>a0</code>）存放的起始地址为 <code>LOC(L)</code>，每个数据元素占用 <code>sizeof(ElemType) = d</code> 个字节，则第 <code>i</code> 个元素（1-based 下标）的内存地址为：<br><strong><code>LOC(ai) = LOC(L) + (i - 1) × d</code></strong>（支持 <code>O(1)</code> 随机存取）。</li>
+<li><strong>插入与删除的平均移动次数</strong>：<ul>
+<li><strong>插入操作</strong>：在长度为 <code>n</code> 的顺序表第 <code>i</code>（<code>1 ≤ i ≤ n + 1</code>）个位置插入元素，需将第 <code>n</code> 至第 <code>i</code> 个元素依次后移，移动次数为 <code>n - i + 1</code>；若在每个位置插入等概率（<code>p = 1 / (n + 1)</code>），则<strong>平均移动元素次数为 <code>n / 2</code></strong>，时间复杂度为 <strong><code>O(n)</code></strong>。</li>
+<li><strong>删除操作</strong>：删除第 <code>i</code>（<code>1 ≤ i ≤ n</code>）个元素，需将第 <code>i + 1</code> 至第 <code>n</code> 个元素依次前移，移动次数为 <code>n - i</code>；若删除每个位置等概率（<code>p = 1 / n</code>），则<strong>平均移动元素次数为 <code>(n - 1) / 2</code></strong>，时间复杂度为 <strong><code>O(n)</code></strong>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>单链表（Singly Linked List）</strong><ul>
+<li><strong>引入头结点（Head Node &#x2F; Dummy Node）的两大原因</strong>：<ol>
+<li><strong>统一首元节点与其他节点的操作</strong>：在链表第 1 个位置插入或删除节点时，无需专门修改头指针 <code>L</code> 本身，代码逻辑与中间节点完全一致；</li>
+<li><strong>统一空表与非空表的判定</strong>：无论链表是否为空，头指针 <code>L</code> 永远非空（指向头结点），<strong>带头结点单链表判空条件为 <code>L-&gt;next == NULL</code></strong>（不带头结点判空条件为 <code>L == NULL</code>）。</li>
+</ol>
+</li>
+<li><strong>单链表的两种建立方式（时间复杂度均为 <code>O(n)</code>）</strong>：<ul>
+<li><strong>头插法（逆序建表 &#x2F; 原地逆置）</strong>：每次将新节点 <code>s</code> 插入在头结点 <code>L</code> 之后，核心两步指针顺序：<strong>① <code>s-&gt;next = L-&gt;next;</code> ② <code>L-&gt;next = s;</code></strong>（顺序绝不可颠倒，否则丢失原首元节点地址）。头插法生成的链表元素顺序与输入顺序<strong>完全相反</strong>，常用于<strong>单链表 <code>O(1)</code> 空间原地逆置</strong>。</li>
+<li><strong>尾插法（正序建表）</strong>：必须维护一个始终指向当前表尾节点的<strong>尾指针 <code>r</code></strong>，每次插入执行：<strong>① <code>r-&gt;next = s;</code> ② <code>r = s;</code></strong>，最后令 <code>r-&gt;next = NULL</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><img width="860" height="360" src="/img/posts/ds-ch1-list.svg" alt="单链表头插法与双链表插入指针修改顺序" loading="lazy" decoding="async"></p>
+<ol start="3">
+<li><strong>双链表、循环链表与静态链表</strong><ul>
+<li><strong>双链表（Doubly Linked List）</strong>：每个节点包含前驱指针 <code>prior</code> 和后继指针 <code>next</code>。<ul>
+<li><strong>在节点 <code>p</code> 之后插入新节点 <code>s</code> 的四步指针修改</strong>：<br><strong>① <code>s-&gt;next = p-&gt;next;</code> → ② <code>p-&gt;next-&gt;prior = s;</code> → ③ <code>s-&gt;prior = p;</code> → ④ <code>p-&gt;next = s;</code></strong><br>（铁律：只要保证<strong>先用新节点 <code>s</code> 的指针接住 <code>p-&gt;next</code>，最后再修改 <code>p-&gt;next = s</code></strong> 即可防止断链）。</li>
+<li><strong>删除节点 <code>p</code> 的后继节点 <code>q</code>（即 <code>q = p-&gt;next</code>）</strong>：<br><strong>① <code>p-&gt;next = q-&gt;next;</code> → ② <code>q-&gt;next-&gt;prior = p;</code> → ③ <code>free(q);</code></strong></li>
+</ul>
+</li>
+<li><strong>循环链表（Circular Linked List）</strong>：<ul>
+<li><strong>循环单链表</strong>：表尾节点的 <code>next</code> 不为 <code>NULL</code> 而是指向头结点 <code>L</code>（判空条件：<strong><code>L-&gt;next == L</code></strong>）。若经常需要在表头和表尾同时进行操作，<strong>仅设一个指向表尾节点的尾指针 <code>r</code> 最优</strong>（此时找表尾是 <code>r</code>，找头结点是 <code>r-&gt;next</code>，找首元节点是 <code>r-&gt;next-&gt;next</code>，全部为 <code>O(1)</code>）。</li>
+<li><strong>循环双链表</strong>：头结点的 <code>prior</code> 指向表尾节点，表尾节点的 <code>next</code> 指向头结点（判空条件：<strong><code>L-&gt;next == L &amp;&amp; L-&gt;prior == L</code></strong>）。</li>
+</ul>
+</li>
+<li><strong>静态链表（Static Linked List）</strong>：借助一维结构体数组实现链式存储，利用数组下标（称为<strong>游标 <code>cur</code></strong>）代替内存指针，以 <code>cur == -1</code>（或 <code>0</code>）表示表尾，适用于不支持指针的高级语言或固定容量的内存池分配。</li>
+</ul>
+</li>
+<li><strong>顺序表与链表的多维对比总结</strong></li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">顺序表（动态数组 <code>std::vector</code>）</th>
+<th align="left">链表（单链表 &#x2F; 双链表 <code>std::list</code>）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>存储分配与密度</strong></td>
+<td align="left">连续内存空间，<strong>存储密度 &#x3D; 1</strong>（无额外指针开销），CPU 缓存局部性（Cache Locality）极佳</td>
+<td align="left">离散内存节点，<strong>存储密度 &lt; 1</strong>（每个节点需额外存储 1～2 个指针），缓存命中率低</td>
+</tr>
+<tr>
+<td align="left"><strong>按位查找（随机访问）</strong></td>
+<td align="left"><strong><code>O(1)</code></strong>（直接通过基址 + 偏移量计算）</td>
+<td align="left"><strong><code>O(n)</code></strong>（必须从头结点依次顺着指针遍历）</td>
+</tr>
+<tr>
+<td align="left"><strong>按值查找</strong></td>
+<td align="left">无序时 <code>O(n)</code>，<strong>有序时可通过折半查找达到 <code>O(log2 n)</code></strong></td>
+<td align="left">无论有序无序均为 <strong><code>O(n)</code></strong>（链表无法在 <code>O(1)</code> 内定位中点，故不支持二分查找）</td>
+</tr>
+<tr>
+<td align="left"><strong>插入与删除</strong></td>
+<td align="left"><strong><code>O(n)</code></strong>（平均需移动半数元素；尾部追加均摊 <code>O(1)</code>）</td>
+<td align="left">已知前驱节点指针时修改指针仅需 <strong><code>O(1)</code></strong>（若需先按位查找则仍为 <code>O(n)</code>）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第二章-栈、队列与数组"><a href="#第二章-栈、队列与数组" class="headerlink" title="第二章 栈、队列与数组"></a>第二章 栈、队列与数组</h2><h3 id="2-1-栈（Stack）与典型应用"><a href="#2-1-栈（Stack）与典型应用" class="headerlink" title="2.1 栈（Stack）与典型应用"></a>2.1 栈（Stack）与典型应用</h3><ol>
+<li><strong>栈的基本性质与卡特兰数（Catalan）</strong><ul>
+<li><strong>定义</strong>：只允许在固定的一端（<strong>栈顶 Top</strong>）进行插入（入栈 Push）和删除（出栈 Pop）操作的受限线性表，遵循<strong>后进先出（LIFO，Last In First Out）</strong>原则。</li>
+<li><strong>出栈序列个数与合法性判定（卡特兰数必考公式）</strong>：<ul>
+<li>若有 <code>n</code> 个不同元素依次进栈（进栈过程中允许随时出栈），则所能得到的<strong>不同合法出栈序列总数</strong>由卡特兰数给出：<br><strong><code>Catalan(n) = C(2n, n) / (n + 1)</code></strong><br>（常用值：<code>n = 3</code> 时有 5 种，<code>n = 4</code> 时有 14 种，<code>n = 5</code> 时有 42 种）。</li>
+<li><strong>出栈序列合法性判定法则</strong>：在出栈序列中，<strong>任意一个元素 <code>x</code> 后面所有比 <code>x</code> 先入栈（即编号比 <code>x</code> 小）的元素，必须按从大到小的逆序排列</strong>（例如入栈顺序为 <code>1, 2, 3</code>，出栈序列中 <code>3</code> 后面的 <code>1, 2</code> 必须排成 <code>2, 1</code>，绝不可能出现 <code>3, 1, 2</code>）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>顺序栈、共享栈与链栈</strong><ul>
+<li><strong>顺序栈</strong>：采用数组 <code>data[MaxSize]</code> 存储，设栈顶指针 <code>top</code> 初始值为 <strong><code>-1</code></strong>（指向当前栈顶元素）：<ul>
+<li><strong>栈空条件</strong>：<code>S.top == -1</code>；<strong>栈满条件</strong>：<code>S.top == MaxSize - 1</code>。</li>
+<li><strong>入栈操作</strong>：<code>S.data[++S.top] = x</code>（先加 1 后填入）；<strong>出栈操作</strong>：<code>x = S.data[S.top--]</code>（先取出后减 1）。</li>
+<li>（注：若规定 <code>top</code> 初始值为 <code>0</code>，指向栈顶元素的下一个空位，则入栈为 <code>S.data[S.top++] = x</code>，出栈为 <code>x = S.data[--S.top]</code>）。</li>
+</ul>
+</li>
+<li><strong>共享栈（双栈共享一维数组）</strong>：将两个顺序栈的栈底分别设置在数组的两端（<code>top0 = -1</code> 向上增长，<code>top1 = MaxSize</code> 向下增长），用于提高内存空间利用率、减少单栈上溢概率。<strong>共享栈判满条件</strong>：<strong><code>top1 - top0 == 1</code></strong>。</li>
+<li><strong>链栈</strong>：采用<strong>不带头结点的单链表</strong>实现，所有入栈与出栈操作均在<strong>表头（栈顶）</strong>进行，不存在栈满上溢问题。</li>
+</ul>
+</li>
+<li><strong>栈的四大经典工程应用</strong><ul>
+<li><strong>括号匹配检验</strong>：扫描字符串，遇到左括号 <code>(</code>、<code>[</code>、<code>&#123;</code> 压栈；遇到右括号时检查栈顶是否为同类型左括号（若栈空或类型不匹配则非法）；扫描结束时<strong>栈必须为空</strong>才算完全匹配。</li>
+<li><strong>中缀表达式转后缀表达式（逆波兰式，Postfix）与求值</strong>（无需括号即可唯一确定运算次序）：<ul>
+<li><strong>中缀转后缀算法（准备一个运算符栈）</strong>：<ol>
+<li>遇到<strong>操作数</strong>：直接输出到后缀表达式；</li>
+<li>遇到<strong>左括号 <code>(</code></strong>：直接入栈；遇到<strong>右括号 <code>)</code></strong>：依次弹出栈顶运算符并输出，直到弹出左括号 <code>(</code> 为止（括号本身不输出）；</li>
+<li>遇到<strong>运算符</strong>：依次弹出栈中<strong>优先级高于或等于</strong>当前运算符的所有运算符并输出（若遇到 <code>(</code> 或栈空则停止），然后将当前运算符入栈；</li>
+<li>扫描完毕后，将栈中剩余运算符依次弹出输出。</li>
+</ol>
+</li>
+<li><strong>后缀表达式求值算法（准备一个操作数栈）</strong>：从左往右扫描后缀表达式，遇到操作数直接入栈；遇到二元运算符 <code>&lt;op&gt;</code> 时，从栈顶连续弹出两个操作数——<strong>先弹出的是右操作数 <code>B</code>，后弹出的是左操作数 <code>A</code></strong>，计算 <strong><code>A &lt;op&gt; B</code></strong> 并将结果压回栈中。</li>
+</ul>
+</li>
+<li><strong>函数调用栈与递归转非递归</strong>：每次函数调用都将返回地址、实参和局部变量压入系统调用栈；尾递归可直接改为循环，一般递归可显式维护用户栈模拟消去。</li>
+<li><strong>单调栈（Monotonic Stack）</strong>：栈内元素保持单调递增或单调递减，用于在 <strong><code>O(n)</code> 线性时间</strong>内求解数组中每个元素左侧&#x2F;右侧第一个比它大或比它小的元素（如柱状图最大矩形面积、接雨水问题）。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="2-2-队列（Queue）与循环队列"><a href="#2-2-队列（Queue）与循环队列" class="headerlink" title="2.2 队列（Queue）与循环队列"></a>2.2 队列（Queue）与循环队列</h3><ol>
+<li><strong>队列的基本性质与链队列</strong><ul>
+<li><strong>定义</strong>：只允许在一端（<strong>队尾 Rear</strong>）进行插入（入队 EnQueue），而在另一端（<strong>队头 Front</strong>）进行删除（出队 DeQueue）的受限线性表，遵循<strong>先进先出（FIFO，First In First Out）</strong>原则。</li>
+<li><strong>链队列</strong>：同时带有<strong>队头指针 <code>front</code></strong>（指向头结点）和<strong>队尾指针 <code>rear</code></strong>（指向表尾节点）的单链表。出队时若删去的是最后一个节点，<strong>必须同时将队尾指针 <code>rear</code> 重新指向头结点 <code>front</code></strong>，防止 <code>rear</code> 变成悬空野指针。</li>
+</ul>
+</li>
+<li><strong>循环队列（Circular Queue）与模运算（必考）</strong><ul>
+<li><strong>为什么需要循环队列（假溢出问题）</strong>：在普通顺序队列中，随着元素不断入队和出队，<code>front</code> 和 <code>rear</code> 指针不断向数组高端移动；当 <code>rear == MaxSize</code> 时，即使数组低端仍有大量因出队留下的空闲单元，也无法继续入队（称为<strong>假溢出</strong>）。为此，通过<strong>模运算 <code>% MaxSize</code></strong> 将一维数组在逻辑上首尾相连成环状，即<strong>循环队列</strong>。</li>
+<li><strong>区分队空与队满的三种方案（默认采用方案一：牺牲 1 个存储单元）</strong>：<ul>
+<li>设 <code>Q.front</code> 指向队头元素，<code>Q.rear</code> 指向队尾元素的<strong>下一个空闲位置</strong>：</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><img width="860" height="360" src="/img/posts/ds-ch2-circular-queue.svg" alt="循环队列判空判满模运算与中缀转后缀表达式规则" loading="lazy" decoding="async"></p>
+<table>
+<thead>
+<tr>
+<th align="left">操作 &#x2F; 判定项</th>
+<th align="left">方案一：牺牲 1 个单元（最常考）</th>
+<th align="left">方案二：增设 <code>size</code> 计数器</th>
+<th align="left">方案三：增设 <code>tag</code> 标志位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>入队指针步进</strong></td>
+<td align="left"><code>Q.rear = (Q.rear + 1) % MaxSize</code></td>
+<td align="left">同左，且 <code>Q.size++</code></td>
+<td align="left">同左，且置 <code>Q.tag = 1</code></td>
+</tr>
+<tr>
+<td align="left"><strong>出队指针步进</strong></td>
+<td align="left"><code>Q.front = (Q.front + 1) % MaxSize</code></td>
+<td align="left">同左，且 <code>Q.size--</code></td>
+<td align="left">同左，且置 <code>Q.tag = 0</code></td>
+</tr>
+<tr>
+<td align="left"><strong>队空判定条件</strong></td>
+<td align="left"><strong><code>Q.front == Q.rear</code></strong></td>
+<td align="left"><code>Q.size == 0</code></td>
+<td align="left"><code>Q.front == Q.rear &amp;&amp; Q.tag == 0</code></td>
+</tr>
+<tr>
+<td align="left"><strong>队满判定条件</strong></td>
+<td align="left"><strong><code>(Q.rear + 1) % MaxSize == Q.front</code></strong></td>
+<td align="left"><code>Q.size == MaxSize</code></td>
+<td align="left"><code>Q.front == Q.rear &amp;&amp; Q.tag == 1</code></td>
+</tr>
+<tr>
+<td align="left"><strong>当前元素个数</strong></td>
+<td align="left"><strong><code>(Q.rear - Q.front + MaxSize) % MaxSize</code></strong></td>
+<td align="left"><code>Q.size</code></td>
+<td align="left">满时 <code>MaxSize</code>，否则同方案一</td>
+</tr>
+</tbody></table>
+<ol start="3">
+<li><strong>双端队列（Deque）与单调队列</strong><ul>
+<li><strong>双端队列</strong>：允许在两端都进行入队和出队的线性表（分为输出受限的双端队列和输入受限的双端队列）。</li>
+<li><strong>单调队列</strong>：基于双端队列实现，队头维护当前窗口最值，队尾在入队时淘汰所有比新元素更劣的旧元素，用于在 <strong><code>O(n)</code> 线性时间</strong>内求解<strong>滑动窗口最大值 &#x2F; 最小值</strong>问题。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="2-3-多维数组与特殊矩阵压缩存储"><a href="#2-3-多维数组与特殊矩阵压缩存储" class="headerlink" title="2.3 多维数组与特殊矩阵压缩存储"></a>2.3 多维数组与特殊矩阵压缩存储</h3><ol>
+<li><strong>二维数组的行优先与列优先地址计算</strong><br>设二维数组 <code>A[0 .. m-1][0 .. n-1]</code>（共 <code>m</code> 行 <code>n</code> 列，0-based 下标），首元素 <code>A[0][0]</code> 地址为 <code>LOC(0, 0)</code>，每个元素占 <code>d</code> 个存储单元：<ul>
+<li><strong>按行优先存储（C &#x2F; C++ &#x2F; C# 默认方式）</strong>：先存完第 0 行，再存第 1 行……元素 <code>A[i][j]</code> 前面共有 <code>i</code> 整行（<code>i × n</code> 个元素）加上本行前面的 <code>j</code> 个元素：<br><strong><code>LOC(i, j) = LOC(0, 0) + (i × n + j) × d</code></strong></li>
+<li><strong>按列优先存储（Fortran &#x2F; MATLAB 方式）</strong>：元素 <code>A[i][j]</code> 前面共有 <code>j</code> 整列（<code>j × m</code> 个元素）加上本列前面的 <code>i</code> 个元素：<br><strong><code>LOC(i, j) = LOC(0, 0) + (j × m + i) × d</code></strong></li>
+</ul>
+</li>
+<li><strong>特殊矩阵的一维数组压缩存储（1-based 矩阵下标 <code>aij</code>，<code>1 ≤ i, j ≤ n</code>）</strong><ul>
+<li><strong>n 阶对称矩阵（<code>aij = aji</code>）</strong>：只存储主对角线及下三角区的 <strong><code>n(n + 1) / 2</code></strong> 个元素到一维数组 <code>B[0 .. n(n+1)/2 - 1]</code> 中（按行优先）：<ul>
+<li>当 <strong><code>i ≥ j</code>（下三角及主对角线）</strong> 时，前面 <code>i - 1</code> 行共有 <code>1 + 2 + ... + (i - 1) = i(i - 1)/2</code> 个元素，第 <code>i</code> 行前面有 <code>j - 1</code> 个元素，故对应一维数组 <code>B</code> 的 0-based 下标 <code>k</code> 为：<br><strong><code>k = i(i - 1) / 2 + j - 1</code></strong></li>
+<li>当 <strong><code>i &lt; j</code>（上三角区）</strong> 时，利用对称性 <code>aij = aji</code> 互换 <code>i</code> 和 <code>j</code>：<br><strong><code>k = j(j - 1) / 2 + i - 1</code></strong></li>
+</ul>
+</li>
+<li><strong>n 阶三角矩阵（下三角矩阵 &#x2F; 上三角矩阵）</strong>：除存储三角区 <code>n(n + 1) / 2</code> 个元素外，在数组末尾最后一个位置 <strong><code>B[n(n + 1) / 2]</code></strong> 额外存 1 个常数 <code>c</code>（共需 <code>n(n + 1) / 2 + 1</code> 个单元）。</li>
+<li><strong>n 阶三对角矩阵（带状矩阵，仅 <code>|i - j| ≤ 1</code> 时非零）</strong>：共含 <code>3n - 2</code> 个非零元素，按行优先存入 <code>B[0 .. 3n - 3]</code> 时，元素 <code>aij</code> 对应的 0-based 下标为：<br><strong><code>k = 2i + j - 3</code></strong></li>
+</ul>
+</li>
+<li><strong>稀疏矩阵（Sparse Matrix）</strong><ul>
+<li>非零元素个数远小于矩阵总元素个数且分布无规律时，仅存储非零元素的<strong>行号、列号和值</strong>：<ul>
+<li><strong>顺序存储</strong>：<strong>三元组表 <code>&lt;row, col, val&gt;</code></strong>（压缩后失去随机存取能力）。</li>
+<li><strong>链式存储</strong>：<strong>十字链表（Orthogonal List）</strong>，为每一行设一个行头指针、每一列设一个列头指针，每个非零元素节点同时挂在所在行的链表和所在列的链表上。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="第三章-串与-KMP-模式匹配"><a href="#第三章-串与-KMP-模式匹配" class="headerlink" title="第三章 串与 KMP 模式匹配"></a>第三章 串与 KMP 模式匹配</h2><h3 id="3-1-串的存储与朴素模式匹配（BF-算法）"><a href="#3-1-串的存储与朴素模式匹配（BF-算法）" class="headerlink" title="3.1 串的存储与朴素模式匹配（BF 算法）"></a>3.1 串的存储与朴素模式匹配（BF 算法）</h3><ol>
+<li><strong>串（String）的基本概念</strong><ul>
+<li><strong>子串与主串</strong>：串中任意个<strong>连续字符</strong>组成的子序列称为该串的子串（注意与不要求连续的“子序列”区分）。空串是任何串的子串；长度为 <code>n</code> 的字符串（各字符互异时）共有 <strong><code>n(n + 1) / 2 + 1</code></strong> 个子串（含空串）。</li>
+</ul>
+</li>
+<li><strong>朴素模式匹配算法（Brute-Force，暴力匹配）</strong><ul>
+<li>设主串 <code>S</code> 长度为 <code>n</code>，模式串 <code>T</code> 长度为 <code>m</code>（下标从 1 开始）：</li>
+<li><strong>过程</strong>：主串指针 <code>i</code> 和模式串指针 <code>j</code> 同步后移比较；一旦在某位置失配（<code>S[i] != T[j]</code>），<strong>模式串整体右移 1 位</strong>，即模式串指针重置为 <strong><code>j = 1</code></strong>，而<strong>主串指针必须回溯到上次起始位置的下一位：<code>i = i - j + 2</code></strong>（0-based 下标为 <code>i = i - j + 1</code>）。</li>
+<li><strong>缺陷与最坏时间复杂度</strong>：当主串为 <code>&quot;0000000001&quot;</code>、模式串为 <code>&quot;0001&quot;</code> 时，每次都在模式串最后一位失配并回溯，最坏时间复杂度高达 <strong><code>O(n × m)</code></strong>。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="3-2-KMP-算法与-next-nextval-数组推导"><a href="#3-2-KMP-算法与-next-nextval-数组推导" class="headerlink" title="3.2 KMP 算法与 next &#x2F; nextval 数组推导"></a>3.2 KMP 算法与 next &#x2F; nextval 数组推导</h3><ol>
+<li><strong>KMP 算法消除主串指针回溯的核心原理</strong><ul>
+<li>当主串 <code>S[i]</code> 与模式串 <code>T[j]</code> 失配时，主串前面刚刚匹配成功的那一段子串 <code>S[i-j+1 .. i-1]</code> 其实完全等于模式串的前缀 <code>T[1 .. j-1]</code>（这是已知信息，根本不需要把主串指针 <code>i</code> 倒回去重新比对）。</li>
+<li>只需在模式串已匹配的前缀子串 <strong><code>T[1 .. j-1]</code></strong> 中，找出其<strong>最长的相等真前缀与真后缀</strong>（真前后缀即不包含串本身的前缀与后缀），设其最大长度为 <strong><code>L</code></strong>，则说明模式串开头的 <code>T[1 .. L]</code> 已经与主串 <code>S[i]</code> 前面的 <code>L</code> 个字符完全重合！</li>
+<li>因此，失配时<strong>主串指针 <code>i</code> 永远保持不动（绝不回溯）</strong>，只需将<strong>模式串指针 <code>j</code> 直接回退到第 <code>L + 1</code> 个位置（即 <code>j = next[j]</code>）</strong>继续与 <code>S[i]</code> 比较即可，使总时间复杂度降至线性 <strong><code>O(n + m)</code></strong>（其中求 <code>next</code> 数组为 <code>O(m)</code>，匹配过程为 <code>O(n)</code>）。</li>
+</ul>
+</li>
+</ol>
+<p><img width="860" height="360" src="/img/posts/ds-ch3-kmp.svg" alt="KMP模式匹配算法最长相等真前后缀跳转与next和nextval数组推导" loading="lazy" decoding="async"></p>
+<ol start="2">
+<li><strong>手算求 <code>next[j]</code> 数组的三步口诀（严蔚敏 1-based 标准）</strong><br>对于模式串 <code>T[1 .. m]</code> 的第 <code>j</code> 位：<ol>
+<li><strong>第 1 位固定为 0</strong>：规定 <strong><code>next[1] = 0</code></strong>（表示连模式串第 1 个字符都失配时，应将主串 <code>i</code> 与模式串 <code>j=0</code> 同时加 1 后移）；</li>
+<li><strong>第 2 位固定为 1</strong>：因为长度为 1 的前缀 <code>T[1]</code> 没有非空真前后缀（<code>L = 0</code>），故 <strong><code>next[2] = 0 + 1 = 1</code></strong>；</li>
+<li><strong>对 <code>j ≥ 3</code></strong>：遮住第 <code>j</code> 个字符本身，只看它前面的<strong>前 <code>j - 1</code> 个字符组成的子串 <code>T[1 .. j-1]</code></strong>，找出该子串<strong>最长相等真前缀与真后缀的长度 <code>L</code></strong>，则：<br><strong><code>next[j] = L + 1</code></strong><br>（注：若考题规定采用 0-based 数组且 <code>next[0] = -1</code>，则只需将上述 1-based 的整个 <code>next</code> 数组所有元素统一减 1，即 <code>next_0[j] = L</code>）。</li>
+</ol>
+</li>
+<li><strong>KMP 算法的进一步优化：<code>nextval[j]</code> 数组</strong><ul>
+<li><strong>为什么需要 <code>nextval</code> 优化</strong>：假设模式串为 <code>T = &quot;aaaaab&quot;</code>，当在 <code>j = 4</code>（字符 <code>&#39;a&#39;</code>）处与主串 <code>S[i] = &#39;c&#39;</code> 失配时，按 <code>next[4] = 3</code> 回退后，<code>T[3]</code> 依然是相同的字符 <code>&#39;a&#39;</code>，必然再次与 <code>&#39;c&#39;</code> 失配，产生一连串毫无意义的连续无效比较。</li>
+<li><strong><code>nextval[j]</code> 的手算与递推规则（从左往右依次填写）</strong>：<ol>
+<li>固定 <strong><code>nextval[1] = 0</code></strong>；</li>
+<li>对 <code>j = 2, 3, ..., m</code>，比较当前字符 <code>T[j]</code> 与它即将回退到的目标字符 <code>T[next[j]]</code>：<ul>
+<li><strong>若 <code>T[j] != T[next[j]]</code></strong>（回退后的字符不同，回退有效）：保持原值不变，即 <strong><code>nextval[j] = next[j]</code></strong>；</li>
+<li><strong>若 <code>T[j] == T[next[j]]</code></strong>（回退后的字符相同，回退必再次失配）：直接继承目标位置的 <code>nextval</code> 值一步跳到底，即 <strong><code>nextval[j] = nextval[next[j]]</code></strong>。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>KMP 算法与求 <code>next</code> &#x2F; <code>nextval</code> 标准 C++ 实现</strong></li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 求模式串 T (1-based, T[1..m]) 的 next 数组</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">get_next</span><span class="params">(<span class="type">const</span> <span class="type">char</span> T[], <span class="type">int</span> m, <span class="type">int</span> next[])</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">1</span>, j = <span class="number">0</span>;</span><br><span class="line">    next[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; m) &#123;</span><br><span class="line">        <span class="keyword">if</span> (j == <span class="number">0</span> || T[i] == T[j]) &#123;</span><br><span class="line">            ++i; ++j;</span><br><span class="line">            next[i] = j;          <span class="comment">// 若求 nextval：若 T[i] != T[j] 则 nextval[i] = j;</span></span><br><span class="line">                                  <span class="comment">// 否则 nextval[i] = nextval[j];</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            j = next[j];          <span class="comment">// 前缀指针利用已知 next 值回退</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. KMP 主串匹配过程：主串 S[1..n], 模式串 T[1..m]</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">index_KMP</span><span class="params">(<span class="type">const</span> <span class="type">char</span> S[], <span class="type">int</span> n, <span class="type">const</span> <span class="type">char</span> T[], <span class="type">int</span> m, <span class="type">const</span> <span class="type">int</span> next[])</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">1</span>, j = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= n &amp;&amp; j &lt;= m) &#123;</span><br><span class="line">        <span class="keyword">if</span> (j == <span class="number">0</span> || S[i] == T[j]) &#123;</span><br><span class="line">            ++i; ++j;             <span class="comment">// 继续比较后继字符（主串指针 i 只进不退）</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            j = next[j];          <span class="comment">// 主串 i 不变，仅模式串 j 回退</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (j &gt; m) ? (i - m) : <span class="number">0</span>; <span class="comment">// 匹配成功返回起始位置，失败返回 0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第四章-树与二叉树（待更新）"><a href="#第四章-树与二叉树（待更新）" class="headerlink" title="第四章 树与二叉树（待更新）"></a>第四章 树与二叉树（待更新）</h2><ul>
+<li><strong>4.1 二叉树的五个核心性质与存储结构</strong>：满二叉树&#x2F;完全二叉树、<code>n0 = n2 + 1</code>、<code>n + 1</code> 个空链域。</li>
+<li><strong>4.2 二叉树的遍历、序列还原与线索化</strong>：先序&#x2F;中序&#x2F;后序&#x2F;层序遍历、中序线索二叉树找前驱后继。</li>
+<li><strong>4.3 树、森林与二叉树的转换及并查集</strong>：左孩子右兄弟转换法则、哈夫曼树、并查集（路径压缩与按秩合并）。</li>
+</ul>
+<hr>
+<h2 id="第五章-图的存储与核心算法（待更新）"><a href="#第五章-图的存储与核心算法（待更新）" class="headerlink" title="第五章 图的存储与核心算法（待更新）"></a>第五章 图的存储与核心算法（待更新）</h2><ul>
+<li><strong>5.1 图的四种存储结构对比</strong>：邻接矩阵、邻接表、十字链表、邻接多重表。</li>
+<li><strong>5.2 图的遍历与最小生成树</strong>：DFS 与 BFS、Prim 算法（加点法）与 Kruskal 算法（加边法）。</li>
+<li><strong>5.3 最短路径、拓扑排序与关键路径</strong>：Dijkstra 与 Floyd 算法、AOV 网拓扑排序、AOE 网关键路径（<code>ve / vl / e / l</code>）。</li>
+</ul>
+<hr>
+<h2 id="第六章-查找、平衡树与散列表（待更新）"><a href="#第六章-查找、平衡树与散列表（待更新）" class="headerlink" title="第六章 查找、平衡树与散列表（待更新）"></a>第六章 查找、平衡树与散列表（待更新）</h2><ul>
+<li><strong>6.1 顺序、折半与分块查找</strong>：成功与失败的平均查找长度（ASL）、折半查找判定树。</li>
+<li><strong>6.2 二叉排序树（BST）、平衡二叉树（AVL）与红黑树</strong>：AVL 四种旋转（LL&#x2F;RR&#x2F;LR&#x2F;RL）、红黑树五条性质与工程权衡。</li>
+<li><strong>6.3 B 树、B+ 树与散列表（Hash Table）</strong>：B 树分裂与合并、B+ 树数据库索引优势、开放定址法与拉链法。</li>
+</ul>
+<hr>
+<h2 id="第七章-排序算法体系（待更新）"><a href="#第七章-排序算法体系（待更新）" class="headerlink" title="第七章 排序算法体系（待更新）"></a>第七章 排序算法体系（待更新）</h2><ul>
+<li><strong>7.1 插入类与交换类排序</strong>：直接插入、希尔排序、冒泡排序、快速排序（Partition 划分与复杂度优化）。</li>
+<li><strong>7.2 选择类、归并排序与基数排序</strong>：堆排序（<code>O(n)</code> 建堆与下滤）、二路归并排序、基数排序与外部多路归并。</li>
+<li><strong>7.3 内部排序算法全景对比表</strong>：时间复杂度（最好&#x2F;平均&#x2F;最坏）、空间复杂度、稳定性与适用场景总结。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">https://vvvvvenxo.github.io/2026/10/26/【计算机基础】数据结构/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a><a class="post-meta__tags" href="/tags/%E7%BA%BF%E6%80%A7%E8%A1%A8/">线性表</a><a class="post-meta__tags" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a><a class="post-meta__tags" href="/tags/%E5%9B%BE%E8%AE%BA%E7%AE%97%E6%B3%95/">图论算法</a><a class="post-meta__tags" href="/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">排序算法</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学"><img class="cover" src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6-thumb.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post" loading="lazy" decoding="async"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【计算机基础】离散数学</div></div><div class="info-2"><div class="info-item-1">基于屈婉玲《离散数学》的系统复习笔记：涵盖数理逻辑（命题与一阶谓词逻辑、范式与推理）、集合与二元关系（关系性质、闭包、等价关系与偏序集哈斯图）、函数、图论及代数结构。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/" title="【算法】排序算法大全"><img class="cover" src="/img/covers/gen/%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8-thumb.svg" alt="cover" loading="lazy" decoding="async"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-28</div><div class="info-item-2">【算法】排序算法大全</div></div><div class="info-2"><div class="info-item-1">系统梳理八大排序算法——选择、冒泡、插入、希尔、归并、快速、堆、计数排序，包含原理、复杂度、稳定性分析与 C# 代码实现，是游戏客户端开发的核心基础知识。</div></div></div></a><a class="pagination-related" href="/2025/06/05/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E5%93%88%E5%B8%8C%E8%A1%A8/" title="【数据结构】哈希表"><img class="cover" src="/img/covers/gen/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%B8%8C%E8%A1%A8-thumb.svg" alt="cover" loading="lazy" decoding="async"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-05</div><div class="info-item-2">【数据结构】哈希表</div></div><div class="info-2"><div class="info-item-1">理解哈希表的工作原理、时间复杂度分析，以及哈希冲突的常见解决方法（拉链法、开放寻址法）。</div></div></div></a><a class="pagination-related" href="/2025/06/05/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81%E5%8E%8B%E7%BC%A9%E7%B3%BB%E7%BB%9F/" title="【项目实战】哈夫曼编码压缩系统"><img class="cover" src="/img/covers/gen/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98-%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81%E5%8E%8B%E7%BC%A9%E7%B3%BB%E7%BB%9F-thumb.svg" alt="cover" loading="lazy" decoding="async"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-05</div><div class="info-item-2">【项目实战】哈夫曼编码压缩系统</div></div><div class="info-2"><div class="info-item-1">基于哈夫曼编码算法实现的文件压缩/解压工具，涵盖哈夫曼树构建、编码生成、位操作与文件格式设计。</div></div></div></a><a class="pagination-related" href="/2026/07/28/%E3%80%90C++%E3%80%91STL%E4%B8%8E%E5%AE%B9%E5%99%A8%E5%BA%95%E5%B1%82/" title="【C++】STL与容器底层"><img class="cover" src="/img/covers/gen/C-STL%E4%B8%8E%E5%AE%B9%E5%99%A8%E5%BA%95%E5%B1%82-thumb.svg" alt="cover" loading="lazy" decoding="async"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-28</div><div class="info-item-2">【C++】STL与容器底层</div></div><div class="info-2"><div class="info-item-1">深入 C++ STL——六大部件的设计思想、各容器（vector/list/deque/set/map 等）的底层实现与时间复杂度对比，以及 push_back 与 emplace_back、红黑树与 AVL 树的区别。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">136</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div class="profile-note">
+  <p>软件工程背景，专注游戏客户端开发。</p>
+  <p><strong>关注</strong> Unity 架构、网络同步与实时渲染。</p>
+  <p class="profile-note__meta">游戏开发 · AI 工具 · 图形技术</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E7%BB%AA%E8%AE%BA%E4%B8%8E%E7%BA%BF%E6%80%A7%E8%A1%A8"><span class="toc-text">第一章 绪论与线性表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%89%E8%A6%81%E7%B4%A0%E4%B8%8E%E7%AE%97%E6%B3%95%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="toc-text">1.1 数据结构三要素与算法复杂度分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E9%A1%BA%E5%BA%8F%E8%A1%A8%E4%B8%8E%E9%93%BE%E8%A1%A8"><span class="toc-text">1.2 顺序表与链表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E6%A0%88%E3%80%81%E9%98%9F%E5%88%97%E4%B8%8E%E6%95%B0%E7%BB%84"><span class="toc-text">第二章 栈、队列与数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%A0%88%EF%BC%88Stack%EF%BC%89%E4%B8%8E%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="toc-text">2.1 栈（Stack）与典型应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%98%9F%E5%88%97%EF%BC%88Queue%EF%BC%89%E4%B8%8E%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97"><span class="toc-text">2.2 队列（Queue）与循环队列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%8E%E7%89%B9%E6%AE%8A%E7%9F%A9%E9%98%B5%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8"><span class="toc-text">2.3 多维数组与特殊矩阵压缩存储</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E4%B8%B2%E4%B8%8E-KMP-%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D"><span class="toc-text">第三章 串与 KMP 模式匹配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%B8%B2%E7%9A%84%E5%AD%98%E5%82%A8%E4%B8%8E%E6%9C%B4%E7%B4%A0%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D%EF%BC%88BF-%E7%AE%97%E6%B3%95%EF%BC%89"><span class="toc-text">3.1 串的存储与朴素模式匹配（BF 算法）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-KMP-%E7%AE%97%E6%B3%95%E4%B8%8E-next-nextval-%E6%95%B0%E7%BB%84%E6%8E%A8%E5%AF%BC"><span class="toc-text">3.2 KMP 算法与 next &#x2F; nextval 数组推导</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%A0%91%E4%B8%8E%E4%BA%8C%E5%8F%89%E6%A0%91%EF%BC%88%E5%BE%85%E6%9B%B4%E6%96%B0%EF%BC%89"><span class="toc-text">第四章 树与二叉树（待更新）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E5%9B%BE%E7%9A%84%E5%AD%98%E5%82%A8%E4%B8%8E%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95%EF%BC%88%E5%BE%85%E6%9B%B4%E6%96%B0%EF%BC%89"><span class="toc-text">第五章 图的存储与核心算法（待更新）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%9F%A5%E6%89%BE%E3%80%81%E5%B9%B3%E8%A1%A1%E6%A0%91%E4%B8%8E%E6%95%A3%E5%88%97%E8%A1%A8%EF%BC%88%E5%BE%85%E6%9B%B4%E6%96%B0%EF%BC%89"><span class="toc-text">第六章 查找、平衡树与散列表（待更新）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E7%AB%A0-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E4%BD%93%E7%B3%BB%EF%BC%88%E5%BE%85%E6%9B%B4%E6%96%B0%EF%BC%89"><span class="toc-text">第七章 排序算法体系（待更新）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="【计算机基础】数据结构"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】数据结构"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="【计算机基础】数据结构">【计算机基础】数据结构</a><time datetime="2026-10-26T00:00:00.000Z" title="发表于 2026-10-26 00:00:00">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】离散数学"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学">【计算机基础】离散数学</a><time datetime="2026-10-25T00:00:00.000Z" title="发表于 2026-10-25 00:00:00">2026-10-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" title="【计算机基础】计算机网络"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】计算机网络"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" title="【计算机基础】计算机网络">【计算机基础】计算机网络</a><time datetime="2026-10-24T00:00:00.000Z" title="发表于 2026-10-24 00:00:00">2026-10-24</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = {"data-mapping":"pathname","data-strict":"0","data-reactions-enabled":"1","data-emit-metadata":"0","data-input-position":"top","data-lang":"zh-CN"}
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark_dimmed' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'VVVVVenxo/VVVVVenxo.github.io',
+      'data-repo-id': 'R_kgDOQ5Bk1Q',
+      'data-category-id': 'DIC_kwDOQ5Bk1c4DJO_-',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !true) {
+    if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script src="/js/site-refinement.js?v=20261020-1" defer></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:description\"]","link[rel=\"canonical\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章、Unity、C++、C#…" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.3"></script></div></div></body></html>
