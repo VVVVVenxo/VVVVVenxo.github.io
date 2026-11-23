@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="图的邻接矩阵与邻接表存储及Prim与Kruskal最小生成树对比">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 5-1 · 图的存储结构（邻接矩阵 vs 邻接表）与最小生成树（Prim vs Kruskal）</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <defs>
+    <marker id="aT" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <path d="M0,0 L7,3.5 L0,7 Z" fill="#287B73"/>
+    </marker>
+  </defs>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: Adjacency List vs Matrix -->
+    <rect x="28" y="64" width="390" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="223" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 邻接表（Adjacency List）结构与存储对比</text>
+
+    <!-- Vertex Table + Edge Nodes -->
+    <g text-anchor="middle">
+      <!-- Row 0 -->
+      <rect x="52" y="106" width="66" height="26" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+      <text x="85" y="124" fill="#17343B" font-weight="700">0 | V0</text>
+      <rect x="118" y="106" width="32" height="26" fill="#FAFBF8" stroke="#287B73" stroke-width="1.2"/>
+      <line x1="150" y1="119" x2="180" y2="119" stroke="#287B73" stroke-width="1.6" marker-end="url(#aT)"/>
+      <rect x="184" y="106" width="68" height="26" fill="#FAFBF8" stroke="#17343B" stroke-width="1.2"/>
+      <text x="218" y="124" fill="#17343B">1 | next</text>
+      <line x1="252" y1="119" x2="282" y2="119" stroke="#287B73" stroke-width="1.6" marker-end="url(#aT)"/>
+      <rect x="286" y="106" width="68" height="26" fill="#FAFBF8" stroke="#17343B" stroke-width="1.2"/>
+      <text x="320" y="124" fill="#17343B">2 | ^</text>
+
+      <!-- Row 1 -->
+      <rect x="52" y="140" width="66" height="26" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+      <text x="85" y="158" fill="#17343B" font-weight="700">1 | V1</text>
+      <rect x="118" y="140" width="32" height="26" fill="#FAFBF8" stroke="#287B73" stroke-width="1.2"/>
+      <line x1="150" y1="153" x2="180" y2="153" stroke="#287B73" stroke-width="1.6" marker-end="url(#aT)"/>
+      <rect x="184" y="140" width="68" height="26" fill="#FAFBF8" stroke="#17343B" stroke-width="1.2"/>
+      <text x="218" y="158" fill="#17343B">3 | ^</text>
+
+      <!-- Row 2 -->
+      <rect x="52" y="174" width="66" height="26" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+      <text x="85" y="192" fill="#17343B" font-weight="700">2 | V2</text>
+      <rect x="118" y="174" width="32" height="26" fill="#FAFBF8" stroke="#287B73" stroke-width="1.2"/>
+      <text x="134" y="192" fill="#61747A">^</text>
+    </g>
+
+    <rect x="46" y="214" width="354" height="106" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="60" y="236" fill="#17343B" font-weight="700">• 邻接矩阵：空间 <tspan fill="#287B73">O(V²)</tspan>（仅取决于顶点数，适合<tspan font-weight="700">稠密图</tspan>）</text>
+    <text x="60" y="258" fill="#17343B" font-weight="700">• 邻接表：无向 <tspan fill="#C47743">O(V+2E)</tspan>，有向 <tspan fill="#C47743">O(V+E)</tspan>（适合<tspan font-weight="700">稀疏图</tspan>）</text>
+    <text x="60" y="280" fill="#17343B">• 十字链表：有向图专属，同时存出边与入边，求入度/出度快</text>
+    <text x="60" y="302" fill="#17343B">• 邻接多重表：无向图专属，每条无向边只存 1 个边节点</text>
+
+    <!-- Right Panel: Prim vs Kruskal -->
+    <rect x="438" y="64" width="394" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="635" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 最小生成树（MST）：Prim 算法 vs Kruskal 算法</text>
+
+    <rect x="456" y="108" width="358" height="98" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="470" y="130" fill="#287B73" font-weight="700">① Prim 算法（加点法 · 归并顶点）：</text>
+    <text x="470" y="152" fill="#17343B">• 维护已选顶点集 U，每次挑连接 U 与 V-U 的最小权边加入</text>
+    <text x="470" y="174" fill="#287B73" font-weight="700">• 时间复杂度：O(V²)（与边数 E 无关）</text>
+    <text x="470" y="194" fill="#17343B">• 适用场景：<tspan font-weight="700">边稠密图</tspan></text>
+
+    <rect x="456" y="218" width="358" height="102" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="470" y="240" fill="#C47743" font-weight="700">② Kruskal 算法（加边法 · 归并边）：</text>
+    <text x="470" y="262" fill="#17343B">• 将所有边按权值递增排序，用<tspan font-weight="700">并查集</tspan>判环，选满 V-1 条边</text>
+    <text x="470" y="284" fill="#C47743" font-weight="700">• 时间复杂度：O(E log2 E)（瓶颈在于对 E 条边排序）</text>
+    <text x="470" y="304" fill="#17343B">• 适用场景：<tspan font-weight="700">边稀疏图</tspan>（若各边权值互异则 MST 必唯一）</text>
+  </g>
+</svg>
