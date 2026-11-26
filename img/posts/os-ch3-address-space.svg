@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="进程虚拟地址空间分布与页式存储快表TLB地址翻译">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 3-1 · 进程虚拟地址空间布局与页式管理（TLB 快表 + 多级页表）地址翻译</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: Process Virtual Address Space -->
+    <rect x="28" y="64" width="390" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="223" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 进程虚拟地址空间布局（高地址 → 低地址）</text>
+
+    <!-- Memory Segments Stack -->
+    <g text-anchor="middle">
+      <rect x="44" y="104" width="358" height="32" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+      <text x="223" y="125" fill="#17343B" font-weight="700">内核空间（Kernel Space · 高地址，所有进程共享映射）</text>
+
+      <rect x="44" y="136" width="358" height="36" fill="#F4E6D9" stroke="#C47743" stroke-width="1.4"/>
+      <text x="223" y="159" fill="#C47743" font-weight="700">用户栈 Stack（局部变量 / 栈帧 · 向低地址向下增长 ↓）</text>
+
+      <rect x="44" y="172" width="358" height="32" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <text x="223" y="193" fill="#61747A">文件映射与共享库区（mmap / 动态库 .so / .dll）</text>
+
+      <rect x="44" y="204" width="358" height="36" fill="#D8E6E0" stroke="#287B73" stroke-width="1.4"/>
+      <text x="223" y="227" fill="#287B73" font-weight="700">堆 Heap（malloc / new 动态分配 · 向高地址向上增长 ↑）</text>
+
+      <rect x="44" y="240" width="358" height="36" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+      <text x="223" y="263" fill="#17343B"><tspan font-weight="700">.bss</tspan>（未初始化全局/静态） | <tspan font-weight="700">.data</tspan>（已初始化全局/静态）</text>
+
+      <rect x="44" y="276" width="358" height="36" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+      <text x="223" y="299" fill="#17343B" font-weight="700">只读代码段（.text）与常量区（.rodata · 低地址）</text>
+    </g>
+
+    <!-- Right Panel: Paging & TLB & Multi-level Page Table -->
+    <rect x="438" y="64" width="394" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="635" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 页式地址拆分、快表（TLB）EAT 与多级页表</text>
+
+    <rect x="452" y="106" width="366" height="62" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="464" y="128" fill="#287B73" font-weight="700">逻辑地址 A 拆分（设页面大小 L = 2^k 字节）：</text>
+    <text x="464" y="152" fill="#17343B">• <tspan font-weight="700">页号 P = A / L</tspan>（高位） | <tspan font-weight="700">页内偏移 W = A % L</tspan>（低 k 位）</text>
+
+    <rect x="452" y="178" width="366" height="68" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="464" y="200" fill="#C47743" font-weight="700">有效访问时间 EAT（快表耗时 ε，访存耗时 t，命中率 a）：</text>
+    <text x="464" y="222" fill="#17343B" font-weight="700">• 先查快表：EAT = a × (ε + t) + (1 - a) × (ε + 2t)</text>
+    <text x="464" y="240" fill="#61747A">• 快慢表同时查：EAT = a × (ε + t) + (1 - a) × 2t</text>
+
+    <rect x="452" y="256" width="366" height="64" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="464" y="278" fill="#17343B" font-weight="700">为何引入多级页表（如 32 位 10+10+12 二级页表）：</text>
+    <text x="464" y="300" fill="#17343B">避免单级页表占用<tspan font-weight="700" fill="#287B73">连续 4MB 内存</tspan>，且二级页表可<tspan font-weight="700" fill="#C47743">按需调入</tspan></text>
+  </g>
+</svg>
