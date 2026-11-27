@@ -397,7 +397,6 @@ export async function getAllPosts(): Promise<PostItem[]> {
   }
 
   posts.sort((a, b) => {
-    if (a.sticky !== b.sticky) return a.sticky ? -1 : 1;
     if (b.timestamp !== a.timestamp) return b.timestamp - a.timestamp;
     return b.slug.localeCompare(a.slug, 'zh-CN');
   });
