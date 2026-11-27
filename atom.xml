@@ -134,6 +134,13 @@
       <description>系统梳理八大排序算法——选择、冒泡、插入、希尔、归并、快速、堆、计数排序，包含原理、复杂度、稳定性分析与 C# 代码实现，是游戏客户端开发的核心基础知识。</description>
     </item>
     <item>
+      <title>【计算机基础】编译原理与链接</title>
+      <link>https://VVVVVenxo.github.io/2026/04/12/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E4%B8%8E%E9%93%BE%E6%8E%A5/</link>
+      <guid>https://VVVVVenxo.github.io/2026/04/12/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E4%B8%8E%E9%93%BE%E6%8E%A5/</guid>
+      <pubDate>Sun, 12 Apr 2026 14:00:00 GMT</pubDate>
+      <description>遵循龙书《编译原理》（Aho 等著）与《程序员的自我修养：链接、装载与库》（俞甲子等著）主线，系统梳理词法/语法/语义分析、IR 与 SSA 编译优化、ELF 目标文件结构、静态重定位、动态链接 PLT/GOT 以及 C++/C#/IL2CPP 编译管线。</description>
+    </item>
+    <item>
       <title>【随笔】最近的所思所想</title>
       <link>https://VVVVVenxo.github.io/2026/03/28/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E6%9C%80%E8%BF%91%E7%9A%84%E6%89%80%E6%80%9D%E6%89%80%E6%83%B3/</link>
       <guid>https://VVVVVenxo.github.io/2026/03/28/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E6%9C%80%E8%BF%91%E7%9A%84%E6%89%80%E6%80%9D%E6%89%80%E6%83%B3/</guid>
@@ -174,13 +181,6 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>详解 Unity MonoBehaviour 的生命周期函数执行顺序，包括 Awake、Start、Update、FixedUpdate、LateUpdate 等。</description>
-    </item>
-    <item>
-      <title>【Unity】内存与资源管理</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%86%85%E5%AD%98%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%86%85%E5%AD%98%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>详解 Unity 内存与资源管理：资源加载、对象池、GC 原理与优化、AB 包热更新。</description>
     </item>
   </channel>
 </rss>

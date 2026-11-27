@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：ELF 可重定位目标文件（.o）段结构、.bss 节省空间机制与强弱符号规则</text>
+
+  <!-- 左栏：ELF 目标文件布局 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. ELF 可重定位目标文件（.o）核心段布局</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="32" rx="3" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="113" fill="#17343B" font-weight="700">ELF Header（64B：魔数 7F 45 4C 46、架构与段表偏移）</text>
+
+    <rect x="44" y="128" width="364" height="32" rx="3" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="149" fill="#287B73" font-weight="700">.text 代码段（只读可执行 RX：存放编译后的机器指令）</text>
+
+    <rect x="44" y="164" width="364" height="32" rx="3" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="185" fill="#17343B" font-weight="700">.rodata 只读数据段（字符串字面量、const 与跳转表）</text>
+
+    <rect x="44" y="200" width="364" height="32" rx="3" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="221" fill="#17343B" font-weight="700">.data 已初始化数据段（非零全局/静态变量，占磁盘）</text>
+
+    <rect x="44" y="236" width="364" height="32" rx="3" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="56" y="257" fill="#C47743" font-weight="700">.bss 未初始化全局/静态变量（SHT_NOBITS，不占磁盘）</text>
+
+    <rect x="44" y="272" width="364" height="26" rx="3" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="290" fill="#61747A">.symtab 符号表  |  .rela.text 重定位表  |  .strtab 字符串表</text>
+
+    <rect x="44" y="302" width="364" height="26" rx="3" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="320" fill="#17343B" font-weight="700">Section Header Table（段表：各段偏移、长度与属性）</text>
+  </g>
+
+  <!-- 右栏：.bss 机制与强弱符号 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 为什么区分 .data 与 .bss 及链接器强弱符号规则</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="104" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">为什么 .bss 段不占用磁盘文件体积：</text>
+    <text x="468" y="134" fill="#17343B">• 如定义 <tspan font-family="Consolas, monospace">static int buf[1024*1024];</tspan> (未初始化全0)</text>
+    <text x="468" y="156" fill="#17343B">• 若放入 .data 段，磁盘文件将平白无故膨胀 4MB 零字节</text>
+    <text x="468" y="178" fill="#287B73" font-weight="700">• 放入 .bss 仅在段表记总字节数，装载时由 OS 映射零页</text>
+
+    <rect x="456" y="206" width="362" height="120" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="468" y="226" fill="#287B73" font-weight="700">链接器全局符号冲突消解三条规则（强符号 vs 弱符号）：</text>
+    <text x="468" y="248" fill="#17343B">• <tspan font-weight="700">定义</tspan>：函数与已初始化全局为<tspan font-weight="700" fill="#287B73">强符号</tspan>；未初始化为<tspan font-weight="700" fill="#C47743">弱符号</tspan></text>
+    <text x="468" y="270" fill="#17343B">• <tspan font-weight="700">规则 1</tspan>：同名强符号不可多次定义（否则报重定义错误）</text>
+    <text x="468" y="292" fill="#17343B">• <tspan font-weight="700">规则 2</tspan>：1 个强符号与多个同名弱符号共存，选<tspan font-weight="700" fill="#287B73">强符号</tspan></text>
+    <text x="468" y="314" fill="#17343B">• <tspan font-weight="700">规则 3</tspan>：若全为弱符号，选体积最大者（COMMON 块）</text>
+  </g>
+</svg>

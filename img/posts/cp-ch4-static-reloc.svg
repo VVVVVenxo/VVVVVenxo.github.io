@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <defs>
+    <marker id="arrow-teal4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#287B73"/>
+    </marker>
+  </defs>
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：静态链接“相似段合并”两步链接法与重定位地址修正计算</text>
+
+  <!-- 左栏：相似段合并 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 第一步：空间与地址分配（相似段合并与 VMA 分配）</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="136" height="110" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="112" y="112" text-anchor="middle" fill="#17343B" font-weight="700">main.o (偏移 0 起)</text>
+    <rect x="56" y="120" width="112" height="24" rx="2" fill="#D8E6E0" stroke="#287B73"/>
+    <text x="112" y="137" text-anchor="middle" fill="#287B73">.text (main)</text>
+    <rect x="56" y="147" width="112" height="24" rx="2" fill="#FAFBF8" stroke="#CBD7CF"/>
+    <text x="112" y="164" text-anchor="middle" fill="#17343B">.data</text>
+    <rect x="56" y="174" width="112" height="24" rx="2" fill="#F4E6D9" stroke="#C47743"/>
+    <text x="112" y="191" text-anchor="middle" fill="#C47743">.bss</text>
+
+    <rect x="44" y="210" width="136" height="110" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="112" y="230" text-anchor="middle" fill="#17343B" font-weight="700">math.o (偏移 0 起)</text>
+    <rect x="56" y="238" width="112" height="24" rx="2" fill="#D8E6E0" stroke="#287B73"/>
+    <text x="112" y="255" text-anchor="middle" fill="#287B73">.text (add)</text>
+    <rect x="56" y="265" width="112" height="24" rx="2" fill="#FAFBF8" stroke="#CBD7CF"/>
+    <text x="112" y="282" text-anchor="middle" fill="#17343B">.data</text>
+    <rect x="56" y="292" width="112" height="24" rx="2" fill="#F4E6D9" stroke="#C47743"/>
+    <text x="112" y="309" text-anchor="middle" fill="#C47743">.bss</text>
+
+    <line x1="184" y1="150" x2="232" y2="165" stroke="#287B73" stroke-width="1.8" marker-end="url(#arrow-teal4)"/>
+    <line x1="184" y1="260" x2="232" y2="195" stroke="#287B73" stroke-width="1.8" marker-end="url(#arrow-teal4)"/>
+
+    <rect x="238" y="94" width="170" height="220" rx="4" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="323" y="114" text-anchor="middle" fill="#287B73" font-weight="700">可执行文件 a.out</text>
+    <rect x="250" y="124" width="146" height="52" rx="3" fill="#D8E6E0" stroke="#287B73"/>
+    <text x="323" y="144" text-anchor="middle" fill="#287B73" font-weight="700">合并 .text 段</text>
+    <text x="323" y="164" text-anchor="middle" fill="#17343B">main + add (定 VMA)</text>
+
+    <rect x="250" y="186" width="146" height="48" rx="3" fill="#FFFFFF" stroke="#CBD7CF"/>
+    <text x="323" y="206" text-anchor="middle" fill="#17343B" font-weight="700">合并 .data 段</text>
+    <text x="323" y="224" text-anchor="middle" fill="#61747A">汇总读写全局变量</text>
+
+    <rect x="250" y="244" width="146" height="54" rx="3" fill="#F4E6D9" stroke="#C47743"/>
+    <text x="323" y="264" text-anchor="middle" fill="#C47743" font-weight="700">合并 .bss 段</text>
+    <text x="323" y="284" text-anchor="middle" fill="#17343B">避免页内碎片浪费</text>
+  </g>
+
+  <!-- 右栏：重定位公式 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 第二步：符号解析与指令重定位修正公式</text>
+
+  <g font-size="13">
+    <rect x="456" y="94" width="362" height="106" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="114" fill="#17343B" font-weight="700">为什么单文件编译时外部调用地址填假值（0x00 / -4）：</text>
+    <text x="468" y="136" fill="#17343B">• 编译 main.c 时未知外部函数 add 的最终虚拟地址</text>
+    <text x="468" y="158" fill="#17343B">• 先在指令处填占位数，并在 <tspan font-weight="700" fill="#287B73">.rela.text</tspan> 登记重定位表项：</text>
+    <text x="468" y="180" fill="#C47743" font-weight="700" font-family="Consolas, monospace">Elf64_Rela { r_offset, r_info, r_addend }</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#287B73" font-weight="700">重定位寻址修正公式（S=符号真地址, P=被修正位置）：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">绝对寻址修正 (R_386_32 / R_X86_64_32)</tspan>：</text>
+    <text x="468" y="272" fill="#287B73" font-weight="700" font-family="Consolas, monospace">   修正值 = S + A  (直接填入目标符号绝对虚拟地址)</text>
+    <text x="468" y="294" fill="#17343B">2. <tspan font-weight="700">PC 相对寻址修正 (R_386_PC32 / R_X86_64_PC32)</tspan>：</text>
+    <text x="468" y="314" fill="#C47743" font-weight="700" font-family="Consolas, monospace">   修正值 = S + A - P = S - (P + 4) (距下条指令偏移)</text>
+  </g>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 6-1：C++ 原生 AOT、C# CLR JIT 与 Unity IL2CPP / HybridCLR 编译管线对比</text>
+
+  <!-- 左栏：三条编译管线 -->
+  <rect x="28" y="54" width="400" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="228" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 三种主流语言编译与执行管线链路对比</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="368" height="72" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#17343B" font-weight="700">① C / C++ 原生静态编译 (AOT · Ahead-Of-Time)：</text>
+    <text x="56" y="134" fill="#287B73" font-weight="700" font-family="Consolas, monospace">.cpp → .i → LLVM IR → .s → .o → ELF/PE</text>
+    <text x="56" y="154" fill="#61747A">优势：无运行时编译开销，支持跨模块链接时优化（LTO）</text>
+
+    <rect x="44" y="174" width="368" height="72" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="194" fill="#287B73" font-weight="700">② C# / .NET 标准运行时编译 (JIT · Just-In-Time)：</text>
+    <text x="56" y="216" fill="#17343B" font-weight="700" font-family="Consolas, monospace">.cs → Roslyn → DLL(CIL+元数据) → CLR JIT → 机器码</text>
+    <text x="56" y="236" fill="#17343B">优势：跨平台字节码，支持运行时加载 Assembly 热更新</text>
+
+    <rect x="44" y="256" width="368" height="70" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="56" y="276" fill="#C47743" font-weight="700">③ Unity IL2CPP 管线 (CIL 转 C++ 再原生 AOT)：</text>
+    <text x="56" y="298" fill="#17343B" font-weight="700" font-family="Consolas, monospace">.cs → CIL → IL2CPP 转 .cpp → Clang → libil2cpp.so</text>
+    <text x="56" y="318" fill="#17343B">元数据剥离至 global-metadata.dat，满足 iOS 禁 JIT</text>
+  </g>
+
+  <!-- 右栏：IL2CPP 限制与 HybridCLR 原理 -->
+  <rect x="444" y="54" width="388" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="638" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. IL2CPP 泛型共享与 HybridCLR 原生 C# 热更新原理</text>
+
+  <g font-size="13">
+    <rect x="458" y="92" width="360" height="112" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="470" y="112" fill="#17343B" font-weight="700">为什么纯 AOT 下值类型泛型会引发膨胀或缺失异常：</text>
+    <text x="470" y="134" fill="#17343B">• <tspan font-weight="700" fill="#287B73">引用类型泛型共享</tspan>：引用指针均 8B，可共用一份机器码</text>
+    <text x="470" y="156" fill="#17343B">• <tspan font-weight="700" fill="#C47743">值类型泛型特化</tspan>：int(4B) 与 double(8B) 尺寸不同，</text>
+    <text x="470" y="176" fill="#17343B">  必须独立生成机器码；若 AOT 编译期未扫描到该实例，</text>
+    <text x="470" y="196" fill="#61747A">  运行时调用将抛出 ExecutionEngineException</text>
+
+    <rect x="458" y="214" width="360" height="112" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="470" y="234" fill="#287B73" font-weight="700">HybridCLR 如何让 IL2CPP 支持 C# DLL 热更新：</text>
+    <text x="470" y="256" fill="#17343B">1. <tspan font-weight="700">动态注册元数据</tspan>：运行期增量注册热更 DLL 至 il2cpp</text>
+    <text x="470" y="278" fill="#17343B">2. <tspan font-weight="700">寄存器解释器</tspan>：将栈式 CIL 转译为寄存器指令高效执行</text>
+    <text x="470" y="300" fill="#17343B">3. <tspan font-weight="700">补充元数据</tspan>：提供 AOT 泛型原始 IL 回退解释执行，</text>
+    <text x="470" y="318" fill="#287B73" font-weight="700">   彻底解除热更代码使用任意值类型泛型的限制</text>
+  </g>
+</svg>
