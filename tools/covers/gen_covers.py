@@ -42,6 +42,7 @@ CAPTIONS = {
     "covers": "文章信息经过排版，生成可发布封面",
     "pipeline": "三维顶点经过坐标变换与光栅化，最终着色为屏幕像素",
     "linux": "无 GUI 损耗，以纯文本配置与命令行驱动 7×24 小时持续构建",
+    "computer-org": "指令经流水线译码执行，通过多级缓存与主存交换数据",
 }
 
 
@@ -401,6 +402,24 @@ def diagram_linux():
     ])
 
 
+def diagram_computer_org():
+    return "".join([
+        t(650, 205, "CPU 流水线 · Cache · 主存层次", 21, INK, 650),
+        rule(650, 222, 1125, 222),
+        box(668, 290, 136, 86, "CPU 核", MINT, TEAL, 18, "ALU · 寄存器"),
+        box(842, 290, 136, 86, "L1 / L2 Cache", "#F4E6D9", ORANGE, 16, "SRAM · 组相联"),
+        box(1016, 290, 136, 86, "主存储器", PALE, SOFT, 18, "DRAM · 页框"),
+        rule(804, 322, 834, 322, TEAL, 2, marker="tealArrow"),
+        rule(842, 346, 812, 346, ORANGE, 2, marker="orangeArrow"),
+        rule(978, 322, 1008, 322, TEAL, 2, marker="tealArrow"),
+        rule(1016, 346, 986, 346, ORANGE, 2, marker="orangeArrow"),
+        box(668, 418, 484, 56, "IF 取指  →  ID 译码  →  EX 执行  →  MEM 访存  →  WB 写回", PALE, TEAL, 15, mono=True),
+        rule(736, 418, 736, 376, TEAL, 1.5, "4 4"),
+        rule(910, 418, 910, 376, ORANGE, 1.5, "4 4"),
+        t(910, 524, "五段指令流水线与多级存储协同工作", 16, MUTED, anchor="middle"),
+    ])
+
+
 def select_variant(top, sub, title):
     if sub == "图形学" or "渲染管线" in title or "Shader" in title:
         return "pipeline"
@@ -416,7 +435,7 @@ def select_variant(top, sub, title):
         if "计算机网络" in title: return "network"
         if "离散数学" in title: return "graph"
         if "数据结构" in title: return "huffman"
-        if "组成原理" in title: return "memory"
+        if "组成原理" in title: return "computer-org"
         return "process"
     if sub == "网络":
         if "帧同步" in title: return "frame-sync"
@@ -468,6 +487,7 @@ def diagram_for(kind):
     if kind in ("ai-coding", "ai-agent", "covers"): return diagram_ai(kind)
     if kind == "pipeline": return diagram_pipeline()
     if kind == "linux": return diagram_linux()
+    if kind == "computer-org": return diagram_computer_org()
     if kind in ("learning","reflection-notes"): return diagram_learning(kind=="reflection-notes")
     return diagram_layers("architecture", "")
 
@@ -483,6 +503,7 @@ def diagram_heading(kind):
         "ai-coding":"人机协作 · 工程回路","ai-agent":"Agent · 规划与工具调用",
         "covers":"文章到封面的生成链路","pipeline":"顶点变换 · 光栅化 · 片元着色",
         "linux":"无头服务 · 命令行 · 持续构建",
+        "computer-org":"CPU 流水线 · Cache · 主存层次",
         "learning":"学习闭环","reflection-notes":"经验与思考"}
     return names[kind]
 
