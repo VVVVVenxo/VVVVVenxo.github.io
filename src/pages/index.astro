@@ -200,41 +200,43 @@ const featuredProjects = [
 
       <!-- Right Sidebar -->
       <aside class="home-sidebar" aria-label="继续探索博客">
-        <section class="home-topics" aria-labelledby="home-topics-heading">
-          <div class="home-section-heading">
-            <h2 id="home-topics-heading">按主题阅读</h2>
-            <a href="/categories" class="home-text-link" aria-label="查看全部分类">
-              全部
-            </a>
-          </div>
-          <ul>
-            {
-              topicList.map(topic => (
-                <li>
-                  <a href={topic.href}>
-                    <span lang="zh-CN">{topic.name}</span>
-                    <span class="home-topic-count">
-                      {topic.count}
-                      <span class="sr-only"> 篇文章</span>
-                    </span>
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </section>
+        <div class="sticky top-24">
+          <section class="home-topics" aria-labelledby="home-topics-heading">
+            <div class="home-section-heading">
+              <h2 id="home-topics-heading">按主题阅读</h2>
+              <a href="/categories" class="home-text-link" aria-label="查看全部分类">
+                全部
+              </a>
+            </div>
+            <ul>
+              {
+                topicList.map(topic => (
+                  <li>
+                    <a href={topic.href}>
+                      <span lang="zh-CN">{topic.name}</span>
+                      <span class="home-topic-count">
+                        {topic.count}
+                        <span class="sr-only"> 篇文章</span>
+                      </span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </section>
 
-        <a href="/atom.xml" class="home-rss">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 11a9 9 0 0 1 9 9"></path>
-            <path d="M4 4a16 16 0 0 1 16 16"></path>
-            <circle cx="5" cy="19" r="1"></circle>
-          </svg>
-          <span>
-            <strong>RSS 订阅更新</strong>
-            <span>通过阅读器订阅全站最新技术长文与工程复盘。</span>
-          </span>
-        </a>
+          <a href="/atom.xml" class="home-rss">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 11a9 9 0 0 1 9 9"></path>
+              <path d="M4 4a16 16 0 0 1 16 16"></path>
+              <circle cx="5" cy="19" r="1"></circle>
+            </svg>
+            <span>
+              <strong>RSS 订阅更新</strong>
+              <span>通过阅读器订阅全站最新技术长文与工程复盘。</span>
+            </span>
+          </a>
+        </div>
       </aside>
     </div>
 

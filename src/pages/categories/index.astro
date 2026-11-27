@@ -4,6 +4,10 @@ import { getAllCategories, getAllPosts } from '../../lib/posts';
 
 const categories = await getAllCategories();
 const allPosts = await getAllPosts();
+
+const topLevelNames = new Set(['技术笔记', '项目实战', 'AI探索', '随笔杂谈']);
+const primaryPillars = categories.filter(c => topLevelNames.has(c.name));
+const techStacks = categories.filter(c => !topLevelNames.has(c.name));
 ---
 
 <BaseLayout
@@ -15,20 +19,48 @@ const allPosts = await getAllPosts();
     <header class="page-heading">
       <p class="section-kicker">技术分类</p>
       <h1 class="mt-3 text-4xl font-bold tracking-tight text-[var(--text-primary)] md:text-5xl">
-        分类
+        分类与专题索引
       </h1>
       <p class="mt-4 max-w-2xl text-base leading-8 text-[var(--text-secondary)]">
-        共 {categories.length} 个分类维度，覆盖 {allPosts.length} 篇体系化技术笔记与项目实战。
+        共收录 {allPosts.length} 篇文章，按 {techStacks.length} 个技术栈与 {primaryPillars.length} 大内容板块归档。
       </p>
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        {
+          primaryPillars.map(pillar => (
+            <a href={`/categories/${encodeURIComponent(pillar.slug)}/`} class="tag">
+              {pillar.name} ({pillar.count})
+            </a>
+          ))
+        }
+      </div>
     </header>
 
-    <div class="topic-index">
+    <div class="category-directory">
       {
-        categories.map(cat => (
-          <a href={`/categories/${encodeURIComponent(cat.slug)}/`}>
-            <span lang="zh-CN">{cat.name}</span>
-            <span class="topic-index-count">{cat.count} 篇</span>
-          </a>
+        techStacks.map(cat => (
+          <section class="category-directory__card">
+            <div class="category-directory__head">
+              <a href={`/categories/${encodeURIComponent(cat.slug)}/`} class="category-directory__title">
+                <h2>{cat.name}</h2>
+                <span class="category-directory__badge">{cat.count} 篇</span>
+              </a>
+              <a href={`/categories/${encodeURIComponent(cat.slug)}/`} class="home-text-link">
+                全部 <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
+            <ul class="category-directory__list">
+              {cat.posts.slice(0, 5).map(post => (
+                <li>
+                  <a href={post.url}>
+                    <span class="category-directory__post-title">{post.cleanTitle}</span>
+                    <time datetime={post.dateStr}>{post.dateStr}</time>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
         ))
       }
     </div>

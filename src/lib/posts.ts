@@ -93,6 +93,37 @@ const LANG_ALIASES: Record<string, string> = {
   txt: 'text',
 };
 
+const LANG_DISPLAY_NAMES: Record<string, string> = {
+  cpp: 'C++',
+  c: 'C',
+  csharp: 'C#',
+  lua: 'Lua',
+  python: 'Python',
+  javascript: 'JS',
+  typescript: 'TS',
+  bash: 'Shell',
+  shell: 'Shell',
+  json: 'JSON',
+  yaml: 'YAML',
+  html: 'HTML',
+  css: 'CSS',
+  xml: 'XML',
+  sql: 'SQL',
+  glsl: 'GLSL',
+  hlsl: 'HLSL',
+  shaderlab: 'ShaderLab',
+  markdown: 'Markdown',
+  diff: 'Diff',
+};
+
+export function panguSpacing(text: string): string {
+  return String(text || '')
+    .replace(/([\u4e00-\u9fa5])([A-Za-z0-9])/g, '$1 $2')
+    .replace(/([A-Za-z0-9+#*])([\u4e00-\u9fa5])/g, '$1 $2')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function normalizeLang(lang?: string): string {
   const raw = (lang || 'text').trim().split(/\s+/)[0].toLowerCase();
   return LANG_ALIASES[raw] || raw || 'text';
@@ -270,8 +301,12 @@ export async function renderMarkdown(markdown: string): Promise<{ html: string; 
           },
           defaultColor: false,
         });
-        const copyBtn = `<button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>`;
-        return `<div class="code-block-wrapper">${copyBtn}${shikiHtml}</div>\n`;
+        const langBadge =
+          finalLang !== 'text'
+            ? `<span class="code-lang-badge">${LANG_DISPLAY_NAMES[finalLang] || finalLang.toUpperCase()}</span>`
+            : '';
+        const copyBtn = `<button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>`;
+        return `<div class="code-block-wrapper">${langBadge}${copyBtn}${shikiHtml}</div>\n`;
       },
     },
   });
@@ -307,7 +342,7 @@ export async function getAllPosts(): Promise<PostItem[]> {
 
     // Extract optional 【Category】 prefix for cleaner badge presentation if needed
     const prefixMatch = rawTitle.match(/^【([^】]+)】\s*(.+)$/);
-    const cleanTitle = prefixMatch ? prefixMatch[2].trim() : rawTitle;
+    const cleanTitle = panguSpacing(prefixMatch ? prefixMatch[2].trim() : rawTitle);
     const categories = normalizeArray(data.categories);
     const tags = normalizeArray(data.tags);
     const categoryBadge = prefixMatch
@@ -316,7 +351,7 @@ export async function getAllPosts(): Promise<PostItem[]> {
 
     const { year, month, day, dateStr, dateFormatted, timestamp } = parseDateParts(rawFile, data.date);
     const { wordCount, readingMinutes } = countWordsAndReadingTime(content);
-    const description = extractDescription(content, data.description);
+    const description = panguSpacing(extractDescription(content, data.description));
 
     const cover = data.cover ? String(data.cover).trim() : undefined;
     let coverThumb = cover;
