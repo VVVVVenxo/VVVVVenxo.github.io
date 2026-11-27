@@ -31,7 +31,7 @@
     <text x="468" y="112" fill="#C47743" font-weight="700">为什么 async 方法中不能跨 await 持有 Span&lt;T&gt;：</text>
     <text x="468" y="133" fill="#17343B">• 跨 <tspan font-family="Consolas, monospace">await</tspan> 的局部变量必须提升为状态机字段并可能上堆，</text>
     <text x="468" y="153" fill="#17343B">  而编译器严禁 <tspan font-family="Consolas, monospace">ref struct</tspan> 作为普通类/结构体字段上堆！</text>
-    <text x="468" y="173" fill="#287B73" font-weight="700">• 方案：跨 await 异步传输改用普通 struct Memory&lt;T&gt;，</text>
+    <text x="468" y="173" fill="#287B73" font-weight="700">• 方案：跨 await 传递改用普通 struct Memory&lt;T&gt;，</text>
     <text x="468" y="193" fill="#287B73" font-weight="700">  在同步块内调 memory.Span 转为局部 Span 高速处理</text>
 
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
