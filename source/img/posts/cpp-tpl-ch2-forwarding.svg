@@ -15,7 +15,7 @@
     <text x="56" y="194" fill="#61747A">  才构成万能引用；<tspan font-family="Consolas, monospace">vector&lt;T&gt;::push_back(T&amp;&amp;)</tspan> 不是</text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
-    <text x="56" y="230" fill="#287B73" font-weight="700">万能引用 template&lt;class T&gt; void wrapper(T&amp;&amp; arg) 推导：</text>
+    <text x="56" y="230" fill="#287B73" font-weight="700">万能引用 void wrapper(T&amp;&amp; arg) 推导过程：</text>
     <text x="56" y="252" fill="#17343B">• <tspan font-weight="700">传入左值 int x</tspan>：<tspan font-family="Consolas, monospace">T</tspan> 被推导为 <tspan font-weight="700" font-family="Consolas, monospace">int&amp;</tspan>，</text>
     <text x="56" y="272" fill="#17343B">  形参 <tspan font-family="Consolas, monospace">int&amp; &amp;&amp;</tspan> 经引用折叠变为左值引用 <tspan font-weight="700" font-family="Consolas, monospace">int&amp;</tspan></text>
     <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">传入右值 42</tspan>：<tspan font-family="Consolas, monospace">T</tspan> 被推导为非引用类型 <tspan font-weight="700" font-family="Consolas, monospace">int</tspan>，</text>
@@ -37,8 +37,8 @@
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="468" y="230" fill="#C47743" font-weight="700">std::forward&lt;T&gt;(arg) 条件转换还原值类别：</text>
     <text x="468" y="252" fill="#17343B">• 核心实现：<tspan font-weight="700" font-family="Consolas, monospace">return static_cast&lt;T&amp;&amp;&gt;(arg);</tspan></text>
-    <text x="468" y="272" fill="#17343B">• 当 <tspan font-family="Consolas, monospace">T = int&amp;</tspan> 时：<tspan font-family="Consolas, monospace">static_cast&lt;int&amp; &amp;&amp;&gt;</tspan> 折叠为 <tspan font-weight="700" font-family="Consolas, monospace">int&amp;</tspan>（左值）</text>
-    <text x="468" y="292" fill="#17343B">• 当 <tspan font-family="Consolas, monospace">T = int</tspan> 时：<tspan font-family="Consolas, monospace">static_cast&lt;int&amp;&amp;&gt;</tspan> 还原为 <tspan font-weight="700" font-family="Consolas, monospace">int&amp;&amp;</tspan>（右值）</text>
+    <text x="468" y="272" fill="#17343B">• <tspan font-family="Consolas, monospace">T = int&amp;</tspan>：<tspan font-family="Consolas, monospace">static_cast&lt;int&amp; &amp;&amp;&gt;</tspan> 折叠为 <tspan font-weight="700" font-family="Consolas, monospace">int&amp;</tspan></text>
+    <text x="468" y="292" fill="#17343B">• <tspan font-family="Consolas, monospace">T = int</tspan>：<tspan font-family="Consolas, monospace">static_cast&lt;int&amp;&amp;&gt;</tspan> 还原为 <tspan font-weight="700" font-family="Consolas, monospace">int&amp;&amp;</tspan></text>
     <text x="468" y="313" fill="#287B73" font-weight="700">• 区别：std::move 无条件转右值；forward 按 T 转换</text>
   </g>
 </svg>

@@ -10,14 +10,14 @@
     <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="56" y="112" fill="#287B73" font-weight="700">状态同步的数据流向（服务端运行完整战斗逻辑）：</text>
     <text x="56" y="134" fill="#17343B">1. 客户端发送请求指令（如请求释放技能、移动摇杆方向）</text>
-    <text x="56" y="155" fill="#17343B">2. 服务端校验合法性（冷却、距离、碰撞），计算最新血量与坐标</text>
-    <text x="56" y="175" fill="#17343B">3. 服务端按固定频率（如 10～20Hz）将变化后的属性下发客户端</text>
+    <text x="56" y="155" fill="#17343B">2. 服务端校验冷却、距离与碰撞，计算最新血量与坐标</text>
+    <text x="56" y="175" fill="#17343B">3. 服务端按 10～20Hz 频率将变化后的属性下发客户端</text>
     <text x="56" y="194" fill="#61747A">• 客户端仅根据收到的状态播放动画与特效，天然防篡改</text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="230" fill="#287B73" font-weight="700">基于位掩码（Bitmask）的脏属性增量打包：</text>
-    <text x="56" y="252" fill="#17343B">• 实体包含数十项属性（血量、蓝量、移速、坐标、Buff 状态）</text>
-    <text x="56" y="272" fill="#17343B">• 每帧只发送本帧发生修改的字段：用 64 位整型掩码标记哪几个</text>
+    <text x="56" y="252" fill="#17343B">• 实体包含数十项属性（血量、蓝量、移速、坐标等）</text>
+    <text x="56" y="272" fill="#17343B">• 每帧只发修改过的字段：用 64 位掩码标记哪几个</text>
     <text x="56" y="293" fill="#17343B">  属性发生修改（对应位设为 1），包体中仅顺序写入这几个</text>
     <text x="56" y="313" fill="#287B73" font-weight="700">  变化字段的最新值，大幅降低单包字节数</text>
   </g>
@@ -29,16 +29,16 @@
   <g font-size="13">
     <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="468" y="112" fill="#C47743" font-weight="700">全图广播的 O(N²) 流量瓶颈：</text>
-    <text x="468" y="134" fill="#17343B">• 若同地图有 1000 名玩家，每人每次移动都向其余 999 人广播，</text>
+    <text x="468" y="134" fill="#17343B">• 若同图 1000 名玩家每次移动都向其余 999 人广播，</text>
     <text x="468" y="154" fill="#17343B">  服务端每秒需发送近百万条消息，且客户端收到大量视野外</text>
     <text x="468" y="175" fill="#17343B">  玩家的位置数据（不仅浪费带宽，还可能被透视外挂利用）</text>
     <text x="468" y="194" fill="#61747A">• 必须通过 AOI 算法仅同步玩家视野周围的实体状态</text>
 
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="468" y="230" fill="#C47743" font-weight="700">九宫格网格法与事件通知：</text>
-    <text x="468" y="252" fill="#17343B">• 将场景按固定尺寸（如 50m × 50m）划分为二维网格，每个格子</text>
-    <text x="468" y="272" fill="#17343B">  维护当前位于格内的实体列表；玩家订阅自身所在格及周围 8 格</text>
-    <text x="468" y="292" fill="#17343B">• 实体跨越格子时，对比新旧九宫格集合，向新增格</text>
-    <text x="468" y="313" fill="#287B73" font-weight="700">  发送 Enter（进入视野创建），向离开格发送 Leave（销毁实体）</text>
+    <text x="468" y="252" fill="#17343B">• 将场景按固定尺寸（50m × 50m）划分为网格，每格</text>
+    <text x="468" y="272" fill="#17343B">  维护格内实体列表；玩家订阅自身所在格及周围 8 格</text>
+    <text x="468" y="292" fill="#17343B">• 实体跨格时，自动对比新旧九宫格集合，向新增格</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  发 Enter（进入视野创建），向旧格发 Leave（销毁）</text>
   </g>
 </svg>

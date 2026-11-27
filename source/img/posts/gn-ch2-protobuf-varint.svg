@@ -38,7 +38,7 @@
     <text x="468" y="230" fill="#C47743" font-weight="700">ZigZag 有符号数交错映射（sint32 / sint64 底层机制）：</text>
     <text x="468" y="252" fill="#17343B">• 将正负整数按绝对值大小交错映射为无符号正整数：</text>
     <text x="468" y="272" fill="#17343B" font-family="Consolas, monospace">0 → 0,  -1 → 1,  1 → 2,  -2 → 3,  2 → 4 ...</text>
-    <text x="468" y="294" fill="#287B73" font-weight="700" font-family="Consolas, monospace">编码：(n &lt;&lt; 1) ^ (n &gt;&gt; 31)   （算术右移复制符号位）</text>
+    <text x="468" y="294" fill="#287B73" font-weight="700" font-family="Consolas, monospace">编码：(n &lt;&lt; 1) ^ (n &gt;&gt; 31) （右移复制符号位）</text>
     <text x="468" y="314" fill="#287B73" font-weight="700" font-family="Consolas, monospace">解码：(u &gt;&gt; 1) ^ -(u &amp; 1)   （小负数同样仅占 1B）</text>
   </g>
 </svg>

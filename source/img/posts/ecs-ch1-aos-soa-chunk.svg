@@ -10,15 +10,15 @@
     <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="56" y="112" fill="#287B73" font-weight="700">引用类型离散分配与指针间接寻址：</text>
     <text x="56" y="134" fill="#17343B">• 每个 <tspan font-family="Consolas, monospace">MonoBehaviour</tspan> 是托管堆上单独分配的 <tspan font-family="Consolas, monospace">class</tspan> 对象</text>
-    <text x="56" y="155" fill="#17343B">• 对象内部同时包含对象头、方法表指针与不需要每帧访问的字段</text>
-    <text x="56" y="175" fill="#17343B">• 不同对象的内存地址不连续，遍历时需通过指针数组多次解引用</text>
-    <text x="56" y="194" fill="#61747A">• 托管堆垃圾回收（GC）不会自动整理压缩已分配对象的内存位置</text>
+    <text x="56" y="155" fill="#17343B">• 对象内部包含对象头、方法表指针与非当前逻辑字段</text>
+    <text x="56" y="175" fill="#17343B">• 不同对象地址不连续，遍历时需通过指针多次解引用</text>
+    <text x="56" y="194" fill="#61747A">• 托管堆 GC 不会自动整理压缩已分配对象的内存位置</text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="230" fill="#287B73" font-weight="700">CPU 缓存行（64B Cache Line）利用率低下：</text>
     <text x="56" y="252" fill="#17343B">• 当系统在 <tspan font-family="Consolas, monospace">Update</tspan> 中只读取 <tspan font-family="Consolas, monospace">Position</tspan>（12 字节）与</text>
-    <text x="56" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">Velocity</tspan>（12 字节）时，64B 缓存行其余 40B 全是无关字段</text>
-    <text x="56" y="293" fill="#17343B">• 随机跳转的地址使 CPU 硬件预取器无法预测下一条缓存行，</text>
+    <text x="56" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">Velocity</tspan>（12B）时，64B 缓存行其余 40B 全是无关字段</text>
+    <text x="56" y="293" fill="#17343B">• 随机跳转地址使硬件预取器无法预测下一条缓存行，</text>
     <text x="56" y="313" fill="#287B73" font-weight="700">  频繁发生 L1/L2 Cache Miss 并等待主存读取</text>
   </g>
 

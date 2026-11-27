@@ -30,7 +30,7 @@
     <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="468" y="112" fill="#C47743" font-weight="700">类型擦除（Type Erasure）三字段布局（GCC 占 32B）：</text>
     <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700" font-family="Consolas, monospace">_M_functor (16B union)</tspan>：栈内缓冲或堆对象指针</text>
-    <text x="468" y="154" fill="#17343B">2. <tspan font-weight="700" font-family="Consolas, monospace">_M_manager (8B)</tspan>：管理函数指针（拷贝/移动/析构闭包）</text>
+    <text x="468" y="154" fill="#17343B">2. <tspan font-weight="700" font-family="Consolas, monospace">_M_manager (8B)</tspan>：管理指针（拷贝/移动/析构）</text>
     <text x="468" y="175" fill="#17343B">3. <tspan font-weight="700" font-family="Consolas, monospace">_M_invoker (8B)</tspan>：调用转发函数指针（调 operator()）</text>
     <text x="468" y="194" fill="#61747A">• 将函数指针、仿函数、不同捕获的 Lambda 统一为同类型</text>
 

@@ -18,7 +18,7 @@
     <text x="56" y="230" fill="#287B73" font-weight="700">SetPass Call（渲染管线状态与材质切换）：</text>
     <text x="56" y="252" fill="#17343B">• 切换不同 Shader、贴图或混合/深度测试状态时触发</text>
     <text x="56" y="272" fill="#17343B">• GPU 需要切换着色器程序并重新绑定材质常量与纹理单元</text>
-    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">单次 SetPass Call 的 CPU 与驱动开销远高于普通 DrawCall</tspan></text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">单次 SetPass Call 的驱动开销远高于普通 DrawCall</tspan></text>
     <text x="56" y="313" fill="#287B73" font-weight="700">• 优化核心：既要减少绘制次数，更要减少材质与状态切换</text>
   </g>
 

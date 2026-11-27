@@ -14,7 +14,7 @@
 
     <rect x="44" y="174" width="368" height="72" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="194" fill="#287B73" font-weight="700">② C# / .NET 标准运行时编译 (JIT · Just-In-Time)：</text>
-    <text x="56" y="216" fill="#17343B" font-weight="700" font-family="Consolas, monospace">.cs → Roslyn → DLL(CIL+元数据) → CLR JIT → 机器码</text>
+    <text x="56" y="216" fill="#17343B" font-weight="700" font-family="Consolas, monospace">.cs → Roslyn → DLL(CIL) → CLR JIT → 机器码</text>
     <text x="56" y="236" fill="#17343B">优势：跨平台字节码，支持运行时加载 Assembly 热更新</text>
 
     <rect x="44" y="256" width="368" height="70" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>

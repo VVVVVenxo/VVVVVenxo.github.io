@@ -28,7 +28,7 @@
 
   <g font-size="13">
     <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
-    <text x="468" y="112" fill="#C47743" font-weight="700">写线程（生产者）：flag.store(true, memory_order_release)</text>
+    <text x="468" y="112" fill="#C47743" font-weight="700">写线程：flag.store(true, memory_order_release)</text>
     <text x="468" y="134" fill="#17343B">• <tspan font-weight="700">Release 语义</tspan>：在该 <tspan font-family="Consolas, monospace">store</tspan> 之前的所有内存读写操作，</text>
     <text x="468" y="154" fill="#17343B">  均不允许被重排到该 <tspan font-family="Consolas, monospace">store</tspan> 之后</text>
     <text x="468" y="175" fill="#17343B">• 确保在将标志位 <tspan font-family="Consolas, monospace">flag</tspan> 置为 <tspan font-family="Consolas, monospace">true</tspan> 之前，前面准备好</text>
