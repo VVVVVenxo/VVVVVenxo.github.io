@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：3D 游戏 Recast NavMesh 体素化烘焙管线与 Funnel 漏斗算法路径拉直</text>
+
+  <!-- 左栏：Recast 体素化烘焙 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. Recast 导航网格（NavMesh）体素化烘焙五阶段</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="42" rx="3" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="110" fill="#17343B" font-weight="700">① 三维体素化 (Voxelization)：将三角面光栅化为实心体素</text>
+    <text x="56" y="127" fill="#61747A">解决任意复杂穿插模型的拓扑重叠问题（Recast 核心创举）</text>
+
+    <rect x="44" y="140" width="364" height="42" rx="3" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="158" fill="#17343B" font-weight="700">② 可行走过滤：剔除超最大坡度、低头顶净高及超台阶落差</text>
+    <text x="56" y="175" fill="#61747A">的体素顶面，并按角色碰撞半径 AgentRadius 执行内缩腐蚀</text>
+
+    <rect x="44" y="188" width="364" height="42" rx="3" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="206" fill="#287B73" font-weight="700">③ 距离场与分水岭区域划分 (Watershed Partitioning)：</text>
+    <text x="56" y="223" fill="#17343B">计算每个体素到边界距离，切分为不含空洞的连通平面区域</text>
+
+    <rect x="44" y="236" width="364" height="42" rx="3" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="254" fill="#17343B" font-weight="700">④ 轮廓提取与 Douglas-Peucker 折线简化：</text>
+    <text x="56" y="271" fill="#61747A">将锯齿状体素边界拟合简化为紧凑的多边形顶点环</text>
+
+    <rect x="44" y="284" width="364" height="42" rx="3" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="56" y="302" fill="#C47743" font-weight="700">⑤ 凸多边形网格生成 (Convex Polygon Mesh)：</text>
+    <text x="56" y="319" fill="#17343B">三角剖分并合并为凸多边形（凸多边形内两点连线必不穿墙）</text>
+  </g>
+
+  <!-- 右栏：Funnel 漏斗算法 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 为什么需要 Funnel 漏斗算法（Simple Stupid Funnel）</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="106" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#17343B" font-weight="700">两阶段 NavMesh 寻路：多边形通道搜索 + 拐点拉直</text>
+    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700">阶段 1 (A* 搜多边形通道)</tspan>：在凸多边形邻接图上跑 A*，</text>
+    <text x="468" y="154" fill="#17343B">  仅得到一串相邻多边形及公共穿门边（Portal Edges）序列</text>
+    <text x="468" y="176" fill="#17343B">• 若直接连各多边形中心点，角色会走出折线绕路的机械感</text>
+
+    <rect x="456" y="208" width="362" height="118" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="468" y="228" fill="#287B73" font-weight="700">Funnel 漏斗算法（拉绳法 String Pulling）三步推进：</text>
+    <text x="468" y="250" fill="#17343B">1. 维护当前漏斗顶点 <tspan font-family="Consolas, monospace">Apex</tspan> 及左右边界射线 <tspan font-family="Consolas, monospace">(Left, Right)</tspan></text>
+    <text x="468" y="272" fill="#17343B">2. 考察下一扇穿门边 <tspan font-family="Consolas, monospace">[newL, newR]</tspan>：若新端点向内收窄</text>
+    <text x="468" y="292" fill="#17343B">   漏斗且未越过对侧边，则更新收缩漏斗夹角</text>
+    <text x="468" y="312" fill="#C47743" font-weight="700">3. 一旦新边越过对侧边界，旧边界点即定为必经拐点</text>
+  </g>
+</svg>

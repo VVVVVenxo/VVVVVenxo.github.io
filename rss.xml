@@ -8,6 +8,20 @@
     <managingEditor>VVVVVenxo</managingEditor>
     <atom:link href="https://VVVVVenxo.github.io/atom.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>【算法】图与搜索算法</title>
+      <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</link>
+      <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</guid>
+      <pubDate>Fri, 27 Nov 2026 18:00:00 GMT</pubDate>
+      <description>系统梳理游戏开发中的空间搜索、路径规划与 AI 决策核心算法：BFS/Dijkstra/A* 完备性与可采纳性证明、网格启发函数与破平局（Breaking Ties）优化、JPS 跳点搜索强迫邻居剪枝、3D 游戏 Recast NavMesh 体素化烘焙与 Funnel 漏斗拉绳算法、以及 HFSM 分层状态机与行为树架构。</description>
+    </item>
+    <item>
+      <title>【网络】游戏客户端网络基础</title>
+      <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</link>
+      <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</guid>
+      <pubDate>Fri, 27 Nov 2026 17:00:00 GMT</pubDate>
+      <description>系统梳理游戏客户端网络层核心工程架构：TCP 粘包/半包成因与长度前缀拆包、RingBuffer 环形缓冲区零拷贝设计、Protobuf TLV/Varint/ZigZag 编码原理、KCP 可靠 UDP 四大降延迟机制、应用层心跳与静默断线重连状态机、以及网络线程与 Unity 主线程双队列解耦。</description>
+    </item>
+    <item>
       <title>【计算机基础】线性代数与 3D 数学</title>
       <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E4%B8%8E%203D%20%E6%95%B0%E5%AD%A6/</link>
       <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E4%B8%8E%203D%20%E6%95%B0%E5%AD%A6/</guid>
@@ -134,13 +148,6 @@
       <description>深入 C++ STL——六大部件的设计思想、各容器（vector/list/deque/set/map 等）的底层实现与时间复杂度对比，以及 push_back 与 emplace_back、红黑树与 AVL 树的区别。</description>
     </item>
     <item>
-      <title>【算法】图与搜索算法</title>
-      <link>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</link>
-      <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</guid>
-      <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
-      <description>梳理游戏开发中常用的图与搜索算法——A* 寻路、JPS 跳点搜索、广度/深度遍历，以及 AI 决策的两大方案行为树与状态机的对比。</description>
-    </item>
-    <item>
       <title>【算法】排序算法大全</title>
       <link>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</link>
       <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</guid>
@@ -174,13 +181,6 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%8D%8F%E7%A8%8B%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>理解 Unity 协程的原理与用法，协程与线程的区别，以及 JobSystem 多线程方案。</description>
-    </item>
-    <item>
-      <title>【Unity】物理系统</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E7%89%A9%E7%90%86%E7%B3%BB%E7%BB%9F/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E7%89%A9%E7%90%86%E7%B3%BB%E7%BB%9F/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>详解 Unity 物理系统：碰撞检测模式、穿透问题解决方案，以及 NavMesh 导航系统。</description>
     </item>
   </channel>
 </rss>

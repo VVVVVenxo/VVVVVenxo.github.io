@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：可靠 UDP（KCP 协议）四大降延迟机制与 TCP 重传队头阻塞（HOLB）对比</text>
+
+  <!-- 左栏：为什么 TCP 在弱网下高延迟 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 为什么实时动作/帧同步游戏在弱网下不用原生 TCP</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#C47743" font-weight="700">原生 TCP 为吞吐量与公平性设计的三大延迟来源：</text>
+    <text x="56" y="134" fill="#17343B">1. <tspan font-weight="700">RTO 翻倍退避</tspan>：丢包超时后 RTO 按 <tspan font-family="Consolas, monospace">2*RTO、4*RTO</tspan> 膨胀</text>
+    <text x="56" y="156" fill="#17343B">2. <tspan font-weight="700">拥塞窗口骤降</tspan>：一旦丢包立即认为网络拥塞，将发送窗口</text>
+    <text x="56" y="176" fill="#17343B">   减半甚至降为 1，导致后续实时操作包被堵在发送端</text>
+    <text x="56" y="196" fill="#17343B">3. <tspan font-weight="700">延迟确认 (Delayed ACK)</tspan>：等待 40ms 捎带确认</text>
+
+    <rect x="44" y="216" width="364" height="108" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="236" fill="#287B73" font-weight="700">KCP（基于 UDP 的快速可靠 ARQ 协议）核心取舍：</text>
+    <text x="56" y="258" fill="#17343B">• 以多耗 <tspan font-weight="700" fill="#C47743">10%~20% 带宽</tspan>为代价，换取平均延迟降低 30%+</text>
+    <text x="56" y="280" fill="#17343B">• 纯算法层实现（仅 kcp.h/c），底层传输完全由用户回调</text>
+    <text x="56" y="302" fill="#17343B">• 极速模式配置：<tspan font-family="Consolas, monospace">ikcp_nodelay(kcp, 1, 10, 2, 1)</tspan></text>
+  </g>
+
+  <!-- 右栏：KCP 四大核心机制 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. KCP 相比 TCP 的四大核心降延迟机制</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#287B73" font-weight="700">① RTO 1.5 倍温和增长 + ② 选择性重传：</text>
+    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700">RTO × 1.5</tspan>：开启 nodelay 后超时重传按 1.5 倍温和增长</text>
+    <text x="468" y="156" fill="#17343B">• <tspan font-weight="700">UNA + ACK 双确认</tspan>：包头携带接收端“期望收到的</text>
+    <text x="468" y="176" fill="#17343B">  最小包号 UNA”(&lt;UNA 已收齐) 与单包 ACK，丢包时仅</text>
+    <text x="468" y="196" fill="#287B73" font-weight="700">  精准重传缺失分片，绝不连带重传后续已到达的分片</text>
+
+    <rect x="456" y="216" width="362" height="108" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="236" fill="#C47743" font-weight="700">③ 快速重传 (Fast Retransmit) + ④ 非退让流控：</text>
+    <text x="468" y="258" fill="#17343B">• <tspan font-weight="700">快速重传</tspan>：发送端若收到后面包的 ACK 越过了某包达到</text>
+    <text x="468" y="278" fill="#17343B">  指定次数（如 <tspan font-family="Consolas, monospace">resend=2</tspan> 次），<tspan font-weight="700" fill="#C47743">不等超时立即重传该包</tspan></text>
+    <text x="468" y="300" fill="#17343B">• <tspan font-weight="700">非退让流控</tspan>：跳过慢启动与拥塞减半，发送速率仅受</text>
+    <text x="468" y="318" fill="#17343B">  发送窗口 <tspan font-family="Consolas, monospace">snd_wnd</tspan> 与对端接收窗口 <tspan font-family="Consolas, monospace">rmt_wnd</tspan> 限制</text>
+  </g>
+</svg>

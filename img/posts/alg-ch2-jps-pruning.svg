@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：JPS（跳点搜索）路径对称性剪枝规则、强迫邻居（Forced Neighbor）与跳点判定</text>
+
+  <!-- 左栏：自然邻居与强迫邻居 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 为什么均匀代价格网存在大量“对称冗余路径”</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#17343B" font-weight="700">JPS 方向性邻居剪枝（Pruning · 设父节点为 p(x)）：</text>
+    <text x="56" y="134" fill="#17343B">• <tspan font-weight="700" fill="#287B73">直线移动 (如向右)</tspan>：仅保留正前方 1 个<tspan font-weight="700">自然邻居</tspan>；其余</text>
+    <text x="56" y="154" fill="#17343B">  邻居均可不经 x 而由 p(x) 以更优或相等代价到达，直接剪除</text>
+    <text x="56" y="175" fill="#17343B">• <tspan font-weight="700" fill="#287B73">对角移动 (如右上)</tspan>：仅保留右、上、右上 3 个<tspan font-weight="700">自然邻居</tspan>；</text>
+    <text x="56" y="194" fill="#61747A">  无需将直线探测途中的普通空白格压入 Open List 二叉堆</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#C47743" font-weight="700">强迫邻居（Forced Neighbor）定义：</text>
+    <text x="56" y="252" fill="#17343B">• 当节点 x 侧方紧邻<tspan font-weight="700" fill="#C47743">障碍物</tspan>时，原本可绕过 x 的对称路径被</text>
+    <text x="56" y="272" fill="#17343B">  障碍物阻断，使得从 p(x) 到达障碍物后方邻居 n 的最短路径</text>
+    <text x="56" y="292" fill="#17343B">  <tspan font-weight="700" fill="#C47743">必须经过 x</tspan>！此时称 n 为 x 的<tspan font-weight="700">强迫邻居</tspan>，必须加入扩展集</text>
+  </g>
+
+  <!-- 右栏：跳点三条件与工程适用边界 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 跳点（Jump Point）递归判定三条件与工程对比</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#287B73" font-weight="700">节点 y 成为跳点（唯一需要入 Open 堆的拐点）的三条件：</text>
+    <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700">终点条件</tspan>：节点 y 本身就是寻路目标点 Goal</text>
+    <text x="468" y="156" fill="#17343B">2. <tspan font-weight="700">强迫拐点条件</tspan>：节点 y 至少拥有一个<tspan font-weight="700" fill="#C47743">强迫邻居</tspan></text>
+    <text x="468" y="178" fill="#17343B">3. <tspan font-weight="700">对角递归条件</tspan>：若从 x 到 y 是斜向对角移动，且从 y 沿</text>
+    <text x="468" y="198" fill="#17343B">   水平或垂直分量方向直线跳跃能够探测到满足 1 或 2 的点</text>
+
+    <rect x="456" y="216" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="236" fill="#17343B" font-weight="700">JPS vs 标准 A* 的性能收益与适用约束：</text>
+    <text x="468" y="258" fill="#17343B">• <tspan font-weight="700" fill="#287B73">核心收益</tspan>：Open 堆入队数锐减 90%+，提速数倍至十倍</text>
+    <text x="468" y="280" fill="#17343B">• <tspan font-weight="700" fill="#287B73">零预计算</tspan>：基础 JPS 不占额外内存，天然支持动态障碍物</text>
+    <text x="468" y="302" fill="#17343B">• <tspan font-weight="700" fill="#C47743">适用前提</tspan>：仅限<tspan font-weight="700">均匀代价网格</tspan>（不含沼泽/山地权重）</text>
+  </g>
+</svg>
