@@ -172,7 +172,7 @@ void goodExample() {
 ```cpp
 auto up1 = std::make_unique<int>(42);
 
-// auto up2 = up1;  // 编译错误！不能拷贝
+// auto up2 = up1;  // 编译错误：unique_ptr 不可拷贝
 
 auto up2 = std::move(up1);  // 转移所有权
 // 此时 up1 == nullptr

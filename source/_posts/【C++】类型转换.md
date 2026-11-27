@@ -49,8 +49,8 @@ int* mp = const_cast<int*>(cp);  // 合法，b 本身不是 const
 用于编译期已知类型关系的转换：
 
 - 基本数据类型之间的转换（int、float、enum 等）
-- 类层次间的向上转换（派生类 → 基类）✅ 安全
-- 类层次间的向下转换（基类 → 派生类）⚠️ 不安全（无运行时检查）
+- 类层次间的向上转换（派生类 → 基类）：安全
+- 类层次间的向下转换（基类 → 派生类）：不安全（无运行时类型检查）
 
 ```cpp
 // 基本类型转换
@@ -114,7 +114,7 @@ uintptr_t addr = reinterpret_cast<uintptr_t>(p);
 // 整数转指针
 int* p2 = reinterpret_cast<int*>(addr);
 
-// 不同类型指针互转（危险！）
+// 不同类型指针互转（无类型安全检查）
 float* fp = reinterpret_cast<float*>(p);
 ```
 

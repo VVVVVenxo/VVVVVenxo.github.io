@@ -25,7 +25,7 @@ std::vector<int> createBigVector() {
 }
 ```
 
-**核心问题**：当源对象即将销毁时（如函数返回值），拷贝它毫无意义，不如直接"偷走"它的资源。
+**问题背景**：当源对象即将销毁时（如临时对象或函数返回值），执行深拷贝会产生不必要的内存分配与数据复制开销。
 
 **C++11 的解决方案**：引入**移动语义**，通过右值引用区分"需要保留的对象"和"即将销毁的对象"，实现资源的高效转移。
 
@@ -150,7 +150,7 @@ public:
     // 移动构造函数
     MyString(MyString&& other) noexcept 
         : data(other.data), size(other.size) {
-        other.data = nullptr;  // 偷走资源
+        other.data = nullptr;  // 转移指针所有权并置空源指针
         other.size = 0;
     }
     
@@ -184,7 +184,7 @@ typename remove_reference<T>::type&& move(T&& arg) noexcept {
 }
 ```
 
-**理解**：`std::move(x)` 告诉编译器"我不再需要 x 的值了，你可以移动它"。
+**语义**：`std::move(x)` 将左值显式转换为右值引用，使编译器优先匹配移动构造函数或移动赋值运算符。
 
 ```cpp
 std::string str = "hello";
@@ -287,7 +287,7 @@ class Modern {
     std::vector<int> items;           // 自动深拷贝和移动
     std::shared_ptr<Resource> shared; // 引用计数共享
     
-    // 不需要手写任何析构、拷贝、移动函数！
+    // 无需手动编写析构、拷贝或移动函数
 };
 ```
 

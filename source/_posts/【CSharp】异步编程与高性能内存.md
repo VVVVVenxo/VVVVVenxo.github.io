@@ -66,7 +66,7 @@ int result = awaiter.GetResult();
 
 ## 第 2 章：`SynchronizationContext` 线程切回与 `.Result` 死锁
 
-### 2.1 为什么 `await` 之后的代码能自动回到 Unity 主线程
+### 2.1 `SynchronizationContext` 异步恢复主线程的机制
 
 在 Unity 的 `MonoBehaviour` 中执行 `await Task.Run(() => HeavyWork());` 时，尽管 `HeavyWork()` 在后台线程池运行，`await` 之后的代码仍会自动回到 **Unity 主线程** 执行。该机制由 **`SynchronizationContext`（同步上下文）** 实现：
 
@@ -79,7 +79,7 @@ int result = awaiter.GetResult();
 
 ---
 
-### 2.2 为什么在主线程调用 `task.Wait()` 或 `task.Result` 会永久死锁
+### 2.2 主线程调用 `task.Wait()` 或 `task.Result` 导致死锁的成因
 
 在单线程 `SynchronizationContext` 环境（Unity 主线程、WPF / WinForms UI 线程）中，若同步方法调用了未配置 `ConfigureAwait(false)` 的异步方法，并同步阻塞调用 `.Result` 或 `.Wait()`，会触发**永久死锁**：
 
@@ -134,13 +134,13 @@ async Task<string> DownloadAsync() {
   await UniTask.Delay(TimeSpan.FromSeconds(1.5f), ignoreTimeScale: false,
                       cancellationToken: this.GetCancellationTokenOnDestroy());
   ```
-- **生命周期自动绑定取消（防止销毁后空引用）**：传统 `async Task` 最危险的 Bug 是异步等待期间 `GameObject` 已被销毁，恢复执行时访问已销毁组件抛出 `MissingReferenceException`。通过传入 `this.GetCancellationTokenOnDestroy()`，当挂载的 `MonoBehaviour` 触发 `OnDestroy` 时自动激活 `CancellationToken`，在池化层直接静默拦截并回收状态机。
+- **生命周期自动绑定取消（防止销毁后空引用）**：异步等待期间若 `GameObject` 已销毁，恢复执行并访问已销毁组件会抛出 `MissingReferenceException`。通过传入 `this.GetCancellationTokenOnDestroy()`，当挂载的 `MonoBehaviour` 触发 `OnDestroy` 时自动激活 `CancellationToken`，在池化层直接静默拦截并回收状态机。
 
 ---
 
 ## 第 4 章：高性能零拷贝内存原语：`Span<T>`、`Memory<T>` 与 `ArrayPool<T>`
 
-在网络拆包、二进制文件解析、字符串切分与原生插件互操作中，传统 C# 代码频繁调用 `Substring()` 或 `new byte[]` 切片会产生海量短命临时对象。C# 7.2 引入的 **`Span<T>`** 与 **`ArrayPool<T>`** 从根本上重构了 .NET 的内存操作范式。
+在网络拆包、二进制文件解析、字符串切分与原生插件互操作中，传统 C# 代码频繁调用 `Substring()` 或 `new byte[]` 切片会产生大量短期托管堆对象。C# 7.2 引入的 **`Span<T>`** 与 **`ArrayPool<T>`** 从根本上重构了 .NET 的内存操作范式。
 
 ![C# 高性能零拷贝内存视图：Span<T>（ref struct）、Memory<T> 与 ArrayPool](/img/posts/cs-ch4-span-arraypool.svg)
 
@@ -148,18 +148,18 @@ async Task<string> DownloadAsync() {
 
 `Span<T>`（以及只读视图 `ReadOnlySpan<T>`）在底层仅由两个字段构成（64 位下共 16 字节）：一个由 JIT 特殊追踪的**受管内部指针（`ref T _pointer`，ByReference）**和一个整型长度 **`int _length`**。
 
-```text
-struct Span<T> {
+```csharp
+public readonly ref struct Span<T> {
     internal readonly ref T _pointer; // 直接指向目标连续内存首元素的内部引用
     private readonly int _length;     // 切片元素个数
 }
 ```
 
-- **统一抹平三类物理内存**：同一个接收 `Span<byte>` 参数的解析函数，可以同时零拷贝接收：① **托管堆数组**（`new byte[1024]` 的任意子段）；② **线程栈分配内存**（`stackalloc byte[256]`，函数返回即刻随栈指针回退释放，0 GC）；③ **非托管原生堆内存**（`new Span<byte>(void* ptr, int len)`，如 C++ Native 插件或 `NativeArray<T>` 内存）。
+- **统一封装三类连续内存**：同一个接收 `Span<byte>` 参数的解析函数，可以同时零拷贝接收：① **托管堆数组**（`new byte[1024]` 的任意子段）；② **线程栈分配内存**（`stackalloc byte[256]`，函数返回即刻随栈指针回退释放，0 GC）；③ **非托管原生堆内存**（`new Span<byte>(void* ptr, int len)`，如 C++ Native 插件或 `NativeArray<T>` 内存）。
 - **`Slice(start, length)` 零拷贝切片**：对 `Span<T>` 或字符串 `str.AsSpan().Slice(4, 8)` 执行切片时，仅做一次指针加法 `_pointer + start` 并赋新长度，耗时 **`O(1)` 且分配 0 字节堆内存**。
-- **为什么编译器强制规定 `Span<T>` 必须是 `ref struct`（严禁上堆）**：
+- **`Span<T>` 限定为 `ref struct`（仅限栈分配）的原因**：
   1. **防止栈内存悬空指针（Use-After-Free）**：因为 `Span<T>` 可以指向 `stackalloc` 分配的当前函数栈帧内存；一旦允许将 `Span<T>` 装箱为 `object`、作为普通 `class` 的成员变量、或被 Lambda 闭包与 `async` 状态机捕获到托管堆上，当当前函数返回销毁栈帧后，堆上的 `Span<T>` 就会指向已被销毁的栈地址，破坏类型安全。
-  2. **避免多线程撕裂与 GC 内部指针追踪过载**：`Span<T>` 包含 16 字节双字段，在多线程并发读写堆字段时不具备原子性（可能读到新指针配旧长度导致越界）；且追踪堆上海量的数组中间内部指针会极大拖慢 GC 标记速度。因此编译器在语法层面锁死 `ref struct` **只能存在于线程栈上**。
+  2. **避免多线程撕裂与 GC 内部指针追踪过载**：`Span<T>` 包含 16 字节双字段，在多线程并发读写堆字段时不具备原子性（可能读到新指针配旧长度导致越界）；且追踪堆上的大量内部指针会增加 GC 标记开销。因此编译器规定 `ref struct` **只能分配在线程栈上**。
 
 ---
 

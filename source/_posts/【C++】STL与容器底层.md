@@ -30,8 +30,8 @@ description: 基于《STL 源码剖析》（侯捷著）与 GCC libstdc++ 实现
 
 ![std::vector 三指针连续内存与倍增均摊分析 vs std::deque 分段连续中控器](/img/posts/stl-ch1-vector-deque.svg)
 
-#### 1. 为什么扩容因子必须采用几何级数倍增（GCC `2.0x` / MSVC `1.5x`）
-- **若采用固定步长扩容（每次满时仅增加常数 `K` 个槽位）**：连续执行 `N` 次 `push_back` 时，在第 `K, 2K, 3K ...` 次均会触发全量元素搬移，总拷贝次数为等差数列求和 `K * (1 + 2 + ... + N/K) = O(N^2)`，分摊到每次 `push_back` 的均摊时间复杂度退化为 **`O(N)`**。
+#### 1. 几何级数倍增扩容因子（GCC `2.0x` / MSVC `1.5x`）
+- **若采用固定步长扩容（每次满时仅增加常数 `K` 个槽位）**：连续执行 `N` 次 `push_back` 时，在第 `K, 2K, 3K ...` 次均会触发全量元素搬移，总拷贝次数为等差数列求和 $K \times (1 + 2 + \dots + N/K) = O(N^2)$，单次 `push_back` 的均摊时间复杂度为 **`O(N)`**。
 - **采用 2 倍几何扩容（Doubling Strategy）**：设初始容量为 1，插入 `N = 2^m` 个元素期间，仅在容量为 `1, 2, 4, 8, ..., 2^(m-1)` 时触发扩容搬移，总元素移动次数为等比数列求和：
   $$
   \text{Total Moves} = 1 + 2 + 4 + \dots + \frac{N}{2} = N - 1 < N, \qquad \text{Amortized Cost} = \frac{N + (N - 1)}{N} = O(1)
@@ -52,7 +52,7 @@ description: 基于《STL 源码剖析》（侯捷著）与 GCC libstdc++ 实现
    - 主控数组 `_M_map` 是一小块存放指针的连续数组，其中每个槽位指向一块固定大小的连续内存缓冲区（GCC `libstdc++` 中默认每块缓冲区为 **512 字节**；若单个元素大于 512B 则每块存 1 个元素）。
    - 初始化时，中控器故意从 `_M_map` 数组**正中间的槽位**开始放置第一块缓冲区，使得前端 `push_front` 和后端 `push_back` 都有充足的空闲槽位向两侧扩展挂载新缓冲区块。
 2. **四指针迭代器 `_Deque_iterator`（每个迭代器占 32 字节）**：
-   为了把分段不连续的多个缓冲区块伪装成一段连续支持 `it + n` 的随机访问区间，`deque` 的每个迭代器内部必须维护 4 个指针：
+   为在多块非连续缓冲区上提供支持 `it + n` 的随机访问接口，`deque` 的每个迭代器内部维护 4 个指针：
    - `_M_cur`：指向当前正在访问的元素；
    - `_M_first` 与 `_M_last`：指向当前所在 512B 缓冲区块的起始地址与末尾地址；
    - `_M_node（T**）`：反向指向中控器 `_M_map` 中管理当前块的那个二级指针槽位（当 `++_M_cur == _M_last` 走到当前块尽头时，自动执行 `++_M_node` 切换到中控器的下一个缓冲区块首地址）。
@@ -86,8 +86,8 @@ description: 基于《STL 源码剖析》（侯捷著）与 GCC libstdc++ 实现
    - `_M_header.parent` 指向红黑树的根节点 `Root`，同时根节点 `Root.parent` 指向 `_M_header`；
    - `_M_header.left` 始终指向整棵树的**最左最小节点**（调用 `map.begin()` 直接返回 `_M_header.left`，耗时 **`O(1)`**）；
    - `_M_header.right` 始终指向整棵树的**最右最大节点**。
-3. **为什么 `std::set` 的迭代器不允许修改元素，而 `std::map` 只允许修改 `second`**：
-   红黑树节点在树中的位置完全由键值 `Key` 的比较序决定。若允许用户通过迭代器原地修改 `Key` 值，整棵二叉搜索树的有序不变量将立即损毁。因此 `std::set<K>::iterator` 在底层直接定义为 `const_iterator`；而 `std::map<K, V>` 将节点值类型定义为 **`std::pair<const K, V>`**，从类型系统层面锁死 `Key` 不可改，仅允许修改附属值 `V`。
+3. **`std::set` 与 `std::map` 迭代器的只读约束**：
+   红黑树节点在树中的位置由键值 `Key` 的比较序决定。若通过迭代器原地修改 `Key` 值，会破坏二叉搜索树的有序性约束。因此 `std::set<K>::iterator` 在底层直接定义为 `const_iterator`；而 `std::map<K, V>` 将节点值类型定义为 **`std::pair<const K, V>`**，通过 `const K` 限制键值不可修改，仅允许修改关联值 `V`。
 
 ---
 
@@ -123,10 +123,10 @@ STL 通过 `std::iterator_traits<Iter>::iterator_category` 提取迭代器的五
 
 ![STL 五级迭代器能力层级、算法分派（Tag Dispatching）与迭代器失效规则](/img/posts/stl-ch4-iterator-invalidation.svg)
 
-- **为什么 `std::sort` 工程实现采用混合内省排序（Introsort）**：
-  单纯的快速排序在面对精心构造的数据（如大量重复元素或特定逆序）时，递归树可能严重失衡退化至 `O(N^2)` 且引发栈溢出。`std::sort` 结合了三种排序算法的优势：
-  1. **主体采用三数取中快速排序（Median-of-Three Quicksort）**：取首、中、尾三元素的中间值作为枢轴 Pivot，保证极佳的 L1 Cache 顺序扫描局部性。
-  2. **递归深度超限切换堆排序（Heapsort）**：当递归分割深度超过阈值 `2 * ⌊log2(N)⌋` 时，判定当前分支存在恶化风险，立即将该子区间切换为 `std::partial_sort`（堆排序），从数学上锁死最坏时间复杂度上限为 **`O(N log N)`**。
+- **`std::sort` 混合内省排序（Introsort）的三个阶段**：
+  单纯的快速排序在面对特定数据分布时，递归树可能失衡退化至 `O(N^2)`。`std::sort` 结合了三种排序算法：
+  1. **主体采用三数取中快速排序（Median-of-Three Quicksort）**：取首、中、尾三元素的中间值作为枢轴 Pivot，利用连续内存的 Cache 顺序访问局部性。
+  2. **递归深度超限切换堆排序（Heapsort）**：当递归分割深度超过阈值 $2\lfloor\log_2 N\rfloor$ 时，将该子区间切换为 `std::partial_sort`（堆排序），保证最坏时间复杂度上界为 **`O(N log N)`**。
   3. **小区间收尾采用插入排序（Insertion Sort）**：当子区间元素个数小于等于阈值 **`16`** 时，停止快排递归，留到最后统一执行一趟无递归调用开销的插入排序。
 
 ---
