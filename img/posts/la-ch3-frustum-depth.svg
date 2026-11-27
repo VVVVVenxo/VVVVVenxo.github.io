@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-2：透视投影矩阵推导、非线性深度精度分布（Z-Fighting）与 Reversed-Z 原理</text>
+
+  <!-- 左栏：透视投影矩阵 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 透视投影矩阵（Perspective Projection）核心构造</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">相似三角形近平面投射（视场角 fovY，宽高比 a=W/H）：</text>
+    <text x="56" y="134" fill="#17343B">• 近平面半高：<tspan font-family="Consolas, monospace">t = n * tan(fovY/2)</tspan>，半宽 <tspan font-family="Consolas, monospace">r = a * t</tspan></text>
+    <text x="56" y="156" fill="#17343B">• 相似比：<tspan font-family="Consolas, monospace">x_p = n * x_e / (-z_e)</tspan>，归一至 [-1, 1] 得：</text>
+    <text x="56" y="178" fill="#287B73" font-weight="700" font-family="Consolas, monospace">M[0][0] = cot(fovY/2) / a,   M[1][1] = cot(fovY/2)</text>
+    <text x="56" y="198" fill="#C47743" font-weight="700" font-family="Consolas, monospace">M[3][2] = -1,  M[3][3] = 0   (使 w_clip = -z_e)</text>
+
+    <rect x="44" y="216" width="364" height="108" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="236" fill="#287B73" font-weight="700">OpenGL vs DirectX / Vulkan / Metal 的 NDC 差异：</text>
+    <text x="56" y="258" fill="#17343B">• <tspan font-weight="700">OpenGL 传统标准</tspan>：NDC 深度范围为 <tspan font-weight="700" fill="#C47743">z_ndc ∈ [-1, 1]</tspan></text>
+    <text x="56" y="280" fill="#17343B">• <tspan font-weight="700">DX12 / Vulkan</tspan>：NDC 深度范围为 <tspan font-weight="700" fill="#287B73">z_ndc ∈ [0, 1]</tspan></text>
+    <text x="56" y="302" fill="#17343B">• 深度映射通式：<tspan font-family="Consolas, monospace">z_ndc = A + B / z_e</tspan>（反比例函数）</text>
+  </g>
+
+  <!-- 右栏：Z-Fighting 与 Reversed-Z -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 为什么会发生深度闪烁（Z-Fighting）与 Reversed-Z</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">1/z 非线性分布导致的远距离深度精度崩塌：</text>
+    <text x="468" y="134" fill="#17343B">• 因 <tspan font-family="Consolas, monospace">z_ndc = A + B/z</tspan>，导数 <tspan font-family="Consolas, monospace">dz_ndc/dz ∝ 1/z²</tspan></text>
+    <text x="468" y="156" fill="#17343B">• 若近平面 <tspan font-family="Consolas, monospace">n=0.1m</tspan>、远平面 <tspan font-family="Consolas, monospace">f=1000m</tspan>，则 <tspan font-weight="700" fill="#C47743">90% 的深度值</tspan></text>
+    <text x="468" y="176" fill="#17343B">  被挤在相机前 1 米内！远处两共面物体因深度量化相同</text>
+    <text x="468" y="194" fill="#61747A">  而交替胜出，产生画面撕裂闪烁（Z-Fighting）</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">现代引擎方案：Reversed-Z（反向深度：近=1，远=0）</text>
+    <text x="468" y="252" fill="#17343B">1. IEEE 754 浮点数在<tspan font-weight="700" fill="#287B73">靠近 0 处阶码极小、精度极密集</tspan>，</text>
+    <text x="468" y="272" fill="#17343B">   而在靠近 1 处精度较稀疏</text>
+    <text x="468" y="294" fill="#17343B">2. 令远平面=<tspan font-weight="700" fill="#287B73">0</tspan>、近平面=<tspan font-weight="700" fill="#287B73">1</tspan>（配合 GREATER 深度测试），</text>
+    <text x="468" y="314" fill="#287B73" font-weight="700">   刚好用浮点数靠近 0 的高精度抵消 1/z 远处的精度衰减</text>
+  </g>
+</svg>

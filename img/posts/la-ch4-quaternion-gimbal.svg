@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：欧拉角万向节死锁（Gimbal Lock）证明与单位四元数双侧旋转及 Slerp 插值</text>
+
+  <!-- 左栏：欧拉角与万向节死锁 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 欧拉角顺规与万向节死锁（Gimbal Lock）代数成因</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="110" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#17343B" font-weight="700">欧拉角层级依赖（以 Y-X-Z / Yaw-Pitch-Roll 为例）：</text>
+    <text x="56" y="133" fill="#17343B">• 三次旋转并非独立，而是构成<tspan font-weight="700" fill="#C47743">父子层级嵌套的万向节环</tspan></text>
+    <text x="56" y="154" fill="#17343B">• 当中间轴 Pitch（X 轴俯仰角）转至 <tspan font-weight="700" fill="#C47743">±90° (cosx=0)</tspan> 时：</text>
+    <text x="56" y="175" fill="#287B73" font-weight="700" font-family="Consolas, monospace">Ry(y) * Rx(90°) * Rz(z) = Ry(y ± z) * Rx(90°)</text>
+    <text x="56" y="195" fill="#61747A">• 外环 Yaw 与内环 Roll 轴共线，3 自由度退化为 2 自由度</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">三种三维旋转表示法工程对比：</text>
+    <text x="56" y="252" fill="#17343B">• <tspan font-weight="700">欧拉角 (3 floats)</tspan>：直观易调参；有万向节死锁、插值抖动</text>
+    <text x="56" y="274" fill="#17343B">• <tspan font-weight="700">旋转矩阵 (9 floats)</tspan>：直接变换顶点；冗余且插值易畸变</text>
+    <text x="56" y="296" fill="#17343B">• <tspan font-weight="700">单位四元数 (4 floats)</tspan>：紧凑无死锁、组合仅 16 次乘法、</text>
+    <text x="56" y="314" fill="#287B73" font-weight="700">  支持 Slerp 恒定角速度插值（骨骼动画与物理引擎标准）</text>
+  </g>
+
+  <!-- 右栏：单位四元数与 Slerp -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 单位四元数旋转公式（为什么是 θ/2）与 Slerp 插值</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="112" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">绕单位轴 u 旋转 θ 角的单位四元数构造与双侧乘法：</text>
+    <text x="468" y="134" fill="#17343B" font-weight="700" font-family="Consolas, monospace">q = [cos(θ/2),  sin(θ/2) * u],   |q| = 1,  q⁻¹ = q*</text>
+    <text x="468" y="156" fill="#287B73" font-weight="700" font-family="Consolas, monospace">向量旋转 (v 扩充为 [0, v])：v' = q ⊗ v ⊗ q*</text>
+    <text x="468" y="178" fill="#17343B">• <tspan font-weight="700">为什么用半角 θ/2</tspan>：左乘 q 与右乘共轭 q* 在垂直于 u 的</text>
+    <text x="468" y="196" fill="#17343B">  平面同向累加两次 θ/2 旋转，并抵消平行于 u 的实部分量</text>
+
+    <rect x="456" y="214" width="362" height="110" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="234" fill="#C47743" font-weight="700">双重覆盖性质（q = -q）与球面线性插值（Slerp）：</text>
+    <text x="468" y="255" fill="#17343B">• <tspan font-weight="700">q 与 -q 等价</tspan>：旋转轴反向且角变 2π - θ，终态完全相同</text>
+    <text x="468" y="276" fill="#17343B">• <tspan font-weight="700">最短路径</tspan>：若 <tspan font-family="Consolas, monospace">dot(q1, q2) &lt; 0</tspan>，插值前先令 <tspan font-family="Consolas, monospace">q2 = -q2</tspan></text>
+    <text x="468" y="297" fill="#287B73" font-weight="700" font-family="Consolas, monospace">Slerp = (sin((1-t)Ω)*q1 + sin(tΩ)*q2) / sinΩ</text>
+    <text x="468" y="317" fill="#61747A">（高频动画常采用 NLerp 归一化线性插值省去三角函数）</text>
+  </g>
+</svg>

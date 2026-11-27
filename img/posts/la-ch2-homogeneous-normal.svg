@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：4×4 齐次坐标仿射变换分块结构与法线逆转置矩阵 (M⁻¹)ᵀ 推导</text>
+
+  <!-- 左栏：4x4 齐次矩阵 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 为什么引入 4D 齐次坐标 (x, y, z, w) 与 4×4 矩阵</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#17343B" font-weight="700">为什么 3×3 矩阵无法表示“平移（Translation）”：</text>
+    <text x="56" y="134" fill="#17343B">• 3×3 矩阵乘法满足线性性质 <tspan font-family="Consolas, monospace">M(0) = 0</tspan>，原点永远不动</text>
+    <text x="56" y="156" fill="#17343B">• 平移 <tspan font-family="Consolas, monospace">p' = R p + t</tspan> 属仿射变换，需升至 4D 齐次空间，</text>
+    <text x="56" y="176" fill="#287B73" font-weight="700">  用 4D 剪切在 w=1 超平面上实现 3D 平移：</text>
+    <text x="56" y="196" fill="#C47743" font-weight="700" font-family="Consolas, monospace">[ R(3×3)  t(3×1) ] [ p ]   w=1 点：p' = R*p + t</text>
+
+    <rect x="44" y="216" width="364" height="108" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="236" fill="#287B73" font-weight="700">齐次分量 w 的物理区分与矩阵基向量解剖：</text>
+    <text x="56" y="258" fill="#17343B">• <tspan font-weight="700">w = 1 (空间点 Point)</tspan>：受旋转、缩放与平移共同作用</text>
+    <text x="56" y="279" fill="#17343B">• <tspan font-weight="700">w = 0 (方向向量 Vector)</tspan>：乘矩阵时平移项 t*0 归零</text>
+    <text x="56" y="299" fill="#17343B">• <tspan font-weight="700">代数规则</tspan>：点减点得向量 (w=0)；点加向量得点 (w=1)</text>
+    <text x="56" y="317" fill="#61747A">• 列向量约定下，矩阵前 3 列即变换后的 X/Y/Z 基轴</text>
+  </g>
+
+  <!-- 右栏：法线逆转置矩阵 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 为什么法线向量必须乘逆转置矩阵 (M⁻¹)ᵀ</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">非均匀缩放（Non-Uniform Scale）破坏法线垂直性：</text>
+    <text x="468" y="134" fill="#17343B">• 表面切线 <tspan font-family="Consolas, monospace">t = P2 - P1</tspan> 直接随顶点矩阵变换：<tspan font-family="Consolas, monospace">t' = M t</tspan></text>
+    <text x="468" y="156" fill="#17343B">• 若法线 n 也直接左乘 M（如 X 轴拉长 2 倍），法线会向</text>
+    <text x="468" y="176" fill="#17343B">  拉伸轴倾倒，使变换后 <tspan font-family="Consolas, monospace">t' · (M n) ≠ 0</tspan>，不再垂直于表面</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">代数推导（设法线矩阵为 G，要求保持正交 t'·n' = 0）：</text>
+    <text x="468" y="252" fill="#17343B" font-family="Consolas, monospace">(t')ᵀ n' = (M t)ᵀ (G n) = tᵀ (Mᵀ G) n = 0</text>
+    <text x="468" y="274" fill="#287B73" font-weight="700" font-family="Consolas, monospace">令 Mᵀ G = I  ⇒  G = (Mᵀ)⁻¹ = (M⁻¹)ᵀ （逆转置矩阵）</text>
+    <text x="468" y="296" fill="#17343B">• <tspan font-weight="700">优化</tspan>：若 M 仅含旋转（正交矩阵满足 <tspan font-family="Consolas, monospace">M⁻¹ = Mᵀ</tspan>），</text>
+    <text x="468" y="316" fill="#17343B">  则 <tspan font-family="Consolas, monospace">(M⁻¹)ᵀ = M</tspan>，可直接用原矩阵 3×3 部分变换法线</text>
+  </g>
+</svg>

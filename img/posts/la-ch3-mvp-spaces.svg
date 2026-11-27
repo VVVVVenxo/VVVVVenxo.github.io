@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：3D 坐标空间变换流水线（Model → World → View → Clip → NDC → Screen）</text>
+
+  <!-- 左栏：Model / World / View -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 局部空间 → 世界空间 → 观察空间（LookAt 矩阵）</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="104" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">Model 矩阵（M）与 TRS 复合顺序：</text>
+    <text x="56" y="134" fill="#17343B">• 将顶点从模型局部空间（Object Space）变换至世界空间</text>
+    <text x="56" y="156" fill="#17343B">• 标准变换顺序：<tspan font-weight="700" fill="#287B73">先缩放 (S) → 再旋转 (R) → 最后平移 (T)</tspan></text>
+    <text x="56" y="178" fill="#C47743" font-weight="700">• 列向量右乘约定下：<tspan font-family="Consolas, monospace">p_world = T * R * S * p_local</tspan></text>
+
+    <rect x="44" y="206" width="364" height="118" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="226" fill="#287B73" font-weight="700">View 观察矩阵（V · 摄像机空间变换推导）：</text>
+    <text x="56" y="248" fill="#17343B">• 本质：将世界物体变换到以相机位置 E 为原点、正交基</text>
+    <text x="56" y="268" fill="#17343B">  (R, U, F) 为轴的参考系，等价于相机自身变换的<tspan font-weight="700" fill="#C47743">逆矩阵</tspan>：</text>
+    <text x="56" y="290" fill="#287B73" font-weight="700" font-family="Consolas, monospace">V = (T_eye * R_cam)⁻¹ = (R_cam)ᵀ * T(-E)</text>
+    <text x="56" y="312" fill="#17343B">• 注意：OpenGL 规范中观察空间相机朝 <tspan font-weight="700">-Z 轴</tspan>看（右手系）</text>
+  </g>
+
+  <!-- 右栏：Clip / NDC / Screen 与透视校正插值 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 裁剪空间 → NDC 透视除法 → 屏幕空间与透视校正插值</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#17343B" font-weight="700">齐次裁剪空间与硬件透视除法（Perspective Divide）：</text>
+    <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700">齐次裁剪</tspan>：除以 w 前，硬件直接测试 <tspan font-family="Consolas, monospace">-w ≤ x,y,z ≤ w</tspan></text>
+    <text x="468" y="156" fill="#17343B">2. <tspan font-weight="700">透视除法</tspan>：投影矩阵将观察空间深度 <tspan font-family="Consolas, monospace">-z_e</tspan> 存入 <tspan font-family="Consolas, monospace">w_clip</tspan>，</text>
+    <text x="468" y="176" fill="#287B73" font-weight="700">   硬件执行 <tspan font-family="Consolas, monospace">ndc = clip.xyz / w</tspan> 产生近大远小透视收敛</text>
+    <text x="468" y="194" fill="#61747A">3. 视口映射：将 NDC 坐标映射至像素坐标 [0, W] × [0, H]</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">为什么屏幕空间插值 UV 必须做“透视校正插值”：</text>
+    <text x="468" y="252" fill="#17343B">• 透视除法后，屏幕像素步长与 3D 空间步长呈<tspan font-weight="700" fill="#C47743">非线性关系</tspan></text>
+    <text x="468" y="274" fill="#17343B">• 直接在屏幕空间线性插值 UV 会导致斜面纹理严重扭曲</text>
+    <text x="468" y="294" fill="#287B73" font-weight="700">• 线性量定理：<tspan font-family="Consolas, monospace">1/z</tspan> 与 <tspan font-family="Consolas, monospace">u/z</tspan> 在屏幕空间严格满足线性关系！</text>
+    <text x="468" y="314" fill="#17343B">• GPU 先线性插值 <tspan font-family="Consolas, monospace">1/w</tspan> 与 <tspan font-family="Consolas, monospace">u/w</tspan>，再逐像素相除恢复真实 <tspan font-family="Consolas, monospace">u</tspan></text>
+  </g>
+</svg>

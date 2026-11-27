@@ -1,0 +1,707 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Astro v5.18.2"><title>线性代数与 3D 数学 | VVVVVenxo 的博客</title><meta name="description" content="遵循《3D 数学基础：图形与游戏开发》（Fletcher Dunn 著）与《虎书》（Fundamentals of Computer Graphics）主线，系统梳理向量点积/叉积、4×4 齐次变换矩阵与法线逆转置推导、MVP 坐标流水线与 Reversed-Z 深度、欧拉角万向节死锁与四元数旋转、以及空间射线相交与视锥裁剪算法。"><meta name="keywords" content="VVVVVenxo, 游戏客户端开发, Unity, C++, C#, 图形学, 实时渲染, 网络同步, 算法, AI Agent"><meta name="author" content="VVVVVenxo"><meta name="theme-color" content="#f3f6f3" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#161f1c" media="(prefers-color-scheme: dark)"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/04/12/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E4%B8%8E%203D%20%E6%95%B0%E5%AD%A6/"><link rel="icon" href="/img/cat.ico"><link rel="alternate" type="application/rss+xml" title="VVVVVenxo 的博客" href="/atom.xml"><meta property="og:type" content="article"><meta property="og:url" content="https://vvvvvenxo.github.io/2026/04/12/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E4%B8%8E%203D%20%E6%95%B0%E5%AD%A6/"><meta property="og:title" content="线性代数与 3D 数学 | VVVVVenxo 的博客"><meta property="og:description" content="遵循《3D 数学基础：图形与游戏开发》（Fletcher Dunn 著）与《虎书》（Fundamentals of Computer Graphics）主线，系统梳理向量点积/叉积、4×4 齐次变换矩阵与法线逆转置推导、MVP 坐标流水线与 Reversed-Z 深度、欧拉角万向节死锁与四元数旋转、以及空间射线相交与视锥裁剪算法。"><meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E4%B8%8E-3D-%E6%95%B0%E5%AD%A6.png"><script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script><link rel="stylesheet" href="/_astro/index.D_CZfaNh.css"></head> <body> <header class="site-header sticky top-0 z-40 w-full border-b border-[var(--border-color)]"> <div class="container flex h-16 items-center justify-between"> <a href="/" aria-label="VVVVVenxo 的博客，返回首页" class="brand-link text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]"> <img src="/img/cat.ico" alt="" class="brand-mark" width="30" height="30"> <span class="brand-name">VVVVVenxo</span> <span class="brand-caption">游戏客户端工程手记</span> </a> <nav class="hidden items-center gap-1 md:flex" aria-label="主导航"> <a href="/" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 首页 </a><a href="/blog" aria-current="page" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 分类 </a><a href="/tags" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 标签 </a><a href="/about" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 关于 </a> </nav> <div class="flex items-center gap-1.5"> <button id="search-btn" type="button" class="header-action" aria-label="搜索 (Ctrl+K)" title="搜索 (Ctrl+K)"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </button> <button id="theme-toggle" type="button" class="header-action" aria-label="切换主题" title="切换明暗主题"> <svg class="sun-icon hidden dark:block" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> <svg class="moon-icon block dark:hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="mobile-menu-btn" type="button" class="header-action md:hidden" aria-label="菜单" aria-controls="mobile-menu" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> </div> </div> <div id="mobile-menu" class="hidden border-t border-[var(--border-subtle)] md:hidden"> <nav class="container py-3" aria-label="移动导航"> <div class="bg-[var(--bg-surface)]"> <a href="/" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 首页 </a><a href="/blog" aria-current="page" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors bg-[var(--bg-muted)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 分类 </a><a href="/tags" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 标签 </a><a href="/about" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 关于 </a> </div> </nav> </div> </header> <main class="flex-1">  <div id="reading-progress" class="reading-progress-bar" aria-hidden="true"></div> <div class="post-reading-shell container-wide flex py-10 md:py-14"> <article class="min-w-0 flex-1"> <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8"> <div class="post-header-grid"> <div> <div class="flex flex-wrap items-center gap-2"> <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" class="section-kicker hover:underline"> 计算机基础 </a> <span class="text-xs text-[var(--text-tertiary)]">
+/ 技术笔记 · 计算机基础 </span> </div> <h1 lang="zh-CN" class="mt-3 text-3xl font-bold tracking-tight text-balance text-[var(--text-primary)] md:text-4xl"> 线性代数与 3D 数学 </h1> <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-tertiary)]"> <time datetime="2026-04-12">2026年04月12日</time> <span>·</span> <span>22 分钟阅读</span> <span>·</span> <span>约 7,087 字</span> </div> <div class="mt-4 flex flex-wrap gap-2"> <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="tag"> 线性代数 </a><a href="/tags/3D%E6%95%B0%E5%AD%A6/" class="tag"> 3D数学 </a><a href="/tags/%E9%BD%90%E6%AC%A1%E5%9D%90%E6%A0%87/" class="tag"> 齐次坐标 </a><a href="/tags/%E5%9B%9B%E5%85%83%E6%95%B0/" class="tag"> 四元数 </a><a href="/tags/%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2/" class="tag"> 矩阵变换 </a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" class="tag"> 计算机基础 </a> </div> </div> <div class="post-header-diagram"> <img src="/img/covers/gen/计算机基础-线性代数与-3D-数学-thumb.svg" alt="线性代数与 3D 数学" loading="eager" fetchpriority="high"> </div> </div> </header> <div class="prose max-w-none" lang="zh-CN"><p>本文遵循《3D 数学基础：图形与游戏开发》（<em>3D Math Primer for Graphics and Game Development</em>，Fletcher Dunn &amp; Ian Parberry 著）与《计算机图形学基础》（<em>Fundamentals of Computer Graphics</em>，Steve Marschner &amp; Peter Shirley 著）教材主线，按图形渲染与游戏物理引擎的实际工程脉络组织为五个章节：<strong>向量代数、坐标系旋向与几何运算</strong>、<strong>线性变换、4D 齐次矩阵与法线逆转置推导</strong>、<strong>3D 坐标空间变换流水线与透视深度精度（Reversed-Z）</strong>、<strong>三维旋转表示：欧拉角万向节死锁、旋转矩阵与单位四元数</strong>、<strong>几何图元方程、空间射线求交与视锥体平面裁剪</strong>。</p>
+<hr>
+<h2 id="第-1-章向量代数坐标系旋向与几何运算">第 1 章：向量代数、坐标系旋向与几何运算<a class="heading-anchor" href="#第-1-章向量代数坐标系旋向与几何运算" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<p>在三维图形学与物理仿真中，标量（Scalar）仅具有大小，而<strong>向量（Vector）<strong>同时具备大小（模长 Magnitude）与方向，代表空间中的</strong>位移（Displacement）</strong>或方向，不具有固定起点；<strong>点（Point）</strong>则代表相对于坐标系原点的确定空间位置。</p>
+<h3 id="11-左手坐标系-vs-右手坐标系与线性空间基底">1.1 左手坐标系 vs 右手坐标系与线性空间基底<a class="heading-anchor" href="#11-左手坐标系-vs-右手坐标系与线性空间基底" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>三维笛卡尔坐标系由三条两两正交的单位基向量 <code>i = (1,0,0)</code>、<code>j = (0,1,0)</code>、<code>k = (0,0,1)</code> 张成。当固定 <code>+X</code> 轴朝右、<code>+Y</code> 轴朝上时，<code>+Z</code> 轴的朝向决定了坐标系的<strong>旋向（Handedness）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="left">坐标系类型</th>
+<th align="left"><code>+X</code> / <code>+Y</code> / <code>+Z</code> 朝向约定</th>
+<th align="left">正旋转方向判别法则</th>
+<th align="left">叉积方向判别法则</th>
+<th align="left">典型引擎与图形 API</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>左手坐标系（Left-Handed）</strong></td>
+<td align="left"><code>+X</code> 右、<code>+Y</code> 上、<strong><code>+Z</code> 朝屏幕内（前方）</strong></td>
+<td align="left">左手拇指指向旋转轴正向，四指弯曲方向为正旋转（顺时针 CW）</td>
+<td align="left">左手四指从 <code>a</code> 弯向 <code>b</code>，拇指指向 <code>a × b</code></td>
+<td align="left"><strong>Unity（世界/局部空间）、DirectX、Unreal（Z 朝上左手系）</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>右手坐标系（Right-Handed）</strong></td>
+<td align="left"><code>+X</code> 右、<code>+Y</code> 上、<strong><code>+Z</code> 朝屏幕外（观察者）</strong></td>
+<td align="left">右手拇指指向旋转轴正向，四指弯曲方向为正旋转（逆时针 CCW）</td>
+<td align="left">右手四指从 <code>a</code> 弯向 <code>b</code>，拇指指向 <code>a × b</code></td>
+<td align="left"><strong>OpenGL、Vulkan、Maya、Blender、Unity 观察空间（View Space）</strong></td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>重要性质</strong>：左手坐标系与右手坐标系之间<strong>不存在纯旋转变换</strong>，二者必须通过<strong>翻转任意单个坐标轴符号</strong>（即乘以行列式 <code>det(M) = -1</code> 的镜像反射矩阵）才能互相转换。</li>
+</ul>
+<hr>
+<h3 id="12-点积dot-product与正交投影">1.2 点积（Dot Product）与正交投影<a class="heading-anchor" href="#12-点积dot-product与正交投影" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>设三维向量 <code>a = (ax, ay, az)</code>、<code>b = (bx, by, bz)</code>，二者夹角为 <code>θ ∈ [0, π]</code>，其<strong>点积（内积）</strong>结果为一个标量：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>代数定义：a · b = a^T b = ax * bx + ay * by + az * bz</span></span>
+<span class="line"><span>几何定义：a · b = |a| |b| cos(θ)</span></span></code></pre></div>
+<ul>
+<li><strong>核心代数性质</strong>：满足交换律 <code>a · b = b · a</code>、分配律 <code>a · (b + c) = a · b + a · c</code>；向量与自身点积等于模长平方 <code>a · a = |a|^2</code>。</li>
+<li><strong>正交投影与正交分解</strong>：若 <code>n</code> 为单位向量（<code>|n| = 1</code>），则标量 <code>a · n</code> 即为向量 <code>a</code> 在 <code>n</code> 方向上的<strong>有符号投影长度</strong>。由此可将任意向量 <code>a</code> 唯一正交分解为平行于 <code>n</code> 的分量 <code>a_∥</code> 与垂直于 <code>n</code> 的分量 <code>a_⊥</code>（<strong>Gram-Schmidt 正交化</strong>与绕任意轴旋转推导的基础）：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>a_∥ = (a · n) n</span></span>
+<span class="line"><span>a_⊥ = a - a_∥ = a - (a · n) n</span></span></code></pre></div>
+</li>
+</ul>
+<p><img width="860" height="360" src="/img/posts/la-ch1-vector-ops.svg" alt="三维向量点积（Dot Product）与叉积（Cross Product）几何意义及游戏判定应用" loading="lazy" decoding="async"></p>
+<hr>
+<h3 id="13-叉积cross-product与正交基构建">1.3 叉积（Cross Product）与正交基构建<a class="heading-anchor" href="#13-叉积cross-product与正交基构建" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>两个三维向量的<strong>叉积（外积）</strong>结果为一个同时垂直于 <code>a</code> 和 <code>b</code> 所在平面的新三维向量：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>代数定义：a × b = (ay*bz - az*by,  az*bx - ax*bz,  ax*by - ay*bx)</span></span>
+<span class="line"><span>几何模长：|a × b| = |a| |b| sin(θ)   （在数值上等于以 a, b 为邻边的平行四边形面积）</span></span></code></pre></div>
+<ul>
+<li><strong>核心代数性质</strong>：<ol>
+<li><strong>反交换律（Anti-commutativity）</strong>：<code>a × b = -(b × a)</code>；任意向量与自身（或共线向量）的叉积为零向量 <code>a × a = 0</code>。</li>
+<li><strong>叉积等价反对称矩阵乘法</strong>：向量 <code>a</code> 与 <code>b</code> 的叉积可写为反对称矩阵 <code>[a]_×</code> 左乘列向量 <code>b</code>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>        [  0   -az   ay ] [ bx ]</span></span>
+<span class="line"><span>a × b = [  az   0   -ax ] [ by ]</span></span>
+<span class="line"><span>        [ -ay   ax   0  ] [ bz ]</span></span></code></pre></div>
+</li>
+</ol>
+</li>
+<li><strong>由前向向量构建相机/角色正交基（Orthonormal Basis）</strong>：已知角色归一化前向向量 <code>F</code> 与世界空间参考上向量 <code>U_world = (0, 1, 0)</code>（假设二者不共线），在左手坐标系（Unity）下构造标准正交基 <code>(R, U, F)</code> 的三步公式为：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>1. 右向量 R = normalize(U_world × F)</span></span>
+<span class="line"><span>2. 真上向量 U = F × R   （由于 F 与 R 已单位正交，叉积模长必为 1，无需再次 normalize）</span></span></code></pre></div>
+</li>
+</ul>
+<hr>
+<h2 id="第-2-章线性变换4d-齐次矩阵与法线逆转置推导">第 2 章：线性变换、4D 齐次矩阵与法线逆转置推导<a class="heading-anchor" href="#第-2-章线性变换4d-齐次矩阵与法线逆转置推导" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="21-矩阵乘法的几何本质与行列主序约定">2.1 矩阵乘法的几何本质与行/列主序约定<a class="heading-anchor" href="#21-矩阵乘法的几何本质与行列主序约定" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>线性变换 <code>T(v)</code> 满足加法保持与标量乘法保持（<code>T(u + v) = T(u) + T(v)</code>，<code>T(kv) = k T(v)</code>）。在选定基向量 <code>(i, j, k)</code> 后，任意三维线性变换唯一对应一个 <code>3 × 3</code> 矩阵 <code>M</code>：</p>
+<ul>
+<li><strong>几何解读铁律</strong>：在<strong>列向量右乘约定（<code>v&#39; = M v</code>，OpenGL / Unity Shader <code>mul(M, v)</code> 标准）<strong>下，<code>3 × 3</code> 矩阵 <code>M</code> 的</strong>第 1 列、第 2 列、第 3 列，分别就是原基向量 <code>i(1,0,0)</code>、<code>j(0,1,0)</code>、<code>k(0,0,1)</code> 经过该线性变换后的新坐标</strong>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>v' = M [x, y, z]^T = x * Col_1(M) + y * Col_2(M) + z * Col_3(M)</span></span></code></pre></div>
+</li>
+<li><strong>三种基础 3D 线性变换矩阵</strong>：<ol>
+<li><strong>缩放矩阵 <code>S(sx, sy, sz)</code></strong>：对角矩阵 <code>diag(sx, sy, sz)</code>，非对角元素全为 0。</li>
+<li><strong>绕坐标轴旋转矩阵（右手系逆时针正角 <code>θ</code>）</strong>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>        [ 1    0       0    ]          [  cosθ   0   sinθ ]          [ cosθ  -sinθ   0 ]</span></span>
+<span class="line"><span>Rx(θ) = [ 0   cosθ   -sinθ  ], Ry(θ) = [   0     1    0   ], Rz(θ) = [ sinθ   cosθ   0 ]</span></span>
+<span class="line"><span>        [ 0   sinθ    cosθ  ]          [ -sinθ   0   cosθ ]          [  0      0     1 ]</span></span></code></pre></div>
+（为什么 <code>Ry(θ)</code> 的 <code>sinθ</code> 符号与 <code>Rx/Rz</code> 相反？因为在三维循环排列 <code>X -&gt; Y -&gt; Z -&gt; X</code> 中，绕 Y 轴旋转是从 <code>Z</code> 轴转向 <code>X</code> 轴，而非从 <code>X</code> 转向 <code>Z</code>。）</li>
+<li><strong>正交矩阵（Orthogonal Matrix）核心性质</strong>：纯旋转矩阵 <code>R</code> 的列向量是两两正交的单位向量，满足 <strong><code>R^T R = I</code></strong>，即<strong>旋转矩阵的逆矩阵严格等于其转置矩阵（<code>R^-1 = R^T</code>）</strong>，且行列式 <code>det(R) = +1</code>。在代码中对纯旋转矩阵求逆只需直接转置，无需执行高开销的高斯消元。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 id="22-为什么必须引入-4d-齐次坐标homogeneous-coordinates">2.2 为什么必须引入 4D 齐次坐标（Homogeneous Coordinates）<a class="heading-anchor" href="#22-为什么必须引入-4d-齐次坐标homogeneous-coordinates" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>为什么三维图形学不用 <code>3 × 3</code> 矩阵而必须统一使用 <code>4 × 4</code> 矩阵？</p>
+<ul>
+<li><strong>根本原因</strong>：任何 <code>3 × 3</code> 线性变换矩阵乘以零向量恒等于零向量（<code>M * [0, 0, 0]^T = [0, 0, 0]^T</code>），意味着<strong>三维线性变换永远无法移动坐标原点</strong>。而三维平移 <code>p&#39; = R p + t</code> 属于<strong>仿射变换（Affine Transformation）</strong>，无法塞进 <code>3 × 3</code> 矩阵乘法中。</li>
+<li><strong>升维剪切原理</strong>：将三维坐标 <code>(x, y, z)</code> 扩充第 4 个分量 <code>w</code>，升维至四维齐次空间 <code>(x, y, z, w)</code>。三维空间中的仿射平移，等价于四维空间中沿 <code>w</code> 轴的<strong>高维线性剪切变换（Shear）</strong>在超平面 <code>w = 1</code> 上的截面：</li>
+</ul>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>[ x' ]   [ R_xx  R_xy  R_xz  tx ] [ x ]   [ R_x · p + tx * w ]</span></span>
+<span class="line"><span>[ y' ] = [ R_yx  R_yy  R_yz  ty ] [ y ] = [ R_y · p + ty * w ]</span></span>
+<span class="line"><span>[ z' ]   [ R_zx  R_zy  R_zz  tz ] [ z ]   [ R_z · p + tz * w ]</span></span>
+<span class="line"><span>[ w' ]   [  0     0     0     1 ] [ w ]   [        w         ]</span></span></code></pre></div>
+<ul>
+<li><strong><code>w = 1</code> 与 <code>w = 0</code> 的严格区分</strong>：<ul>
+<li><strong>空间点（Point，<code>w = 1</code>）</strong>：代入上式得 <code>p&#39; = R p + t</code>，同时受旋转、缩放与平移作用。</li>
+<li><strong>方向向量（Vector，<code>w = 0</code>）</strong>：代入上式得 <code>v&#39; = R v + t * 0 = R v</code>，<strong>自动屏蔽平移项</strong>（因为方向与位移没有固定位置，平移不改变方向向量）。</li>
+<li><strong>点与向量的加减闭合性</strong>：两个位置点相减 <code>P2(w=1) - P1(w=1)</code> 得到 <code>w = 0</code> 的位移向量；位置点加上位移向量 <code>P1(w=1) + v(w=0)</code> 仍得到 <code>w = 1</code> 的新位置点；两个位置点直接相加（<code>w = 2</code>）在仿射几何中无意义（除非除以 2 求中点，即重心坐标线性组合 <code>α P1 + β P2</code> 且 <code>α + β = 1</code>）。</li>
+</ul>
+</li>
+</ul>
+<p><img width="860" height="360" src="/img/posts/la-ch2-homogeneous-normal.svg" alt="4×4 齐次坐标仿射变换分块结构与法线逆转置矩阵 (M⁻¹)ᵀ 推导" loading="lazy" decoding="async"></p>
+<hr>
+<h3 id="23-为什么法线向量变换必须乘以逆转置矩阵-m-1t">2.3 为什么法线向量变换必须乘以逆转置矩阵 <code>(M^-1)^T</code><a class="heading-anchor" href="#23-为什么法线向量变换必须乘以逆转置矩阵-m-1t" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>在顶点着色器中，顶点坐标 <code>p</code> 与表面切线向量 <code>t = P2 - P1</code> 均直接左乘模型矩阵 <code>M</code>（即 <code>t&#39; = M t</code>）。但如果模型经历了<strong>非均匀缩放（Non-Uniform Scale，例如 X 轴缩放 0.5 倍、Y 轴缩放 2 倍）</strong>，把表面法线 <code>n</code> 也直接左乘 <code>M</code> 会导致变换后的向量 <code>M n</code> <strong>不再垂直于变换后的表面切线 <code>t&#39;</code></strong>。</p>
+<ul>
+<li><strong>代数严格证明</strong>：
+设法线应当左乘某个待求的 <code>3 × 3</code> 线性变换矩阵 <code>G</code>（即 <code>n&#39; = G n</code>）。已知变换前表面切线 <code>t</code> 与法线 <code>n</code> 正交（内积写成矩阵乘法为 <code>t^T n = 0</code>）。为保证变换后 <code>t&#39;</code> 与 <code>n&#39;</code> 依然严格正交，必须对任意切线 <code>t</code> 满足：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>(t')^T n' = (M t)^T (G n) = t^T (M^T G) n = 0</span></span></code></pre></div>
+欲使上式恒等于变换前的 <code>t^T I n = 0</code>，只需令中间矩阵乘积为单位矩阵 <code>I</code>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>M^T G = I  ==>  G = (M^T)^-1 = (M^-1)^T</span></span></code></pre></div>
+因此，<strong>法线变换矩阵必然等于顶点模型矩阵左上角 <code>3 × 3</code> 子矩阵的逆转置矩阵 <code>(M^-1)^T</code></strong>（在 Unity URP 中即 <code> TransformObjectToWorldNormal</code> 内部使用的 <code>unity_WorldToObject</code> 转置乘法）。</li>
+<li><strong>两类特殊情况简化</strong>：<ol>
+<li>若 <code>M</code> <strong>仅含旋转</strong>（正交矩阵 <code>M^-1 = M^T</code>），则 <code>(M^-1)^T = (M^T)^T = M</code>，此时法线可直接乘原矩阵 <code>M</code>。</li>
+<li>若 <code>M</code> <strong>仅含旋转与统一缩放（Uniform Scale，缩放因子为 <code>k</code>）</strong>，则 <code>(M^-1)^T = (1/k) R</code>，方向与直接乘 <code>M = k R</code> 完全一致，仅需在变换后执行一次 <code>normalize()</code> 即可省去求逆运算。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="第-3-章3d-坐标空间变换流水线与透视深度精度reversed-z">第 3 章：3D 坐标空间变换流水线与透视深度精度（Reversed-Z）<a class="heading-anchor" href="#第-3-章3d-坐标空间变换流水线与透视深度精度reversed-z" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<p>一个三维模型顶点从局部建模坐标最终变成屏幕上的二维像素并写入深度缓冲（Z-Buffer），必须依次经历五次坐标空间变换。</p>
+<p><img width="860" height="360" src="/img/posts/la-ch3-mvp-spaces.svg" alt="3D 坐标空间变换流水线（Model → World → View → Clip → NDC → Screen）" loading="lazy" decoding="async"></p>
+<h3 id="31-局部空间-世界空间-观察空间lookat-矩阵推导">3.1 局部空间 → 世界空间 → 观察空间（LookAt 矩阵推导）<a class="heading-anchor" href="#31-局部空间-世界空间-观察空间lookat-矩阵推导" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<ol>
+<li><strong>模型变换（Model Transform，局部空间 → 世界空间）</strong>：<ul>
+<li>将模型顶点乘以复合矩阵 <code>M = T * R * S</code>（列向量右乘下，必须严格遵循 <strong>先缩放 <code>S</code> → 再旋转 <code>R</code> → 最后平移 <code>T</code></strong> 的顺序；若先平移再缩放，物体距离世界原点的位移也会被一并放大；若先旋转再非均匀缩放，则会沿着旋转后的斜轴拉伸从而引入剪切畸变）。</li>
+</ul>
+</li>
+<li><strong>观察变换（View Transform，世界空间 → 观察/摄像机空间）</strong>：<ul>
+<li>设摄像机在世界空间中的位置为 <code>E = (ex, ey, ez)</code>，通过叉积构造出摄像机在世界空间中的三个单位正交基向量：右向量 <code>R</code>、上向量 <code>U</code>、观察朝向反方向（或正方向）<code>F</code>。</li>
+<li>将一个点从摄像机局部空间变换到世界空间的矩阵为 <code>M_cam = T(E) * R_cam</code>（其中 <code>R_cam</code> 的三列分别为 <code>[R, U, -F]</code>）。</li>
+<li>而观察变换是将世界空间中的所有物体反过来变换到以摄像机为原点的参考系中，因此 <strong>View 矩阵 <code>V</code> 恰好等于 <code>M_cam</code> 的逆矩阵</strong>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>                                           [ Rx   Ry   Rz  -(R · E) ]</span></span>
+<span class="line"><span>V = (M_cam)^-1 = (T(E) * R_cam)^-1       = [ Ux   Uy   Uz  -(U · E) ]</span></span>
+<span class="line"><span>               = (R_cam)^T * T(-E)         [ -Fx  -Fy  -Fz  (F · E) ]</span></span>
+<span class="line"><span>                                           [  0    0    0      1    ]</span></span></code></pre></div>
+（注意：在 OpenGL 与 Unity 的约定中，尽管世界空间是左手系，<strong>观察空间 View Space 统一采用右手系，即摄像机正前方朝向 <code>-Z</code> 轴</strong>，因此摄像机前方的物体在观察空间中的坐标恒满足 <code>z_e &lt; 0</code>。）</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="32-正交投影与透视投影矩阵perspective-projection推导">3.2 正交投影与透视投影矩阵（Perspective Projection）推导<a class="heading-anchor" href="#32-正交投影与透视投影矩阵perspective-projection推导" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>投影变换（Projection Transform）将观察空间中的三维视锥体（View Frustum，由近裁剪面 <code>n</code> 与远裁剪面 <code>f</code> 截断）映射为裁剪空间（Clip Space），并准备执行透视除法。</p>
+<h4 id="1-正交投影矩阵orthographic-projection">1. 正交投影矩阵（Orthographic Projection）</h4>
+<p>视景体为轴对齐长方体 <code>[l, r] × [b, t] × [-n, -f]</code>，光线平行投射，无近大远小效果（常用于 2D 游戏、UI、工程制图与平行光阴影贴图 Shadow Map）。只需依次执行<strong>中心平移至原点</strong>与<strong>三轴线性缩放至标准立方体</strong>（以 OpenGL <code>[-1, 1]^3</code> 为例）：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>         [ 2/(r-l)     0          0       -(r+l)/(r-l) ]</span></span>
+<span class="line"><span>P_ortho = [    0     2/(t-b)       0       -(t+b)/(t-b) ]</span></span>
+<span class="line"><span>         [    0        0      -2/(f-n)    -(f+n)/(f-n) ]</span></span>
+<span class="line"><span>         [    0        0          0             1      ]</span></span></code></pre></div>
+<p>正交投影矩阵第 4 行为 <code>[0, 0, 0, 1]</code>，变换后裁剪坐标恒保持 <strong><code>w_clip = 1</code></strong>。</p>
+<h4 id="2-透视投影矩阵perspective-projection">2. 透视投影矩阵（Perspective Projection）</h4>
+<p>设垂直视场角为 <code>fovY</code>，屏幕宽高比为 <code>a = W / H</code>，近平面与远平面距离分别为 <code>n</code> 和 <code>f</code>（均取正数，对应观察空间平面 <code>z_e = -n</code> 与 <code>z_e = -f</code>）。</p>
+<ul>
+<li><strong>第一步（相似三角形近平面投射）</strong>：根据相似三角形比例，观察空间点 <code>(x_e, y_e, z_e)</code> 投射到近平面 <code>z = -n</code> 上的坐标为：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>x_p = n * x_e / (-z_e),    y_p = n * y_e / (-z_e)</span></span></code></pre></div>
+</li>
+<li><strong>第二步（利用齐次坐标 <code>w_clip</code> 实现除以 <code>-z_e</code>）</strong>：4×4 矩阵乘法本身只能做线性加权，无法直接除以变量 <code>-z_e</code>；但硬件在顶点着色器之后会自动执行<strong>透视除法（Perspective Divide，将 <code>x_clip, y_clip, z_clip</code> 同除以 <code>w_clip</code>）</strong>。因此，只需将透视投影矩阵第 4 行设为 <strong><code>[0, 0, -1, 0]</code></strong>，即可巧妙地令 <strong><code>w_clip = -z_e</code></strong>！</li>
+<li><strong>第三步（归一化横纵坐标与求解深度系数 <code>A, B</code>）</strong>：近平面半高为 <code>t = n * tan(fovY / 2)</code>，半宽为 <code>r = a * t</code>。将 <code>x_p ∈ [-r, r]</code>、<code>y_p ∈ [-t, t]</code> 线性映射到 <code>[-1, 1]</code>，并设 <code>z_clip = A * z_e + B</code>（除以 <code>w_clip = -z_e</code> 后 <code>z_ndc = -A - B / z_e</code>），代入近远平面边界条件即可解出标准透视投影矩阵：</li>
+</ul>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>                  [ cot(fovY/2)/a        0              0               0         ]</span></span>
+<span class="line"><span>P_persp(OpenGL) = [       0         cot(fovY/2)         0               0         ]</span></span>
+<span class="line"><span>                  [       0              0        -(f+n)/(f-n)    -2*f*n/(f-n)    ]</span></span>
+<span class="line"><span>                  [       0              0             -1               0         ]</span></span></code></pre></div>
+<p><img width="860" height="360" src="/img/posts/la-ch3-frustum-depth.svg" alt="透视投影矩阵推导、非线性深度精度分布（Z-Fighting）与 Reversed-Z 原理" loading="lazy" decoding="async"></p>
+<hr>
+<h3 id="33-深度缓冲非线性精度z-fightingreversed-z-与透视校正插值">3.3 深度缓冲非线性精度（Z-Fighting）、Reversed-Z 与透视校正插值<a class="heading-anchor" href="#33-深度缓冲非线性精度z-fightingreversed-z-与透视校正插值" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<h4 id="1-为什么传统深度缓冲会发生远景闪烁z-fighting与-reversed-z-解决方案">1. 为什么传统深度缓冲会发生远景闪烁（Z-Fighting）与 Reversed-Z 解决方案</h4>
+<p>由透视投影矩阵与透视除法可知，NDC 深度 <code>z_ndc</code> 与观察空间真实深度 <code>-z_e</code> 之间并非线性关系，而是关于 <code>1 / (-z_e)</code> 的<strong>双曲线反比例函数</strong>（以 <code>[0, 1]</code> 标准深度范围为例）：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>z_ndc(z) = f / (f - n) - (f * n) / ((f - n) * (-z_e))</span></span></code></pre></div>
+<ul>
+<li><strong>精度灾难</strong>：当近平面 <code>n = 0.1</code>、远平面 <code>f = 1000</code> 时，距离摄像机仅 <code>1</code> 米处的点对应的 <code>z_ndc</code> 就已经高达 <code>0.90009</code>！这意味着 <strong><code>[0, 0.9]</code> 整整 90% 的深度值区间被浪费在了摄像机前 0.1m ～ 1m 的极窄范围内</strong>，而从 <code>1m</code> 到 <code>1000m</code> 的广阔远景只能挤在 <code>[0.9, 1.0]</code> 的最后 10% 区间内。同时，IEEE 754 浮点数在靠近 <code>1.0</code> 处的阶码固定为 <code>0</code>，有效位数有限，导致远距离相隔几厘米的两个表面量化出完全相同的深度值，深度测试随机交替胜出，造成严重的<strong>深度冲突闪烁（Z-Fighting）</strong>。</li>
+<li><strong>工程根治方案</strong>：<ol>
+<li><strong>严禁把近裁剪面 <code>n</code> 设得过小</strong>（将 <code>n</code> 从 <code>0.01</code> 调大到 <code>0.3</code>，远景深度精度立即可提升 30 倍）。</li>
+<li><strong>Reversed-Z（反向深度缓冲，DX12 / Vulkan / Unity URP 标准）</strong>：直接将深度映射反转为 <strong>近裁剪面映射为 <code>1.0</code>、远裁剪面映射为 <code>0.0</code></strong>（深度测试改为 <code>GREATER</code> 或 <code>GREATER_EQUAL</code>），并使用 32 位浮点深度缓冲（<code>D32_FLOAT</code>）。因为 IEEE 754 浮点数在<strong>越靠近 <code>0.0</code> 的地方指数阶码越小（可低至 <code>2^-126</code>），可表示的数值密度呈指数级加密</strong>，恰好完美抵消了 <code>1/z</code> 双曲线在远距离处的斜率衰减，使整个视锥体从近到远获得近似均匀的对数级深度精度。</li>
+</ol>
+</li>
+</ul>
+<h4 id="2-为什么光栅化插值顶点属性必须采用透视校正插值">2. 为什么光栅化插值顶点属性必须采用“透视校正插值”</h4>
+<p>三角形经过透视除法投影到二维屏幕后，屏幕像素坐标 <code>(x_s, y_s)</code> 的均匀步进<strong>并不对应三维空间中的均匀步进</strong>。若光栅化器直接在屏幕空间对纹理坐标 <code>u</code> 执行普通线性插值 <code>u_lerp = (1 - t) u_0 + t u_1</code>，贴在透视斜面上的棋盘格纹理会在对角线处发生明显的折断扭曲。</p>
+<ul>
+<li><strong>透视校正插值公式（Perspective-Correct Interpolation）</strong>：数学证明表明，虽然属性 <code>u</code> 和深度 <code>z</code> 在屏幕空间都是非线性的，但 <strong><code>1 / z</code>（即 <code>1 / w_clip</code>）以及任意顶点属性除以 <code>z</code> 的商 <code>u / z</code>（即 <code>u / w_clip</code>）在二维屏幕空间上严格满足线性关系</strong>。因此 GPU 光栅化硬件对每个片元（屏幕重心坐标为 <code>(α, β, γ)</code>）执行如下三步插值：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>1. 线性插值倒数深度：  inv_w = α * (1/w0) + β * (1/w1) + γ * (1/w2)</span></span>
+<span class="line"><span>2. 线性插值属性商：    u_over_w = α * (u0/w0) + β * (u1/w1) + γ * (u2/w2)</span></span>
+<span class="line"><span>3. 逐像素相除恢复真实值：u_correct = u_over_w / inv_w</span></span></code></pre></div>
+</li>
+</ul>
+<hr>
+<h2 id="第-4-章三维旋转表示欧拉角万向节死锁旋转矩阵与单位四元数">第 4 章：三维旋转表示：欧拉角万向节死锁、旋转矩阵与单位四元数<a class="heading-anchor" href="#第-4-章三维旋转表示欧拉角万向节死锁旋转矩阵与单位四元数" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="41-欧拉角顺规与万向节死锁gimbal-lock代数证明">4.1 欧拉角顺规与万向节死锁（Gimbal Lock）代数证明<a class="heading-anchor" href="#41-欧拉角顺规与万向节死锁gimbal-lock代数证明" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>欧拉角将一次三维旋转拆解为绕三个坐标轴的连续三次旋转角 <code>(Pitch 俯仰角绕 X, Yaw 偏航角绕 Y, Roll 翻滚角绕 Z)</code>。</p>
+<ul>
+<li><strong>内旋（Intrinsic，绕物体自身旋转后的局部轴）与外旋（Extrinsic，绕固定世界轴）等价定理</strong>：按 <code>Z -&gt; X -&gt; Y</code> 顺序绕局部动态轴旋转（内旋），在数学上完全等价于按相反顺序 <code>Y -&gt; X -&gt; Z</code> 绕固定世界轴旋转（外旋）。</li>
+<li><strong>为什么会发生万向节死锁（Gimbal Lock）</strong>：
+以旋转复合矩阵 <code>R = Ry(y) * Rx(x) * Rz(z)</code>（先 Roll <code>z</code>，再 Pitch <code>x</code>，最后 Yaw <code>y</code>）为例，当中间那次旋转（俯仰角 Pitch <code>x</code>，即抬头或低头）恰好转到 <strong><code>x = +90°</code></strong>（此时 <code>sin(90°) = 1, cos(90°) = 0</code>）时，将三个旋转矩阵相乘展开并利用三角和角公式化简可得：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>                     [  cosy   0   siny ] [ 1   0    0 ] [ cosz  -sinz   0 ]</span></span>
+<span class="line"><span>Ry(y) Rx(90°) Rz(z) = [   0     1    0   ] [ 0   0   -1 ] [ sinz   cosz   0 ]</span></span>
+<span class="line"><span>                     [ -siny   0   cosy ] [ 0   1    0 ] [  0      0     1 ]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>                     [  cos(y - z)   -sin(y - z)    0 ]</span></span>
+<span class="line"><span>                   = [      0             0        -1 ] = Ry(y - z) * Rx(90°)</span></span>
+<span class="line"><span>                     [ -sin(y - z)   -cos(y - z)    0 ]</span></span></code></pre></div>
+观察结果矩阵可见：原本代表两个独立旋转自由度的角度 <code>y</code>（外环 Yaw）和 <code>z</code>（内环 Roll），在矩阵中完全退化合并成了单一差值项 <strong><code>(y - z)</code></strong>！这说明第一次绕局部 Z 轴旋转与第三次绕世界 Y 轴旋转在三维空间中<strong>旋转轴完全共线重合</strong>，系统瞬间丢失了一个旋转自由度（从 3 自由度退化为 2 自由度），导致相机或骨骼在插值经过 <code>±90°</code> 极点时发生剧烈翻转抖动。</li>
+</ul>
+<p><img width="860" height="360" src="/img/posts/la-ch4-quaternion-gimbal.svg" alt="欧拉角万向节死锁（Gimbal Lock）证明与单位四元数双侧旋转及 Slerp 插值" loading="lazy" decoding="async"></p>
+<hr>
+<h3 id="42-轴角表示法与罗德里格斯rodrigues旋转公式">4.2 轴角表示法与罗德里格斯（Rodrigues）旋转公式<a class="heading-anchor" href="#42-轴角表示法与罗德里格斯rodrigues旋转公式" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>根据欧拉旋转定理，三维空间中任意一次刚体旋转，都等价于绕某条穿过原点的<strong>单位旋转轴 <code>u = (ux, uy, uz)</code></strong> 旋转一个角度 <code>θ</code>。将待旋转向量 <code>v</code> 正交分解为平行于轴 <code>u</code> 的分量 <code>v_∥ = (v · u) u</code>（旋转中保持不变）与垂直于轴 <code>u</code> 的分量 <code>v_⊥ = v - (v · u) u</code>（在垂直平面内旋转 <code>θ</code> 角），即可直接导出<strong>罗德里格斯旋转公式（Rodrigues&#39; Rotation Formula）</strong>：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>v' = v_∥ + cos(θ) * v_⊥ + sin(θ) * (u × v)</span></span>
+<span class="line"><span>   = cos(θ) * v + (1 - cos(θ)) * (u · v) * u + sin(θ) * (u × v)</span></span></code></pre></div>
+<hr>
+<h3 id="43-单位四元数unit-quaternion代数结构双侧旋转与插值">4.3 单位四元数（Unit Quaternion）代数结构、双侧旋转与插值<a class="heading-anchor" href="#43-单位四元数unit-quaternion代数结构双侧旋转与插值" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<h4 id="1-四元数定义与-hamilton-乘法法则">1. 四元数定义与 Hamilton 乘法法则</h4>
+<p>四元数 <code>q</code> 是复数向四维超复数空间的扩张，由 1 个实部标量 <code>w</code> 与 3 个虚部向量 <code>v = (x, y, z)</code> 组成：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>q = w + x i + y j + z k = [w, v]</span></span>
+<span class="line"><span>Hamilton 虚数单位乘法公理：i^2 = j^2 = k^2 = ijk = -1</span></span>
+<span class="line"><span>（由此导出反交换循环律：ij = -ji = k,  jk = -kj = i,  ki = -ik = j）</span></span></code></pre></div>
+<p>利用点积与叉积，两个四元数 <code>q1 = [w1, v1]</code> 与 <code>q2 = [w2, v2]</code> 的 <strong>Graßmann 乘积公式</strong>可紧凑写为：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>q1 ⊗ q2 = [ w1 * w2 - (v1 · v2),   w1 * v2 + w2 * v1 + (v1 × v2) ]</span></span></code></pre></div>
+<ul>
+<li><strong>共轭（Conjugate）与逆（Inverse）</strong>：定义共轭四元数为虚部取反 <code>q* = [w, -v]</code>，模长平方为 <code>|q|^2 = w^2 + x^2 + y^2 + z^2 = q ⊗ q*</code>。四元数的逆为 <code>q^-1 = q* / |q|^2</code>。</li>
+<li><strong>单位四元数核心性质</strong>：当 <code>|q| = 1</code> 时，<strong>单位四元数的逆严格等于其共轭（<code>q^-1 = q*</code>）</strong>，仅需将三个虚部符号取反即可完成求逆！</li>
+</ul>
+<h4 id="2-为什么绕单位轴-u-旋转-角的单位四元数要用半角-2">2. 为什么绕单位轴 <code>u</code> 旋转 <code>θ</code> 角的单位四元数要用半角 <code>θ/2</code></h4>
+<p>将绕单位向量 <code>u</code> 旋转 <code>θ</code> 角的旋转操作编码为单位四元数：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>q = [ cos(θ / 2),  sin(θ / 2) * u ]   （显然 cos^2(θ/2) + sin^2(θ/2)*|u|^2 = 1）</span></span></code></pre></div>
+<p>将三维向量 <code>p</code> 扩充为实部为 0 的<strong>纯四元数 <code>p = [0, p]</code></strong>，则旋转后的新向量 <code>p&#39;</code> 由如下<strong>双侧共轭三明治乘法</strong>给出：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>p' = q ⊗ p ⊗ q^-1 = q ⊗ p ⊗ q*</span></span></code></pre></div>
+<ul>
+<li><strong>为什么必须两边乘（<code>q p q*</code>）且使用半角 <code>θ/2</code></strong>：<ul>
+<li>若只执行单侧左乘 <code>q ⊗ p</code>，根据 Graßmann 乘法公式，结果实部会出现 <code>-(sin(θ/2) u · p)</code>，只要 <code>p</code> 与旋转轴 <code>u</code> 不垂直，结果就不再是实部为 0 的三维纯向量，而是溢出到了四维空间！</li>
+<li>左乘 <code>q</code> 会使平行于 <code>u</code> 的分量进入四维实轴旋转 <code>+θ/2</code>，同时使垂直于 <code>u</code> 的分量在垂直平面内旋转 <code>+θ/2</code>；而右乘共轭 <code>q*</code> 则使平行于 <code>u</code> 的分量反向旋转 <code>-θ/2</code>（正负抵消恰好回到实部为 0 的三维空间），却使垂直于 <code>u</code> 的平面分量<strong>继续同向旋转第二个 <code>+θ/2</code></strong>！两次半角旋转同向叠加为完整的 <code>θ</code> 角，展开 <code>q ⊗ p ⊗ q*</code> 即严格还原为前文的罗德里格斯公式。</li>
+</ul>
+</li>
+<li><strong>双重覆盖性质（Double Cover，<code>q</code> 与 <code>-q</code> 等价）</strong>：将四元数全部取反 <code>-q = [-cos(θ/2), -sin(θ/2) u]</code>，等价于绕相反轴 <code>-u</code> 旋转 <code>2π - θ</code> 角（或者代入 <code>(-q) ⊗ p ⊗ (-q)*</code> 负负得正等于 <code>q ⊗ p ⊗ q*</code>）。因此三维旋转群 <code>SO(3)</code> 中的每一个三维朝向，在四维单位超球面 <code>S^3</code> 上都对应着<strong>一对对跖点 <code>q</code> 与 <code>-q</code></strong>。</li>
+</ul>
+<h4 id="3-四元数插值lerpnlerp-与-slerp球面线性插值">3. 四元数插值：Lerp、NLerp 与 Slerp（球面线性插值）</h4>
+<p>在骨骼动画关键帧融合与相机平滑跟随中，需要在起始旋转 <code>q1</code> 与终止旋转 <code>q2</code> 之间按比例 <code>t ∈ [0, 1]</code> 插值：</p>
+<table>
+<thead>
+<tr>
+<th align="left">插值算法</th>
+<th align="left">计算公式（设 <code>cos(Ω) = q1 · q2</code>）</th>
+<th align="left">单位模长保持</th>
+<th align="left">角速度均匀性</th>
+<th align="left">工程开销与适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>线性插值（Lerp）</strong></td>
+<td align="left"><code>q(t) = (1 - t) q1 + t q2</code></td>
+<td align="left">否（走球面弦线，中点模长小于 1）</td>
+<td align="left">否（中间快、两端慢）</td>
+<td align="left">不可直接用于旋转（未归一化会引入缩放畸变）</td>
+</tr>
+<tr>
+<td align="left"><strong>归一化线性插值（NLerp）</strong></td>
+<td align="left"><code>q(t) = normalize((1 - t) q1 + t q2)</code></td>
+<td align="left">是（将弦线投影回单位超球面）</td>
+<td align="left">夹角较小时近似均匀</td>
+<td align="left"><strong>极快（无三角函数，且满足多骨骼混合交换律）</strong>，引擎动画混合主流</td>
+</tr>
+<tr>
+<td align="left"><strong>球面线性插值（Slerp）</strong></td>
+<td align="left"><code>q(t) = [sin((1-t)Ω)/sinΩ] q1 + [sin(tΩ)/sinΩ] q2</code></td>
+<td align="left">是（沿四维球面大圆弧测地线运动）</td>
+<td align="left"><strong>严格恒定角速度</strong></td>
+<td align="left">含 3 次 <code>sin</code> 与 1 次 <code>acos</code>，用于大角度旋转或高精度相机轨迹</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>插值工程必做两项保护</strong>：<ol>
+<li><strong>最短弧修正（Shortest Path）</strong>：由于 <code>q2</code> 与 <code>-q2</code> 代表同一朝向，插值前必须先计算四维点积 <code>d = dot(q1, q2)</code>；若 <strong><code>d &lt; 0</code></strong>（说明四维夹角大于 <code>90°</code>，对应三维旋转大于 <code>180°</code> 绕远路），必须先将 <strong><code>q2 = -q2</code> 且 <code>d = -d</code></strong>，确保始终沿最短圆弧插值。</li>
+<li><strong>小角度除零保护</strong>：当 <code>d &gt; 0.9995</code>（<code>Ω -&gt; 0</code>）时，Slerp 分母 <code>sin(Ω) -&gt; 0</code> 会引发浮点除零不稳定，此时必须直接退化分支调用 <code>NLerp(q1, q2, t)</code>。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="第-5-章几何图元方程空间射线求交与视锥体平面裁剪">第 5 章：几何图元方程、空间射线求交与视锥体平面裁剪<a class="heading-anchor" href="#第-5-章几何图元方程空间射线求交与视锥体平面裁剪" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<p>在物理碰撞检测（Raycast）、鼠标屏幕拾取（Picking）与渲染视锥剔除（Frustum Culling）中，核心数学运算是几何图元的参数方程联立求交。</p>
+<p><img width="860" height="360" src="/img/posts/la-ch5-ray-intersection.svg" alt="空间几何相交测试（AABB Slab 算法、Möller-Trumbore 算法与视锥体提取）" loading="lazy" decoding="async"></p>
+<h3 id="51-射线与平面球体及-aabb-包围盒求交slab-算法">5.1 射线与平面、球体及 AABB 包围盒求交（Slab 算法）<a class="heading-anchor" href="#51-射线与平面球体及-aabb-包围盒求交slab-算法" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>设三维<strong>射线（Ray）</strong>的参数方程为 <code>R(t) = O + t D</code>（其中 <code>O</code> 为射线起点，<code>D</code> 为方向向量，参数范围 <code>t &gt;= 0</code>）。</p>
+<ol>
+<li><strong>射线与平面求交</strong>：<ul>
+<li>设平面方程为 <code>n · P + d = 0</code>（其中 <code>n</code> 为平面单位法向量，<code>d = -(n · P0)</code> 为原点到平面的有符号距离）。</li>
+<li>将 <code>P = O + t D</code> 代入平面方程 <code>n · (O + t D) + d = 0</code>，直接解出交点参数 <code>t</code>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>t = -(n · O + d) / (n · D)</span></span></code></pre></div>
+若分母 <code>n · D == 0</code>，说明射线与平面平行；若解出 <code>t &gt;= 0</code>，则交点坐标为 <code>O + t D</code>。</li>
+</ul>
+</li>
+<li><strong>射线与球体求交</strong>：<ul>
+<li>设球心为 <code>C</code>、半径为 <code>r</code>，球面方程为 <code>|P - C|^2 = r^2</code>。令位移向量 <code>m = O - C</code> 且 <code>|D| = 1</code>，代入得关于 <code>t</code> 的一元二次方程：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>t^2 + 2 (m · D) t + (|m|^2 - r^2) = 0</span></span>
+<span class="line"><span>判别式 Δ/4 = (m · D)^2 - (|m|^2 - r^2)</span></span></code></pre></div>
+当 <code>Δ &lt; 0</code> 时未命中；当 <code>Δ &gt;= 0</code> 时，最小非负实根 <code>t = -(m · D) - sqrt(Δ/4)</code> 即为首次入射点。</li>
+</ul>
+</li>
+<li><strong>射线与轴对齐包围盒（AABB）求交：Kay-Kajiya Slab 算法</strong>：<ul>
+<li>轴对齐包围盒 <code>AABB</code> 由最小角点 <code>(xmin, ymin, zmin)</code> 与最大角点 <code>(xmax, ymax, zmax)</code> 定义，几何上等价于 <strong>X、Y、Z 三对平行平面夹层（Slab）的交集</strong>。</li>
+<li>分别计算射线穿过三对平行平面的进入参数与离开参数（需注意若方向分量 <code>Dx &lt; 0</code>，则进入点与离开点需交换取 <code>min/max</code>）：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>tx_1 = (xmin - Ox) / Dx,   tx_2 = (xmax - Ox) / Dx</span></span>
+<span class="line"><span>tx_min = min(tx_1, tx_2),  tx_max = max(tx_1, tx_2)   （同理求得 ty_min, ty_max, tz_min, tz_max）</span></span></code></pre></div>
+</li>
+<li>求三个一维区间 <code>[tx_min, tx_max]</code>、<code>[ty_min, ty_max]</code>、<code>[tz_min, tz_max]</code> 的公共交集 <code>[t_enter, t_exit]</code>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>t_enter = max(tx_min, ty_min, tz_min)</span></span>
+<span class="line"><span>t_exit  = min(tx_max, ty_max, tz_max)</span></span></code></pre></div>
+</li>
+<li><strong>相交充要条件</strong>：当且仅当 <strong><code>t_enter &lt;= t_exit</code> 且 <code>t_exit &gt;= 0</code></strong> 时，射线与 AABB 相交。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="52-mller-trumbore-快速射线-三角形求交算法">5.2 Möller-Trumbore 快速射线-三角形求交算法<a class="heading-anchor" href="#52-mller-trumbore-快速射线-三角形求交算法" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>判断射线是否命中网格模型（Mesh Collider）中的三角形 <code>(V0, V1, V2)</code> 时，传统做法是先求射线与三角形所在平面的交点，再判断交点是否在三角形内部。<strong>Möller-Trumbore 算法</strong>通过将三角形写成<strong>重心坐标（Barycentric Coordinates）</strong>形式，一步直接联立解出距离参数 <code>t</code> 与重心坐标 <code>(u, v)</code>，无需预存三角形平面方程：</p>
+<ul>
+<li><strong>线性方程组构建</strong>：三角形内任意一点可表示为 <code>P(u, v) = (1 - u - v) V0 + u V1 + v V2</code>（满足 <code>u &gt;= 0, v &gt;= 0, u + v &lt;= 1</code>）。令其等于射线方程 <code>O + t D</code> 并移项整理：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>O - V0 = -t D + u (V1 - V0) + v (V2 - V0)</span></span></code></pre></div>
+设两条边向量 <code>E1 = V1 - V0</code>、<code>E2 = V2 - V0</code>，起点偏移 <code>T = O - V0</code>，则上式为一个三元一次线性方程组：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>                  [ t ]</span></span>
+<span class="line"><span>[ -D   E1   E2 ]  [ u ] = T</span></span>
+<span class="line"><span>                  [ v ]</span></span></code></pre></div>
+</li>
+<li><strong>克莱姆法则（Cramer&#39;s Rule）标量三重积求解</strong>：
+利用行列式等于混合积的性质 <code>det([a, b, c]) = (a × b) · c = -(a × c) · b</code>，设辅助叉积向量 <strong><code>P = D × E2</code></strong> 与 <strong><code>Q = T × E1</code></strong>，只需 2 次叉积与 4 次点积即可直接算出 <code>[t, u, v]</code>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>det = P · E1</span></span>
+<span class="line"><span>u   = (P · T) / det</span></span>
+<span class="line"><span>v   = (Q · D) / det</span></span>
+<span class="line"><span>t   = (Q · E2) / det</span></span></code></pre></div>
+在工程实现中，一旦算出 <code>u &lt; 0</code> 或 <code>u &gt; 1</code>，即可立即提前终止（Early-Out）返回未命中，无需继续计算 <code>Q</code>、<code>v</code> 和 <code>t</code>。</li>
+</ul>
+<hr>
+<h3 id="53-gribb-hartmann-视锥体-6-平面提取与视锥裁剪frustum-culling">5.3 Gribb-Hartmann 视锥体 6 平面提取与视锥裁剪（Frustum Culling）<a class="heading-anchor" href="#53-gribb-hartmann-视锥体-6-平面提取与视锥裁剪frustum-culling" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>在每帧提交 DrawCall 前，渲染引擎需要在 CPU 端或 Compute Shader 中快速剔除完全位于摄像机视锥体外部的物体包围盒。<strong>Gribb-Hartmann 算法</strong>无需通过视场角和相机姿态做复杂的几何三角运算，而是<strong>直接从复合矩阵 <code>M = P * V</code> 的四个行向量中通过一次加减法提取出世界空间下的视锥体 6 个裁剪平面方程</strong>：</p>
+<ul>
+<li><strong>代数推导</strong>：
+设复合矩阵 <code>M = P * V</code> 的四行向量分别为 <code>R0, R1, R2, R3</code>（每个 <code>Ri</code> 为 <code>1 × 4</code> 行向量）。对于世界空间任意齐次点 <code>X = [x, y, z, 1]^T</code>，其裁剪空间坐标的四个分量正是行向量与 <code>X</code> 的内积：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>x_clip = R0 · X,   y_clip = R1 · X,   z_clip = R2 · X,   w_clip = R3 · X</span></span></code></pre></div>
+点 <code>X</code> 位于视锥体内部的充要条件是满足齐次裁剪不等式 <code>-w_clip &lt;= x_clip, y_clip, z_clip &lt;= w_clip</code>。以左裁剪面 <code>-w_clip &lt;= x_clip</code> 为例，移项即得：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>x_clip + w_clip >= 0  ==>  (R3 + R0) · X >= 0</span></span></code></pre></div>
+可见行向量之和 <strong><code>R3 + R0</code> 的前三个分量 <code>(a, b, c)</code> 直接就是左裁剪平面在世界空间中朝向视锥体内部的法向量，第 4 个分量 <code>d</code> 就是平面常数项</strong>！</li>
+<li><strong>六个视锥裁剪平面行向量提取全表</strong>（归一化时将四元组 <code>[a, b, c, d]</code> 同除以法线模长 <code>sqrt(a^2 + b^2 + c^2)</code> 即可）：<ul>
+<li><strong>左平面（Left）</strong>：<code>R3 + R0</code></li>
+<li><strong>右平面（Right）</strong>：<code>R3 - R0</code></li>
+<li><strong>下平面（Bottom）</strong>：<code>R3 + R1</code></li>
+<li><strong>上平面（Top）</strong>：<code>R3 - R1</code></li>
+<li><strong>近平面（Near）</strong>：OpenGL <code>[-1, 1]</code> 下为 <code>R3 + R2</code>；DirectX/Vulkan <code>[0, 1]</code> 下直接为 <code>R2</code></li>
+<li><strong>远平面（Far）</strong>：<code>R3 - R2</code></li>
+</ul>
+</li>
+</ul>
+</div> <!-- Prev / Next Flat Navigation --> <nav class="mt-16 grid grid-cols-1 gap-6 border-t border-[var(--border-color)] pt-8 md:grid-cols-2" aria-label="上下篇文章导航"> <div> <a href="/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+← 新一篇
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 排序算法大全 </p> </a> </div> <div class="md:text-right"> <a href="/2026/03/28/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E6%9C%80%E8%BF%91%E7%9A%84%E6%89%80%E6%80%9D%E6%89%80%E6%83%B3/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+旧一篇 →
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 最近的所思所想 </p> </a> </div> </nav> <!-- Giscus Comments --> <section class="mt-14 border-t border-[var(--border-subtle)] pt-8" aria-label="评论区"> <div class="mb-5 flex items-baseline gap-3"> <h2 class="text-lg font-semibold text-[var(--text-primary)]">讨论与评论</h2> <span class="text-xs text-[var(--text-tertiary)]">由 GitHub Discussions 驱动</span> </div> <div id="giscus-container"></div> </section> </article> <!-- Mobile TOC Trigger & Drawer -->  <button id="toc-toggle" class="toc-trigger fixed right-6 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded transition-colors hover:bg-[var(--accent-hover)] lg:hidden" aria-label="目录" title="文章目录"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="8" y1="6" x2="21" y2="6"></line> <line x1="8" y1="12" x2="21" y2="12"></line> <line x1="8" y1="18" x2="21" y2="18"></line> <line x1="3" y1="6" x2="3.01" y2="6"></line> <line x1="3" y1="12" x2="3.01" y2="12"></line> <line x1="3" y1="18" x2="3.01" y2="18"></line> </svg> </button> <div id="toc-mobile-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-xs lg:hidden"></div> <nav id="toc-mobile" aria-label="移动端目录" class="fixed right-0 bottom-0 left-0 z-50 max-h-[64vh] translate-y-full overflow-hidden rounded-t-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl transition-transform duration-300 lg:hidden"> <div class="flex items-center justify-between border-b border-[var(--border-subtle)] p-4"> <h4 class="font-semibold text-[var(--text-primary)]">目录</h4> <button id="toc-close" class="header-action -mr-1" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> <ul class="max-h-[calc(64vh-4rem)] space-y-1 overflow-y-auto p-4 text-sm"> <li> <a href="#第-1-章向量代数坐标系旋向与几何运算" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-1-章向量代数坐标系旋向与几何运算" lang="zh-CN"> 第 1 章：向量代数、坐标系旋向与几何运算 </a> </li><li> <a href="#11-左手坐标系-vs-右手坐标系与线性空间基底" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="11-左手坐标系-vs-右手坐标系与线性空间基底" lang="zh-CN"> 1.1 左手坐标系 vs 右手坐标系与线性空间基底 </a> </li><li> <a href="#12-点积dot-product与正交投影" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="12-点积dot-product与正交投影" lang="zh-CN"> 1.2 点积（Dot Product）与正交投影 </a> </li><li> <a href="#13-叉积cross-product与正交基构建" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="13-叉积cross-product与正交基构建" lang="zh-CN"> 1.3 叉积（Cross Product）与正交基构建 </a> </li><li> <a href="#第-2-章线性变换4d-齐次矩阵与法线逆转置推导" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-2-章线性变换4d-齐次矩阵与法线逆转置推导" lang="zh-CN"> 第 2 章：线性变换、4D 齐次矩阵与法线逆转置推导 </a> </li><li> <a href="#21-矩阵乘法的几何本质与行列主序约定" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="21-矩阵乘法的几何本质与行列主序约定" lang="zh-CN"> 2.1 矩阵乘法的几何本质与行/列主序约定 </a> </li><li> <a href="#22-为什么必须引入-4d-齐次坐标homogeneous-coordinates" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="22-为什么必须引入-4d-齐次坐标homogeneous-coordinates" lang="zh-CN"> 2.2 为什么必须引入 4D 齐次坐标（Homogeneous Coordinates） </a> </li><li> <a href="#23-为什么法线向量变换必须乘以逆转置矩阵-m-1t" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="23-为什么法线向量变换必须乘以逆转置矩阵-m-1t" lang="zh-CN"> 2.3 为什么法线向量变换必须乘以逆转置矩阵 (M^-1)^T </a> </li><li> <a href="#第-3-章3d-坐标空间变换流水线与透视深度精度reversed-z" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-3-章3d-坐标空间变换流水线与透视深度精度reversed-z" lang="zh-CN"> 第 3 章：3D 坐标空间变换流水线与透视深度精度（Reversed-Z） </a> </li><li> <a href="#31-局部空间-世界空间-观察空间lookat-矩阵推导" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="31-局部空间-世界空间-观察空间lookat-矩阵推导" lang="zh-CN"> 3.1 局部空间 → 世界空间 → 观察空间（LookAt 矩阵推导） </a> </li><li> <a href="#32-正交投影与透视投影矩阵perspective-projection推导" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="32-正交投影与透视投影矩阵perspective-projection推导" lang="zh-CN"> 3.2 正交投影与透视投影矩阵（Perspective Projection）推导 </a> </li><li> <a href="#33-深度缓冲非线性精度z-fightingreversed-z-与透视校正插值" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="33-深度缓冲非线性精度z-fightingreversed-z-与透视校正插值" lang="zh-CN"> 3.3 深度缓冲非线性精度（Z-Fighting）、Reversed-Z 与透视校正插值 </a> </li><li> <a href="#第-4-章三维旋转表示欧拉角万向节死锁旋转矩阵与单位四元数" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-4-章三维旋转表示欧拉角万向节死锁旋转矩阵与单位四元数" lang="zh-CN"> 第 4 章：三维旋转表示：欧拉角万向节死锁、旋转矩阵与单位四元数 </a> </li><li> <a href="#41-欧拉角顺规与万向节死锁gimbal-lock代数证明" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="41-欧拉角顺规与万向节死锁gimbal-lock代数证明" lang="zh-CN"> 4.1 欧拉角顺规与万向节死锁（Gimbal Lock）代数证明 </a> </li><li> <a href="#42-轴角表示法与罗德里格斯rodrigues旋转公式" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="42-轴角表示法与罗德里格斯rodrigues旋转公式" lang="zh-CN"> 4.2 轴角表示法与罗德里格斯（Rodrigues）旋转公式 </a> </li><li> <a href="#43-单位四元数unit-quaternion代数结构双侧旋转与插值" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="43-单位四元数unit-quaternion代数结构双侧旋转与插值" lang="zh-CN"> 4.3 单位四元数（Unit Quaternion）代数结构、双侧旋转与插值 </a> </li><li> <a href="#第-5-章几何图元方程空间射线求交与视锥体平面裁剪" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-5-章几何图元方程空间射线求交与视锥体平面裁剪" lang="zh-CN"> 第 5 章：几何图元方程、空间射线求交与视锥体平面裁剪 </a> </li><li> <a href="#51-射线与平面球体及-aabb-包围盒求交slab-算法" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="51-射线与平面球体及-aabb-包围盒求交slab-算法" lang="zh-CN"> 5.1 射线与平面、球体及 AABB 包围盒求交（Slab 算法） </a> </li><li> <a href="#52-mller-trumbore-快速射线-三角形求交算法" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="52-mller-trumbore-快速射线-三角形求交算法" lang="zh-CN"> 5.2 Möller-Trumbore 快速射线-三角形求交算法 </a> </li><li> <a href="#53-gribb-hartmann-视锥体-6-平面提取与视锥裁剪frustum-culling" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="53-gribb-hartmann-视锥体-6-平面提取与视锥裁剪frustum-culling" lang="zh-CN"> 5.3 Gribb-Hartmann 视锥体 6 平面提取与视锥裁剪（Frustum Culling） </a> </li> </ul> </nav>  <nav class="toc hidden lg:block" aria-label="目录"> <div class="reading-toc sticky top-24"> <h4 class="mb-3 pl-2.5 text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">目录</h4> <ul id="desktop-toc-list" class="max-h-[calc(100vh-10rem)] space-y-0.5 overflow-y-auto text-sm"> <li> <a href="#第-1-章向量代数坐标系旋向与几何运算" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-1-章向量代数坐标系旋向与几何运算" lang="zh-CN"> 第 1 章：向量代数、坐标系旋向与几何运算 </a> </li><li> <a href="#11-左手坐标系-vs-右手坐标系与线性空间基底" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="11-左手坐标系-vs-右手坐标系与线性空间基底" lang="zh-CN"> 1.1 左手坐标系 vs 右手坐标系与线性空间基底 </a> </li><li> <a href="#12-点积dot-product与正交投影" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="12-点积dot-product与正交投影" lang="zh-CN"> 1.2 点积（Dot Product）与正交投影 </a> </li><li> <a href="#13-叉积cross-product与正交基构建" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="13-叉积cross-product与正交基构建" lang="zh-CN"> 1.3 叉积（Cross Product）与正交基构建 </a> </li><li> <a href="#第-2-章线性变换4d-齐次矩阵与法线逆转置推导" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-2-章线性变换4d-齐次矩阵与法线逆转置推导" lang="zh-CN"> 第 2 章：线性变换、4D 齐次矩阵与法线逆转置推导 </a> </li><li> <a href="#21-矩阵乘法的几何本质与行列主序约定" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="21-矩阵乘法的几何本质与行列主序约定" lang="zh-CN"> 2.1 矩阵乘法的几何本质与行/列主序约定 </a> </li><li> <a href="#22-为什么必须引入-4d-齐次坐标homogeneous-coordinates" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="22-为什么必须引入-4d-齐次坐标homogeneous-coordinates" lang="zh-CN"> 2.2 为什么必须引入 4D 齐次坐标（Homogeneous Coordinates） </a> </li><li> <a href="#23-为什么法线向量变换必须乘以逆转置矩阵-m-1t" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="23-为什么法线向量变换必须乘以逆转置矩阵-m-1t" lang="zh-CN"> 2.3 为什么法线向量变换必须乘以逆转置矩阵 (M^-1)^T </a> </li><li> <a href="#第-3-章3d-坐标空间变换流水线与透视深度精度reversed-z" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-3-章3d-坐标空间变换流水线与透视深度精度reversed-z" lang="zh-CN"> 第 3 章：3D 坐标空间变换流水线与透视深度精度（Reversed-Z） </a> </li><li> <a href="#31-局部空间-世界空间-观察空间lookat-矩阵推导" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="31-局部空间-世界空间-观察空间lookat-矩阵推导" lang="zh-CN"> 3.1 局部空间 → 世界空间 → 观察空间（LookAt 矩阵推导） </a> </li><li> <a href="#32-正交投影与透视投影矩阵perspective-projection推导" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="32-正交投影与透视投影矩阵perspective-projection推导" lang="zh-CN"> 3.2 正交投影与透视投影矩阵（Perspective Projection）推导 </a> </li><li> <a href="#33-深度缓冲非线性精度z-fightingreversed-z-与透视校正插值" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="33-深度缓冲非线性精度z-fightingreversed-z-与透视校正插值" lang="zh-CN"> 3.3 深度缓冲非线性精度（Z-Fighting）、Reversed-Z 与透视校正插值 </a> </li><li> <a href="#第-4-章三维旋转表示欧拉角万向节死锁旋转矩阵与单位四元数" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-4-章三维旋转表示欧拉角万向节死锁旋转矩阵与单位四元数" lang="zh-CN"> 第 4 章：三维旋转表示：欧拉角万向节死锁、旋转矩阵与单位四元数 </a> </li><li> <a href="#41-欧拉角顺规与万向节死锁gimbal-lock代数证明" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="41-欧拉角顺规与万向节死锁gimbal-lock代数证明" lang="zh-CN"> 4.1 欧拉角顺规与万向节死锁（Gimbal Lock）代数证明 </a> </li><li> <a href="#42-轴角表示法与罗德里格斯rodrigues旋转公式" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="42-轴角表示法与罗德里格斯rodrigues旋转公式" lang="zh-CN"> 4.2 轴角表示法与罗德里格斯（Rodrigues）旋转公式 </a> </li><li> <a href="#43-单位四元数unit-quaternion代数结构双侧旋转与插值" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="43-单位四元数unit-quaternion代数结构双侧旋转与插值" lang="zh-CN"> 4.3 单位四元数（Unit Quaternion）代数结构、双侧旋转与插值 </a> </li><li> <a href="#第-5-章几何图元方程空间射线求交与视锥体平面裁剪" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-5-章几何图元方程空间射线求交与视锥体平面裁剪" lang="zh-CN"> 第 5 章：几何图元方程、空间射线求交与视锥体平面裁剪 </a> </li><li> <a href="#51-射线与平面球体及-aabb-包围盒求交slab-算法" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="51-射线与平面球体及-aabb-包围盒求交slab-算法" lang="zh-CN"> 5.1 射线与平面、球体及 AABB 包围盒求交（Slab 算法） </a> </li><li> <a href="#52-mller-trumbore-快速射线-三角形求交算法" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="52-mller-trumbore-快速射线-三角形求交算法" lang="zh-CN"> 5.2 Möller-Trumbore 快速射线-三角形求交算法 </a> </li><li> <a href="#53-gribb-hartmann-视锥体-6-平面提取与视锥裁剪frustum-culling" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="53-gribb-hartmann-视锥体-6-平面提取与视锥裁剪frustum-culling" lang="zh-CN"> 5.3 Gribb-Hartmann 视锥体 6 平面提取与视锥裁剪（Frustum Culling） </a> </li> </ul> </div> </nav>  </div>  <button id="back-to-top" type="button" class="back-to-top-pill" aria-label="回到顶部" title="回到顶部"> <span id="back-to-top-pct">0%</span> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"> <path d="M18 15l-6-6-6 6"></path> </svg> </button>  <div id="image-lightbox" class="image-lightbox" role="dialog" aria-modal="true" aria-label="图片放大预览"> <img id="image-lightbox-img" src="" alt=""> <p id="image-lightbox-caption" class="image-lightbox__caption"></p> </div> <script>
+    (function () {
+      // TOC Mobile Drawer & Scroll Spy
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocMobile = document.getElementById('toc-mobile');
+      const tocClose = document.getElementById('toc-close');
+      const tocBackdrop = document.getElementById('toc-mobile-backdrop');
+      let isOpen = false;
+
+      function openMobileToc() {
+        if (isOpen) return;
+        isOpen = true;
+        if (tocMobile) tocMobile.classList.remove('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.remove('hidden');
+        if (tocToggle) tocToggle.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileToc() {
+        if (!isOpen) return;
+        isOpen = false;
+        if (tocMobile) tocMobile.classList.add('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.add('hidden');
+        if (tocToggle) tocToggle.classList.remove('hidden');
+        document.body.style.overflow = '';
+      }
+
+      if (tocToggle) tocToggle.addEventListener('click', openMobileToc);
+      if (tocClose) tocClose.addEventListener('click', closeMobileToc);
+      if (tocBackdrop) tocBackdrop.addEventListener('click', closeMobileToc);
+
+      document.querySelectorAll('.toc-link-mobile').forEach(link => {
+        link.addEventListener('click', () => setTimeout(closeMobileToc, 100));
+      });
+
+      const tocLinks = document.querySelectorAll('.toc-link');
+      if (tocLinks.length > 0) {
+        const headingIds = Array.from(tocLinks)
+          .map(link => link.getAttribute('data-heading'))
+          .filter(Boolean);
+        const headingElements = headingIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateActiveLink() {
+          if (!headingElements.length) return;
+          let activeId = headingIds[0];
+          for (let i = 0; i < headingElements.length; i++) {
+            const rect = headingElements[i].getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.28) {
+              activeId = headingElements[i].id;
+            }
+          }
+          const tocListEl = document.getElementById('desktop-toc-list');
+          tocLinks.forEach(link => {
+            if (link.getAttribute('data-heading') === activeId) {
+              const wasActive = link.classList.contains('toc-active');
+              link.classList.add('toc-active');
+              if (!wasActive && tocListEl) {
+                const linkTop = link.offsetTop;
+                const listHeight = tocListEl.clientHeight;
+                tocListEl.scrollTo({
+                  top: Math.max(0, linkTop - listHeight / 2 + 24),
+                  behavior: 'smooth',
+                });
+              }
+            } else {
+              link.classList.remove('toc-active');
+            }
+          });
+        }
+
+        let ticking = false;
+        const progressBar = document.getElementById('reading-progress');
+        const backToTopBtn = document.getElementById('back-to-top');
+        const backToTopPct = document.getElementById('back-to-top-pct');
+
+        function updateProgress() {
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = docHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100)) : 0;
+          if (progressBar) progressBar.style.width = pct + '%';
+          if (backToTopPct) backToTopPct.textContent = Math.round(pct) + '%';
+          if (backToTopBtn) {
+            backToTopBtn.classList.toggle('is-visible', window.scrollY > 360);
+          }
+        }
+        if (backToTopBtn) {
+          backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateActiveLink();
+                updateProgress();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        updateActiveLink();
+        updateProgress();
+      }
+
+      // Heading Anchor Copy Link
+      document.querySelectorAll('.prose .heading-anchor').forEach(anchor => {
+        anchor.addEventListener('click', async e => {
+          e.preventDefault();
+          const href = anchor.getAttribute('href') || '';
+          const fullUrl = window.location.origin + window.location.pathname + href;
+          history.replaceState(null, '', href);
+          try {
+            await navigator.clipboard.writeText(fullUrl);
+            anchor.classList.add('copied');
+            anchor.textContent = '已复制';
+            setTimeout(() => {
+              anchor.classList.remove('copied');
+              anchor.textContent = '#';
+            }, 1500);
+          } catch (_) {}
+        });
+      });
+
+      // Image Lightbox Zoom
+      const lightbox = document.getElementById('image-lightbox');
+      const lightboxImg = document.getElementById('image-lightbox-img');
+      const lightboxCaption = document.getElementById('image-lightbox-caption');
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.prose img, .post-header-diagram img').forEach(img => {
+        img.addEventListener('click', () => {
+          if (!lightbox || !lightboxImg) return;
+          lightboxImg.src = img.getAttribute('src') || '';
+          lightboxImg.alt = img.getAttribute('alt') || '';
+          if (lightboxCaption) {
+            lightboxCaption.textContent = img.getAttribute('alt') || '';
+          }
+          lightbox.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      if (lightbox) {
+        lightbox.addEventListener('click', closeLightbox);
+      }
+      window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && lightbox && lightbox.classList.contains('is-open')) {
+          closeLightbox();
+        }
+      });
+
+      // Lazy Load Giscus Comments
+      const giscusContainer = document.getElementById('giscus-container');
+      if (giscusContainer) {
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded) return;
+          giscusContainer.dataset.loaded = 'true';
+          const isDark = document.documentElement.classList.contains('dark');
+          const s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.setAttribute('data-repo', 'VVVVVenxo/VVVVVenxo.github.io');
+          s.setAttribute('data-repo-id', 'R_kgDOQ5Bk1Q');
+          s.setAttribute('data-category', 'Announcements');
+          s.setAttribute('data-category-id', 'DIC_kwDOQ5Bk1c4DJO_-');
+          s.setAttribute('data-mapping', 'pathname');
+          s.setAttribute('data-strict', '0');
+          s.setAttribute('data-reactions-enabled', '1');
+          s.setAttribute('data-emit-metadata', '0');
+          s.setAttribute('data-input-position', 'top');
+          s.setAttribute('data-theme', isDark ? 'dark_dimmed' : 'light');
+          s.setAttribute('data-lang', 'zh-CN');
+          s.crossOrigin = 'anonymous';
+          s.async = true;
+          giscusContainer.appendChild(s);
+        };
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            entries => {
+              if (entries.some(e => e.isIntersecting)) {
+                loadGiscus();
+                io.disconnect();
+              }
+            },
+            { rootMargin: '300px' }
+          );
+          io.observe(giscusContainer);
+        } else {
+          loadGiscus();
+        }
+      }
+    })();
+  </script>  </main> <footer class="site-footer border-t border-[var(--border-color)]"> <div class="container py-8"> <div class="flex flex-col items-center justify-between gap-4 md:flex-row"> <div class="flex items-center gap-3"> <a href="https://github.com/VVVVVenxo" target="_blank" rel="noopener noreferrer" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="GitHub" title="GitHub"> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="mailto:1263147353@qq.com" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="Email" title="Email"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="4" width="20" height="16" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> </a> <a href="/atom.xml" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="RSS 订阅" title="RSS 订阅"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M4 11a9 9 0 0 1 9 9"></path> <path d="M4 4a16 16 0 0 1 16 16"></path> <circle cx="5" cy="19" r="1"></circle> </svg> </a> </div> <p class="text-xs text-[var(--text-tertiary)]">
+© 2024–2026 VVVVVenxo
+</p> </div> </div> </footer> <!-- Flat Search Modal --> <div id="search-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/45 px-4 pt-[10vh] backdrop-blur-xs" role="dialog" aria-modal="true" aria-label="全站搜索"> <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl"> <div class="flex items-center gap-3 border-b border-[var(--border-subtle)] px-4 py-3"> <svg class="shrink-0 text-[var(--text-tertiary)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> <input id="search-input" type="search" placeholder="搜索文章标题、关键词、技术栈（支持 C++ / Unity / 渲染 / 网络...）" class="w-full bg-transparent text-base text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none" autocomplete="off"> <button id="search-close" type="button" class="rounded border border-[var(--border-color)] px-2 py-0.5 text-xs text-[var(--text-tertiary)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
+ESC
+</button> </div> <div id="search-results" class="max-h-[62vh] overflow-y-auto divide-y divide-[var(--border-subtle)] px-4 py-2 text-sm"> <p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p> </div> </div> </div> <script>
+      (function () {
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const giscusFrame = document.querySelector('iframe.giscus-frame');
+            if (giscusFrame && giscusFrame.contentWindow) {
+              giscusFrame.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: isDark ? 'dark_dimmed' : 'light' } } },
+                'https://giscus.app'
+              );
+            }
+          });
+        }
+
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            const hidden = mobileMenu.classList.toggle('hidden');
+            mobileBtn.setAttribute('aria-expanded', String(!hidden));
+          });
+        }
+
+        // Code Copy Buttons
+        document.addEventListener('click', async e => {
+          const btn = e.target.closest('.copy-button');
+          if (!btn) return;
+          const wrapper = btn.closest('.code-block-wrapper');
+          const codeEl = wrapper ? wrapper.querySelector('pre code') : null;
+          if (!codeEl) return;
+          try {
+            await navigator.clipboard.writeText(codeEl.innerText);
+            const copyIcon = btn.querySelector('.copy-icon');
+            const checkIcon = btn.querySelector('.check-icon');
+            btn.classList.add('copied');
+            if (copyIcon) copyIcon.classList.add('hidden');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              if (copyIcon) copyIcon.classList.remove('hidden');
+              if (checkIcon) checkIcon.classList.add('hidden');
+            }, 1800);
+          } catch (_) {}
+        });
+
+        // Search Modal
+        const searchBtn = document.getElementById('search-btn');
+        const searchModal = document.getElementById('search-modal');
+        const searchInput = document.getElementById('search-input');
+        const searchClose = document.getElementById('search-close');
+        const searchResults = document.getElementById('search-results');
+        let searchIndex = null;
+
+        async function ensureSearchIndex() {
+          if (searchIndex) return searchIndex;
+          try {
+            const res = await fetch('/search.json');
+            searchIndex = await res.json();
+          } catch (_) {
+            searchIndex = [];
+          }
+          return searchIndex;
+        }
+
+        function openSearch() {
+          if (!searchModal) return;
+          searchModal.classList.remove('hidden');
+          searchModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          ensureSearchIndex();
+          setTimeout(() => searchInput && searchInput.focus(), 30);
+        }
+
+        function closeSearch() {
+          if (!searchModal) return;
+          searchModal.classList.add('hidden');
+          searchModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
+
+        if (searchBtn) searchBtn.addEventListener('click', openSearch);
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        if (searchModal) {
+          searchModal.addEventListener('click', e => {
+            if (e.target === searchModal) closeSearch();
+          });
+        }
+
+        window.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (searchModal && searchModal.classList.contains('hidden')) openSearch();
+            else closeSearch();
+          } else if (e.key === 'Escape' && searchModal && !searchModal.classList.contains('hidden')) {
+            closeSearch();
+          }
+        });
+
+        function escapeHtml(s) {
+          return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
+
+        if (searchInput && searchResults) {
+          searchInput.addEventListener('input', async () => {
+            const q = searchInput.value.trim().toLowerCase();
+            if (!q) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p>';
+              return;
+            }
+            const data = await ensureSearchIndex();
+            const matched = data.filter(item => {
+              const title = (item.title || '').toLowerCase();
+              const content = (item.content || '').toLowerCase();
+              const tags = (item.tags || []).join(' ').toLowerCase();
+              const cats = (item.categories || []).join(' ').toLowerCase();
+              return title.includes(q) || tags.includes(q) || cats.includes(q) || content.includes(q);
+            });
+
+            if (!matched.length) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">没有找到匹配的文章</p>';
+              return;
+            }
+
+            searchResults.innerHTML = matched
+              .slice(0, 15)
+              .map(item => {
+                const rawText = item.content || '';
+                const idx = rawText.toLowerCase().indexOf(q);
+                let snippet = rawText.slice(0, 110);
+                if (idx > 30) {
+                  snippet = '…' + rawText.slice(idx - 25, idx + 85) + '…';
+                }
+                return `
+                  <a href="${item.url}" class="block py-3.5 transition-colors hover:text-[var(--accent)]">
+                    <div class="flex items-baseline justify-between gap-2">
+                      <span class="font-semibold text-[var(--text-primary)]">${escapeHtml(item.title)}</span>
+                      <span class="shrink-0 text-xs text-[var(--text-tertiary)]">${escapeHtml(item.date || '')}</span>
+                    </div>
+                    <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">${escapeHtml(snippet)}</p>
+                  </a>
+                `;
+              })
+              .join('');
+          });
+        }
+      })();
+    </script> </body> </html>
