@@ -21,7 +21,7 @@
     <rect x="46" y="156" width="364" height="164" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="58" y="178" fill="#287B73" font-weight="700">规格化真值公式（1 ≤ E ≤ 254，偏置值 Bias = 127）：</text>
     <text x="228" y="200" fill="#C47743" font-weight="700" text-anchor="middle">真值 V = (-1)^S × (1.M)_2 × 2^(E - 127)</text>
-    <text x="58" y="224" fill="#17343B">• <tspan font-weight="700">64位 double</tspan>：<tspan font-weight="700">1 位 S + 11 位 E（偏置 1023）+ 52 位 M</tspan></text>
+    <text x="58" y="224" fill="#17343B">• <tspan font-weight="700">64位 double</tspan>：<tspan font-weight="700">1位 S + 11位 E (偏置 1023) + 52位 M</tspan></text>
     <text x="58" y="246" fill="#17343B">• <tspan font-weight="700">E=0 且 M=0</tspan>：精确表示机器零 <tspan font-weight="700">±0</tspan></text>
     <text x="58" y="268" fill="#17343B">• <tspan font-weight="700">E=0 且 M≠0</tspan>：非规格化数 <tspan font-weight="700">(-1)^S × (0.M) × 2^(-126)</tspan></text>
     <text x="58" y="290" fill="#17343B">• <tspan font-weight="700">E=255 (全1) 且 M=0</tspan>：无穷大 <tspan font-weight="700" fill="#C47743">±∞</tspan></text>

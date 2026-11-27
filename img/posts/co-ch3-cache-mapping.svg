@@ -15,12 +15,12 @@
 
     <!-- Mapping 2: Fully Associative -->
     <rect x="44" y="174" width="384" height="62" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
-    <text x="56" y="194" fill="#17343B" font-weight="700">② 全相联映射（可装入任意空行，冲突最低但比较电路最贵）：</text>
+    <text x="56" y="194" fill="#17343B" font-weight="700">② 全相联映射（可装任意空行，冲突最低但比较器最贵）：</text>
     <text x="236" y="220" fill="#17343B" font-weight="700" text-anchor="middle">[        标记 Tag (t = 主存块号全长 m 位)        |  块内地址 (b 位) ]</text>
 
     <!-- Mapping 3: Set Associative -->
     <rect x="44" y="244" width="384" height="76" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.4"/>
-    <text x="56" y="264" fill="#C47743" font-weight="700">③ k 路组相联映射（每组 k 行，共 Q=2^q 组；组号 = j % Q）：</text>
+    <text x="56" y="264" fill="#C47743" font-weight="700">③ k 路组相联映射（共 Q=2^q 组；组号 g = j % Q）：</text>
     <text x="236" y="290" fill="#C47743" font-weight="700" text-anchor="middle">[ 标记 Tag (t 位)  |  Cache 组号 (q 位)  |  块内地址 (b 位) ]</text>
     <text x="236" y="310" fill="#61747A" text-anchor="middle">组间采用直接映射定位组号，组内 k 行采用全相联并行比较 Tag</text>
 
@@ -30,15 +30,15 @@
 
     <rect x="474" y="104" width="344" height="92" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="486" y="126" fill="#17343B" font-weight="700">Cache 单行总位数（控制位 + 标记位 + 数据块）：</text>
-    <text x="486" y="148" fill="#287B73" font-weight="700">• 有效位 (1位) + 脏位 (写回法 1位) + 替换算法位 (LRU)</text>
+    <text x="486" y="148" fill="#287B73" font-weight="700">• 有效位 (1位) + 脏位 (写回 1位) + 替换控制位 (LRU)</text>
     <text x="486" y="168" fill="#287B73" font-weight="700">  + 标记位 (Tag = t位) + 数据块 (2^b × 8 位)</text>
     <text x="486" y="188" fill="#61747A">（注：k 路组相联每行的 LRU 替换控制位占 log2 k 位）</text>
 
     <rect x="474" y="206" width="344" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="486" y="228" fill="#17343B" font-weight="700">两大黄金写策略组合（写命中 + 写不命中搭配）：</text>
     <text x="486" y="250" fill="#287B73" font-weight="700">① 全写法 (Write-Through) + 非写分配法 (非调入)</text>
-    <text x="486" y="268" fill="#17343B">   命中时同时写 Cache 与主存（配写缓冲）；不命中直接写主存</text>
+    <text x="486" y="268" fill="#17343B">   命中同时写 Cache 与主存；不命中直接写主存</text>
     <text x="486" y="290" fill="#C47743" font-weight="700">② 写回法 (Write-Back) + 写分配法 (Write-Allocate)</text>
-    <text x="486" y="308" fill="#17343B">   命中时只写 Cache 置脏位=1，换出时才写回；不命中先调入</text>
+    <text x="486" y="308" fill="#17343B">   命中只改 Cache 置脏位=1，换出写回；不命中先调入</text>
   </g>
 </svg>

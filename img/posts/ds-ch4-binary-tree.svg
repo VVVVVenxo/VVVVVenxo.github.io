@@ -31,15 +31,15 @@
       <text x="365" y="130" fill="#287B73" font-weight="700">rchild</text>
     </g>
 
-    <text x="223" y="164" fill="#17343B" text-anchor="middle">tag = 0 指向左/右孩子；<tspan fill="#C47743" font-weight="700">tag = 1 指向前驱/后继线索（共 n+1 个）</tspan></text>
+    <text x="223" y="164" fill="#17343B" text-anchor="middle">tag=0 指左/右孩子；<tspan fill="#C47743" font-weight="700">tag=1 指前驱/后继线索（共 n+1 个）</tspan></text>
 
     <rect x="46" y="178" width="354" height="142" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="60" y="200" fill="#17343B" font-weight="700">中序线索二叉树（左 → 根 → 右）定位法则：</text>
     <text x="60" y="224" fill="#287B73" font-weight="700">• 找节点 p 的中序后继（Next）：</text>
-    <text x="60" y="244" fill="#17343B">  若 rtag==1 直接取 rchild；若 rtag==0 取<tspan font-weight="700" fill="#287B73">右子树最左下节点</tspan></text>
+    <text x="60" y="244" fill="#17343B">  rtag==1 直接取 rchild；rtag==0 取<tspan font-weight="700" fill="#287B73">右子树最左下节点</tspan></text>
     <text x="60" y="270" fill="#C47743" font-weight="700">• 找节点 p 的中序前驱（Prior）：</text>
-    <text x="60" y="290" fill="#17343B">  若 ltag==1 直接取 lchild；若 ltag==0 取<tspan font-weight="700" fill="#C47743">左子树最右下节点</tspan></text>
-    <text x="60" y="310" fill="#61747A">注：先序线索树找前驱、后序线索树找后继需借助双亲指针</text>
+    <text x="60" y="290" fill="#17343B">  ltag==1 直接取 lchild；ltag==0 取<tspan font-weight="700" fill="#C47743">左子树最右下节点</tspan></text>
+    <text x="60" y="310" fill="#61747A">注：先序线索找前驱、后序线索找后继需借助双亲指针</text>
 
     <!-- Right Panel: Child-Sibling Representation -->
     <rect x="438" y="64" width="394" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>

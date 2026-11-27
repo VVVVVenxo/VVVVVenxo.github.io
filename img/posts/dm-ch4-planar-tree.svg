@@ -10,7 +10,7 @@
 
     <rect x="46" y="106" width="352" height="58" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="222" y="128" fill="#287B73" font-weight="700" text-anchor="middle">欧拉公式：顶点数 n - 边数 m + 面数 r = 2</text>
-    <text x="222" y="150" fill="#17343B" text-anchor="middle">次数定理：Σ deg(Ri) = 2m  |  简单平面图边数上限：m ≤ 3n - 6</text>
+    <text x="222" y="150" fill="#17343B" text-anchor="middle">次数定理：Σ deg(Ri) = 2m  |  边数上限：m ≤ 3n - 6</text>
 
     <rect x="46" y="176" width="352" height="142" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="222" y="198" fill="#C47743" font-weight="700" text-anchor="middle">库拉托夫斯基定理：非平面图必含 K5 或 K3,3 同胚子图</text>

@@ -17,8 +17,8 @@
     </g>
 
     <!-- Y axis labels -->
-    <text x="66" y="336" fill="#61747A" text-anchor="end">0</text>
-    <text x="66" y="325" fill="#61747A" text-anchor="end">1</text>
+    <text x="66" y="338" fill="#61747A" text-anchor="end">0</text>
+    <text x="66" y="321" fill="#61747A" text-anchor="end">1</text>
     <text x="66" y="256" fill="#61747A" text-anchor="end">8</text>
     <text x="66" y="216" fill="#61747A" text-anchor="end">12</text>
     <text x="66" y="176" fill="#61747A" text-anchor="end">16</text>
@@ -64,7 +64,7 @@
     <text x="132" y="236" fill="#287B73" font-weight="700" text-anchor="middle">慢开始</text>
     <text x="132" y="253" fill="#61747A" text-anchor="middle">(指数翻倍)</text>
     <text x="292" y="114" fill="#287B73" font-weight="700" text-anchor="middle">拥塞避免 (每轮 +1)</text>
-    <text x="432" y="82" fill="#C47743" font-weight="700" text-anchor="middle">① 超时：cwnd 降为 1</text>
+    <text x="432" y="86" fill="#C47743" font-weight="700" text-anchor="middle">① 超时：cwnd 降为 1</text>
     <text x="656" y="156" fill="#C47743" font-weight="700" text-anchor="middle">② 收到 3 个重复 ACK（快重传）</text>
     <text x="742" y="202" fill="#287B73" font-weight="700" text-anchor="middle">快恢复 + 拥塞避免</text>
 

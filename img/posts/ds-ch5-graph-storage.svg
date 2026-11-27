@@ -45,7 +45,7 @@
     <rect x="46" y="214" width="354" height="106" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="60" y="236" fill="#17343B" font-weight="700">• 邻接矩阵：空间 <tspan fill="#287B73">O(V²)</tspan>（仅取决于顶点数，适合<tspan font-weight="700">稠密图</tspan>）</text>
     <text x="60" y="258" fill="#17343B" font-weight="700">• 邻接表：无向 <tspan fill="#C47743">O(V+2E)</tspan>，有向 <tspan fill="#C47743">O(V+E)</tspan>（适合<tspan font-weight="700">稀疏图</tspan>）</text>
-    <text x="60" y="280" fill="#17343B">• 十字链表：有向图专属，同时存出边与入边，求入度/出度快</text>
+    <text x="60" y="280" fill="#17343B">• 十字链表：有向图专属，同时存出/入边，求入度/出度快</text>
     <text x="60" y="302" fill="#17343B">• 邻接多重表：无向图专属，每条无向边只存 1 个边节点</text>
 
     <!-- Right Panel: Prim vs Kruskal -->
@@ -54,7 +54,7 @@
 
     <rect x="456" y="108" width="358" height="98" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="470" y="130" fill="#287B73" font-weight="700">① Prim 算法（加点法 · 归并顶点）：</text>
-    <text x="470" y="152" fill="#17343B">• 维护已选顶点集 U，每次挑连接 U 与 V-U 的最小权边加入</text>
+    <text x="470" y="152" fill="#17343B">• 维护已选点集 U，每次挑连接 U 与 V-U 的最小权边加入</text>
     <text x="470" y="174" fill="#287B73" font-weight="700">• 时间复杂度：O(V²)（与边数 E 无关）</text>
     <text x="470" y="194" fill="#17343B">• 适用场景：<tspan font-weight="700">边稠密图</tspan></text>
 

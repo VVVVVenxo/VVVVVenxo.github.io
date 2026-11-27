@@ -18,7 +18,7 @@
 
     <rect x="44" y="218" width="368" height="48" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="238" fill="#287B73" font-weight="700">③ LRU（最近最久未使用 · 向前看）：淘汰最久未访问的页</text>
-    <text x="56" y="256" fill="#17343B">基于局部性原理，性能最接近 OPT（堆栈类算法，无 Belady）</text>
+    <text x="56" y="256" fill="#17343B">基于局部性原理，性能最接近 OPT（堆栈类，无 Belady）</text>
 
     <rect x="44" y="274" width="368" height="46" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="56" y="294" fill="#17343B" font-weight="700">④ 简单 CLOCK（二次机会）：循环扫描访问位 A</text>
@@ -35,15 +35,15 @@
     <text x="472" y="162" fill="#17343B">最佳淘汰页！<tspan font-weight="700">本轮扫描过程中不修改任何页面的访问位 A</tspan></text>
 
     <rect x="460" y="176" width="360" height="42" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
-    <text x="472" y="196" fill="#C47743" font-weight="700">第 2 轮扫描：若第 1 轮失败，找 (A = 0, M = 1) —— 未访问已改</text>
+    <text x="472" y="196" fill="#C47743" font-weight="700">第 2 轮扫描：若第 1 轮失败，找 (A=0, M=1) 未访问已改</text>
     <text x="472" y="212" fill="#17343B"><tspan font-weight="700" fill="#C47743">本轮将所有扫描途经页面的访问位 A 全部置为 0</tspan></text>
 
-    <rect x="464" y="226" width="352" height="42" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
-    <text x="478" y="246" fill="#287B73" font-weight="700">第 3 轮扫描：若第 2 轮失败，重新找 (A = 0, M = 0)</text>
-    <text x="478" y="262" fill="#17343B">（原先的 (1, 0) 页在第 2 轮中已被清零变为 (0, 0)，本轮不改 A）</text>
+    <rect x="460" y="226" width="360" height="42" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="472" y="246" fill="#287B73" font-weight="700">第 3 轮扫描：若第 2 轮失败，重新找 (A = 0, M = 0)</text>
+    <text x="472" y="262" fill="#17343B">（原 (1, 0) 页在第 2 轮已被清零为 (0, 0)，本轮不改 A）</text>
 
-    <rect x="464" y="276" width="352" height="44" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
-    <text x="478" y="296" fill="#17343B" font-weight="700">第 4 轮扫描：若第 3 轮失败，重新找 (A = 0, M = 1)（必能找到）</text>
-    <text x="478" y="314" fill="#61747A">（原先的 (1, 1) 页在第 2 轮已被清零为 (0, 1)，最多四轮必命中）</text>
+    <rect x="460" y="276" width="360" height="44" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="472" y="296" fill="#17343B" font-weight="700">第 4 轮扫描：若第 3 轮失败，找 (A=0, M=1)（必命中）</text>
+    <text x="472" y="314" fill="#61747A">（原 (1, 1) 页在第 2 轮已清零为 (0, 1)，最多四轮必中）</text>
   </g>
 </svg>

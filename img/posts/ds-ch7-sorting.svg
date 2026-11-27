@@ -32,7 +32,7 @@
     <rect x="28" y="216" width="804" height="132" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
     <text x="430" y="240" fill="#17343B" font-weight="700" text-anchor="middle">3. 八大内部排序算法高频考点速断表</text>
 
-    <text x="48" y="266" fill="#17343B">• <tspan font-weight="700" fill="#C47743">四大不稳定排序（口诀：“快希选堆”）</tspan>：<tspan font-weight="700">快速排序、希尔排序、简单选择排序、堆排序</tspan>；其余（直接插入、冒泡、归并、基数）全稳定</text>
+    <text x="48" y="266" fill="#17343B">• <tspan font-weight="700" fill="#C47743">四大不稳定排序（口诀“快希选堆”）</tspan>：<tspan font-weight="700">快速排序、希尔排序、简单选择排序、堆排序</tspan>；其余四种（插入、冒泡、归并、基数）全稳定</text>
     <text x="48" y="290" fill="#17343B">• <tspan font-weight="700" fill="#287B73">比较次数与初始序列状态无关的算法</tspan>：<tspan font-weight="700">简单选择排序 O(n²)、折半插入排序、二路归并排序（总时间无关，每趟比较微差）、基数排序</tspan></text>
     <text x="48" y="314" fill="#17343B">• <tspan font-weight="700" fill="#287B73">每趟必有元素落入最终位置</tspan>：<tspan font-weight="700">交换类（冒泡、快排）+ 选择类（简单选择、堆排）</tspan>（插入与归并在末趟前不保证）</text>
     <text x="48" y="336" fill="#61747A">• 空间复杂度：仅快速排序 O(log2 n)、二路归并排序 O(n)、基数排序 O(r)，其余五种全部为原地排序 O(1)</text>

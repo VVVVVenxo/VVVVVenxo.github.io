@@ -48,12 +48,12 @@
     <rect x="466" y="106" width="348" height="102" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="480" y="128" fill="#17343B" font-weight="700">特殊元素在运算表中的快速识别：</text>
     <text x="480" y="150" fill="#287B73" font-weight="700">• 左幺元 el：所在行与表头行完全一致</text>
-    <text x="480" y="170" fill="#287B73" font-weight="700">• 右幺元 er：所在列与表头列完全一致（同存必相等唯一）</text>
+    <text x="480" y="170" fill="#287B73" font-weight="700">• 右幺元 er：所在列与表头列一致（同存必相等唯一）</text>
     <text x="480" y="192" fill="#C47743" font-weight="700">• 左/右零元 θ：所在行/列全为 θ 本身（群中绝无零元）</text>
 
     <rect x="466" y="220" width="348" height="100" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="480" y="242" fill="#C47743" font-weight="700">群的三大必考定理：</text>
-    <text x="480" y="264" fill="#17343B">• 穿脱法则：(a * b)^-1 = b^-1 * a^-1（消去律恒成立）</text>
+    <text x="480" y="264" fill="#17343B">• 穿脱法则：(a*b)^-1 = b^-1 * a^-1（消去律恒成立）</text>
     <text x="480" y="286" fill="#17343B" font-weight="700">• 拉格朗日定理：子群 H 的阶 |H| 必整除群 G 的阶 |G|</text>
     <text x="480" y="306" fill="#287B73" font-weight="700">• n 阶循环群生成元个数：欧拉函数 φ(n)（与 n 互质）</text>
   </g>
