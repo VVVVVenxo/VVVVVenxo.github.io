@@ -1,0 +1,637 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Astro v5.18.2"><title>资源加载与热更新 | VVVVVenxo 的博客</title><meta name="description" content="系统梳理 Unity 资源标识体系（GUID / LocalID）、AssetBundle 二进制结构与 LZ4 分块压缩、隐式依赖冗余拆包、异步加载生命周期防错与引用计数卸载，以及 Lua 与 HybridCLR 原生 C# 热更新架构。"><meta name="keywords" content="VVVVVenxo, 游戏客户端开发, Unity, C++, C#, 图形学, 实时渲染, 网络同步, 算法, AI Agent"><meta name="author" content="VVVVVenxo"><meta name="theme-color" content="#f3f6f3" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#161f1c" media="(prefers-color-scheme: dark)"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/11/27/%E3%80%90Unity%E3%80%91%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E4%B8%8E%E7%83%AD%E6%9B%B4%E6%96%B0/"><link rel="icon" href="/img/cat.ico"><link rel="alternate" type="application/rss+xml" title="VVVVVenxo 的博客" href="/atom.xml"><meta property="og:type" content="article"><meta property="og:url" content="https://vvvvvenxo.github.io/2026/11/27/%E3%80%90Unity%E3%80%91%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E4%B8%8E%E7%83%AD%E6%9B%B4%E6%96%B0/"><meta property="og:title" content="资源加载与热更新 | VVVVVenxo 的博客"><meta property="og:description" content="系统梳理 Unity 资源标识体系（GUID / LocalID）、AssetBundle 二进制结构与 LZ4 分块压缩、隐式依赖冗余拆包、异步加载生命周期防错与引用计数卸载，以及 Lua 与 HybridCLR 原生 C# 热更新架构。"><meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/Unity-%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E4%B8%8E%E7%83%AD%E6%9B%B4%E6%96%B0.png"><script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script><link rel="stylesheet" href="/_astro/index.U3Dh2Des.css"></head> <body> <header class="site-header sticky top-0 z-40 w-full border-b border-[var(--border-color)]"> <div class="container flex h-16 items-center justify-between"> <a href="/" aria-label="VVVVVenxo 的博客，返回首页" class="brand-link text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]"> <img src="/img/cat.ico" alt="" class="brand-mark" width="30" height="30"> <span class="brand-name">VVVVVenxo</span> <span class="brand-caption">游戏客户端工程手记</span> </a> <nav class="hidden items-center gap-1 md:flex" aria-label="主导航"> <a href="/" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 首页 </a><a href="/blog" aria-current="page" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 分类 </a><a href="/tags" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 标签 </a><a href="/about" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 关于 </a> </nav> <div class="flex items-center gap-1.5"> <button id="search-btn" type="button" class="header-action" aria-label="搜索 (Ctrl+K)" title="搜索 (Ctrl+K)"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </button> <button id="theme-toggle" type="button" class="header-action" aria-label="切换主题" title="切换明暗主题"> <svg class="sun-icon hidden dark:block" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> <svg class="moon-icon block dark:hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="mobile-menu-btn" type="button" class="header-action md:hidden" aria-label="菜单" aria-controls="mobile-menu" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> </div> </div> <div id="mobile-menu" class="hidden border-t border-[var(--border-subtle)] md:hidden"> <nav class="container py-3" aria-label="移动导航"> <div class="bg-[var(--bg-surface)]"> <a href="/" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 首页 </a><a href="/blog" aria-current="page" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors bg-[var(--bg-muted)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 分类 </a><a href="/tags" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 标签 </a><a href="/about" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 关于 </a> </div> </nav> </div> </header> <main class="flex-1">  <div id="reading-progress" class="reading-progress-bar" aria-hidden="true"></div> <div class="post-reading-shell container-wide flex py-10 md:py-14"> <article class="min-w-0 flex-1"> <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8"> <div class="post-header-grid"> <div> <div class="flex flex-wrap items-center gap-2"> <a href="/categories/Unity/" class="section-kicker hover:underline"> Unity </a> <span class="text-xs text-[var(--text-tertiary)]">
+/ 技术笔记 · Unity </span> </div> <h1 lang="zh-CN" class="mt-3 text-3xl font-bold tracking-tight text-balance text-[var(--text-primary)] md:text-4xl"> 资源加载与热更新 </h1> <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-tertiary)]"> <time datetime="2026-11-27">2026年11月27日</time> <span>·</span> <span>12 分钟阅读</span> <span>·</span> <span>约 3,687 字</span> </div> <div class="mt-4 flex flex-wrap gap-2"> <a href="/tags/Unity/" class="tag"> Unity </a><a href="/tags/%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" class="tag"> 资源管理 </a><a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" class="tag"> 热更新 </a><a href="/tags/HybridCLR/" class="tag"> HybridCLR </a><a href="/tags/%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD/" class="tag"> 异步加载 </a><a href="/tags/YooAsset/" class="tag"> YooAsset </a> </div> </div> <div class="post-header-diagram"> <img src="/img/covers/gen/Unity-资源加载与热更新-thumb.svg" alt="资源加载与热更新" loading="eager" fetchpriority="high"> </div> </div> </header> <div class="prose max-w-none" lang="zh-CN"><p>本文梳理 Unity 客户端资源加载管线与代码热更新机制，共分为四个章节：<strong>资源唯一标识体系（<code>GUID</code> 与 <code>LocalID</code>）及加载方案演进</strong>、<strong><code>AssetBundle</code> 内部结构、<code>LZ4</code> 分块压缩与依赖拆包策略</strong>、<strong>异步加载时序竞争防护、引用计数管理与 <code>Unload</code> 内存释放</strong>、<strong>热更新方案对比（Lua 虚拟机桥接 vs <code>HybridCLR</code> 原生 C# 混合执行）</strong>。</p>
+<hr>
+<h2 id="第-1-章unity-资源标识体系与加载方案演进">第 1 章：Unity 资源标识体系与加载方案演进<a class="heading-anchor" href="#第-1-章unity-资源标识体系与加载方案演进" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="11-meta-文件中的-guid-与-localid">1.1 <code>.meta</code> 文件中的 <code>GUID</code> 与 <code>LocalID</code><a class="heading-anchor" href="#11-meta-文件中的-guid-与-localid" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>当我们在 Unity 编辑器中把一张贴图拖给材质球、或者把一个预制体拖给脚本变量时，Unity 序列化保存的<strong>并不是该文件在磁盘上的相对路径</strong>，而是由 <strong><code>GUID</code> + <code>LocalID</code></strong> 组成的唯一坐标：</p>
+<p><img width="860" height="360" src="/img/posts/res-ch1-guid-modes.svg" alt="Unity 资源标识（GUID 与 LocalID）及三类加载方式对比" loading="lazy" decoding="async"></p>
+<ol>
+<li><strong><code>GUID</code>（128 位全局唯一标识符）</strong>：
+每个资源文件导入 Unity 时，都会在同级目录下生成一个同名的 <code>.meta</code> 文件，其中记录了该文件的 <code>GUID</code>。只要 <code>.meta</code> 文件跟着资源一起在工程内移动或重命名，<code>GUID</code> 就不变，引用它的材质或预制体就不会丢失关联（若直接在系统资源管理器中弄丢了 <code>.meta</code> 文件，Unity 会将其视为新文件重新生成 <code>GUID</code>，导致原有引用全部断开）。</li>
+<li><strong><code>LocalID</code>（文件内部局部标识，序列化文本中记为 <code>fileID</code>）</strong>：
+一个复合资源文件内部往往包含多个子对象（例如一个 Prefab 内部包含多个 <code>GameObject</code> 和 <code>MonoBehaviour</code> 组件，一张 Multiple 模式的图集纹理内部包含多个 <code>Sprite</code> 子图）。<code>LocalID</code> 用来唯一定位该文件内部的具体哪一个子对象。</li>
+<li><strong><code>InstanceID</code>（运行期内存实例标识）</strong>：
+当资源被加载进内存后，引擎内部维护的持久管理器会将 <code>(GUID, LocalID)</code> 映射为一个 32 位有符号整型 <code>InstanceID</code>。运行期判断对象是否已加载、或者反序列化时恢复引用关系，均通过 <code>InstanceID</code> 查找内存对象表完成。</li>
+</ol>
+<hr>
+<h3 id="12-四类资源加载方式对比">1.2 四类资源加载方式对比<a class="heading-anchor" href="#12-四类资源加载方式对比" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<table>
+<thead>
+<tr>
+<th align="left">加载方式</th>
+<th align="left">适用环境</th>
+<th align="left">包体与热更能力</th>
+<th align="left">核心特点与工程定位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>AssetDatabase.LoadAssetAtPath</code></strong></td>
+<td align="left"><strong>仅限 Unity Editor</strong></td>
+<td align="left">无需打包</td>
+<td align="left">开发期直接在编辑器内按 <code>Assets/...</code> 路径快速加载，真机构建不可用。</td>
+</tr>
+<tr>
+<td align="left"><strong><code>Resources.Load / LoadAsync</code></strong></td>
+<td align="left">编辑器与全平台真机</td>
+<td align="left"><strong>不可热更</strong>，打入首包</td>
+<td align="left">所有文件强制合并进包内 <code>resources.assets</code>，启动时构建全量索引树，拖慢启动速度且增大首包体积。</td>
+</tr>
+<tr>
+<td align="left"><strong><code>AssetBundle</code>（AB 包）</strong></td>
+<td align="left">编辑器与全平台真机</td>
+<td align="left"><strong>支持分包压缩与远程热更</strong></td>
+<td align="left">Unity 底层标准热更载体，支持 <code>LZ4</code> 按需解压，但需要开发者自行维护包间依赖关系与引用计数。</td>
+</tr>
+<tr>
+<td align="left"><strong><code>YooAsset</code> / <code>Addressables</code></strong></td>
+<td align="left">编辑器与全平台真机</td>
+<td align="left"><strong>完整工业级热更管线</strong></td>
+<td align="left">基于 <code>AssetBundle</code> 封装，内置版本清单比对、断点续传下载、依赖自动加载与引用计数卸载。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第-2-章assetbundle-结构lz4-压缩与依赖冗余消除">第 2 章：<code>AssetBundle</code> 结构、<code>LZ4</code> 压缩与依赖冗余消除<a class="heading-anchor" href="#第-2-章assetbundle-结构lz4-压缩与依赖冗余消除" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="21-assetbundle-二进制布局与三种压缩格式">2.1 <code>AssetBundle</code> 二进制布局与三种压缩格式<a class="heading-anchor" href="#21-assetbundle-二进制布局与三种压缩格式" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>一个打包生成的 <code>AssetBundle</code> 文件在二进制结构上由两部分组成：<strong>头部索引区（Header，记录包内资产名称、类型及在数据区中的字节偏移量）</strong> 与 <strong>数据块区（Data Blocks，存放序列化后的纹理、网格、预制体字节流）</strong>。</p>
+<p>打包时通过 <code>BuildAssetBundleOptions</code> 可选择三种压缩模式：</p>
+<p><img width="860" height="360" src="/img/posts/res-ch2-ab-lz4-deps.svg" alt="AssetBundle 二进制结构、LZ4 分块压缩与依赖冗余消除" loading="lazy" decoding="async"></p>
+<table>
+<thead>
+<tr>
+<th align="left">压缩格式</th>
+<th align="left">构建参数</th>
+<th align="left">磁盘体积</th>
+<th align="left">加载机制与内存表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>不压缩</strong></td>
+<td align="left"><code>UncompressedAssetBundle</code></td>
+<td align="left">最大</td>
+<td align="left">无需解压，直接按偏移读取，但包体过大不利于网络下载。</td>
+</tr>
+<tr>
+<td align="left"><strong>LZMA（流式整包压缩）</strong></td>
+<td align="left">默认参数（<code>None</code>）</td>
+<td align="left"><strong>最小</strong></td>
+<td align="left">整个数据区压成一个流；读取包内哪怕 1 个小图标，都<strong>必须先将整个 AB 包全量解压</strong>，首次加载慢且内存峰值高。</td>
+</tr>
+<tr>
+<td align="left"><strong>LZ4（128KB 分块压缩）</strong></td>
+<td align="left"><code>ChunkBasedCompression</code></td>
+<td align="left">中等（比 LZMA 略大）</td>
+<td align="left"><strong>商业项目统一标准</strong>：按 <strong>128KB</strong> 为单位独立压缩成块（Chunk），加载哪个资源就只解压它所在的 128KB 块。</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong><code>AssetBundle.LoadFromFile</code> 与 <code>LZ4</code> 的零拷贝配合</strong>：
+当使用 <code>AssetBundle.LoadFromFile(path)</code>（或异步版 <code>LoadFromFileAsync</code>）加载本地磁盘上的 <strong><code>LZ4</code> 格式</strong> AB 包时，Unity <strong>不会把整个文件读入内存</strong>，而是仅读取文件头部的块索引表（通常仅几 KB），并保持一个指向磁盘文件的文件句柄。随后当业务代码调用 <code>ab.LoadAsset&lt;GameObject&gt;(&quot;Hero&quot;)</code> 时，引擎才根据头部索引定位该预制体涉及的几个 128KB 数据块，从磁盘按偏移读取并实时通过 <code>LZ4</code> 解压生成对象，内存占用极低且加载速度接近不压缩格式。</li>
+</ul>
+<hr>
+<h3 id="22-隐式依赖冗余与公共包抽取策略">2.2 隐式依赖冗余与公共包抽取策略<a class="heading-anchor" href="#22-隐式依赖冗余与公共包抽取策略" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<ul>
+<li><strong>隐式依赖引发的内存双份冗余</strong>：
+假设工程中有两个预制体：<code>PanelA.prefab</code>（指定打入 <code>ui_panel_a.bundle</code>）和 <code>PanelB.prefab</code>（指定打入 <code>ui_panel_b.bundle</code>），它们都引用了同一张公共背景贴图 <code>CommonBg.png</code>，但开发者<strong>没有给 <code>CommonBg.png</code> 单独指定 AB 包名</strong>。<ul>
+<li>在打包时，Unity 发现两个包都依赖 <code>CommonBg.png</code> 且它不属于任何独立包，于是会将 <code>CommonBg.png</code> 的完整像素数据<strong>同时复制一份塞进 <code>ui_panel_a.bundle</code> 和 <code>ui_panel_b.bundle</code> 中</strong>。</li>
+<li>更严重的是：运行时若同时打开界面 A 和界面 B，由于这两份贴图来自两个不同的 AB 包，引擎会将它们视为两个完全独立的资源实例，<strong>在内存和显存中驻留两份一模一样的贴图</strong>。</li>
+</ul>
+</li>
+<li><strong>构建期引用入度扫描与运行期依赖先行加载</strong>：<ol>
+<li><strong>构建期自动拆包</strong>：在打包脚本（或使用 <code>YooAsset</code> 的收集器规则）中，通过 <code>AssetDatabase.GetDependencies</code> 扫描所有入口资源的引用图，统计每个底层资产被多少个不同的入口包引用（入度）。凡是<strong>被 2 个及以上包共同引用的贴图、材质、字体或 Shader</strong>，自动归入独立的公共依赖包（如 <code>common_textures.bundle</code>、<code>common_shaders.bundle</code>）。</li>
+<li><strong>运行期先加载依赖包</strong>：当公共资源被拆出后，在加载并实例化 <code>PanelA</code> 之前，必须先查询全局 <code>AssetBundleManifest</code> 获取 <code>ui_panel_a.bundle</code> 的所有依赖包列表，先把所有依赖包通过 <code>LoadFromFile</code> 加载进内存，最后再加载 <code>PanelA</code>，否则实例化出来的界面会出现材质或贴图丢失（显示为紫红色异常材质）。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="第-3-章异步加载时序防护引用计数与内存卸载">第 3 章：异步加载时序防护、引用计数与内存卸载<a class="heading-anchor" href="#第-3-章异步加载时序防护引用计数与内存卸载" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="31-异步加载的生命周期竞争防护">3.1 异步加载的生命周期竞争防护<a class="heading-anchor" href="#31-异步加载的生命周期竞争防护" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>正式项目中，为防止主线程卡顿，UI 界面与角色模型均采用异步加载。由于异步加载至少在调用后的下一帧（甚至数帧后）才会触发完成回调，期间极易发生<strong>时序竞争</strong>：</p>
+<ul>
+<li><strong>典型问题</strong>：玩家点击按钮异步加载打开“背包界面”，但在 AB 包尚未读取完成的 0.2 秒内，玩家又点击了返回键关闭该界面或切换到了新场景。当异步加载完成执行回调时，外部宿主对象已被销毁，直接在回调中实例化预制体并挂载到已销毁的父节点上，不仅会导致空引用报错，还会产生无法被回收的孤立游戏对象（内存泄漏）。</li>
+<li><strong>标准防护代码（绑定 <code>CancellationToken</code> + 句柄释放）</strong>：</li>
+</ul>
+<div class="code-block-wrapper"><span class="code-lang-badge">C#</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">using</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> System</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">Threading</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">using</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> Cysharp</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">Threading</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">Tasks</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">using</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> UnityEngine</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">using</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> YooAsset</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">public</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> class</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> UIWindowLoader</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> : </span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">MonoBehaviour</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">{</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    private</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> AssetHandle</span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75"> m_handle</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    private</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> GameObject</span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75"> m_instance</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    public</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> async</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> UniTask</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> LoadAndShowAsync</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">string</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B"> location</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">)</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    {</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 获取与当前 MonoBehaviour 生命周期绑定的取消令牌（OnDestroy 时自动触发取消）</span></span>
+<span class="line"><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">        CancellationToken</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75"> token</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B"> this</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">GetCancellationTokenOnDestroy</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">        m_handle</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B"> YooAssets</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">LoadAssetAsync</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">&#x3C;</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">GameObject</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">>(</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">location</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        await </span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">m_handle</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">ToUniTask</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 异步等待返回后，第一时间检查宿主是否已被销毁或主动取消</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        if</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">token</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">IsCancellationRequested</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> ||</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B"> this</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> ==</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> null</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">)</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        {</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">            // 若界面在加载期间已关闭，立即归还释放资源句柄，不执行实例化</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">            m_handle</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">Release</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">            m_handle</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> null</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">            return</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">        m_instance</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B"> m_handle</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">InstantiateSync</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">transform</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    private</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> void</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> OnDestroy</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">()</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        if</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">m_instance</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> !=</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> null</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">)</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        {</span></span>
+<span class="line"><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">            Destroy</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">m_instance</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">            m_instance</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> null</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        }</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 界面销毁时释放句柄，使底层 AB 包引用计数减 1</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        if</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">m_handle</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> !=</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> null</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">)</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">            m_handle</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">Release</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">            m_handle</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> null</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">}</span></span></code></pre></div>
+<hr>
+<h3 id="32-引用计数管理与-unloadfalse-unloadtrue-对比">3.2 引用计数管理与 <code>Unload(false)</code> / <code>Unload(true)</code> 对比<a class="heading-anchor" href="#32-引用计数管理与-unloadfalse-unloadtrue-对比" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p><img width="860" height="360" src="/img/posts/res-ch3-refcount-unload.svg" alt="异步加载生命周期防错、引用计数管理与 Unload(false/true) 内存释放" loading="lazy" decoding="async"></p>
+<ol>
+<li><strong>共享资源的引用计数管理</strong>：
+如前所述，公共图集包 <code>common_ui.bundle</code> 可能同时被界面 A 和界面 B 依赖。如果界面 A 关闭时直接卸载了 <code>common_ui.bundle</code>，正在显示的界面 B 上的图片会立刻变白或丢失。因此，资源管理器必须为每个已加载的 AB 包维护一个整型引用计数 <code>RefCount</code>：<ul>
+<li>每当上层业务申请一个指向该包内资源的句柄（或有其他已加载的 AB 包依赖该包）时，<code>RefCount++</code>；</li>
+<li>每当业务关闭界面调用 <code>handle.Release()</code> 归还句柄时，<code>RefCount--</code>；</li>
+<li>当 <code>RefCount</code> 降为 <code>0</code> 时，不立即销毁（避免玩家马上再次打开同一界面引发重复磁盘读取），而是将其放入 <strong>LRU（最近最少使用）闲置缓存队列</strong>；当闲置缓存总大小超过阈值或发生场景切换时，按最久未使用顺序淘汰并卸载 <code>RefCount == 0</code> 的包。</li>
+</ul>
+</li>
+<li><strong><code>AssetBundle.Unload(false)</code> 与 <code>AssetBundle.Unload(true)</code> 的底层差异</strong>：<ul>
+<li><strong><code>ab.Unload(false)</code>（严禁在运行期常规使用）</strong>：
+仅释放 <code>AssetBundle</code> 自身的头部索引内存，但<strong>保留所有已经通过该包 <code>LoadAsset</code> 加载进内存的 <code>Texture</code>、<code>Mesh</code>、<code>Material</code> 资产对象</strong>。这会切断 AB 包与那些已加载资产之间的内部引用链：如果稍后重新加载同一个 AB 包并再次读取同名预制体，引擎无法识别内存中已有的旧贴图，会<strong>在内存中重新创建一份完全相同的贴图副本</strong>，造成隐蔽且难以清理的内存翻倍。</li>
+<li><strong><code>ab.Unload(true)</code>（配合引用计数的标准卸载方式）</strong>：
+同时释放 <code>AssetBundle</code> 头部索引以及<strong>所有从该包加载出来的资产对象</strong>，内存释放干净彻底。只要严格通过引用计数保证调用 <code>Unload(true)</code> 时 <code>RefCount == 0</code>（即场景中已没有任何存活的实例在使用该包的资源），就能安全、无残留地回收全部内存。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="第-4-章代码热更新机制xlua-vs-hybridclr">第 4 章：代码热更新机制（<code>xLua</code> vs <code>HybridCLR</code>）<a class="heading-anchor" href="#第-4-章代码热更新机制xlua-vs-hybridclr" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="41-aot-平台限制与两代热更新方案对比">4.1 AOT 平台限制与两代热更新方案对比<a class="heading-anchor" href="#41-aot-平台限制与两代热更新方案对比" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>在 iOS、主机及部分小程序平台上，操作系统出于安全策略严禁应用在运行期动态分配可执行内存页（即<strong>禁止 JIT 即时编译</strong>）。因此 Unity 在发布移动端时默认采用 <strong>IL2CPP（AOT 静态提前编译）</strong>：在打包阶段先把 C# 编译出的中间语言（IL 字节码）转译为 C++ 源码，再编译为目标平台的原生机器码（如 ARM64 汇编放入 <code>libil2cpp.so</code>）。由于原生机器码无法在运行时动态修改，默认情况下无法直接调用 <code>Assembly.Load(byte[])</code> 加载新的热更 DLL。</p>
+<p>围绕这一限制，Unity 商业项目形成了两代主流热更架构：</p>
+<p><img width="860" height="360" src="/img/posts/res-ch4-hybridclr-hotupdate.svg" alt="热更新对比（Lua 虚拟机桥接 vs HybridCLR 原生 C# 混合执行）" loading="lazy" decoding="async"></p>
+<table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">传统方案：<code>xLua</code> / <code>ToLua</code>（Lua 虚拟机）</th>
+<th align="left">现代方案：<code>HybridCLR</code>（原生 C# 混合执行）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>核心实现原理</strong></td>
+<td align="left">内嵌 C 语言编写的 Lua 虚拟机，将 Lua 脚本文本打入 AB 包下载并解释执行。</td>
+<td align="left">改造扩充 <code>libil2cpp</code> 运行时，直接内置高效的寄存器型 IL 字节码解释器。</td>
+</tr>
+<tr>
+<td align="left"><strong>编程语言与工程流</strong></td>
+<td align="left"><strong>C# + Lua 双语言割裂</strong>：底层框架用 C#，热更业务用 Lua，无法直接共享类型定义。</td>
+<td align="left"><strong>纯 C# 单语言统一</strong>：主包与热更包均使用标准 C# 编写，共享全部 IDE 重构与静态检查。</td>
+</tr>
+<tr>
+<td align="left"><strong>跨界调用开销</strong></td>
+<td align="left"><strong>高</strong>：C# 与 Lua 互调需经过生成的静态 Wrap 代码压栈、拆箱与拷贝。</td>
+<td align="left"><strong>零跨界开销</strong>：热更代码与主包 AOT 代码同处一个 IL2CPP 内存空间，直接互调。</td>
+</tr>
+<tr>
+<td align="left"><strong>内存与 GC 管理</strong></td>
+<td align="left">同时存在 Mono/IL2CPP GC 与 Lua GC 两套独立垃圾回收器，需防跨语言引用泄漏。</td>
+<td align="left">统一由同一个 IL2CPP GC 管理，不存在双虚拟机交叉引用泄漏问题。</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="42-hybridclr-热更新工作流与补充元数据机制">4.2 <code>HybridCLR</code> 热更新工作流与补充元数据机制<a class="heading-anchor" href="#42-hybridclr-热更新工作流与补充元数据机制" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p><code>HybridCLR</code> 将整个客户端代码划分为 <strong>主包 AOT 程序集（稳定不常改的底层框架、第三方库，打包时直接编译为原生机器码）</strong> 与 <strong>热更新程序集（如 <code>HotUpdate.dll</code>，包含高频迭代的 UI、玩法、活动逻辑，打入 <code>AssetBundle</code> 远程下载）</strong>。</p>
+<p>其完整启动与热更加载流程包含以下四个步骤：</p>
+<ol>
+<li><strong>下载热更 AB 包</strong>：客户端启动后通过 <code>YooAsset</code> 与 CDN 比对版本号，将最新的热更 DLL 资源包下载到本地沙盒目录。</li>
+<li><strong>为 AOT 泛型补充元数据（<code>LoadMetadataForAOTAssembly</code>）</strong>：<ul>
+<li>在原生 IL2CPP 中，如果热更代码写了一个值类型泛型实例化（例如 <code>new List&lt;HotStruct&gt;()</code>，其中 <code>HotStruct</code> 是在热更 DLL 中新定义的 <code>struct</code>），由于值类型每个字段宽度不同，AOT 编译阶段从未为 <code>HotStruct</code> 生成过对应的 <code>List&lt;T&gt;</code> 机器码。</li>
+<li><code>HybridCLR</code> 支持基于 IL 解释器实现任意泛型的动态实例化，但前提是解释器需要读取原主包 AOT 程序集（如 <code>mscorlib.dll</code>、<code>System.Core.dll</code>）中泛型模板的原始 IL 元数据。因此在加载热更 DLL 之前，需要先加载裁剪后的 AOT 补充元数据 DLL：</li>
+</ul>
+</li>
+<li><strong>调用 <code>Assembly.Load</code> 加载热更程序集</strong>：将 <code>HotUpdate.dll</code> 的二进制字节流注册进 <code>libil2cpp</code> 运行时。</li>
+<li><strong>跳转进入热更入口</strong>：通过反射调用热更程序集中的启动入口函数（或挂载热更脚本的预制体），此后所有热更逻辑均以原生 C# 方式直接运行：</li>
+</ol>
+<div class="code-block-wrapper"><span class="code-lang-badge">C#</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">using</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> System</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">using</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> System</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">Reflection</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">using</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> HybridCLR</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">using</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> UnityEngine</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">public</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> class</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> HotUpdateBootstrapper</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> : </span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">MonoBehaviour</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">{</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">    // 需要补充泛型元数据的主包 AOT 程序集列表（由构建工具自动扫描生成）</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    private</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> static</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> readonly</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> string</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">[] </span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75">AOTMetaAssemblyNames</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    {</span></span>
+<span class="line"><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">        "mscorlib.dll"</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">,</span></span>
+<span class="line"><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">        "System.dll"</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">,</span></span>
+<span class="line"><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">        "System.Core.dll"</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">,</span></span>
+<span class="line"><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">        "UniTask.dll"</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    };</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    public</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> void</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> StartHotUpdate</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">Func</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">&#x3C;</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">string</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">byte</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">[]> </span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">loadDllBytesFunc</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">)</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    {</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 1. 先为主包 AOT 程序集补充原始元数据，以支持热更代码中使用任意值类型泛型</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        foreach</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">string</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75"> aotDllName</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> in</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75"> AOTMetaAssemblyNames</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">)</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">            byte</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">[] </span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">dllBytes</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> loadDllBytesFunc</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">aotDllName</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">            LoadImageErrorCode</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75"> err</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B"> RuntimeApi</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">LoadMetadataForAOTAssembly</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">                dllBytes</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, </span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">HomologousImageMode</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">SuperSet</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">            if</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">err</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> !=</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B"> LoadImageErrorCode</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">OK</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">)</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">                Debug</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">LogError</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">$"补充 AOT 元数据失败: </span><span style="--shiki-light:#50A14F;--shiki-dark:#ABB2BF">{</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">aotDllName</span><span style="--shiki-light:#50A14F;--shiki-dark:#ABB2BF">}</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">, 错误码: </span><span style="--shiki-light:#50A14F;--shiki-dark:#ABB2BF">{</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">err</span><span style="--shiki-light:#50A14F;--shiki-dark:#ABB2BF">}</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">"</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 2. 加载远程热更新程序集 HotUpdate.dll</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        byte</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">[] </span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">hotUpdateBytes</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> loadDllBytesFunc</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">"HotUpdate.dll"</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">        Assembly</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75"> hotUpdateAsm</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B"> Assembly</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">Load</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75">hotUpdateBytes</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 3. 反射获取热更主入口类并启动游戏主逻辑</span></span>
+<span class="line"><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">        Type</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75"> entryType</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B"> hotUpdateAsm</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">GetType</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">"GameLogic.HotUpdateEntry"</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">        MethodInfo</span><span style="--shiki-light:#383A42;--shiki-dark:#E06C75"> startMethod</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> =</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B"> entryType</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">GetMethod</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">"StartGame"</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, </span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">BindingFlags</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">Public</span><span style="--shiki-light:#383A42;--shiki-dark:#56B6C2"> |</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B"> BindingFlags</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">Static</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">        startMethod</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">?.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">Invoke</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">null</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, </span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">null</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">}</span></span></code></pre></div>
+</div> <!-- Prev / Next Flat Navigation --> <nav class="mt-16 grid grid-cols-1 gap-6 border-t border-[var(--border-color)] pt-8 md:grid-cols-2" aria-label="上下篇文章导航"> <div> <a href="/2026/11/27/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E5%B8%A7%E5%90%8C%E6%AD%A5%E4%B8%8E%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+← 新一篇
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 帧同步与状态同步 </p> </a> </div> <div class="md:text-right"> <a href="/2026/11/27/%E3%80%90Unity%E3%80%91DrawCall%E4%B8%8E%E5%90%88%E6%89%B9%E4%BC%98%E5%8C%96/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+旧一篇 →
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> DrawCall 与合批优化 </p> </a> </div> </nav> <!-- Giscus Comments --> <section class="mt-14 border-t border-[var(--border-subtle)] pt-8" aria-label="评论区"> <div class="mb-5 flex items-baseline gap-3"> <h2 class="text-lg font-semibold text-[var(--text-primary)]">讨论与评论</h2> <span class="text-xs text-[var(--text-tertiary)]">由 GitHub Discussions 驱动</span> </div> <div id="giscus-container"></div> </section> </article> <!-- Mobile TOC Trigger & Drawer -->  <button id="toc-toggle" class="toc-trigger fixed right-6 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded transition-colors hover:bg-[var(--accent-hover)] lg:hidden" aria-label="目录" title="文章目录"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="8" y1="6" x2="21" y2="6"></line> <line x1="8" y1="12" x2="21" y2="12"></line> <line x1="8" y1="18" x2="21" y2="18"></line> <line x1="3" y1="6" x2="3.01" y2="6"></line> <line x1="3" y1="12" x2="3.01" y2="12"></line> <line x1="3" y1="18" x2="3.01" y2="18"></line> </svg> </button> <div id="toc-mobile-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-xs lg:hidden"></div> <nav id="toc-mobile" aria-label="移动端目录" class="fixed right-0 bottom-0 left-0 z-50 max-h-[64vh] translate-y-full overflow-hidden rounded-t-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl transition-transform duration-300 lg:hidden"> <div class="flex items-center justify-between border-b border-[var(--border-subtle)] p-4"> <h4 class="font-semibold text-[var(--text-primary)]">目录</h4> <button id="toc-close" class="header-action -mr-1" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> <ul class="max-h-[calc(64vh-4rem)] space-y-1 overflow-y-auto p-4 text-sm"> <li> <a href="#第-1-章unity-资源标识体系与加载方案演进" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-1-章unity-资源标识体系与加载方案演进" lang="zh-CN"> 第 1 章：Unity 资源标识体系与加载方案演进 </a> </li><li> <a href="#11-meta-文件中的-guid-与-localid" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="11-meta-文件中的-guid-与-localid" lang="zh-CN"> 1.1 .meta 文件中的 GUID 与 LocalID </a> </li><li> <a href="#12-四类资源加载方式对比" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="12-四类资源加载方式对比" lang="zh-CN"> 1.2 四类资源加载方式对比 </a> </li><li> <a href="#第-2-章assetbundle-结构lz4-压缩与依赖冗余消除" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-2-章assetbundle-结构lz4-压缩与依赖冗余消除" lang="zh-CN"> 第 2 章：AssetBundle 结构、LZ4 压缩与依赖冗余消除 </a> </li><li> <a href="#21-assetbundle-二进制布局与三种压缩格式" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="21-assetbundle-二进制布局与三种压缩格式" lang="zh-CN"> 2.1 AssetBundle 二进制布局与三种压缩格式 </a> </li><li> <a href="#22-隐式依赖冗余与公共包抽取策略" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="22-隐式依赖冗余与公共包抽取策略" lang="zh-CN"> 2.2 隐式依赖冗余与公共包抽取策略 </a> </li><li> <a href="#第-3-章异步加载时序防护引用计数与内存卸载" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-3-章异步加载时序防护引用计数与内存卸载" lang="zh-CN"> 第 3 章：异步加载时序防护、引用计数与内存卸载 </a> </li><li> <a href="#31-异步加载的生命周期竞争防护" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="31-异步加载的生命周期竞争防护" lang="zh-CN"> 3.1 异步加载的生命周期竞争防护 </a> </li><li> <a href="#32-引用计数管理与-unloadfalse-unloadtrue-对比" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="32-引用计数管理与-unloadfalse-unloadtrue-对比" lang="zh-CN"> 3.2 引用计数管理与 Unload(false) / Unload(true) 对比 </a> </li><li> <a href="#第-4-章代码热更新机制xlua-vs-hybridclr" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-4-章代码热更新机制xlua-vs-hybridclr" lang="zh-CN"> 第 4 章：代码热更新机制（xLua vs HybridCLR） </a> </li><li> <a href="#41-aot-平台限制与两代热更新方案对比" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="41-aot-平台限制与两代热更新方案对比" lang="zh-CN"> 4.1 AOT 平台限制与两代热更新方案对比 </a> </li><li> <a href="#42-hybridclr-热更新工作流与补充元数据机制" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="42-hybridclr-热更新工作流与补充元数据机制" lang="zh-CN"> 4.2 HybridCLR 热更新工作流与补充元数据机制 </a> </li> </ul> </nav>  <nav class="toc hidden lg:block" aria-label="目录"> <div class="reading-toc sticky top-24"> <h4 class="mb-3 pl-2.5 text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">目录</h4> <ul id="desktop-toc-list" class="max-h-[calc(100vh-10rem)] space-y-0.5 overflow-y-auto text-sm"> <li> <a href="#第-1-章unity-资源标识体系与加载方案演进" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-1-章unity-资源标识体系与加载方案演进" lang="zh-CN"> 第 1 章：Unity 资源标识体系与加载方案演进 </a> </li><li> <a href="#11-meta-文件中的-guid-与-localid" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="11-meta-文件中的-guid-与-localid" lang="zh-CN"> 1.1 .meta 文件中的 GUID 与 LocalID </a> </li><li> <a href="#12-四类资源加载方式对比" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="12-四类资源加载方式对比" lang="zh-CN"> 1.2 四类资源加载方式对比 </a> </li><li> <a href="#第-2-章assetbundle-结构lz4-压缩与依赖冗余消除" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-2-章assetbundle-结构lz4-压缩与依赖冗余消除" lang="zh-CN"> 第 2 章：AssetBundle 结构、LZ4 压缩与依赖冗余消除 </a> </li><li> <a href="#21-assetbundle-二进制布局与三种压缩格式" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="21-assetbundle-二进制布局与三种压缩格式" lang="zh-CN"> 2.1 AssetBundle 二进制布局与三种压缩格式 </a> </li><li> <a href="#22-隐式依赖冗余与公共包抽取策略" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="22-隐式依赖冗余与公共包抽取策略" lang="zh-CN"> 2.2 隐式依赖冗余与公共包抽取策略 </a> </li><li> <a href="#第-3-章异步加载时序防护引用计数与内存卸载" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-3-章异步加载时序防护引用计数与内存卸载" lang="zh-CN"> 第 3 章：异步加载时序防护、引用计数与内存卸载 </a> </li><li> <a href="#31-异步加载的生命周期竞争防护" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="31-异步加载的生命周期竞争防护" lang="zh-CN"> 3.1 异步加载的生命周期竞争防护 </a> </li><li> <a href="#32-引用计数管理与-unloadfalse-unloadtrue-对比" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="32-引用计数管理与-unloadfalse-unloadtrue-对比" lang="zh-CN"> 3.2 引用计数管理与 Unload(false) / Unload(true) 对比 </a> </li><li> <a href="#第-4-章代码热更新机制xlua-vs-hybridclr" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-4-章代码热更新机制xlua-vs-hybridclr" lang="zh-CN"> 第 4 章：代码热更新机制（xLua vs HybridCLR） </a> </li><li> <a href="#41-aot-平台限制与两代热更新方案对比" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="41-aot-平台限制与两代热更新方案对比" lang="zh-CN"> 4.1 AOT 平台限制与两代热更新方案对比 </a> </li><li> <a href="#42-hybridclr-热更新工作流与补充元数据机制" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="42-hybridclr-热更新工作流与补充元数据机制" lang="zh-CN"> 4.2 HybridCLR 热更新工作流与补充元数据机制 </a> </li> </ul> </div> </nav>  </div>  <button id="back-to-top" type="button" class="back-to-top-pill" aria-label="回到顶部" title="回到顶部"> <span id="back-to-top-pct">0%</span> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"> <path d="M18 15l-6-6-6 6"></path> </svg> </button>  <div id="image-lightbox" class="image-lightbox" role="dialog" aria-modal="true" aria-label="图片放大预览"> <img id="image-lightbox-img" src="" alt=""> <p id="image-lightbox-caption" class="image-lightbox__caption"></p> </div> <script>
+    (function () {
+      // TOC Mobile Drawer & Scroll Spy
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocMobile = document.getElementById('toc-mobile');
+      const tocClose = document.getElementById('toc-close');
+      const tocBackdrop = document.getElementById('toc-mobile-backdrop');
+      let isOpen = false;
+
+      function openMobileToc() {
+        if (isOpen) return;
+        isOpen = true;
+        if (tocMobile) tocMobile.classList.remove('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.remove('hidden');
+        if (tocToggle) tocToggle.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileToc() {
+        if (!isOpen) return;
+        isOpen = false;
+        if (tocMobile) tocMobile.classList.add('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.add('hidden');
+        if (tocToggle) tocToggle.classList.remove('hidden');
+        document.body.style.overflow = '';
+      }
+
+      if (tocToggle) tocToggle.addEventListener('click', openMobileToc);
+      if (tocClose) tocClose.addEventListener('click', closeMobileToc);
+      if (tocBackdrop) tocBackdrop.addEventListener('click', closeMobileToc);
+
+      document.querySelectorAll('.toc-link-mobile').forEach(link => {
+        link.addEventListener('click', () => setTimeout(closeMobileToc, 100));
+      });
+
+      const tocLinks = document.querySelectorAll('.toc-link');
+      if (tocLinks.length > 0) {
+        const headingIds = Array.from(tocLinks)
+          .map(link => link.getAttribute('data-heading'))
+          .filter(Boolean);
+        const headingElements = headingIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateActiveLink() {
+          if (!headingElements.length) return;
+          let activeId = headingIds[0];
+          for (let i = 0; i < headingElements.length; i++) {
+            const rect = headingElements[i].getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.28) {
+              activeId = headingElements[i].id;
+            }
+          }
+          const tocListEl = document.getElementById('desktop-toc-list');
+          tocLinks.forEach(link => {
+            if (link.getAttribute('data-heading') === activeId) {
+              const wasActive = link.classList.contains('toc-active');
+              link.classList.add('toc-active');
+              if (!wasActive && tocListEl) {
+                const linkTop = link.offsetTop;
+                const listHeight = tocListEl.clientHeight;
+                tocListEl.scrollTo({
+                  top: Math.max(0, linkTop - listHeight / 2 + 24),
+                  behavior: 'smooth',
+                });
+              }
+            } else {
+              link.classList.remove('toc-active');
+            }
+          });
+        }
+
+        let ticking = false;
+        const progressBar = document.getElementById('reading-progress');
+        const backToTopBtn = document.getElementById('back-to-top');
+        const backToTopPct = document.getElementById('back-to-top-pct');
+
+        function updateProgress() {
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = docHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100)) : 0;
+          if (progressBar) progressBar.style.width = pct + '%';
+          if (backToTopPct) backToTopPct.textContent = Math.round(pct) + '%';
+          if (backToTopBtn) {
+            backToTopBtn.classList.toggle('is-visible', window.scrollY > 360);
+          }
+        }
+        if (backToTopBtn) {
+          backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateActiveLink();
+                updateProgress();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        updateActiveLink();
+        updateProgress();
+      }
+
+      // Heading Anchor Copy Link
+      document.querySelectorAll('.prose .heading-anchor').forEach(anchor => {
+        anchor.addEventListener('click', async e => {
+          e.preventDefault();
+          const href = anchor.getAttribute('href') || '';
+          const fullUrl = window.location.origin + window.location.pathname + href;
+          history.replaceState(null, '', href);
+          try {
+            await navigator.clipboard.writeText(fullUrl);
+            anchor.classList.add('copied');
+            anchor.textContent = '已复制';
+            setTimeout(() => {
+              anchor.classList.remove('copied');
+              anchor.textContent = '#';
+            }, 1500);
+          } catch (_) {}
+        });
+      });
+
+      // Image Lightbox Zoom
+      const lightbox = document.getElementById('image-lightbox');
+      const lightboxImg = document.getElementById('image-lightbox-img');
+      const lightboxCaption = document.getElementById('image-lightbox-caption');
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.prose img, .post-header-diagram img').forEach(img => {
+        img.addEventListener('click', () => {
+          if (!lightbox || !lightboxImg) return;
+          lightboxImg.src = img.getAttribute('src') || '';
+          lightboxImg.alt = img.getAttribute('alt') || '';
+          if (lightboxCaption) {
+            lightboxCaption.textContent = img.getAttribute('alt') || '';
+          }
+          lightbox.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      if (lightbox) {
+        lightbox.addEventListener('click', closeLightbox);
+      }
+      window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && lightbox && lightbox.classList.contains('is-open')) {
+          closeLightbox();
+        }
+      });
+
+      // Lazy Load Giscus Comments
+      const giscusContainer = document.getElementById('giscus-container');
+      if (giscusContainer) {
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded) return;
+          giscusContainer.dataset.loaded = 'true';
+          const isDark = document.documentElement.classList.contains('dark');
+          const s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.setAttribute('data-repo', 'VVVVVenxo/VVVVVenxo.github.io');
+          s.setAttribute('data-repo-id', 'R_kgDOQ5Bk1Q');
+          s.setAttribute('data-category', 'Announcements');
+          s.setAttribute('data-category-id', 'DIC_kwDOQ5Bk1c4DJO_-');
+          s.setAttribute('data-mapping', 'pathname');
+          s.setAttribute('data-strict', '0');
+          s.setAttribute('data-reactions-enabled', '1');
+          s.setAttribute('data-emit-metadata', '0');
+          s.setAttribute('data-input-position', 'top');
+          s.setAttribute('data-theme', isDark ? 'dark_dimmed' : 'light');
+          s.setAttribute('data-lang', 'zh-CN');
+          s.crossOrigin = 'anonymous';
+          s.async = true;
+          giscusContainer.appendChild(s);
+        };
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            entries => {
+              if (entries.some(e => e.isIntersecting)) {
+                loadGiscus();
+                io.disconnect();
+              }
+            },
+            { rootMargin: '300px' }
+          );
+          io.observe(giscusContainer);
+        } else {
+          loadGiscus();
+        }
+      }
+    })();
+  </script>  </main> <footer class="site-footer border-t border-[var(--border-color)]"> <div class="container py-8"> <div class="flex flex-col items-center justify-between gap-4 md:flex-row"> <div class="flex items-center gap-3"> <a href="https://github.com/VVVVVenxo" target="_blank" rel="noopener noreferrer" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="GitHub" title="GitHub"> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="mailto:1263147353@qq.com" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="Email" title="Email"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="4" width="20" height="16" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> </a> <a href="/atom.xml" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="RSS 订阅" title="RSS 订阅"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M4 11a9 9 0 0 1 9 9"></path> <path d="M4 4a16 16 0 0 1 16 16"></path> <circle cx="5" cy="19" r="1"></circle> </svg> </a> </div> <p class="text-xs text-[var(--text-tertiary)]">
+© 2024–2026 VVVVVenxo
+</p> </div> </div> </footer> <!-- Flat Search Modal --> <div id="search-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/45 px-4 pt-[10vh] backdrop-blur-xs" role="dialog" aria-modal="true" aria-label="全站搜索"> <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl"> <div class="flex items-center gap-3 border-b border-[var(--border-subtle)] px-4 py-3"> <svg class="shrink-0 text-[var(--text-tertiary)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> <input id="search-input" type="search" placeholder="搜索文章标题、关键词、技术栈（支持 C++ / Unity / 渲染 / 网络...）" class="w-full bg-transparent text-base text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none" autocomplete="off"> <button id="search-close" type="button" class="rounded border border-[var(--border-color)] px-2 py-0.5 text-xs text-[var(--text-tertiary)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
+ESC
+</button> </div> <div id="search-results" class="max-h-[62vh] overflow-y-auto divide-y divide-[var(--border-subtle)] px-4 py-2 text-sm"> <p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p> </div> </div> </div> <script>
+      (function () {
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const giscusFrame = document.querySelector('iframe.giscus-frame');
+            if (giscusFrame && giscusFrame.contentWindow) {
+              giscusFrame.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: isDark ? 'dark_dimmed' : 'light' } } },
+                'https://giscus.app'
+              );
+            }
+          });
+        }
+
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            const hidden = mobileMenu.classList.toggle('hidden');
+            mobileBtn.setAttribute('aria-expanded', String(!hidden));
+          });
+        }
+
+        // Code Copy Buttons
+        document.addEventListener('click', async e => {
+          const btn = e.target.closest('.copy-button');
+          if (!btn) return;
+          const wrapper = btn.closest('.code-block-wrapper');
+          const codeEl = wrapper ? wrapper.querySelector('pre code') : null;
+          if (!codeEl) return;
+          try {
+            await navigator.clipboard.writeText(codeEl.innerText);
+            const copyIcon = btn.querySelector('.copy-icon');
+            const checkIcon = btn.querySelector('.check-icon');
+            btn.classList.add('copied');
+            if (copyIcon) copyIcon.classList.add('hidden');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              if (copyIcon) copyIcon.classList.remove('hidden');
+              if (checkIcon) checkIcon.classList.add('hidden');
+            }, 1800);
+          } catch (_) {}
+        });
+
+        // Search Modal
+        const searchBtn = document.getElementById('search-btn');
+        const searchModal = document.getElementById('search-modal');
+        const searchInput = document.getElementById('search-input');
+        const searchClose = document.getElementById('search-close');
+        const searchResults = document.getElementById('search-results');
+        let searchIndex = null;
+
+        async function ensureSearchIndex() {
+          if (searchIndex) return searchIndex;
+          try {
+            const res = await fetch('/search.json');
+            searchIndex = await res.json();
+          } catch (_) {
+            searchIndex = [];
+          }
+          return searchIndex;
+        }
+
+        function openSearch() {
+          if (!searchModal) return;
+          searchModal.classList.remove('hidden');
+          searchModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          ensureSearchIndex();
+          setTimeout(() => searchInput && searchInput.focus(), 30);
+        }
+
+        function closeSearch() {
+          if (!searchModal) return;
+          searchModal.classList.add('hidden');
+          searchModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
+
+        if (searchBtn) searchBtn.addEventListener('click', openSearch);
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        if (searchModal) {
+          searchModal.addEventListener('click', e => {
+            if (e.target === searchModal) closeSearch();
+          });
+        }
+
+        window.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (searchModal && searchModal.classList.contains('hidden')) openSearch();
+            else closeSearch();
+          } else if (e.key === 'Escape' && searchModal && !searchModal.classList.contains('hidden')) {
+            closeSearch();
+          }
+        });
+
+        function escapeHtml(s) {
+          return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
+
+        if (searchInput && searchResults) {
+          searchInput.addEventListener('input', async () => {
+            const q = searchInput.value.trim().toLowerCase();
+            if (!q) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p>';
+              return;
+            }
+            const data = await ensureSearchIndex();
+            const matched = data.filter(item => {
+              const title = (item.title || '').toLowerCase();
+              const content = (item.content || '').toLowerCase();
+              const tags = (item.tags || []).join(' ').toLowerCase();
+              const cats = (item.categories || []).join(' ').toLowerCase();
+              return title.includes(q) || tags.includes(q) || cats.includes(q) || content.includes(q);
+            });
+
+            if (!matched.length) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">没有找到匹配的文章</p>';
+              return;
+            }
+
+            searchResults.innerHTML = matched
+              .slice(0, 15)
+              .map(item => {
+                const rawText = item.content || '';
+                const idx = rawText.toLowerCase().indexOf(q);
+                let snippet = rawText.slice(0, 110);
+                if (idx > 30) {
+                  snippet = '…' + rawText.slice(idx - 25, idx + 85) + '…';
+                }
+                return `
+                  <a href="${item.url}" class="block py-3.5 transition-colors hover:text-[var(--accent)]">
+                    <div class="flex items-baseline justify-between gap-2">
+                      <span class="font-semibold text-[var(--text-primary)]">${escapeHtml(item.title)}</span>
+                      <span class="shrink-0 text-xs text-[var(--text-tertiary)]">${escapeHtml(item.date || '')}</span>
+                    </div>
+                    <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">${escapeHtml(snippet)}</p>
+                  </a>
+                `;
+              })
+              .join('');
+          });
+        }
+      })();
+    </script> </body> </html>

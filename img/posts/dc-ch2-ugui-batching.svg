@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：UGUI 合批四步流程（深度值 Depth 计算、四级排序与相邻网格合并）</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 按Hierarchy顺序计算深度值 Depth</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">单 Canvas 范围内从上往下依次计算每个元素的 Depth：</text>
+    <text x="56" y="134" fill="#17343B">1. 不需要渲染的元素（透明或宽高为 0）：<tspan font-family="Consolas, monospace">Depth = -1</tspan></text>
+    <text x="56" y="155" fill="#17343B">2. 下方没有任何已渲染元素与其<tspan font-weight="700">网格相交</tspan>：<tspan font-family="Consolas, monospace">Depth = 0</tspan></text>
+    <text x="56" y="175" fill="#17343B">3. 与下方元素 <tspan font-family="Consolas, monospace">Lower</tspan> 网格相交且可合批：<tspan font-family="Consolas, monospace">Depth = Lower.Depth</tspan></text>
+    <text x="56" y="194" fill="#61747A">4. 与下方元素网格相交但不可合批：<tspan font-family="Consolas, monospace">Depth = Lower.Depth + 1</tspan></text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">四级排序生成 VisibleList 并合并相邻同材质网格：</text>
+    <text x="56" y="252" fill="#17343B">• 排序优先级：<tspan font-weight="700">Depth → Material ID → Texture ID → 层级顺序</tspan></text>
+    <text x="56" y="272" fill="#17343B">• 剔除 <tspan font-family="Consolas, monospace">Depth = -1</tspan> 元素后，遍历排序后的 <tspan font-family="Consolas, monospace">VisibleList</tspan>：</text>
+    <text x="56" y="293" fill="#17343B">  只要列表中<tspan font-weight="700">相邻元素材质与贴图相同</tspan>，无论 Depth 是否相等，</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  均合并为同一个批次提交（网格重建在工作线程并行完成）</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. UGUI 合批打断原因与动静分离策略</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">常见的四类合批打断情况：</text>
+    <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700">层级穿插重叠</tspan>：两个同图集 Image 之间夹了重叠的 Text</text>
+    <text x="468" y="154" fill="#17343B">2. <tspan font-weight="700">零散未打图集贴图</tspan>：每个独立 Texture 对应不同的贴图 ID</text>
+    <text x="468" y="175" fill="#17343B">3. <tspan font-weight="700">Mask 模板裁剪</tspan>：首尾额外增加 2 次模板缓冲状态切换</text>
+    <text x="468" y="194" fill="#61747A">4. <tspan font-weight="700">非共面坐标</tspan>：UI 节点 <tspan font-family="Consolas, monospace">Pos Z != 0</tspan> 或存在三维旋转</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">UI 合批与重建优化规范：</text>
+    <text x="468" y="252" fill="#17343B">• <tspan font-weight="700">同层集中排放</tspan>：底板图片放底层，文字集中放在顶层节点</text>
+    <text x="468" y="272" fill="#17343B">• <tspan font-weight="700">优先使用 RectMask2D</tspan>：基于矩形裁剪，不产生模板缓冲开销</text>
+    <text x="468" y="292" fill="#17343B">• <tspan font-weight="700">Canvas 动静分离</tspan>：将每帧变化的血条/计时拆分到独立</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  子 Canvas，避免单个控件移动触发整个主 Canvas 重建</text>
+  </g>
+</svg>

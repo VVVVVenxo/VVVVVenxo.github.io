@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：热更新对比（Lua 虚拟机桥接 vs HybridCLR 原生 C# 混合执行）</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 传统 xLua 跨虚拟机桥接方案</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">iOS 平台禁止运行时 JIT（即时编译机器码）：</text>
+    <text x="56" y="134" fill="#17343B">• Unity 发布移动端采用 IL2CPP 静态编译（AOT），将 C# 的</text>
+    <text x="56" y="155" fill="#17343B">  IL 字节码全部转为 C++ 原生机器码，默认无法动态加载新 DLL</text>
+    <text x="56" y="175" fill="#17343B">• 传统方案引入独立的 C 语言 Lua 虚拟机，将业务代码写成</text>
+    <text x="56" y="194" fill="#61747A">  Lua 文本打入 AB 包下载并由 Lua 虚拟机解释执行</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">双语言开发与跨界通信成本：</text>
+    <text x="56" y="252" fill="#17343B">• 工程被割裂为 C# 底层与 Lua 业务层，无法直接共用数据结构</text>
+    <text x="56" y="272" fill="#17343B">• C# 与 Lua 之间每次函数调用都需要经过预生成的静态 Wrap</text>
+    <text x="56" y="293" fill="#17343B">  桥接层压栈、出栈与类型转换，高频调用存在跨界性能损耗</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">• 详见站内专题《【Unity】Lua编程与xLua热更新机制》</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. HybridCLR 原生 C#（AOT + 解释器）混合方案</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">扩充 libil2cpp 运行时实现动态加载程序集：</text>
+    <text x="468" y="134" fill="#17343B">• 修改底层 <tspan font-family="Consolas, monospace">libil2cpp</tspan> 源码，新增动态元数据注册模块与高效</text>
+    <text x="468" y="154" fill="#17343B">  的寄存器型 IL 字节码解释器</text>
+    <text x="468" y="175" fill="#17343B">• 主包稳定代码仍走 AOT 编译为原生机器码；热更业务代码编译</text>
+    <text x="468" y="194" fill="#61747A">  为 <tspan font-family="Consolas, monospace">HotUpdate.dll</tspan> 打入 AB 包，运行时由 <tspan font-family="Consolas, monospace">Assembly.Load</tspan> 加载</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">补充元数据（AOT Generic）与工程优势：</text>
+    <text x="468" y="252" fill="#17343B">• 热更代码中若实例化了值类型泛型（如 <tspan font-family="Consolas, monospace">List&lt;MyHotStruct&gt;</tspan>），</text>
+    <text x="468" y="272" fill="#17343B">  启动时调用 <tspan font-family="Consolas, monospace">LoadMetadataForAOTAssembly</tspan> 补充 AOT 泛型元数据</text>
+    <text x="468" y="292" fill="#17343B">• 优势：全工程统一使用 C# 编写，热更对象与主包对象同处一个</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  IL2CPP 运行时内存空间，调用零跨界开销，直接支持协程</text>
+  </g>
+</svg>

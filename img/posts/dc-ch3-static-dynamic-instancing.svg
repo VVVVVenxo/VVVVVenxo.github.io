@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：静态合批、动态合批与 GPU 多实例渲染（GPU Instancing）对比</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 静态合批与动态合批的机制与局限</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">静态合批（勾选 Batching Static）：</text>
+    <text x="56" y="134" fill="#17343B">• 构建或加载时将同材质静态物体的顶点预变换到世界空间，</text>
+    <text x="56" y="155" fill="#17343B">  合并写入同一个大型顶点缓冲区（VB）与索引缓冲区（IB）</text>
+    <text x="56" y="175" fill="#17343B">• <tspan font-weight="700">代价</tspan>：物体运行期不可移动；若 100 棵树共用同一模型，</text>
+    <text x="56" y="194" fill="#61747A">  合并后顶点数据会在内存中复制 100 份，显著增加包体与内存</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">动态合批（CPU 每帧实时变换合并小网格）：</text>
+    <text x="56" y="252" fill="#17343B">• 每帧由 CPU 将同材质小模型顶点变换到世界空间后合并</text>
+    <text x="56" y="272" fill="#17343B">• <tspan font-weight="700">严格限制</tspan>：网格顶点属性总数不超过 900（通常少于 300 顶点），</text>
+    <text x="56" y="293" fill="#17343B">  且不能包含负缩放或不同光照贴图</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">• 现代 URP 管线中通常关闭网格动态合批，改用 SRP Batcher</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. GPU Instancing（同网格同材质批量绘制）</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">单份网格内存 + 实例属性数组（单次 DrawCall）：</text>
+    <text x="468" y="134" fill="#17343B">• 显存中<tspan font-weight="700">仅保存 1 份原始 Mesh 顶点数据</tspan>（零内存膨胀）</text>
+    <text x="468" y="154" fill="#17343B">• CPU 将上千个实例各自的变换矩阵、颜色等差异参数打包进</text>
+    <text x="468" y="175" fill="#17343B">  常量数组，调用一次 <tspan font-family="Consolas, monospace">DrawMeshInstanced</tspan> 全部绘出</text>
+    <text x="468" y="194" fill="#61747A">• 顶点着色器通过 <tspan font-family="Consolas, monospace">SV_InstanceID</tspan> 索引当前实例的矩阵与颜色</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">MaterialPropertyBlock 与 Indirect 进阶渲染：</text>
+    <text x="468" y="252" fill="#17343B">• 直接修改 <tspan font-family="Consolas, monospace">renderer.material.color</tspan> 会实例化新材质球</text>
+    <text x="468" y="272" fill="#17343B">  并打断合批；使用 <tspan font-weight="700" font-family="Consolas, monospace">MaterialPropertyBlock</tspan> 可在不创建</text>
+    <text x="468" y="292" fill="#17343B">  新材质的前提下为每个 GPU Instancing 实例传递独立颜色</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">• 适用场景：草地植被、森林树木、大群同类小兵与弹幕</text>
+  </g>
+</svg>

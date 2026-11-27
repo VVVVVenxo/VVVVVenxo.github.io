@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：URP SRP Batcher 常量缓冲区（CBuffer）显存持久化机制</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 传统提交模式 vs SRP Batcher 显存常驻</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">传统渲染循环的瓶颈（每绘制一个不同材质物体）：</text>
+    <text x="56" y="134" fill="#17343B">• 切换到新材质球时，CPU 必须收集该材质的所有属性，</text>
+    <text x="56" y="155" fill="#17343B">  重新打包上传至 GPU 常量缓冲区（CBuffer）</text>
+    <text x="56" y="175" fill="#17343B">• 即使两个材质球使用的是同一个 Shader（仅颜色或贴图不同），</text>
+    <text x="56" y="194" fill="#61747A">  也会触发完整的材质属性上传与状态重绑定</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">SRP Batcher 拆分两类持久化 CBuffer：</text>
+    <text x="56" y="252" fill="#17343B">1. <tspan font-weight="700" font-family="Consolas, monospace">UnityPerMaterial</tspan>：每个材质球在显存中拥有固定的</text>
+    <text x="56" y="272" fill="#17343B">   CBuffer，属性未修改时<tspan font-weight="700">常驻显存，每帧无需重复上传</tspan></text>
+    <text x="56" y="293" fill="#17343B">2. <tspan font-weight="700" font-family="Consolas, monospace">UnityPerDraw</tspan>：将所有物体的变换矩阵合并进一块大缓冲区，</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">   绘制时仅更新缓冲区偏移量，大幅削减 SetPass Call 开销</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. SRP Batcher 合批条件与 Shader 编写规范</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">与传统合批的核心差异（允许不同材质、不同网格）：</text>
+    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700">不减少底层 DrawCall 次数</tspan>，但将多次绘制合并进同一个</text>
+    <text x="468" y="154" fill="#17343B">  SRP Batch，省去材质切换与常量上传的 CPU 准备时间</text>
+    <text x="468" y="175" fill="#17343B">• 只要多个物体使用<tspan font-weight="700">同一个 Shader 变体（Shader Variant）</tspan>，</text>
+    <text x="468" y="194" fill="#61747A">  即使它们使用不同的 Mesh 和不同的材质球，也能合批</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">兼容 SRP Batcher 的两条强制要求：</text>
+    <text x="468" y="252" fill="#17343B">1. Shader 中所有非贴图材质属性必须全部包裹在</text>
+    <text x="468" y="272" fill="#17343B">   <tspan font-family="Consolas, monospace">CBUFFER_START(UnityPerMaterial)</tspan> 宏块内部，且各 Pass 一致</text>
+    <text x="468" y="292" fill="#17343B">2. 渲染对象<tspan font-weight="700">不能使用 MaterialPropertyBlock</tspan>（使用 MPB 的</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">   物体会直接回退为传统非 SRP Batcher 路径并打断批次）</text>
+  </g>
+</svg>

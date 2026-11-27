@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：Unity 资源标识（GUID 与 LocalID）及三类加载方式对比</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. .meta 文件中的 GUID 与文件内 LocalID</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">Unity 引用资源不依赖文件路径，而依赖两个标识：</text>
+    <text x="56" y="134" fill="#17343B">1. <tspan font-weight="700">GUID（全局唯一标识）</tspan>：保存在配套的 <tspan font-family="Consolas, monospace">.meta</tspan> 文件中，</text>
+    <text x="56" y="155" fill="#17343B">   用于定位哪一个磁盘资源文件（移动文件不会丢失引用）</text>
+    <text x="56" y="175" fill="#17343B">2. <tspan font-weight="700">LocalID（文件内部局部 ID）</tspan>：用于定位该资源文件内部的</text>
+    <text x="56" y="194" fill="#61747A">   哪一个具体子对象（如 Prefab 内的某个组件或图集内的小图）</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">运行期实例标识 InstanceID：</text>
+    <text x="56" y="252" fill="#17343B">• 资源加载进内存后，引擎根据 <tspan font-family="Consolas, monospace">(GUID + LocalID)</tspan> 分配</text>
+    <text x="56" y="272" fill="#17343B">  一个运行期整型缓存键 <tspan font-weight="700">InstanceID</tspan></text>
+    <text x="56" y="293" fill="#17343B">• 引用在序列化文件中存为 <tspan font-family="Consolas, monospace">{fileID, guid}</tspan>，反序列化</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  时据此自动查找并关联已加载的内存资源对象</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. Resources、AssetBundle 与资源管理框架对比</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">Resources 目录的工程局限：</text>
+    <text x="468" y="134" fill="#17343B">• 所有资源在构建时强制打入整包 <tspan font-family="Consolas, monospace">resources.assets</tspan> 中，</text>
+    <text x="468" y="154" fill="#17343B">  使安装包首包体积增大，且无法在发布后单独远程热更新</text>
+    <text x="468" y="175" fill="#17343B">• 启动时需加载全量路径索引，文件过多会拉长启动耗时</text>
+    <text x="468" y="194" fill="#61747A">• 正式商业项目仅用其存放极少量首屏启动配置</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">AssetBundle 与上层资源框架（YooAsset）：</text>
+    <text x="468" y="252" fill="#17343B">• <tspan font-weight="700">AssetBundle</tspan>：支持按模块分包、压缩与远端下载热更，</text>
+    <text x="468" y="272" fill="#17343B">  但需自行维护包间依赖加载与引用计数卸载</text>
+    <text x="468" y="292" fill="#17343B">• <tspan font-weight="700">YooAsset / Addressables</tspan>：在 AB 之上封装地址映射、</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  自动依赖加载、版本比对下载与引用计数内存回收</text>
+  </g>
+</svg>

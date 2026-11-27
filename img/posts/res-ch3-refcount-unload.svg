@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：异步加载生命周期防错、引用计数管理与 Unload(false/true) 内存释放</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 异步加载时序竞争与引用计数（RefCount）</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">界面快速开关下的异步回调安全检查：</text>
+    <text x="56" y="134" fill="#17343B">• 异步加载至少跨 1 帧返回；若玩家在完成前已关闭销毁</text>
+    <text x="56" y="155" fill="#17343B">  界面，回调回来直接访问已销毁节点会引发空引用异常</text>
+    <text x="56" y="175" fill="#17343B">• <tspan font-weight="700">防护规范</tspan>：传入与宿主绑定的 <tspan font-family="Consolas, monospace">CancellationToken</tspan>，并在</text>
+    <text x="56" y="194" fill="#61747A">  回调首行检查取消状态，已取消则立即归还资源句柄并退出</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">基于句柄（AssetHandle）的引用计数管理：</text>
+    <text x="56" y="252" fill="#17343B">• 每次申请加载资源时引用计数 <tspan font-family="Consolas, monospace">RefCount + 1</tspan>；界面关闭释放</text>
+    <text x="56" y="272" fill="#17343B">  句柄时 <tspan font-family="Consolas, monospace">RefCount - 1</tspan>（防止共享底板被提前卸载）</text>
+    <text x="56" y="293" fill="#17343B">• 当 <tspan font-family="Consolas, monospace">RefCount == 0</tspan> 时移入待回收池，在内存超限</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  或切场景时统一调用 <tspan font-family="Consolas, monospace">Unload(true)</tspan> 安全卸载</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. AssetBundle.Unload(false) 与 Unload(true) 区别</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">Unload(false) 的内存残留与重复加载隐患：</text>
+    <text x="468" y="134" fill="#17343B">• 仅释放 AB 包自身的包头索引，而<tspan font-weight="700">保留已从该包加载</tspan></text>
+    <text x="468" y="154" fill="#17343B">  <tspan font-weight="700">出来的 Texture、Mesh 等资产对象</tspan></text>
+    <text x="468" y="175" fill="#17343B">• 风险：断开包与资产的内部链接；若稍后再次加载同一</text>
+    <text x="468" y="194" fill="#61747A">  AB 包并读取同名贴图，内存中会产生两份完全相同的贴图副本</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">Unload(true) 的彻底释放与工程准则：</text>
+    <text x="468" y="252" fill="#17343B">• 同时释放 AB 包头索引与所有从该包加载出来的资产内存</text>
+    <text x="468" y="272" fill="#17343B">• 若场景中仍有存活对象引用该包资源，强行调用会导致材质丢失</text>
+    <text x="468" y="292" fill="#17343B">• <tspan font-weight="700">工程准则</tspan>：严禁裸调 <tspan font-family="Consolas, monospace">Unload(false)</tspan>；统一通过引用计数</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  确认无任何存活实例引用后，调用 <tspan font-family="Consolas, monospace">Unload(true)</tspan> 彻底释放</text>
+  </g>
+</svg>
