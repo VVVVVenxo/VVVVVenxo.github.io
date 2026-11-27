@@ -35,7 +35,7 @@
 
     <rect x="452" y="106" width="366" height="62" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="464" y="128" fill="#287B73" font-weight="700">逻辑地址 A 拆分（设页面大小 L = 2^k 字节）：</text>
-    <text x="464" y="152" fill="#17343B">• <tspan font-weight="700">页号 P = A / L</tspan>（高位） | <tspan font-weight="700">页内偏移 W = A % L</tspan>（低 k 位）</text>
+    <text x="464" y="152" fill="#17343B">• <tspan font-weight="700">页号 P = A / L</tspan> (高位)  |  <tspan font-weight="700">页内偏移 W = A % L</tspan> (低 k 位)</text>
 
     <rect x="452" y="178" width="366" height="68" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="464" y="200" fill="#C47743" font-weight="700">有效访问时间 EAT（快表耗时 ε，访存耗时 t，命中率 a）：</text>

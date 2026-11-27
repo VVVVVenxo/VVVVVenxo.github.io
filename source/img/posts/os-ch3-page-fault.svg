@@ -10,22 +10,22 @@
 
     <!-- Request Page Table Entry -->
     <g text-anchor="middle" font-weight="700">
-      <rect x="48"  y="104" width="64" height="30" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/><text x="80"  y="124" fill="#17343B">页号 P</text>
-      <rect x="112" y="104" width="68" height="30" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/><text x="146" y="124" fill="#17343B">物理块号</text>
-      <rect x="180" y="104" width="68" height="30" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/><text x="214" y="124" fill="#C47743">状态位 P</text>
-      <rect x="248" y="104" width="64" height="30" fill="#FAFBF8" stroke="#287B73" stroke-width="1.2"/><text x="280" y="124" fill="#287B73">访问位 A</text>
-      <rect x="312" y="104" width="48" height="30" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/><text x="336" y="124" fill="#C47743">脏位 M</text>
-      <rect x="360" y="104" width="52" height="30" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/><text x="386" y="124" fill="#17343B">外存址</text>
+      <rect x="44"  y="104" width="60" height="30" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/><text x="74"  y="124" fill="#17343B">页号 P</text>
+      <rect x="104" y="104" width="66" height="30" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/><text x="137" y="124" fill="#17343B">物理块号</text>
+      <rect x="170" y="104" width="66" height="30" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/><text x="203" y="124" fill="#C47743">状态位 P</text>
+      <rect x="236" y="104" width="66" height="30" fill="#FAFBF8" stroke="#287B73" stroke-width="1.2"/><text x="269" y="124" fill="#287B73">访问位 A</text>
+      <rect x="302" y="104" width="56" height="30" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/><text x="330" y="124" fill="#C47743">脏位 M</text>
+      <rect x="358" y="104" width="54" height="30" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/><text x="385" y="124" fill="#17343B">外存址</text>
     </g>
 
     <rect x="44" y="146" width="368" height="174" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
-    <text x="56" y="170" fill="#17343B" font-weight="700">① 查页表发现状态位 <tspan fill="#C47743">P == 0</tspan>（未调入），触发缺页陷入内核</text>
+    <text x="56" y="170" fill="#17343B" font-weight="700">① 查页表见状态位 <tspan fill="#C47743">P == 0</tspan>（未调入），触发缺页陷入内核</text>
     <text x="56" y="196" fill="#17343B">② 若内存满，调<tspan font-weight="700" fill="#287B73">页面置换算法</tspan>选淘汰页：若<tspan font-weight="700" fill="#C47743">脏位 M == 1</tspan></text>
     <text x="56" y="216" fill="#61747A">   需先写回磁盘对换区；若 <tspan font-weight="700" fill="#17343B">M == 0</tspan>（未修改）则直接覆盖</text>
-    <text x="56" y="242" fill="#17343B">③ 启动磁盘 I/O 调入物理块（进程阻塞），完成后唤醒进程，</text>
+    <text x="56" y="242" fill="#17343B">③ 启动磁盘 I/O 调入物理块（阻塞），完成后唤醒进程，</text>
     <text x="56" y="262" fill="#17343B">   修改页表项置 <tspan font-weight="700" fill="#287B73">P = 1、M = 0</tspan>，并同步更新快表 TLB</text>
     <text x="56" y="288" fill="#C47743" font-weight="700">④ iret 返回用户态，重新执行刚才引发缺页的那条指令！</text>
-    <text x="56" y="308" fill="#61747A">（注：一条指令执行期间可能访问多个操作数，可触发多次缺页）</text>
+    <text x="56" y="308" fill="#61747A">（注：一条指令访问多个操作数时，可能触发多次缺页）</text>
 
     <!-- Right Panel: Copy-on-Write -->
     <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#C47743" stroke-width="1.5"/>

@@ -10,7 +10,7 @@
     <text x="154" y="110" fill="#61747A" text-anchor="middle">相同时间占用不同频率带宽</text>
     <line x1="66" y1="274" x2="248" y2="274" stroke="#17343B" stroke-width="1.5"/>
     <line x1="66" y1="274" x2="66" y2="132" stroke="#17343B" stroke-width="1.5"/>
-    <text x="58" y="144" fill="#61747A" text-anchor="end">频率</text>
+    <text x="62" y="144" fill="#61747A" text-anchor="end">频率</text>
     <text x="246" y="294" fill="#61747A" text-anchor="end">时间 →</text>
     <rect x="74" y="138" width="166" height="34" rx="3" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
     <text x="157" y="160" fill="#C47743" font-weight="700" text-anchor="middle">用户 A（频带 1）</text>

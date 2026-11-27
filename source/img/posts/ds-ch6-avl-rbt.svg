@@ -10,26 +10,26 @@
 
     <!-- 2x2 grid for LL, RR, LR, RL -->
     <rect x="46" y="106" width="176" height="92" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
-    <text x="134" y="128" fill="#287B73" font-weight="700" text-anchor="middle">① LL 型（左孩子的左子树）</text>
+    <text x="134" y="128" fill="#287B73" font-weight="700" text-anchor="middle">① LL 型 (左孩的左子树)</text>
     <text x="134" y="152" fill="#17343B" font-weight="700" text-anchor="middle">操作：右单旋</text>
     <text x="134" y="176" fill="#61747A" text-anchor="middle">左孩子 B 上升为新根</text>
 
     <rect x="234" y="106" width="176" height="92" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
-    <text x="322" y="128" fill="#287B73" font-weight="700" text-anchor="middle">② RR 型（右孩子的右子树）</text>
+    <text x="322" y="128" fill="#287B73" font-weight="700" text-anchor="middle">② RR 型 (右孩的右子树)</text>
     <text x="322" y="152" fill="#17343B" font-weight="700" text-anchor="middle">操作：左单旋</text>
     <text x="322" y="176" fill="#61747A" text-anchor="middle">右孩子 B 上升为新根</text>
 
     <rect x="46" y="210" width="176" height="108" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
-    <text x="134" y="232" fill="#C47743" font-weight="700" text-anchor="middle">③ LR 型（左孩子的右子树）</text>
+    <text x="134" y="232" fill="#C47743" font-weight="700" text-anchor="middle">③ LR 型 (左孩的右子树)</text>
     <text x="134" y="256" fill="#17343B" font-weight="700" text-anchor="middle">操作：先左旋后右旋</text>
     <text x="134" y="278" fill="#C47743" font-weight="700" text-anchor="middle">孙子节点 C 上升为新根</text>
-    <text x="134" y="300" fill="#61747A" text-anchor="middle">（先对 B 左旋，再对 A 右旋）</text>
+    <text x="134" y="300" fill="#61747A" text-anchor="middle">先对 B 左旋，再对 A 右旋</text>
 
     <rect x="234" y="210" width="176" height="108" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
-    <text x="322" y="232" fill="#C47743" font-weight="700" text-anchor="middle">④ RL 型（右孩子的左子树）</text>
+    <text x="322" y="232" fill="#C47743" font-weight="700" text-anchor="middle">④ RL 型 (右孩的左子树)</text>
     <text x="322" y="256" fill="#17343B" font-weight="700" text-anchor="middle">操作：先右旋后左旋</text>
     <text x="322" y="278" fill="#C47743" font-weight="700" text-anchor="middle">孙子节点 C 上升为新根</text>
-    <text x="322" y="300" fill="#61747A" text-anchor="middle">（先对 B 右旋，再对 A 左旋）</text>
+    <text x="322" y="300" fill="#61747A" text-anchor="middle">先对 B 右旋，再对 A 左旋</text>
 
     <!-- Right Panel: Red-Black Tree -->
     <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>

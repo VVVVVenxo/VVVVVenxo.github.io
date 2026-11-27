@@ -34,7 +34,7 @@
     <text x="474" y="224" fill="#C47743" font-weight="700">DMA 方式与程序中断方式的四大硬件本质区别：</text>
     <text x="474" y="246" fill="#17343B">① <tspan font-weight="700">响应时机</tspan>：中断在<tspan font-weight="700">指令执行结束</tspan>响应；DMA 在<tspan font-weight="700" fill="#287B73">每个存取</tspan></text>
     <text x="474" y="264" fill="#17343B">   <tspan font-weight="700" fill="#287B73">周期结束</tspan>均可响应（<tspan font-weight="700" fill="#287B73">周期挪用</tspan>：借 1 个访存周期传数）</text>
-    <text x="474" y="284" fill="#17343B">② <tspan font-weight="700">传输方式</tspan>：中断靠程序传送存现场；<tspan font-weight="700" fill="#C47743">DMA 纯硬件直传</tspan>，</text>
+    <text x="474" y="284" fill="#17343B">② <tspan font-weight="700">传输</tspan>：中断靠程序传送存现场；<tspan font-weight="700" fill="#C47743">DMA 纯硬件直传</tspan>，</text>
     <text x="474" y="302" fill="#17343B">   <tspan font-weight="700" fill="#C47743">不改变 CPU 程序流</tspan>且优先级高于中断</text>
   </g>
 </svg>

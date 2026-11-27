@@ -51,7 +51,7 @@
 
     <text x="430" y="264" fill="#17343B" text-anchor="middle">B 中每个元素都至少有一个原像</text>
     <text x="430" y="286" fill="#C47743" font-weight="700" text-anchor="middle">前提：|A| = m ≥ |B| = n</text>
-    <text x="430" y="308" fill="#61747A" text-anchor="middle">满射总数：n! × S(m, n)（第二类斯特林数）</text>
+    <text x="430" y="308" fill="#61747A" text-anchor="middle">满射总数：n! × S(m, n) (斯特林数)</text>
 
     <!-- Card 3: Bijection (x=576, w=256) -->
     <rect x="576" y="64" width="256" height="262" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>

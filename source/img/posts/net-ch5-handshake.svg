@@ -60,7 +60,7 @@
     <!-- Wave 2 -->
     <text x="638" y="192" fill="#C47743" font-weight="700" text-anchor="middle">② ACK=1, seq=v, ack=u+1</text>
     <line x1="762" y1="199" x2="518" y2="209" stroke="#C47743" stroke-width="2" marker-end="url(#arrOrange)"/>
-    <text x="638" y="232" fill="#61747A" text-anchor="middle">（Server 进入 CLOSE-WAIT，发完剩余数据）</text>
+    <text x="638" y="232" fill="#61747A" text-anchor="middle">Server 进 CLOSE-WAIT 发剩余数据</text>
 
     <!-- Wave 3 -->
     <text x="638" y="258" fill="#C47743" font-weight="700" text-anchor="middle">③ FIN=1, ACK=1, seq=w, ack=u+1</text>
@@ -70,8 +70,8 @@
     <text x="638" y="300" fill="#287B73" font-weight="700" text-anchor="middle">④ ACK=1, seq=u+1, ack=w+1</text>
     <line x1="514" y1="307" x2="758" y2="317" stroke="#287B73" stroke-width="2" marker-end="url(#arrTeal)"/>
 
-    <rect x="454" y="330" width="128" height="26" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
-    <text x="518" y="348" fill="#C47743" font-weight="700" text-anchor="middle">TIME-WAIT (2MSL)</text>
+    <rect x="448" y="330" width="142" height="26" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="519" y="348" fill="#C47743" font-weight="700" text-anchor="middle">TIME-WAIT (2MSL)</text>
     <text x="762" y="348" fill="#17343B" font-weight="700" text-anchor="middle">CLOSED</text>
     <text x="637" y="376" fill="#61747A" text-anchor="middle">等待 2MSL 确保末次 ACK 抵达并清空网络残留报文</text>
   </g>

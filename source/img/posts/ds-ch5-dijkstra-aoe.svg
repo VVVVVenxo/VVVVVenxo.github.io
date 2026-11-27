@@ -12,24 +12,24 @@
     <text x="60" y="130" fill="#287B73" font-weight="700">• Dijkstra 算法（单源最短路径 · 贪心松弛）：</text>
     <text x="60" y="152" fill="#17343B">  松弛方程：<tspan font-weight="700">dist[v] = min(dist[v], dist[u] + w(u, v))</tspan></text>
     <text x="60" y="174" fill="#17343B">  时间复杂度：朴素 <tspan font-weight="700" fill="#287B73">O(V²)</tspan>  |  最小堆优化 <tspan font-weight="700" fill="#287B73">O((V + E) log2 V)</tspan></text>
-    <text x="60" y="196" fill="#C47743" font-weight="700">  核心限制：严禁包含负权边（负权会导致已确定点被再次缩短）</text>
+    <text x="60" y="196" fill="#C47743" font-weight="700">  限制：严禁含负权边（负权会使已确定点被再次缩短）</text>
 
     <rect x="46" y="222" width="354" height="98" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="60" y="244" fill="#17343B" font-weight="700">• Floyd-Warshall 算法（全源最短路径 · 动态规划）：</text>
-    <text x="60" y="266" fill="#17343B">  转移：<tspan font-weight="700">A[i][j] = min(A[i][j], A[i][k] + A[k][j])</tspan> (k最外层)</text>
+    <text x="60" y="266" fill="#17343B">  转移：<tspan font-weight="700">A[i][j] = min(A[i][j], A[i][k]+A[k][j])</tspan> (k最外)</text>
     <text x="60" y="288" fill="#287B73" font-weight="700">  时间复杂度：O(V³)，空间复杂度：O(V²)</text>
-    <text x="60" y="308" fill="#61747A">  适用限制：允许包含负权边，但不能包含总权值为负的回路</text>
+    <text x="60" y="308" fill="#61747A">  限制：允许含负权边，但不能含总权值为负的回路</text>
 
     <!-- Right Panel: AOE Critical Path -->
     <rect x="438" y="64" width="394" height="272" rx="6" fill="#FAFBF8" stroke="#C47743" stroke-width="1.5"/>
     <text x="635" y="90" fill="#C47743" font-weight="700" text-anchor="middle">2. AOE 网（顶点表事件、边表活动）关键路径四步求法</text>
 
     <rect x="456" y="108" width="358" height="46" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
-    <text x="470" y="128" fill="#287B73" font-weight="700">① 事件最早发生时间 ve(j)（按拓扑序从前往后取 max）：</text>
+    <text x="470" y="128" fill="#287B73" font-weight="700">① 事件最早时间 ve(j)（按拓扑序从前往后取 max）：</text>
     <text x="470" y="146" fill="#17343B">ve(源点) = 0 ， ve(j) = max{ ve(i) + w(&lt;i, j&gt;) }</text>
 
     <rect x="456" y="162" width="358" height="46" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
-    <text x="470" y="182" fill="#287B73" font-weight="700">② 事件最迟发生时间 vl(i)（按逆拓扑序从后往前取 min）：</text>
+    <text x="470" y="182" fill="#287B73" font-weight="700">② 事件最迟时间 vl(i)（按逆拓扑序从后往前取 min）：</text>
     <text x="470" y="200" fill="#17343B">vl(汇点) = ve(汇点) ， vl(i) = min{ vl(j) - w(&lt;i, j&gt;) }</text>
 
     <rect x="456" y="216" width="358" height="46" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>

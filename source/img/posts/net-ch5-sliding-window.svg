@@ -52,7 +52,7 @@
 
     <rect x="238" y="264" width="194" height="54" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
     <text x="335" y="286" fill="#C47743" font-weight="700" text-anchor="middle">② 34～36：已发送未确认</text>
-    <text x="335" y="306" fill="#17343B" text-anchor="middle">P2 - P1（需暂存以备超时重传）</text>
+    <text x="335" y="306" fill="#17343B" text-anchor="middle">P2 - P1 (暂存以备超时重传)</text>
 
     <rect x="446" y="264" width="194" height="54" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
     <text x="543" y="286" fill="#287B73" font-weight="700" text-anchor="middle">③ 37～41：允许立即发送</text>

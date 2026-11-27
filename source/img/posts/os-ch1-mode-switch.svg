@@ -45,12 +45,12 @@
     <rect x="458" y="108" width="364" height="68" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="470" y="130" fill="#287B73" font-weight="700">① 外中断（Interrupt · 与当前指令无关的异步信号）：</text>
     <text x="470" y="152" fill="#17343B">• <tspan font-weight="700">可屏蔽中断</tspan>（INTR 引脚，受 IF 控制，如时钟/网卡 I/O）</text>
-    <text x="470" y="168" fill="#17343B">• <tspan font-weight="700">不可屏蔽中断</tspan>（NMI 引脚，紧急硬件故障如掉电、奇偶错）</text>
+    <text x="470" y="168" fill="#17343B">• <tspan font-weight="700">不可屏蔽中断</tspan>（NMI 引脚，硬件故障如掉电、奇偶错）</text>
 
     <!-- Internal Exceptions -->
     <rect x="458" y="186" width="364" height="132" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
-    <text x="470" y="208" fill="#C47743" font-weight="700">② 内中断 / 异常（Exception · 当前指令引发的同步事件）：</text>
-    <text x="470" y="232" fill="#17343B">• <tspan font-weight="700" fill="#287B73">自陷 (Trap)</tspan>：主动触发（如系统调用 <tspan font-weight="700">syscall</tspan>、断点调试），</text>
+    <text x="470" y="208" fill="#C47743" font-weight="700">② 内中断 / 异常（Exception · 指令引发的同步事件）：</text>
+    <text x="470" y="232" fill="#17343B">• <tspan font-weight="700" fill="#287B73">自陷 (Trap)</tspan>：主动触发（系统调用 <tspan font-weight="700">syscall</tspan>、断点调试），</text>
     <text x="470" y="250" fill="#61747A">  处理完毕后返回到<tspan font-weight="700" fill="#17343B">下一条指令</tspan>继续执行</text>
     <text x="470" y="274" fill="#17343B">• <tspan font-weight="700" fill="#C47743">故障 (Fault)</tspan>：可修复异常（如<tspan font-weight="700">缺页异常 Page Fault</tspan>），</text>
     <text x="470" y="292" fill="#61747A">  调入物理页修复后，返回到<tspan font-weight="700" fill="#C47743">当前引起故障的指令</tspan>重新执行</text>

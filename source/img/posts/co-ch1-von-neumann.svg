@@ -42,7 +42,7 @@
 
     <rect x="44" y="264" width="368" height="56" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="56" y="286" fill="#17343B" font-weight="700">• MAR 位数 = 地址码长度（决定可寻址单元数 2^MAR）</text>
-    <text x="56" y="306" fill="#17343B" font-weight="700">• MDR 位数 = 存储字长（MAR、MDR、IR 对程序员透明）</text>
+    <text x="56" y="306" fill="#17343B" font-weight="700">• MDR 位数 = 存储字长（MAR/MDR/IR 对程序员透明）</text>
 
     <!-- Right Panel: Quantitative Performance Formulas -->
     <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>

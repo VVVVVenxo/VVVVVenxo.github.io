@@ -42,7 +42,7 @@
     <!-- Step 2 -->
     <rect x="418" y="178" width="394" height="60" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
     <text x="432" y="200" fill="#287B73" font-weight="700">步骤 2：B 向 A 回复帧（从接口 2 进入）</text>
-    <text x="432" y="222" fill="#17343B">记录【MAC_B → 接口 2】；查表命中 MAC_A，仅从接口 1 转发</text>
+    <text x="432" y="222" fill="#17343B">记录 [MAC_B → 接口 2]；查表命中 MAC_A，从接口 1 转发</text>
 
     <!-- Table summary -->
     <rect x="418" y="250" width="394" height="48" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.5"/>

@@ -10,30 +10,30 @@
 
     <rect x="44" y="106" width="368" height="98" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="128" fill="#287B73" font-weight="700">• SRAM（静态随机存储器 · 用于 CPU 内部 Cache）：</text>
-    <text x="56" y="148" fill="#17343B">  存储元为<tspan font-weight="700">双稳态触发器（6 晶体管）</tspan>，非破坏性读出，<tspan font-weight="700">无需刷新</tspan>，</text>
-    <text x="56" y="168" fill="#17343B">  行列地址同时送达，速度快、集成度低、功耗大、价格昂贵</text>
+    <text x="56" y="148" fill="#17343B">  存储元为<tspan font-weight="700">双稳态触发器 (6管)</tspan>，非破坏性读出，<tspan font-weight="700">无需刷新</tspan>，</text>
+    <text x="56" y="168" fill="#17343B">  行列地址同时送达，速度快、集成度低、功耗高、价格贵</text>
     <text x="56" y="192" fill="#C47743" font-weight="700">• DRAM（动态随机存储器 · 用于主存内存条）：</text>
 
     <rect x="44" y="212" width="368" height="108" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
-    <text x="54" y="234" fill="#17343B">• 存储元为<tspan font-weight="700">栅极电容 (1T1C)</tspan>，<tspan font-weight="700" fill="#C47743">破坏性读出（读后需重写）</tspan></text>
-    <text x="54" y="254" fill="#17343B">• 必须每 <tspan font-weight="700">2ms 按“行”刷新</tspan>；采用<tspan font-weight="700" fill="#287B73">地址线复用</tspan>（行/列分两次送，</text>
-    <text x="54" y="274" fill="#17343B">  地址引脚减半）。刷新：<tspan font-weight="700">集中刷新</tspan>（有死区）、<tspan font-weight="700">分散刷新</tspan>（无死区</text>
-    <text x="54" y="294" fill="#17343B">  但周期加倍）、<tspan font-weight="700" fill="#287B73">异步刷新</tspan>（间隔 = 2ms / 行数，工程最佳）</text>
+    <text x="56" y="234" fill="#17343B">• 存储元为<tspan font-weight="700">栅极电容 (1T1C)</tspan>，<tspan font-weight="700" fill="#C47743">破坏性读出（读后需重写）</tspan></text>
+    <text x="56" y="254" fill="#17343B">• 须每 <tspan font-weight="700">2ms 按行刷新</tspan>；采用<tspan font-weight="700" fill="#287B73">地址线复用</tspan>（行/列分两次送，</text>
+    <text x="56" y="274" fill="#17343B">  引脚减半）。刷新：<tspan font-weight="700">集中刷新</tspan>（有死区）、<tspan font-weight="700">分散刷新</tspan>（无死</text>
+    <text x="56" y="294" fill="#17343B">  区但周期加倍）、<tspan font-weight="700" fill="#287B73">异步刷新</tspan>（间隔 = 2ms/行数，最佳）</text>
 
     <!-- Right Panel: Chip Expansion & Endianness -->
     <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
     <text x="640" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 主存芯片扩展与大端序（Big）vs 小端序（Little）</text>
 
     <rect x="458" y="106" width="364" height="86" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
-    <text x="470" y="128" fill="#17343B" font-weight="700">主存容量扩展连线规则（目标 M × N 位，芯片 m × n 位）：</text>
-    <text x="470" y="150" fill="#287B73" font-weight="700">• 位扩展（扩位宽 N/n）：地址/片选并联，数据线各自独立引出</text>
-    <text x="470" y="172" fill="#C47743" font-weight="700">• 字扩展（扩字数 M/m）：低位地址与数据并联，高位译码片选</text>
+    <text x="470" y="128" fill="#17343B" font-weight="700">主存容量扩展连线规则（目标 M×N 位，芯片 m×n 位）：</text>
+    <text x="470" y="150" fill="#287B73" font-weight="700">• 位扩展（扩位宽 N/n）：地址/片选并联，数据线独立引出</text>
+    <text x="470" y="172" fill="#C47743" font-weight="700">• 字扩展（扩字数 M/m）：低位地址与数据并联，高位片选</text>
 
     <rect x="458" y="202" width="364" height="118" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
-    <text x="470" y="224" fill="#C47743" font-weight="700">32 位整数 0x12345678（最高字节 MSB = 0x12）存放顺序：</text>
+    <text x="470" y="224" fill="#C47743" font-weight="700">32 位整数 0x12345678 (MSB=0x12) 字节存放顺序：</text>
     <text x="470" y="246" fill="#61747A">内存地址由低到高：   [0x00]    [0x01]    [0x02]    [0x03]</text>
     <text x="470" y="268" fill="#287B73" font-weight="700">• 大端序 (Big-Endian)：     12H       34H       56H       78H</text>
     <text x="470" y="288" fill="#C47743" font-weight="700">• 小端序 (Little-Endian)：  78H       56H       34H       12H</text>
-    <text x="470" y="308" fill="#17343B">口诀：<tspan font-weight="700">小端“低对低”</tspan>（低字节存低地址，x86默认；网络序大端）</text>
+    <text x="470" y="308" fill="#17343B">口诀：<tspan font-weight="700">小端“低对低”</tspan>（x86小端，TCP/IP 网络序大端）</text>
   </g>
 </svg>

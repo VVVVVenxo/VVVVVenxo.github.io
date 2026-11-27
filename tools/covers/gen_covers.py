@@ -143,10 +143,12 @@ def diagram_memory():
 def diagram_dispatch():
     return "".join([t(650,205,"一次虚函数调用",21,INK,650),rule(650,222,1125,222),
         box(655,300,132,88,"Derived",MINT,TEAL,18,"对象"),box(825,300,116,88,"vptr",PALE,SOFT,18,"0x1020",True),
-        box(980,260,150,174,"vtable",PALE,ORANGE,18),rule(787,344,815,344,TEAL,2,marker="tealArrow"),
-        rule(941,344,970,344,TEAL,2,marker="tealArrow"),t(994,322,"[0] Base::draw",13,MUTED,500,family=MONO),
-        rule(993,334,1117,334,SOFT,1),t(994,364,"[1] Derived::draw",12,ORANGE,650,family=MONO),
-        rule(993,376,1117,376,SOFT,1),t(994,406,"[2] ...",13,MUTED,500,family=MONO),
+        f'<rect x="980" y="260" width="150" height="174" rx="2" fill="{PALE}" stroke="{ORANGE}" stroke-width="2"/>',
+        t(1055,290,"vtable",18,INK,650,"middle",MONO),rule(993,302,1117,302,SOFT,1),
+        rule(787,344,815,344,TEAL,2,marker="tealArrow"),
+        rule(941,344,970,344,TEAL,2,marker="tealArrow"),t(994,328,"[0] Base::draw",13,MUTED,500,family=MONO),
+        rule(993,340,1117,340,SOFT,1),t(994,368,"[1] Derived::draw",12,ORANGE,650,family=MONO),
+        rule(993,380,1117,380,SOFT,1),t(994,408,"[2] ...",13,MUTED,500,family=MONO),
         t(650,518,"运行时类型决定最终调用入口",17,MUTED)])
 
 
@@ -551,11 +553,28 @@ def make_svg(title, top, sub):
 
 
 
+THUMB_OFFSETS = {
+    "sorting": (31, 37), "graph": (36, 20), "hash": (7, 32), "memory": (19, 25),
+    "dispatch": (20, 19), "move": (18, 2), "vector": (30, 13), "language": (34, 19),
+    "process": (50, 19), "architecture": (31, 19), "iterator": (34, 18),
+    "reflection": (19, 19), "parameters": (23, 25), "animation": (31, 19),
+    "lifecycle": (37, -8), "physics": (31, -20), "async": (15, 27),
+    "assets": (6, -10), "gc": (28, 20), "render": (24, -2),
+    "frame-sync": (26, 15), "state-sync": (26, 15), "network": (14, -2),
+    "huffman": (79, 13), "ai-coding": (13, -2), "ai-agent": (13, -2),
+    "covers": (7, 8), "learning": (35, 1), "reflection-notes": (35, 1),
+    "pipeline": (9, 4), "linux": (14, 6), "computer-org": (0, 0),
+}
+
+
 def make_thumbnail(title, top, sub):
     kind = select_variant(top, sub, title)
     diagram_svg = diagram_for(kind)
     diagram_svg = re.sub(r'<text x="650" y="205"[^>]*>.*?</text>', "", diagram_svg, count=1)
     diagram_svg = re.sub(r'<path d="M650 222L1125 222"[^>]*/>', "", diagram_svg, count=1)
+    dx, dy = THUMB_OFFSETS.get(kind, (0, 0))
+    if dx or dy:
+        diagram_svg = f'<g transform="translate({dx} {dy})">{diagram_svg}</g>'
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360" viewBox="610 230 600 360" role="img" aria-labelledby="thumbnailTitle">
 <title id="thumbnailTitle">{esc(diagram_heading(kind))}</title><defs>{defs()}</defs>
 <rect x="610" y="230" width="600" height="360" fill="{BG}"/>{diagram_svg}</svg>'''

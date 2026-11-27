@@ -17,29 +17,29 @@
     <rect x="28" y="64" width="390" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
     <text x="223" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 单链表头插法（逆序建表 / 原地逆置）</text>
 
-    <!-- Nodes: L (head) at x=54, y=132; a1 (old first) at x=270, y=132; s (new node) at x=162, y=200 -->
-    <rect x="54" y="122" width="84" height="34" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
-    <line x1="106" y1="122" x2="106" y2="156" stroke="#287B73" stroke-width="1.2"/>
-    <text x="80" y="144" fill="#17343B" font-weight="700" text-anchor="middle">头 L</text>
-    <text x="122" y="144" fill="#287B73" text-anchor="middle">next</text>
+    <!-- Nodes: L (head) at x=48, y=122; a1 (old first) at x=270, y=122; s (new node) at x=152, y=192 -->
+    <rect x="48" y="122" width="96" height="34" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <line x1="96" y1="122" x2="96" y2="156" stroke="#287B73" stroke-width="1.2"/>
+    <text x="72" y="144" fill="#17343B" font-weight="700" text-anchor="middle">头 L</text>
+    <text x="120" y="144" fill="#287B73" text-anchor="middle">next</text>
 
-    <rect x="274" y="122" width="96" height="34" rx="4" fill="#FAFBF8" stroke="#17343B" stroke-width="1.5"/>
-    <line x1="334" y1="122" x2="334" y2="156" stroke="#17343B" stroke-width="1.2"/>
-    <text x="304" y="144" fill="#17343B" font-weight="700" text-anchor="middle">原首元 a1</text>
-    <text x="352" y="144" fill="#61747A" text-anchor="middle">^</text>
+    <rect x="270" y="122" width="106" height="34" rx="4" fill="#FAFBF8" stroke="#17343B" stroke-width="1.5"/>
+    <line x1="338" y1="122" x2="338" y2="156" stroke="#17343B" stroke-width="1.2"/>
+    <text x="304" y="144" fill="#17343B" font-weight="700" text-anchor="middle">首元 a1</text>
+    <text x="357" y="144" fill="#61747A" text-anchor="middle">^</text>
 
     <!-- Old link L->a1 (dashed) -->
-    <line x1="138" y1="139" x2="268" y2="139" stroke="#AEBDB7" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="144" y1="139" x2="264" y2="139" stroke="#AEBDB7" stroke-width="1.5" stroke-dasharray="4,4"/>
     <text x="204" y="131" fill="#61747A" text-anchor="middle">原 L-&gt;next</text>
 
     <!-- New Node s -->
-    <rect x="158" y="192" width="96" height="34" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.8"/>
-    <line x1="218" y1="192" x2="218" y2="226" stroke="#C47743" stroke-width="1.2"/>
-    <text x="188" y="214" fill="#C47743" font-weight="700" text-anchor="middle">新节点 s</text>
-    <text x="236" y="214" fill="#C47743" text-anchor="middle">next</text>
+    <rect x="152" y="192" width="110" height="34" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.8"/>
+    <line x1="216" y1="192" x2="216" y2="226" stroke="#C47743" stroke-width="1.2"/>
+    <text x="184" y="214" fill="#C47743" font-weight="700" text-anchor="middle">新节点 s</text>
+    <text x="239" y="214" fill="#C47743" text-anchor="middle">next</text>
 
     <!-- Step 1: s->next = L->next -->
-    <path d="M254,209 Q296,209 296,162" fill="none" stroke="#287B73" stroke-width="2" marker-end="url(#aT)"/>
+    <path d="M262,209 Q296,209 296,162" fill="none" stroke="#287B73" stroke-width="2" marker-end="url(#aT)"/>
     <text x="334" y="196" fill="#287B73" font-weight="700" text-anchor="middle">① 先连后继</text>
 
     <!-- Step 2: L->next = s -->

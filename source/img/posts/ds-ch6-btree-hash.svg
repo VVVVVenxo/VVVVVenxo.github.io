@@ -11,7 +11,7 @@
     <rect x="46" y="106" width="364" height="72" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="60" y="128" fill="#17343B" font-weight="700">m 阶 B 树节点关键字个数 K 的上下界（必背公式）：</text>
     <text x="60" y="150" fill="#287B73" font-weight="700">• 根节点：1 ≤ K ≤ m - 1（子树数 2 ～ m）</text>
-    <text x="60" y="170" fill="#C47743" font-weight="700">• 非根内部节点：⌈m/2⌉ - 1 ≤ K ≤ m - 1（上溢分裂 ⌈m/2⌉）</text>
+    <text x="60" y="170" fill="#C47743" font-weight="700">• 非根节点：⌈m/2⌉ - 1 ≤ K ≤ m - 1（上溢分裂 ⌈m/2⌉）</text>
 
     <rect x="46" y="190" width="364" height="128" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="60" y="212" fill="#287B73" font-weight="700">为何数据库索引（MySQL InnoDB）首选 B+ 树：</text>
@@ -25,7 +25,7 @@
     <text x="640" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 散列表（Hash Table）冲突处理与 ASL 计数铁律</text>
 
     <rect x="458" y="106" width="364" height="104" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
-    <text x="470" y="128" fill="#17343B" font-weight="700">两类冲突解决机制（H(key) = key % p，p 取 ≤m 最大质数）：</text>
+    <text x="470" y="128" fill="#17343B" font-weight="700">冲突解决（H(key) = key % p，p 取 ≤m 最大质数）：</text>
     <text x="470" y="150" fill="#287B73" font-weight="700">• 拉链法（链地址法）：同义词挂同一单链表，无聚集现象</text>
     <text x="470" y="172" fill="#C47743" font-weight="700">• 开放定址法：H_i = (H(key) + d_i) % m</text>
     <text x="470" y="194" fill="#61747A">  线性探测易产生一次聚集；删除元素仅可做逻辑删除标记</text>
@@ -33,7 +33,7 @@
     <rect x="458" y="220" width="364" height="98" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="470" y="242" fill="#C47743" font-weight="700">平均查找长度（ASL）手算必考三大铁律：</text>
     <text x="470" y="264" fill="#17343B">① 装填因子 <tspan font-weight="700">α = 记录数 n / 表长 m</tspan>（ASL 直接取决于 α）</text>
-    <text x="470" y="286" fill="#17343B">② <tspan font-weight="700">ASL_成功</tspan> 分母为 <tspan font-weight="700" fill="#287B73">n</tspan>；<tspan font-weight="700">ASL_失败</tspan> 分母为模数 <tspan font-weight="700" fill="#C47743">p</tspan>（绝非表长 m）</text>
+    <text x="470" y="286" fill="#17343B">② <tspan font-weight="700">ASL_成功</tspan> 分母为 <tspan font-weight="700" fill="#287B73">n</tspan>；<tspan font-weight="700">ASL_失败</tspan> 分母为 <tspan font-weight="700" fill="#C47743">p</tspan> (非表长 m)</text>
     <text x="470" y="306" fill="#61747A">③ 开放定址失败时，最后与“空单元”的那次比较必须计入</text>
   </g>
 </svg>

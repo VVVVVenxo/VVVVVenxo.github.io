@@ -25,17 +25,17 @@
     <rect x="44" y="162" width="366" height="158" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="56" y="184" fill="#17343B" font-weight="700">k 段流水线连续执行 n 条指令（时钟周期为 Δt）必考公式：</text>
     <text x="56" y="208" fill="#C47743" font-weight="700">• 理想流水线总执行时间：T_k = (k + n - 1) × Δt</text>
-    <text x="56" y="230" fill="#17343B">  （第 1 条指令走完需 k 个周期，后续 n-1 条每周期流出 1 条）</text>
+    <text x="56" y="230" fill="#17343B">  （首条指令走完需 k 周期，其余 n-1 条每周期流出 1 条）</text>
     <text x="56" y="252" fill="#287B73" font-weight="700">• 吞吐率 TP = n / [(k + n - 1) × Δt]（极限 TP = 1/Δt）</text>
     <text x="56" y="274" fill="#287B73" font-weight="700">• 加速比 S = 串行时间 / 流水时间 = (n × k) / (k + n - 1)</text>
-    <text x="56" y="298" fill="#61747A">• 若存在 m 次阻塞停顿（气泡），总周期数 = <tspan font-weight="700" fill="#17343B">k + n - 1 + m</tspan></text>
+    <text x="56" y="298" fill="#61747A">• 若发生 m 次阻塞停顿，总周期数 = <tspan font-weight="700" fill="#17343B">k + n - 1 + m</tspan></text>
 
     <!-- Right Panel: Three Pipeline Hazards -->
     <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
     <text x="640" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 流水线三大冒险（结构 / 数据 / 控制冒险）与解决方案</text>
 
     <rect x="462" y="104" width="356" height="54" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
-    <text x="474" y="124" fill="#17343B" font-weight="700">① 结构冒险（资源冲突 · 多条指令同周期争抢同一部件）：</text>
+    <text x="474" y="124" fill="#17343B" font-weight="700">① 结构冒险（资源冲突 · 多条指令同周期争同一部件）：</text>
     <text x="474" y="144" fill="#287B73" font-weight="700">解决：采用哈佛结构分离指令 Cache 与数据 Cache</text>
 
     <rect x="462" y="166" width="356" height="92" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.4"/>
@@ -45,7 +45,7 @@
     <text x="474" y="246" fill="#C47743" font-weight="700">• Load-Use 冒险（LW 紧跟运算）：配转发仍需停 1 周期</text>
 
     <rect x="462" y="266" width="356" height="54" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
-    <text x="474" y="286" fill="#287B73" font-weight="700">③ 控制冒险（分支冲突 · 转移指令改 PC 导致预取作废）：</text>
-    <text x="474" y="306" fill="#17343B">解决：<tspan font-weight="700">动态分支预测 (BTB)</tspan>、ID 级提前判分支、分支延迟槽</text>
+    <text x="474" y="286" fill="#287B73" font-weight="700">③ 控制冒险（分支冲突 · 转移改 PC 致预取指令作废）：</text>
+    <text x="474" y="306" fill="#17343B">解决：<tspan font-weight="700">动态分支预测 (BTB)</tspan>、ID 级判分支、分支延迟槽</text>
   </g>
 </svg>

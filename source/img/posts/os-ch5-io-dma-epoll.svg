@@ -10,14 +10,14 @@
 
     <rect x="44" y="106" width="368" height="106" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
     <text x="56" y="128" fill="#17343B" font-weight="700">CPU 干预频率由高到低演进：</text>
-    <text x="56" y="150" fill="#17343B">① <tspan font-weight="700">程序直接控制</tspan>：CPU 死循环轮询设备状态，CPU 与外设串行</text>
-    <text x="56" y="170" fill="#17343B">② <tspan font-weight="700">中断驱动方式</tspan>：每传输 <tspan font-weight="700" fill="#C47743">1 个字/字节</tspan> 触发一次中断由 CPU 搬运</text>
-    <text x="56" y="190" fill="#287B73" font-weight="700">③ DMA（直接内存访问）：设备与内存直接按“块”传输，仅在</text>
+    <text x="56" y="150" fill="#17343B">① <tspan font-weight="700">程序直接控制</tspan>：CPU 轮询设备状态，CPU 与外设串行</text>
+    <text x="56" y="170" fill="#17343B">② <tspan font-weight="700">中断驱动</tspan>：每传 <tspan font-weight="700" fill="#C47743">1 个字/字节</tspan> 触发一次中断由 CPU 搬运</text>
+    <text x="56" y="190" fill="#287B73" font-weight="700">③ DMA（直接内存访问）：设备与内存按“块”直传，仅在</text>
     <text x="56" y="206" fill="#287B73" font-weight="700">   整块数据传输开始和结束时才向 CPU 发出 1 次中断</text>
 
     <rect x="44" y="222" width="368" height="98" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="244" fill="#17343B" font-weight="700">缓冲区每块数据平均处理时间（必考公式）：</text>
-    <text x="56" y="266" fill="#17343B">设外设输入耗时 <tspan font-weight="700">T</tspan>，传送至工作区耗时 <tspan font-weight="700">M</tspan>，CPU 处理耗时 <tspan font-weight="700">C</tspan>：</text>
+    <text x="56" y="266" fill="#17343B">设外设输入耗时 <tspan font-weight="700">T</tspan>，送工作区耗时 <tspan font-weight="700">M</tspan>，CPU 处理耗时 <tspan font-weight="700">C</tspan>：</text>
     <text x="56" y="288" fill="#C47743" font-weight="700">• 单缓冲每块平均耗时 = max(C, T) + M</text>
     <text x="56" y="308" fill="#287B73" font-weight="700">• 双缓冲每块平均耗时 = max(C + M, T)</text>
 
@@ -30,11 +30,11 @@
     <text x="470" y="150" fill="#17343B">• <tspan font-weight="700">select</tspan>：每次将 fd 集合拷入内核，且需 <tspan font-weight="700" fill="#C47743">O(n) 轮询全表</tspan></text>
     <text x="470" y="172" fill="#17343B">• <tspan font-weight="700" fill="#287B73">epoll</tspan>：内核用<tspan font-weight="700">红黑树</tspan>存监听 fd（O(log n)），中断回调</text>
     <text x="470" y="192" fill="#17343B">  将就绪 fd 挂入<tspan font-weight="700" fill="#287B73">就绪双向链表</tspan>，epoll_wait <tspan font-weight="700">O(1)</tspan> 直接取回</text>
-    <text x="470" y="212" fill="#61747A">• <tspan font-weight="700">LT 水平触发</tspan>（未读完持续通知）vs <tspan font-weight="700">ET 边缘触发</tspan>（仅通知 1 次）</text>
+    <text x="470" y="212" fill="#61747A">• <tspan font-weight="700">LT 水平触发</tspan> (未读完持续通知) vs <tspan font-weight="700">ET 边缘触发</tspan> (通知1次)</text>
 
     <rect x="458" y="232" width="364" height="88" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="470" y="254" fill="#C47743" font-weight="700">零拷贝（Zero-Copy · sendfile + SG-DMA）：</text>
-    <text x="470" y="276" fill="#17343B">• 传统 read+write：<tspan font-weight="700">4 次上下文切换 + 4 次拷贝</tspan>（含 2 次 CPU）</text>
-    <text x="470" y="298" fill="#287B73" font-weight="700">• sendfile + DMA：仅 2 次切换 + 2 次 DMA 拷贝（0 次 CPU）</text>
+    <text x="470" y="276" fill="#17343B">• 传统 read+write：<tspan font-weight="700">4 次切换 + 4 次拷贝</tspan>（含 2 次 CPU）</text>
+    <text x="470" y="298" fill="#287B73" font-weight="700">• sendfile+DMA：2 次切换 + 2 次 DMA 拷贝 (0次CPU)</text>
   </g>
 </svg>
