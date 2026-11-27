@@ -8,6 +8,20 @@
     <managingEditor>VVVVVenxo</managingEditor>
     <atom:link href="https://VVVVVenxo.github.io/atom.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>【图形学】PBR 基于物理的渲染与阴影技术</title>
+      <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91PBR%20%E5%9F%BA%E4%BA%8E%E7%89%A9%E7%90%86%E7%9A%84%E6%B8%B2%E6%9F%93%E4%B8%8E%E9%98%B4%E5%BD%B1%E6%8A%80%E6%9C%AF/</link>
+      <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91PBR%20%E5%9F%BA%E4%BA%8E%E7%89%A9%E7%90%86%E7%9A%84%E6%B8%B2%E6%9F%93%E4%B8%8E%E9%98%B4%E5%BD%B1%E6%8A%80%E6%9C%AF/</guid>
+      <pubDate>Fri, 27 Nov 2026 20:00:00 GMT</pubDate>
+      <description>遵循《Real-Time Rendering (4th Ed.)》与迪士尼/Epic Games PBR 白皮书主线，系统梳理辐射度量学与渲染方程、Cook-Torrance 微表面 BRDF（GGX D / Schlick F / Smith G）、金属度-粗糙度能量守恒、IBL 漫反射辐照度图与镜面 Split-Sum 预滤波，以及 Shadow Map / PCF / PCSS / CSM 级联阴影技术。</description>
+    </item>
+    <item>
+      <title>【C++】STL与容器底层</title>
+      <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90C%2B%2B%E3%80%91STL%E4%B8%8E%E5%AE%B9%E5%99%A8%E5%BA%95%E5%B1%82/</link>
+      <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90C%2B%2B%E3%80%91STL%E4%B8%8E%E5%AE%B9%E5%99%A8%E5%BA%95%E5%B1%82/</guid>
+      <pubDate>Fri, 27 Nov 2026 19:00:00 GMT</pubDate>
+      <description>基于《STL 源码剖析》（侯捷著）与 GCC libstdc++ 实现，深入剖析 C++ STL 六大部件、vector 倍增均摊推导、deque 中控器分段连续布局、list 与 map/set 红黑树哨兵节点、unordered_map 全局单链表前驱桶设计、以及全容器复杂度与迭代器失效规则总表。</description>
+    </item>
+    <item>
       <title>【算法】图与搜索算法</title>
       <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</link>
       <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E5%9B%BE%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95/</guid>
@@ -141,13 +155,6 @@
       <description>梳理 Unity 的资源加载体系——从 Resources、AssetBundle 到 Addressables，同步与异步加载的原理与陷阱，引用计数管理，以及 Lua 与 HybridCLR 两种热更新方案的对比。</description>
     </item>
     <item>
-      <title>【C++】STL与容器底层</title>
-      <link>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90C%2B%2B%E3%80%91STL%E4%B8%8E%E5%AE%B9%E5%99%A8%E5%BA%95%E5%B1%82/</link>
-      <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90C%2B%2B%E3%80%91STL%E4%B8%8E%E5%AE%B9%E5%99%A8%E5%BA%95%E5%B1%82/</guid>
-      <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
-      <description>深入 C++ STL——六大部件的设计思想、各容器（vector/list/deque/set/map 等）的底层实现与时间复杂度对比，以及 push_back 与 emplace_back、红黑树与 AVL 树的区别。</description>
-    </item>
-    <item>
       <title>【算法】排序算法大全</title>
       <link>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</link>
       <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</guid>
@@ -174,13 +181,6 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91UI%E4%B8%8E%E6%B8%B2%E6%9F%93%E4%BC%98%E5%8C%96/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>详解 Unity UI 渲染与优化：Canvas 渲染模式、Canvas Scaler、DrawCall、合批规则、LOD。</description>
-    </item>
-    <item>
-      <title>【Unity】协程与多线程</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%8D%8F%E7%A8%8B%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%8D%8F%E7%A8%8B%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>理解 Unity 协程的原理与用法，协程与线程的区别，以及 JobSystem 多线程方案。</description>
     </item>
   </channel>
 </rss>

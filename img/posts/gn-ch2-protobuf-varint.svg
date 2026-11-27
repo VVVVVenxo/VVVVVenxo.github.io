@@ -16,7 +16,7 @@
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="230" fill="#287B73" font-weight="700">Base-128 Varints 变长整数编码（以整数 300 为例）：</text>
-    <text x="56" y="252" fill="#17343B">• 每字节最高位 <tspan font-weight="700" fill="#C47743">MSB 为延续位</tspan>（1=后续有字节，0=结束），</text>
+    <text x="56" y="252" fill="#17343B">• 每字节最高位 <tspan font-weight="700" fill="#C47743">MSB 为延续位</tspan> (1=后续有字节，0=结束)，</text>
     <text x="56" y="272" fill="#17343B">  低 7 位存储有效数值，按<tspan font-weight="700">小端序（低 7 位在前）</tspan>排列：</text>
     <text x="56" y="294" fill="#287B73" font-weight="700" font-family="Consolas, monospace">300 = 00000010 0101100(2) → [10101100, 00000010]</text>
     <text x="56" y="314" fill="#17343B">• 0~127 的高频小整数仅占 <tspan font-weight="700" fill="#287B73">1 字节</tspan>（比 4B int 省 75%）</text>

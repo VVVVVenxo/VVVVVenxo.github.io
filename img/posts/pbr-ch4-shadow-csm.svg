@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：Shadow Map 阴影走样（Shadow Acne）成因、PCSS 软阴影与 CSM 级联阴影</text>
+
+  <!-- 左栏：Shadow Map 走样与偏移 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. Shadow Map 自阴影条纹（Shadow Acne）与偏移权衡</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#C47743" font-weight="700">为什么不加 Bias 会产生黑白相间的自阴影条纹（Acne）：</text>
+    <text x="56" y="134" fill="#17343B">• Shadow Map 纹素具有离散尺寸，倾斜表面上一片区域</text>
+    <text x="56" y="154" fill="#17343B">  的像素会映射到同一个 Shadow Map 纹素深度值 <tspan font-family="Consolas, monospace">z_map</tspan></text>
+    <text x="56" y="175" fill="#17343B">• 导致半边像素实测深度 <tspan font-family="Consolas, monospace">z_cur &gt; z_map</tspan> 被误判为自己遮挡</text>
+    <text x="56" y="194" fill="#61747A">  了自己！表面与光线夹角越倾斜，所需的深度偏移量越大</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">斜率自适应偏移（Slope Bias）与阴影脱节（Peter Pan）：</text>
+    <text x="56" y="252" fill="#287B73" font-weight="700" font-family="Consolas, monospace">bias = max(slope * (1.0 - dot(N, L)), minBias)</text>
+    <text x="56" y="273" fill="#17343B">• <tspan font-weight="700">法线偏移 (Normal Bias)</tspan>：沿顶点法线向内微缩采样点</text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700" fill="#C47743">Peter Panning (阴影悬浮)</tspan>：若 Depth Bias 设得过大，</text>
+    <text x="56" y="313" fill="#17343B">  脚底接触面深度被过度抬高，导致影子与角色脚底分离脱节</text>
+  </g>
+
+  <!-- 右栏：PCSS 与 CSM -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. PCSS 接触硬化软阴影与 CSM（级联阴影贴图）架构</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#287B73" font-weight="700">PCSS（Percentage-Closer Soft Shadows）三步法：</text>
+    <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700">遮挡物搜索</tspan>：统计邻域内遮挡物平均深度 <tspan font-family="Consolas, monospace">d_blk</tspan></text>
+    <text x="468" y="155" fill="#17343B">2. <tspan font-weight="700">半影估算</tspan>：由相似三角形算半影宽度（越近越硬）</text>
+    <text x="468" y="175" fill="#C47743" font-weight="700" font-family="Consolas, monospace">   w_penumbra = ((d_rcv - d_blk) * w_light) / d_blk</text>
+    <text x="468" y="194" fill="#17343B">3. <tspan font-weight="700">动态核 PCF</tspan>：按 <tspan font-family="Consolas, monospace">w_penumbra</tspan> 缩放圆盘采样半径滤波</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">CSM（Cascaded Shadow Maps · 大世界太阳光方案）：</text>
+    <text x="468" y="252" fill="#17343B">• <tspan font-weight="700">痛点</tspan>：单张阴影图覆盖百米场景会使近处阴影充满锯齿</text>
+    <text x="468" y="272" fill="#17343B">• <tspan font-weight="700">视锥切分</tspan>：将相机视锥按距离切为 4 级 (Cascade 0~3)，</text>
+    <text x="468" y="292" fill="#17343B">  近处用小正交盒获高分辨率，远处用大包围盒覆盖全局</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">• <tspan font-weight="700">防抖</tspan>：用外接球固定包围盒尺寸，并按世界纹素步长对齐</text>
+  </g>
+</svg>

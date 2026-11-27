@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：std::unordered_map 开链哈希表底层结构、前驱指针 Trick 与 Rehash 扩容</text>
+
+  <!-- 左栏：C++11 全局单链表桶设计 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 为什么 C++ 标准规定 unordered_map 用拉链法而非开放寻址</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">C++ 标准“引用与指针永不失效”约束：</text>
+    <text x="56" y="134" fill="#17343B">• 标准规定：即使触发 Rehash 扩容，指向哈希表内已有</text>
+    <text x="56" y="154" fill="#17343B">  元素的 <tspan font-weight="700" fill="#287B73">指针与引用 (T&amp;) 绝不能失效</tspan>（仅迭代器可失效）</text>
+    <text x="56" y="175" fill="#17343B">• 这迫使所有 STL 实现必须采用<tspan font-weight="700" fill="#C47743">独立堆分配节点的拉链法</tspan>；</text>
+    <text x="56" y="194" fill="#61747A">  Rehash 时仅重新分配桶指针数组并重挂节点，不搬移元素</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">GCC libstdc++ 全局单链表与“桶存前驱节点”设计：</text>
+    <text x="56" y="252" fill="#17343B">• 为使 <tspan font-family="Consolas, monospace">++it</tspan> 跨空桶遍历为 O(1)，所有节点串成<tspan font-weight="700">单条全局</tspan></text>
+    <text x="56" y="272" fill="#17343B">  <tspan font-weight="700">单链表</tspan>；且为支持单链表 O(1) 删除，每个桶槽位</text>
+    <text x="56" y="292" fill="#287B73" font-weight="700">  存的不是本桶首节点，而是本桶首节点的“前驱节点”！</text>
+    <text x="56" y="313" fill="#17343B">• 节点缓存哈希码 <tspan font-family="Consolas, monospace">hash_code</tspan>，Rehash 时无需重算 hash()</text>
+  </g>
+
+  <!-- 右栏：负载因子与 Rehash -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 负载因子（Load Factor）、Rehash 触发与工程优化</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">负载因子计算与全量 Rehash 性能尖刺：</text>
+    <text x="468" y="134" fill="#17343B" font-weight="700" font-family="Consolas, monospace">load_factor = size() / bucket_count()</text>
+    <text x="468" y="155" fill="#17343B">• 当插入使 <tspan font-family="Consolas, monospace">load_factor &gt; max_load_factor</tspan> 时，桶数组</text>
+    <text x="468" y="175" fill="#17343B">  按质数序列 (11→23→47→97...) 翻倍分配，并将全部 N 个</text>
+    <text x="468" y="194" fill="#C47743" font-weight="700">  节点按 hash % new_count 重新挂载，单次耗时 O(N)</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">高性能 C++ 哈希表工程实践建议：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">预先 reserve(N)</tspan>：按预期元素数一次性分配足够桶数，</text>
+    <text x="468" y="272" fill="#17343B">   彻底避免运行期动态 Rehash 引发的延迟毛刺与迭代器失效</text>
+    <text x="468" y="293" fill="#17343B">2. <tspan font-weight="700">替换平坦哈希表</tspan>：对无需指针稳定的热路径，优先选用</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">   开放寻址 + SIMD 的 absl::flat_hash_map / robin_hood</text>
+  </g>
+</svg>

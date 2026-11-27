@@ -13,7 +13,7 @@
 
     <rect x="44" y="140" width="364" height="42" rx="3" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="56" y="158" fill="#17343B" font-weight="700">② 可行走过滤：剔除超最大坡度、低头顶净高及超台阶落差</text>
-    <text x="56" y="175" fill="#61747A">的体素顶面，并按角色碰撞半径 AgentRadius 执行内缩腐蚀</text>
+    <text x="56" y="175" fill="#61747A">的体素顶面，并按角色半径 AgentRadius 执行内缩腐蚀</text>
 
     <rect x="44" y="188" width="364" height="42" rx="3" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="206" fill="#287B73" font-weight="700">③ 距离场与分水岭区域划分 (Watershed Partitioning)：</text>
@@ -25,7 +25,7 @@
 
     <rect x="44" y="284" width="364" height="42" rx="3" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="56" y="302" fill="#C47743" font-weight="700">⑤ 凸多边形网格生成 (Convex Polygon Mesh)：</text>
-    <text x="56" y="319" fill="#17343B">三角剖分并合并为凸多边形（凸多边形内两点连线必不穿墙）</text>
+    <text x="56" y="319" fill="#17343B">三角剖分并合并为凸多边形（凸多边形内连线必不穿墙）</text>
   </g>
 
   <!-- 右栏：Funnel 漏斗算法 -->

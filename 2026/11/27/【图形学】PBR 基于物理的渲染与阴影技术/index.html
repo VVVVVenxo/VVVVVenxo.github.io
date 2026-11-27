@@ -1,0 +1,592 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Astro v5.18.2"><title>PBR 基于物理的渲染与阴影技术 | VVVVVenxo 的博客</title><meta name="description" content="遵循《Real-Time Rendering (4th Ed.)》与迪士尼/Epic Games PBR 白皮书主线，系统梳理辐射度量学与渲染方程、Cook-Torrance 微表面 BRDF（GGX D / Schlick F / Smith G）、金属度-粗糙度能量守恒、IBL 漫反射辐照度图与镜面 Split-Sum 预滤波，以及 Shadow Map / PCF / PCSS / CSM 级联阴影技术。"><meta name="keywords" content="VVVVVenxo, 游戏客户端开发, Unity, C++, C#, 图形学, 实时渲染, 网络同步, 算法, AI Agent"><meta name="author" content="VVVVVenxo"><meta name="theme-color" content="#f3f6f3" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#161f1c" media="(prefers-color-scheme: dark)"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/11/27/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91PBR%20%E5%9F%BA%E4%BA%8E%E7%89%A9%E7%90%86%E7%9A%84%E6%B8%B2%E6%9F%93%E4%B8%8E%E9%98%B4%E5%BD%B1%E6%8A%80%E6%9C%AF/"><link rel="icon" href="/img/cat.ico"><link rel="alternate" type="application/rss+xml" title="VVVVVenxo 的博客" href="/atom.xml"><meta property="og:type" content="article"><meta property="og:url" content="https://vvvvvenxo.github.io/2026/11/27/%E3%80%90%E5%9B%BE%E5%BD%A2%E5%AD%A6%E3%80%91PBR%20%E5%9F%BA%E4%BA%8E%E7%89%A9%E7%90%86%E7%9A%84%E6%B8%B2%E6%9F%93%E4%B8%8E%E9%98%B4%E5%BD%B1%E6%8A%80%E6%9C%AF/"><meta property="og:title" content="PBR 基于物理的渲染与阴影技术 | VVVVVenxo 的博客"><meta property="og:description" content="遵循《Real-Time Rendering (4th Ed.)》与迪士尼/Epic Games PBR 白皮书主线，系统梳理辐射度量学与渲染方程、Cook-Torrance 微表面 BRDF（GGX D / Schlick F / Smith G）、金属度-粗糙度能量守恒、IBL 漫反射辐照度图与镜面 Split-Sum 预滤波，以及 Shadow Map / PCF / PCSS / CSM 级联阴影技术。"><meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E5%9B%BE%E5%BD%A2%E5%AD%A6-PBR-%E5%9F%BA%E4%BA%8E%E7%89%A9%E7%90%86%E7%9A%84%E6%B8%B2%E6%9F%93%E4%B8%8E%E9%98%B4%E5%BD%B1%E6%8A%80%E6%9C%AF.png"><script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script><link rel="stylesheet" href="/_astro/index.D_CZfaNh.css"></head> <body> <header class="site-header sticky top-0 z-40 w-full border-b border-[var(--border-color)]"> <div class="container flex h-16 items-center justify-between"> <a href="/" aria-label="VVVVVenxo 的博客，返回首页" class="brand-link text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]"> <img src="/img/cat.ico" alt="" class="brand-mark" width="30" height="30"> <span class="brand-name">VVVVVenxo</span> <span class="brand-caption">游戏客户端工程手记</span> </a> <nav class="hidden items-center gap-1 md:flex" aria-label="主导航"> <a href="/" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 首页 </a><a href="/blog" aria-current="page" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 分类 </a><a href="/tags" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 标签 </a><a href="/about" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 关于 </a> </nav> <div class="flex items-center gap-1.5"> <button id="search-btn" type="button" class="header-action" aria-label="搜索 (Ctrl+K)" title="搜索 (Ctrl+K)"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </button> <button id="theme-toggle" type="button" class="header-action" aria-label="切换主题" title="切换明暗主题"> <svg class="sun-icon hidden dark:block" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> <svg class="moon-icon block dark:hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="mobile-menu-btn" type="button" class="header-action md:hidden" aria-label="菜单" aria-controls="mobile-menu" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> </div> </div> <div id="mobile-menu" class="hidden border-t border-[var(--border-subtle)] md:hidden"> <nav class="container py-3" aria-label="移动导航"> <div class="bg-[var(--bg-surface)]"> <a href="/" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 首页 </a><a href="/blog" aria-current="page" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors bg-[var(--bg-muted)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 分类 </a><a href="/tags" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 标签 </a><a href="/about" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 关于 </a> </div> </nav> </div> </header> <main class="flex-1">  <div id="reading-progress" class="reading-progress-bar" aria-hidden="true"></div> <div class="post-reading-shell container-wide flex py-10 md:py-14"> <article class="min-w-0 flex-1"> <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8"> <div class="post-header-grid"> <div> <div class="flex flex-wrap items-center gap-2"> <a href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" class="section-kicker hover:underline"> 图形学 </a> <span class="text-xs text-[var(--text-tertiary)]">
+/ 技术笔记 · 图形学 </span> </div> <h1 lang="zh-CN" class="mt-3 text-3xl font-bold tracking-tight text-balance text-[var(--text-primary)] md:text-4xl"> PBR 基于物理的渲染与阴影技术 </h1> <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-tertiary)]"> <time datetime="2026-11-27">2026年11月27日</time> <span>·</span> <span>16 分钟阅读</span> <span>·</span> <span>约 5,124 字</span> </div> <div class="mt-4 flex flex-wrap gap-2"> <a href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" class="tag"> 图形学 </a><a href="/tags/PBR/" class="tag"> PBR </a><a href="/tags/BRDF/" class="tag"> BRDF </a><a href="/tags/IBL/" class="tag"> IBL </a><a href="/tags/%E9%98%B4%E5%BD%B1%E6%8A%80%E6%9C%AF/" class="tag"> 阴影技术 </a><a href="/tags/CSM/" class="tag"> CSM </a> </div> </div> <div class="post-header-diagram"> <img src="/img/covers/gen/图形学-PBR-基于物理的渲染与阴影技术-thumb.svg" alt="PBR 基于物理的渲染与阴影技术" loading="eager" fetchpriority="high"> </div> </div> </header> <div class="prose max-w-none" lang="zh-CN"><p>本文紧接《【图形学】现代渲染管线与 Shader 编程精要》，遵循《Real-Time Rendering (4th Edition)》与迪士尼（Burley 2012）/ Epic Games（Karis 2013 Unreal Engine 4）PBR 技术白皮书主线，系统拆解现代实时渲染引擎的两大核心支柱：<strong>基于物理的渲染（Physically Based Rendering, PBR）与基于图像的环境光照（IBL）</strong>、以及<strong>实时阴影渲染体系（Shadow Map 走样抑制、PCF、PCSS 接触硬化软阴影与 CSM 级联阴影贴图）</strong>。</p>
+<hr>
+<h2 id="第-1-章辐射度量学基础brdf-与渲染方程">第 1 章：辐射度量学基础、BRDF 与渲染方程<a class="heading-anchor" href="#第-1-章辐射度量学基础brdf-与渲染方程" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<p>传统经验光照模型（Phong / Blinn-Phong）将漫反射与高光简单相加，不仅违反能量守恒定律（高光越强表面总亮度反而越亮，导致过曝塑料感），且材质参数在不同的环境光照下表现严重失真。<strong>基于物理的渲染（PBR）</strong>建立在严格的光学物理度量——<strong>辐射度量学（Radiometry）</strong>之上。</p>
+<p><img width="860" height="360" src="/img/posts/pbr-ch1-radiometry-brdf.svg" alt="辐射度量学四大核心物理量、渲染方程（Rendering Equation）与能量守恒" loading="lazy" decoding="async"></p>
+<h3 id="11-立体角與辐射度量学四大基本物理量">1.1 立体角與辐射度量学四大基本物理量<a class="heading-anchor" href="#11-立体角與辐射度量学四大基本物理量" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<ul>
+<li><strong>立体角（Solid Angle，<code>ω</code> / <code>dω</code>）</strong>：二维弧度定义为弧长除以半径 <code>θ = l / r</code>（整圆为 <code>2π</code> 弧度）；三维<strong>立体角</strong>定义为球面截取面积 <code>A</code> 除以半径平方 <strong><code>ω = A / r^2</code></strong>，微分立体角写为 <code>dω = dA / r^2 = sin(θ) dθ dφ</code>，单位为<strong>球面度（Steradian, <code>sr</code>）</strong>。整个球面的总立体角恒为 <strong><code>4π sr</code></strong>，上半球总立体角为 <strong><code>2π sr</code></strong>。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">物理量名称</th>
+<th align="left">符号</th>
+<th align="left">数学定义公式</th>
+<th align="left">国际单位</th>
+<th align="left">几何与渲染物理含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>辐射通量（Radiant Flux）</strong></td>
+<td align="left"><code>Φ</code></td>
+<td align="left"><code>Φ = dQ / dt</code></td>
+<td align="left">瓦特（<code>W = J/s</code>）</td>
+<td align="left">光源在单位时间内发射或表面接收的<strong>总电磁辐射能量（总功率）</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>辐射强度（Radiant Intensity）</strong></td>
+<td align="left"><code>I</code></td>
+<td align="left"><code>I(ω) = dΦ / dω</code></td>
+<td align="left"><code>W / sr</code></td>
+<td align="left">点光源在<strong>单位立体角</strong>方向上发射的辐射通量</td>
+</tr>
+<tr>
+<td align="left"><strong>辐照度（Irradiance）</strong></td>
+<td align="left"><code>E</code></td>
+<td align="left"><code>E(p) = dΦ / dA</code></td>
+<td align="left"><code>W / m^2</code></td>
+<td align="left">表面点 <code>p</code> 在<strong>单位受光面积</strong>上接收到的所有方向总辐射通量</td>
+</tr>
+<tr>
+<td align="left"><strong>辐射率（Radiance）</strong></td>
+<td align="left"><code>L</code></td>
+<td align="left"><strong><code>L(p, ω) = d^2 Φ / (dω dA cosθ)</code></strong></td>
+<td align="left"><code>W / (sr · m^2)</code></td>
+<td align="left">表面在<strong>单位垂直投影面积 <code>dA cosθ</code>、单位立体角 <code>dω</code></strong> 内发射或接收的光通量</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>为什么在 Shader 中单条光线的颜色 RGB 就是辐射率 Radiance（<code>L</code>）</strong>：<ol>
+<li><strong>沿光线传播的距离不变性</strong>：在无雾气散射的空气或真空中，单条光线沿方向 <code>ω</code> 传播时，其 Radiance <code>L</code> <strong>不随传播距离衰减</strong>（而点光源对表面的辐照度 <code>E</code> 因球面积 <code>4π r^2</code> 扩散而按距离平方反比 <code>1 / r^2</code> 衰减）。因此人眼或摄像机传感器单个像素采样到的颜色值，严格等于物体表面朝向摄像机方向出射的 Radiance <code>L_o</code>。</li>
+<li><strong>兰伯特余弦定律（Lambert&#39;s Cosine Law）</strong>：一束截面积为 <code>dA_⊥</code> 的光束以与表面法线 <code>n</code> 夹角 <code>θ</code> 斜射到表面上时，铺展的受光面积变为 <code>dA = dA_⊥ / cosθ</code>，因此单位表面积接收到的微分辐照度为 <strong><code>dE = L_i(p, ωi) cosθ_i dω_i</code></strong>（其中 <code>cosθ_i = max(0, n · ωi)</code>）。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 id="12-双向反射分布函数brdf与-kajiya-渲染方程">1.2 双向反射分布函数（BRDF）与 Kajiya 渲染方程<a class="heading-anchor" href="#12-双向反射分布函数brdf与-kajiya-渲染方程" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>当来自入射方向 <code>ωi</code> 的微分辐照度 <code>dE_i(p, ωi) = L_i(p, ωi) cosθ_i dω_i</code> 照射到表面点 <code>p</code> 时，表面会将多少比例的能量反射到观察方向 <code>ωo</code> 的微分出射辐射率 <code>dL_o(p, ωo)</code> 中？这一比例函数即定义为<strong>双向反射分布函数（Bidirectional Reflectance Distribution Function, BRDF）</strong>（量纲为 <code>1 / sr</code>）：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>f_r(p, ωi, ωo) = dL_o(p, ωo) / dE_i(p, ωi) = dL_o(p, ωo) / (L_i(p, ωi) cosθ_i dω_i)</span></span></code></pre></div>
+<p>将上半球 <code>Ω</code> 所有入射方向的反射贡献累加，并加上物体自身的发光项 <code>L_e</code>，即得到计算机图形学最核心的 <strong>Kajiya 渲染方程（The Rendering Equation，1986）</strong>：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>L_o(p, ωo) = L_e(p, ωo) + ∫_Ω f_r(p, ωi, ωo) L_i(p, ωi) (n · ωi) dω_i</span></span></code></pre></div>
+<ul>
+<li><strong>物理有效 BRDF 必须满足的三条铁律</strong>：<ol>
+<li><strong>非负性</strong>：<code>f_r(ωi, ωo) &gt;= 0</code>。</li>
+<li><strong>亥姆霍兹互易律（Helmholtz Reciprocity）</strong>：交换光源入射方向与相机观察方向，BRDF 值严格不变：<code>f_r(ωi, ωo) = f_r(ωo, ωi)</code>（这也是正向路径追踪与反向光线追踪等价的物理依据）。</li>
+<li><strong>能量守恒定律（Energy Conservation）</strong>：表面朝整个上半球反射出去的总光通量，绝不能超过入射光通量：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>对任意入射方向 ωi：  ∫_Ω f_r(p, ωi, ωo) cosθ_o dω_o &#x3C;= 1</span></span></code></pre></div>
+<strong>推论（为什么 Lambert 漫反射必须除以 <code>π</code>）</strong>：设理想均匀漫反射材质的反射率（反照率 Albedo）为 <code>c ∈ [0, 1]</code>，其常数 BRDF 为 <code>f_diff</code>。代入能量守恒积分得 <code>f_diff * ∫_0^(2π) dφ ∫_0^(π/2) cosθ sinθ dθ = f_diff * π = c</code>，故 <strong>Lambertian 漫反射 BRDF 必为 <code>f_diff = c / π</code></strong>！</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="第-2-章cook-torrance-微表面模型与金属度-粗糙度工作流">第 2 章：Cook-Torrance 微表面模型与金属度-粗糙度工作流<a class="heading-anchor" href="#第-2-章cook-torrance-微表面模型与金属度-粗糙度工作流" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<p>现代实时引擎（Unreal Engine / Unity URP &amp; HDRP）统一将表面 BRDF 拆分为<strong>漫反射项（Diffuse，折射进入次表面经多次散射再穿出）<strong>与</strong>镜面反射项（Specular，直接在表面第一次接触即反射）</strong>之和：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>f_r(l, v) = k_d * (c / π) + f_spec(l, v)</span></span></code></pre></div>
+<p><img width="860" height="360" src="/img/posts/pbr-ch2-cook-torrance.svg" alt="Cook-Torrance 微表面镜面 BRDF 三项（D 法线分布 / F 菲涅尔 / G 几何遮蔽）" loading="lazy" decoding="async"></p>
+<h3 id="21-cook-torrance-微表面镜面-brdf-三大核心函数d-f-g">2.1 Cook-Torrance 微表面镜面 BRDF 三大核心函数（D / F / G）<a class="heading-anchor" href="#21-cook-torrance-微表面镜面-brdf-三大核心函数d-f-g" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>微表面理论（Microfacet Theory）认为，宏观上看似平坦的粗糙表面，在微观尺度下是由无数个朝向各异的<strong>理想镜面微平面（Microfacets）</strong>组成的。当入射光方向为 <code>l</code>、视线方向为 <code>v</code> 时，根据反射定律，<strong>只有那些微观法线 <code>m</code> 恰好等于半程向量 <code>h = normalize(l + v)</code> 的活性微平面，才能将光线 <code>l</code> 镜面反射进眼睛 <code>v</code></strong>。据此导出 <strong>Cook-Torrance 镜面 BRDF 标准形式</strong>：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>               D(h) * F(v, h) * G(l, v, h)</span></span>
+<span class="line"><span>f_spec(l, v) = ---------------------------</span></span>
+<span class="line"><span>                  4 * (n · l) * (n · v)</span></span></code></pre></div>
+<p>（分母中的 <code>4 (n · l) (n · v)</code> 是从微平面局部半程立体角 <code>dω_h</code> 变换到宏观立体角 <code>dω_o</code> 时的雅可比行列式因子与投影修正项。）</p>
+<h4 id="1-法线分布函数-dhnormal-distribution-function-ndftrowbridge-reitz-ggx">1. 法线分布函数 <code>D(h)</code>（Normal Distribution Function, NDF）：Trowbridge-Reitz GGX</h4>
+<ul>
+<li><strong>物理含义</strong>：统计单位宏观表面积内，微平面法线朝向恰好对齐半程向量 <code>h</code> 的微平面面积比例（决定高光光斑的形状、锐利度与拖尾）。</li>
+<li><strong>迪士尼粗糙度重映射</strong>：美术调节的感知粗糙度为 <code>roughness ∈ [0, 1]</code>，若直接代入公式会导致低粗糙度区间变化过于剧烈，因此先取平方映射 <strong><code>α = roughness^2</code></strong>。</li>
+<li><strong>Trowbridge-Reitz GGX 公式</strong>（相比 Beckmann 分布具有更真实的峰值亮核与柔和长尾光晕）：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>                    α^2</span></span>
+<span class="line"><span>D_GGX(n, h, α) = -------------------------------------</span></span>
+<span class="line"><span>                 π * ( (n · h)^2 * (α^2 - 1) + 1 )^2</span></span></code></pre></div>
+</li>
+</ul>
+<h4 id="2-菲涅尔方程-fv-hfresnel-equationfresnel-schlick-近似">2. 菲涅尔方程 <code>F(v, h)</code>（Fresnel Equation）：Fresnel-Schlick 近似</h4>
+<ul>
+<li><strong>物理含义</strong>：描述电磁波照射到具有不同折射率的介质交界面时，<strong>直接发生镜面反射的能量占比 <code>F</code></strong>（剩余 <code>1 - F</code> 的能量折射进入物体内部）。</li>
+<li><strong>掠射角全反射规律</strong>：当视线垂直于微平面观察（<code>v · h = 1</code>）时，反射率最低，等于该材质的特征<strong>垂直基础反射率 <code>F0</code></strong>；而当视线越趋近于与表面平行的<strong>掠射角（Grazing Angle，<code>v · h -&gt; 0</code>）</strong>时，<strong>任何光滑物体表面的反射率都会急剧攀升并趋近于 <code>100%（1.0）</code></strong>。</li>
+<li><strong>Schlick 五次方近似公式</strong>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>F_Schlick(v, h, F0) = F0 + (1.0 - F0) * (1.0 - max(0, v · h))^5</span></span></code></pre></div>
+</li>
+</ul>
+<h4 id="3-几何遮蔽函数-gl-v-hgeometry-functionsmith-schlick-ggx">3. 几何遮蔽函数 <code>G(l, v, h)</code>（Geometry Function）：Smith-Schlick-GGX</h4>
+<ul>
+<li><strong>物理含义</strong>：在粗糙度较高的凹凸微表面上，一部分微平面会被相邻突起的微平面挡住入射光线（<strong>自阴影 Shadowing</strong>），或者反射出的光线在半路被相邻微平面截获（<strong>自掩蔽 Masking</strong>）。几何函数 <code>G ∈ [0, 1]</code> 即描述未被遮蔽而成功逃逸的能量比例（若缺失 <code>G</code> 项，粗糙表面在掠射角除以趋近于 0 的 <code>(n·l)(n·v)</code> 分母时会产生刺眼的白边过曝伪影）。</li>
+<li><strong>Smith 分离近似与 Schlick-GGX 公式</strong>：将双向遮蔽拆为入射方向与观察方向两个独立单向项的乘积（直接光照下重映射参数取 <code>k = (roughness + 1)^2 / 8</code>；IBL 环境光下取 <code>k = roughness^2 / 2</code>）：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>G_Smith(n, v, l, k) = G_1(n, v, k) * G_1(n, l, k)</span></span>
+<span class="line"><span>其中单向项：G_1(n, v, k) = (n · v) / ( (n · v) * (1 - k) + k )</span></span></code></pre></div>
+</li>
+</ul>
+<hr>
+<h3 id="22-导体金属vs-电介质非金属与金属度工作流能量守恒">2.2 导体（金属）vs 电介质（非金属）与金属度工作流能量守恒<a class="heading-anchor" href="#22-导体金属vs-电介质非金属与金属度工作流能量守恒" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>为什么现代游戏引擎统一使用 <strong><code>BaseColor（基础色 RGB）+ Metallic（金属度）+ Roughness（粗糙度）</code></strong> 参数化材质？</p>
+<ol>
+<li><strong>电介质（Dielectrics / 非金属，如塑料、木头、石头、皮肤，<code>metallic = 0</code>）</strong>：<ul>
+<li>垂直基础反射率 <code>F0</code> 极低且不带颜色（绝大多数非金属的 <code>F0</code> 集中在 <code>0.02 ~ 0.05</code> 之间，引擎统一取无色常数 <strong><code>float3(0.04, 0.04, 0.04)</code></strong>）。</li>
+<li>折射进入非金属内部的光线经过次表面颗粒散射重新射出，形成带有 <code>BaseColor</code> 颜色的<strong>漫反射（Diffuse）</strong>。</li>
+</ul>
+</li>
+<li><strong>导体（Conductors / 金属，如金、银、铜、铁，<code>metallic = 1</code>）</strong>：<ul>
+<li>金属内部的自由电子会<strong>立即吸收并湮灭全部折射进入内部的电磁波</strong>，因此<strong>纯金属完全没有次表面漫反射（<code>k_d = 0</code>）</strong>！</li>
+<li>同时，金属的垂直基础反射率 <code>F0</code> 极高（<code>0.5 ~ 0.98</code>）且对不同波长的光具有选择性反射（例如黄金的高光反射本身就是金黄色的）。因此在金属度工作流中，直接复用 <code>BaseColor</code> 贴图来存储纯金属的有色 <code>F0</code>！</li>
+</ul>
+</li>
+<li><strong>Shader 统一插值与能量守恒代码实现</strong>：<div class="code-block-wrapper"><span class="code-lang-badge">HLSL</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">// 1. 根据金属度在非金属常数 0.04 与金属有色 BaseColor 之间插值得到 F0</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">float3</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> F0 = </span><span style="--shiki-light:#0184BC;--shiki-dark:#56B6C2">lerp</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">float3</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">0.04</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, </span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">0.04</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, </span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">0.04</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">), baseColor.rgb, metallic);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">// 2. 计算菲涅尔反射比例 F（即镜面反射拿走的能量比例 ks = F）</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">float3</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> F = </span><span style="--shiki-light:#0184BC;--shiki-dark:#56B6C2">F_Schlick</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#0184BC;--shiki-dark:#56B6C2">max</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#0184BC;--shiki-dark:#56B6C2">dot</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(H, V), </span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">0.0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">), F0);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">// 3. 严格能量守恒：折射进入内部的比例为 (1.0 - F)，且纯金属无漫反射故再乘以 (1.0 - metallic)</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">float3</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> kd = (</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">1.0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> - F) * (</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">1.0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> - metallic);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">// 4. 最终单光源直接光照出射 Radiance</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">float3</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> Lo = (kd * baseColor.rgb / PI + specularBRDF) * lightRadiance * NdotL;</span></span></code></pre></div>
+</li>
+</ol>
+<hr>
+<h2 id="第-3-章基于图像的光照ibl与-epic-split-sum-拆解近似">第 3 章：基于图像的光照（IBL）与 Epic Split-Sum 拆解近似<a class="heading-anchor" href="#第-3-章基于图像的光照ibl与-epic-split-sum-拆解近似" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<p>仅靠有限个方向光/点光源（Direct Lighting）渲染出的 PBR 材质在背光面会呈现死黑，尤其高光泽金属必须依靠反射周围全景环境才能体现金属质感。<strong>基于图像的光照（Image-Based Lighting, IBL）</strong>将包围场景的高动态范围全景贴图（HDR Cubemap）视为一个由无穷多个方向光源组成的球面，求解半球积分。</p>
+<p><img width="860" height="360" src="/img/posts/pbr-ch3-ibl-splitsum.svg" alt="IBL 基于图像的光照：漫反射辐照度图卷积与镜面反射 Split-Sum 拆解近似" loading="lazy" decoding="async"></p>
+<h3 id="31-漫反射-ibl辐照度环境图irradiance-map与球谐光照sh">3.1 漫反射 IBL：辐照度环境图（Irradiance Map）与球谐光照（SH）<a class="heading-anchor" href="#31-漫反射-ibl辐照度环境图irradiance-map与球谐光照sh" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>在反射方程的漫反射部分中，由于 Lambertian 项 <code>k_d * (c / π)</code> 与入射方向 <code>ωi</code> 无关（或将 <code>k_d</code> 近似替换为粗糙度修正菲涅尔 <code>1 - F_roughness(n, v)</code>），可以将其直接提取到半球积分号外面：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>L_diffuse(p, n) = k_d * (c / π) * [ ∫_Ω L_i(ωi) (n · ωi) dω_i ]</span></span></code></pre></div>
+<p>观察中括号内的半球积分可知：<strong>该积分的结果仅仅取决于表面法线方向 <code>n</code>，与视线方向 <code>v</code> 和材质粗糙度完全无关</strong>！</p>
+<ul>
+<li><strong>离线烘焙方案 A（Irradiance Cubemap）</strong>：在离线阶段遍历一个低分辨率（如 <code>32 × 32 × 6</code>）Cubemap 的每个纹素方向作为法线 <code>n</code>，对原始高清 HDR 环境图执行半球余弦加权卷积积分并存入该纹素；运行时片元着色器只需以世界法线 <code>N</code> 执行 <strong>1 次 <code>texCUBE(irradianceMap, N)</code> 采样</strong>即可拿到全场漫反射环境光。</li>
+<li><strong>离线烘焙方案 B（二阶球谐函数 Spherical Harmonics, SH）</strong>：由于余弦卷积后的漫反射辐照度极其平滑（仅含低频信号），Unity 与 Unreal 的 Light Probes 直接将其投影到前 3 阶（<code>l = 0, 1, 2</code>，共 <code>1 + 3 + 5 = 9</code> 个基函数）<strong>球谐函数系数</strong>上——每个光照探针只需存储 <strong>9 个 RGB 向量（27 个浮点数）</strong>，运行时通过简单的多项式点积即可极速还原任意法线方向的漫反射环境光。</li>
+</ul>
+<hr>
+<h3 id="32-镜面反射-iblepic-games-两部分拆解近似split-sum-approximation">3.2 镜面反射 IBL：Epic Games 两部分拆解近似（Split-Sum Approximation）<a class="heading-anchor" href="#32-镜面反射-iblepic-games-两部分拆解近似split-sum-approximation" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>与漫反射不同，镜面反射积分 <code>∫_Ω f_spec(ωi, ωo) L_i(ωi) (n · ωi) dω_i</code> 中的 <code>f_spec</code> 同时依赖于<strong>法线 <code>n</code>、观察方向 <code>v</code> 与粗糙度 <code>roughness</code></strong>，无法直接预烘焙进一张三维纹理中。Epic Games 在 UE4 中提出了工业界通用的 <strong>Split-Sum 拆解近似法</strong>，将乘积的积分拆解为两个独立积分的乘积：</p>
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>L_spec(n, v) ≈ [ 1/N ∑ L_i(l_k) ]  *  [ ∫_Ω f_spec(l, v) (n · l) dω_i ]</span></span>
+<span class="line"><span>               \________________/     \_______________________________/</span></span>
+<span class="line"><span>             第一部分：预滤波环境贴图          第二部分：2D BRDF 积分查找表 (LUT)</span></span></code></pre></div>
+<ol>
+<li><strong>第一部分：预滤波环境贴图（Pre-filtered Environment Map）</strong>：<ul>
+<li>假设观察视角垂直于表面（<code>v = n = R</code>，从而消除视角维度，仅剩反射向量 <code>R</code> 与粗糙度 <code>roughness</code> 两个维度）。</li>
+<li>离线阶段利用 Hammersley 低差异序列与 <strong>GGX 重要性采样（Importance Sampling）</strong>，按粗糙度从 <code>0.0</code> 到 <code>1.0</code> 分 5 个等级对 HDR 环境图进行不同波瓣宽度的模糊卷积，依次存入 <strong>Cubemap 的 5 级 Mipmap 链</strong>中（<code>Mip 0</code> 为清晰镜面，<code>Mip 4</code> 为极度粗糙模糊）。</li>
+<li>运行时根据反射向量 <code>R = reflect(-V, N)</code> 与材质 <code>roughness * MAX_REFLECTION_LOD</code>，执行一次三线性 Mipmap 采样 <code>SampleLevel(prefilterMap, R, mip)</code>。</li>
+</ul>
+</li>
+<li><strong>第二部分：全局通用的二维 BRDF 查找表（2D Environment BRDF LUT）</strong>：<ul>
+<li>将 Schlick 菲涅尔公式 <code>F(v, h) = F0 + (1 - F0) (1 - v · h)^5</code> 代入第二部分的积分中，可以把材质参数 <strong><code>F0</code> 完全从积分号内部剥离出来</strong>，化为关于 <code>F0</code> 的一次线性函数 <code>F0 * Scale + Bias</code>：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>∫_Ω f_spec(l, v) (n · l) dω_i = F0 * ∫ (f_spec/F)*(1 - (1 - v·h)^5)(n·l) dω</span></span>
+<span class="line"><span>                              +      ∫ (f_spec/F)*(1 - v·h)^5 (n·l) dω</span></span>
+<span class="line"><span>                              = F0 * Scale(n·v, roughness) + Bias(n·v, roughness)</span></span></code></pre></div>
+</li>
+<li>注意到 <code>Scale</code> 和 <code>Bias</code> 这两个积分值与具体环境光和 <code>F0</code> 均无关，仅仅是 <strong><code>cosθ_v = (n · v) ∈ [0, 1]</code> 与 <code>roughness ∈ [0, 1]</code> 的二元函数</strong>！</li>
+<li>因此只需离线生成一张全游戏共用的 <strong><code>512 × 512</code> 双通道浮点贴图（BRDF LUT，横轴为 <code>NdotV</code>，纵轴为 <code>roughness</code>，R 通道存 <code>Scale</code>，G 通道存 <code>Bias</code>）</strong>，运行时采样一次即可合成完整镜面环境光：<div class="code-block-wrapper"><span class="code-lang-badge">HLSL</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">float2</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> envBRDF = brdfLUT.</span><span style="--shiki-light:#0184BC;--shiki-dark:#56B6C2">Sample</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(sampler_Clamp, </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">float2</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(NdotV, roughness)).rg;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">float3</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> specularIBL = prefilteredColor * (F0 * envBRDF.r + envBRDF.g);</span></span></code></pre></div>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="第-4-章实时阴影技术shadow-mappcfpcss-与-csm-级联阴影">第 4 章：实时阴影技术：Shadow Map、PCF、PCSS 与 CSM 级联阴影<a class="heading-anchor" href="#第-4-章实时阴影技术shadow-mappcfpcss-与-csm-级联阴影" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="41-shadow-mapping-两趟原理与自阴影走样shadow-acne-vs-peter-panning">4.1 Shadow Mapping 两趟原理与自阴影走样（Shadow Acne vs Peter Panning）<a class="heading-anchor" href="#41-shadow-mapping-两趟原理与自阴影走样shadow-acne-vs-peter-panning" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>经典的 <strong>Shadow Mapping（阴影映射，Williams 1978）</strong> 算法分为两个渲染 Pass：</p>
+<ol>
+<li><strong>Shadow Caster Pass（光源视角深度渲染）</strong>：将虚拟相机放置于光源位置，将场景几何体变换到光源裁剪空间，仅向一张深度纹理（<code>Shadow Map</code>）写入离光源最近的片元深度值 <code>z_map</code>。</li>
+<li><strong>Main Lighting Pass（主相机视角阴影比对）</strong>：渲染主相机画面时，将每个片元的世界坐标 <code>P_world</code> 乘以光源矩阵变换到光源空间，得到该片元距离光源的实际深度 <code>z_cur</code> 以及在 Shadow Map 上的采样坐标 <code>(u, v)</code>；若 <strong><code>z_cur &gt; z_map(u, v)</code></strong>，说明该点在光源方向上被更近的物体挡住，判定处于阴影中。</li>
+</ol>
+<p><img width="860" height="360" src="/img/posts/pbr-ch4-shadow-csm.svg" alt="Shadow Map 阴影走样（Shadow Acne）成因、PCSS 软阴影与 CSM 级联阴影" loading="lazy" decoding="async"></p>
+<ul>
+<li><strong>为什么不加偏移会产生黑白相间的自阴影条纹（Shadow Acne）</strong>：
+因为 Shadow Map 的纹素分辨率有限，每个纹素覆盖场景中的一小块矩形面积；当光线倾斜照射平面时，平面上共享同一个 Shadow Map 纹素的多个屏幕片元中，有一半片元的真实深度 <code>z_cur</code> 比纹素中心记录的离散深度 <code>z_map</code> 稍大，另一半稍小，从而导致平面被自己遮挡、浮现出规则的明暗摩尔条纹。</li>
+<li><strong>斜率自适应偏移（Slope-Scale Depth Bias）与法线偏移（Normal Bias）</strong>：
+光线与表面法线夹角 <code>θ</code> 越大（表面越陡峭），纹素跨度引起的深度误差 <code>Δz ∝ tan(θ)</code> 越大。因此不能使用固定常数偏移，而必须根据 <code>N · L</code> 动态调节偏移量：<div class="code-block-wrapper"><span class="code-lang-badge">HLSL</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">float</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> bias = </span><span style="--shiki-light:#0184BC;--shiki-dark:#56B6C2">max</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(slopeScaleBias * (</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">1.0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> - </span><span style="--shiki-light:#0184BC;--shiki-dark:#56B6C2">dot</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(N, L)), minConstantBias);</span></span></code></pre></div>
+同时需控制 <code>bias</code> 上限：若深度偏移过大，物体与地面接触处的地面深度被过度减小，会导致本应在阴影中的接触面逃脱阴影判定，产生<strong>阴影与角色脚底脱节悬浮的伪影（Peter Panning）</strong>。Unity URP 通过结合<strong>沿法线向内微缩采样坐标（Normal Bias）</strong>与适度深度偏移共同消除上述两类伪影。</li>
+</ul>
+<hr>
+<h3 id="42-pcf-抗锯齿滤波与-pcss-接触硬化软阴影">4.2 PCF 抗锯齿滤波与 PCSS 接触硬化软阴影<a class="heading-anchor" href="#42-pcf-抗锯齿滤波与-pcss-接触硬化软阴影" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<ol>
+<li><strong>PCF（Percentage-Closer Filtering，百分比渐近滤波）</strong>：<ul>
+<li><strong>注意</strong>：对 Shadow Map 不能直接对深度值本身做双线性插值再比较（先平均深度再做 <code>&gt;</code> 比较的结果仍然是非 0 即 1 的硬边界）！</li>
+<li><strong>正确做法</strong>：在当前片元对应的 Shadow Map <code>(u, v)</code> 周围（如 <code>3×3</code> 或 Poisson Disk 圆盘采样核）采样 <code>K</code> 个邻近纹素，<strong>分别将 <code>z_cur</code> 与这 <code>K</code> 个深度值逐一做大小比较得到 <code>K</code> 个 <code>0/1</code> 可见性结果，最后对这 <code>K</code> 个 <code>0/1</code> 结果求加权平均</strong>，得到平滑过渡的半影灰度值 <code>visibility ∈ [0, 1]</code>。</li>
+</ul>
+</li>
+<li><strong>PCSS（Percentage-Closer Soft Shadows，Fernando 2005）</strong>：
+真实世界中面光源产生的阴影具有显著的<strong>接触硬化（Contact Hardening）</strong>现象：遮挡物（如树枝或脚底）离受影地面越近，阴影边缘越锐利清晰；离受影地面越远，半影区（Penumbra）越宽、阴影越模糊柔和。固定核半径的 PCF 无法模拟这一物理现象，PCSS 通过三步动态计算滤波核半径：<ul>
+<li><strong>第一步（Blocker Search 遮挡物平均深度搜索）</strong>：在当前片元 <code>(u, v)</code> 邻域内采样若干点，找出所有比当前片元深度 <code>d_receiver</code> 更浅（即 <code>z_map &lt; d_receiver</code>）的有效遮挡点，求其算术平均深度 <strong><code>d_blocker</code></strong>（若无任何遮挡点则直接提前终止返回完全照亮 <code>1.0</code>）。</li>
+<li><strong>第二步（Penumbra Size 半影宽度估算）</strong>：设面光源尺寸为 <code>w_light</code>，根据相似三角形比例直接算出半影区半径：<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>w_penumbra = ((d_receiver - d_blocker) * w_light) / d_blocker</span></span></code></pre></div>
+</li>
+<li><strong>第三步（可变核半径 PCF 采样）</strong>：将算出的 <code>w_penumbra</code> 作为 Poisson 圆盘 PCF 的采样扩散半径，执行百分比渐近滤波。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="43-csmcascaded-shadow-maps级联阴影贴图与防抖动对齐">4.3 CSM（Cascaded Shadow Maps，级联阴影贴图）与防抖动对齐<a class="heading-anchor" href="#43-csmcascaded-shadow-maps级联阴影贴图与防抖动对齐" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>在开放世界或大尺度室外场景中，平行太阳光需要覆盖从相机前 <code>0.1m</code> 到远方 <code>500m</code> 的广阔区域。若仅用单张 <code>2048 × 2048</code> 的 Shadow Map 包围整个视锥体，平均每个阴影纹素在地面上要跨好几米，导致玩家眼前的角色阴影呈现严重的马赛克锯齿（<strong>透视走样 Perspective Aliasing</strong>）。</p>
+<ul>
+<li><strong>CSM 视锥分段级联原理</strong>：<ol>
+<li><strong>对数 + 均匀混合切分视锥体</strong>：将主摄像机视锥体沿观察深度方向切分为 3 ～ 4 个子视锥体（Cascades，例如按 <code>7% / 15% / 30% / 48%</code> 比例切分为 <code>[0.1m~15m]</code>、<code>[15m~45m]</code>、<code>[45m~120m]</code>、<code>[120m~300m]</code>）。</li>
+<li><strong>独立正交包围盒渲染</strong>：为每一级子视锥体单独计算光源方向下的紧凑正交投影包围盒，分别渲染进同一张阴影图集的 4 个象限（或 <code>Texture2DArray</code> 的 4 个 Slice，每级各享 <code>2048 × 2048</code> 分辨率）。这样近处 <code>Cascade 0</code> 的纹素密度极高，远景 <code>Cascade 3</code> 又能覆盖全场。</li>
+<li><strong>级联接缝平滑混合（Cascade Blending）</strong>：在相邻两级 Cascade 交界处的过渡带（如 10% 宽度）内，同时采样前后两级 Shadow Map 并按距离线性插值，消除级联切换处的硬突变分界线。</li>
+</ol>
+</li>
+<li><strong>为什么主相机移动或旋转时 CSM 阴影边缘会发生剧烈闪烁（Shadow Shimmering）及根治方法</strong>：<ul>
+<li><strong>原因</strong>：当主相机微移或旋转时，如果每帧重新根据子视锥体 8 个角点计算紧凑轴对齐包围盒（AABB），光源正交投影框的宽高尺寸和中心坐标会随帧连续微变，导致世界空间中的固定物体在 Shadow Map 纹素网格上不断错位滑动，引发阴影边缘高频闪烁。</li>
+<li><strong>两步根治铁律</strong>：<ol>
+<li><strong>使用固定半径的球体包围盒（Bounding Sphere）替代 AABB</strong>：子视锥体对应的最小外接球半径在相机任意旋转下<strong>恒定不变</strong>，从而锁死光源正交投影矩阵的缩放尺寸。</li>
+<li><strong>世界空间纹素步长对齐（Texel Snapping）</strong>：计算光源空间下单个 Shadow Map 纹素对应的世界宽度 <code>worldUnitsPerTexel = orthoWidth / shadowMapResolution</code>，将光源相机在 XY 平面上的平移坐标强制向下取整对齐到 <code>worldUnitsPerTexel</code> 的整数倍网格点上（<code>pos.xy = floor(pos.xy / worldUnitsPerTexel) * worldUnitsPerTexel</code>），使相机移动时阴影纹素在世界空间中保持绝对静止。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</div> <!-- Prev / Next Flat Navigation --> <nav class="mt-16 grid grid-cols-1 gap-6 border-t border-[var(--border-color)] pt-8 md:grid-cols-2" aria-label="上下篇文章导航"> <div>  </div> <div class="md:text-right"> <a href="/2026/11/27/%E3%80%90C%2B%2B%E3%80%91STL%E4%B8%8E%E5%AE%B9%E5%99%A8%E5%BA%95%E5%B1%82/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+旧一篇 →
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> STL 与容器底层 </p> </a> </div> </nav> <!-- Giscus Comments --> <section class="mt-14 border-t border-[var(--border-subtle)] pt-8" aria-label="评论区"> <div class="mb-5 flex items-baseline gap-3"> <h2 class="text-lg font-semibold text-[var(--text-primary)]">讨论与评论</h2> <span class="text-xs text-[var(--text-tertiary)]">由 GitHub Discussions 驱动</span> </div> <div id="giscus-container"></div> </section> </article> <!-- Mobile TOC Trigger & Drawer -->  <button id="toc-toggle" class="toc-trigger fixed right-6 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded transition-colors hover:bg-[var(--accent-hover)] lg:hidden" aria-label="目录" title="文章目录"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="8" y1="6" x2="21" y2="6"></line> <line x1="8" y1="12" x2="21" y2="12"></line> <line x1="8" y1="18" x2="21" y2="18"></line> <line x1="3" y1="6" x2="3.01" y2="6"></line> <line x1="3" y1="12" x2="3.01" y2="12"></line> <line x1="3" y1="18" x2="3.01" y2="18"></line> </svg> </button> <div id="toc-mobile-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-xs lg:hidden"></div> <nav id="toc-mobile" aria-label="移动端目录" class="fixed right-0 bottom-0 left-0 z-50 max-h-[64vh] translate-y-full overflow-hidden rounded-t-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl transition-transform duration-300 lg:hidden"> <div class="flex items-center justify-between border-b border-[var(--border-subtle)] p-4"> <h4 class="font-semibold text-[var(--text-primary)]">目录</h4> <button id="toc-close" class="header-action -mr-1" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> <ul class="max-h-[calc(64vh-4rem)] space-y-1 overflow-y-auto p-4 text-sm"> <li> <a href="#第-1-章辐射度量学基础brdf-与渲染方程" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-1-章辐射度量学基础brdf-与渲染方程" lang="zh-CN"> 第 1 章：辐射度量学基础、BRDF 与渲染方程 </a> </li><li> <a href="#11-立体角與辐射度量学四大基本物理量" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="11-立体角與辐射度量学四大基本物理量" lang="zh-CN"> 1.1 立体角與辐射度量学四大基本物理量 </a> </li><li> <a href="#12-双向反射分布函数brdf与-kajiya-渲染方程" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="12-双向反射分布函数brdf与-kajiya-渲染方程" lang="zh-CN"> 1.2 双向反射分布函数（BRDF）与 Kajiya 渲染方程 </a> </li><li> <a href="#第-2-章cook-torrance-微表面模型与金属度-粗糙度工作流" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-2-章cook-torrance-微表面模型与金属度-粗糙度工作流" lang="zh-CN"> 第 2 章：Cook-Torrance 微表面模型与金属度-粗糙度工作流 </a> </li><li> <a href="#21-cook-torrance-微表面镜面-brdf-三大核心函数d-f-g" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="21-cook-torrance-微表面镜面-brdf-三大核心函数d-f-g" lang="zh-CN"> 2.1 Cook-Torrance 微表面镜面 BRDF 三大核心函数（D / F / G） </a> </li><li> <a href="#22-导体金属vs-电介质非金属与金属度工作流能量守恒" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="22-导体金属vs-电介质非金属与金属度工作流能量守恒" lang="zh-CN"> 2.2 导体（金属）vs 电介质（非金属）与金属度工作流能量守恒 </a> </li><li> <a href="#第-3-章基于图像的光照ibl与-epic-split-sum-拆解近似" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-3-章基于图像的光照ibl与-epic-split-sum-拆解近似" lang="zh-CN"> 第 3 章：基于图像的光照（IBL）与 Epic Split-Sum 拆解近似 </a> </li><li> <a href="#31-漫反射-ibl辐照度环境图irradiance-map与球谐光照sh" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="31-漫反射-ibl辐照度环境图irradiance-map与球谐光照sh" lang="zh-CN"> 3.1 漫反射 IBL：辐照度环境图（Irradiance Map）与球谐光照（SH） </a> </li><li> <a href="#32-镜面反射-iblepic-games-两部分拆解近似split-sum-approximation" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="32-镜面反射-iblepic-games-两部分拆解近似split-sum-approximation" lang="zh-CN"> 3.2 镜面反射 IBL：Epic Games 两部分拆解近似（Split-Sum Approximation） </a> </li><li> <a href="#第-4-章实时阴影技术shadow-mappcfpcss-与-csm-级联阴影" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-4-章实时阴影技术shadow-mappcfpcss-与-csm-级联阴影" lang="zh-CN"> 第 4 章：实时阴影技术：Shadow Map、PCF、PCSS 与 CSM 级联阴影 </a> </li><li> <a href="#41-shadow-mapping-两趟原理与自阴影走样shadow-acne-vs-peter-panning" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="41-shadow-mapping-两趟原理与自阴影走样shadow-acne-vs-peter-panning" lang="zh-CN"> 4.1 Shadow Mapping 两趟原理与自阴影走样（Shadow Acne vs Peter Panning） </a> </li><li> <a href="#42-pcf-抗锯齿滤波与-pcss-接触硬化软阴影" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="42-pcf-抗锯齿滤波与-pcss-接触硬化软阴影" lang="zh-CN"> 4.2 PCF 抗锯齿滤波与 PCSS 接触硬化软阴影 </a> </li><li> <a href="#43-csmcascaded-shadow-maps级联阴影贴图与防抖动对齐" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="43-csmcascaded-shadow-maps级联阴影贴图与防抖动对齐" lang="zh-CN"> 4.3 CSM（Cascaded Shadow Maps，级联阴影贴图）与防抖动对齐 </a> </li> </ul> </nav>  <nav class="toc hidden lg:block" aria-label="目录"> <div class="reading-toc sticky top-24"> <h4 class="mb-3 pl-2.5 text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">目录</h4> <ul id="desktop-toc-list" class="max-h-[calc(100vh-10rem)] space-y-0.5 overflow-y-auto text-sm"> <li> <a href="#第-1-章辐射度量学基础brdf-与渲染方程" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-1-章辐射度量学基础brdf-与渲染方程" lang="zh-CN"> 第 1 章：辐射度量学基础、BRDF 与渲染方程 </a> </li><li> <a href="#11-立体角與辐射度量学四大基本物理量" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="11-立体角與辐射度量学四大基本物理量" lang="zh-CN"> 1.1 立体角與辐射度量学四大基本物理量 </a> </li><li> <a href="#12-双向反射分布函数brdf与-kajiya-渲染方程" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="12-双向反射分布函数brdf与-kajiya-渲染方程" lang="zh-CN"> 1.2 双向反射分布函数（BRDF）与 Kajiya 渲染方程 </a> </li><li> <a href="#第-2-章cook-torrance-微表面模型与金属度-粗糙度工作流" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-2-章cook-torrance-微表面模型与金属度-粗糙度工作流" lang="zh-CN"> 第 2 章：Cook-Torrance 微表面模型与金属度-粗糙度工作流 </a> </li><li> <a href="#21-cook-torrance-微表面镜面-brdf-三大核心函数d-f-g" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="21-cook-torrance-微表面镜面-brdf-三大核心函数d-f-g" lang="zh-CN"> 2.1 Cook-Torrance 微表面镜面 BRDF 三大核心函数（D / F / G） </a> </li><li> <a href="#22-导体金属vs-电介质非金属与金属度工作流能量守恒" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="22-导体金属vs-电介质非金属与金属度工作流能量守恒" lang="zh-CN"> 2.2 导体（金属）vs 电介质（非金属）与金属度工作流能量守恒 </a> </li><li> <a href="#第-3-章基于图像的光照ibl与-epic-split-sum-拆解近似" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-3-章基于图像的光照ibl与-epic-split-sum-拆解近似" lang="zh-CN"> 第 3 章：基于图像的光照（IBL）与 Epic Split-Sum 拆解近似 </a> </li><li> <a href="#31-漫反射-ibl辐照度环境图irradiance-map与球谐光照sh" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="31-漫反射-ibl辐照度环境图irradiance-map与球谐光照sh" lang="zh-CN"> 3.1 漫反射 IBL：辐照度环境图（Irradiance Map）与球谐光照（SH） </a> </li><li> <a href="#32-镜面反射-iblepic-games-两部分拆解近似split-sum-approximation" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="32-镜面反射-iblepic-games-两部分拆解近似split-sum-approximation" lang="zh-CN"> 3.2 镜面反射 IBL：Epic Games 两部分拆解近似（Split-Sum Approximation） </a> </li><li> <a href="#第-4-章实时阴影技术shadow-mappcfpcss-与-csm-级联阴影" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-4-章实时阴影技术shadow-mappcfpcss-与-csm-级联阴影" lang="zh-CN"> 第 4 章：实时阴影技术：Shadow Map、PCF、PCSS 与 CSM 级联阴影 </a> </li><li> <a href="#41-shadow-mapping-两趟原理与自阴影走样shadow-acne-vs-peter-panning" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="41-shadow-mapping-两趟原理与自阴影走样shadow-acne-vs-peter-panning" lang="zh-CN"> 4.1 Shadow Mapping 两趟原理与自阴影走样（Shadow Acne vs Peter Panning） </a> </li><li> <a href="#42-pcf-抗锯齿滤波与-pcss-接触硬化软阴影" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="42-pcf-抗锯齿滤波与-pcss-接触硬化软阴影" lang="zh-CN"> 4.2 PCF 抗锯齿滤波与 PCSS 接触硬化软阴影 </a> </li><li> <a href="#43-csmcascaded-shadow-maps级联阴影贴图与防抖动对齐" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="43-csmcascaded-shadow-maps级联阴影贴图与防抖动对齐" lang="zh-CN"> 4.3 CSM（Cascaded Shadow Maps，级联阴影贴图）与防抖动对齐 </a> </li> </ul> </div> </nav>  </div>  <button id="back-to-top" type="button" class="back-to-top-pill" aria-label="回到顶部" title="回到顶部"> <span id="back-to-top-pct">0%</span> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"> <path d="M18 15l-6-6-6 6"></path> </svg> </button>  <div id="image-lightbox" class="image-lightbox" role="dialog" aria-modal="true" aria-label="图片放大预览"> <img id="image-lightbox-img" src="" alt=""> <p id="image-lightbox-caption" class="image-lightbox__caption"></p> </div> <script>
+    (function () {
+      // TOC Mobile Drawer & Scroll Spy
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocMobile = document.getElementById('toc-mobile');
+      const tocClose = document.getElementById('toc-close');
+      const tocBackdrop = document.getElementById('toc-mobile-backdrop');
+      let isOpen = false;
+
+      function openMobileToc() {
+        if (isOpen) return;
+        isOpen = true;
+        if (tocMobile) tocMobile.classList.remove('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.remove('hidden');
+        if (tocToggle) tocToggle.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileToc() {
+        if (!isOpen) return;
+        isOpen = false;
+        if (tocMobile) tocMobile.classList.add('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.add('hidden');
+        if (tocToggle) tocToggle.classList.remove('hidden');
+        document.body.style.overflow = '';
+      }
+
+      if (tocToggle) tocToggle.addEventListener('click', openMobileToc);
+      if (tocClose) tocClose.addEventListener('click', closeMobileToc);
+      if (tocBackdrop) tocBackdrop.addEventListener('click', closeMobileToc);
+
+      document.querySelectorAll('.toc-link-mobile').forEach(link => {
+        link.addEventListener('click', () => setTimeout(closeMobileToc, 100));
+      });
+
+      const tocLinks = document.querySelectorAll('.toc-link');
+      if (tocLinks.length > 0) {
+        const headingIds = Array.from(tocLinks)
+          .map(link => link.getAttribute('data-heading'))
+          .filter(Boolean);
+        const headingElements = headingIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateActiveLink() {
+          if (!headingElements.length) return;
+          let activeId = headingIds[0];
+          for (let i = 0; i < headingElements.length; i++) {
+            const rect = headingElements[i].getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.28) {
+              activeId = headingElements[i].id;
+            }
+          }
+          const tocListEl = document.getElementById('desktop-toc-list');
+          tocLinks.forEach(link => {
+            if (link.getAttribute('data-heading') === activeId) {
+              const wasActive = link.classList.contains('toc-active');
+              link.classList.add('toc-active');
+              if (!wasActive && tocListEl) {
+                const linkTop = link.offsetTop;
+                const listHeight = tocListEl.clientHeight;
+                tocListEl.scrollTo({
+                  top: Math.max(0, linkTop - listHeight / 2 + 24),
+                  behavior: 'smooth',
+                });
+              }
+            } else {
+              link.classList.remove('toc-active');
+            }
+          });
+        }
+
+        let ticking = false;
+        const progressBar = document.getElementById('reading-progress');
+        const backToTopBtn = document.getElementById('back-to-top');
+        const backToTopPct = document.getElementById('back-to-top-pct');
+
+        function updateProgress() {
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = docHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100)) : 0;
+          if (progressBar) progressBar.style.width = pct + '%';
+          if (backToTopPct) backToTopPct.textContent = Math.round(pct) + '%';
+          if (backToTopBtn) {
+            backToTopBtn.classList.toggle('is-visible', window.scrollY > 360);
+          }
+        }
+        if (backToTopBtn) {
+          backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateActiveLink();
+                updateProgress();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        updateActiveLink();
+        updateProgress();
+      }
+
+      // Heading Anchor Copy Link
+      document.querySelectorAll('.prose .heading-anchor').forEach(anchor => {
+        anchor.addEventListener('click', async e => {
+          e.preventDefault();
+          const href = anchor.getAttribute('href') || '';
+          const fullUrl = window.location.origin + window.location.pathname + href;
+          history.replaceState(null, '', href);
+          try {
+            await navigator.clipboard.writeText(fullUrl);
+            anchor.classList.add('copied');
+            anchor.textContent = '已复制';
+            setTimeout(() => {
+              anchor.classList.remove('copied');
+              anchor.textContent = '#';
+            }, 1500);
+          } catch (_) {}
+        });
+      });
+
+      // Image Lightbox Zoom
+      const lightbox = document.getElementById('image-lightbox');
+      const lightboxImg = document.getElementById('image-lightbox-img');
+      const lightboxCaption = document.getElementById('image-lightbox-caption');
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.prose img, .post-header-diagram img').forEach(img => {
+        img.addEventListener('click', () => {
+          if (!lightbox || !lightboxImg) return;
+          lightboxImg.src = img.getAttribute('src') || '';
+          lightboxImg.alt = img.getAttribute('alt') || '';
+          if (lightboxCaption) {
+            lightboxCaption.textContent = img.getAttribute('alt') || '';
+          }
+          lightbox.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      if (lightbox) {
+        lightbox.addEventListener('click', closeLightbox);
+      }
+      window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && lightbox && lightbox.classList.contains('is-open')) {
+          closeLightbox();
+        }
+      });
+
+      // Lazy Load Giscus Comments
+      const giscusContainer = document.getElementById('giscus-container');
+      if (giscusContainer) {
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded) return;
+          giscusContainer.dataset.loaded = 'true';
+          const isDark = document.documentElement.classList.contains('dark');
+          const s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.setAttribute('data-repo', 'VVVVVenxo/VVVVVenxo.github.io');
+          s.setAttribute('data-repo-id', 'R_kgDOQ5Bk1Q');
+          s.setAttribute('data-category', 'Announcements');
+          s.setAttribute('data-category-id', 'DIC_kwDOQ5Bk1c4DJO_-');
+          s.setAttribute('data-mapping', 'pathname');
+          s.setAttribute('data-strict', '0');
+          s.setAttribute('data-reactions-enabled', '1');
+          s.setAttribute('data-emit-metadata', '0');
+          s.setAttribute('data-input-position', 'top');
+          s.setAttribute('data-theme', isDark ? 'dark_dimmed' : 'light');
+          s.setAttribute('data-lang', 'zh-CN');
+          s.crossOrigin = 'anonymous';
+          s.async = true;
+          giscusContainer.appendChild(s);
+        };
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            entries => {
+              if (entries.some(e => e.isIntersecting)) {
+                loadGiscus();
+                io.disconnect();
+              }
+            },
+            { rootMargin: '300px' }
+          );
+          io.observe(giscusContainer);
+        } else {
+          loadGiscus();
+        }
+      }
+    })();
+  </script>  </main> <footer class="site-footer border-t border-[var(--border-color)]"> <div class="container py-8"> <div class="flex flex-col items-center justify-between gap-4 md:flex-row"> <div class="flex items-center gap-3"> <a href="https://github.com/VVVVVenxo" target="_blank" rel="noopener noreferrer" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="GitHub" title="GitHub"> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="mailto:1263147353@qq.com" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="Email" title="Email"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="4" width="20" height="16" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> </a> <a href="/atom.xml" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="RSS 订阅" title="RSS 订阅"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M4 11a9 9 0 0 1 9 9"></path> <path d="M4 4a16 16 0 0 1 16 16"></path> <circle cx="5" cy="19" r="1"></circle> </svg> </a> </div> <p class="text-xs text-[var(--text-tertiary)]">
+© 2024–2026 VVVVVenxo
+</p> </div> </div> </footer> <!-- Flat Search Modal --> <div id="search-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/45 px-4 pt-[10vh] backdrop-blur-xs" role="dialog" aria-modal="true" aria-label="全站搜索"> <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl"> <div class="flex items-center gap-3 border-b border-[var(--border-subtle)] px-4 py-3"> <svg class="shrink-0 text-[var(--text-tertiary)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> <input id="search-input" type="search" placeholder="搜索文章标题、关键词、技术栈（支持 C++ / Unity / 渲染 / 网络...）" class="w-full bg-transparent text-base text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none" autocomplete="off"> <button id="search-close" type="button" class="rounded border border-[var(--border-color)] px-2 py-0.5 text-xs text-[var(--text-tertiary)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
+ESC
+</button> </div> <div id="search-results" class="max-h-[62vh] overflow-y-auto divide-y divide-[var(--border-subtle)] px-4 py-2 text-sm"> <p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p> </div> </div> </div> <script>
+      (function () {
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const giscusFrame = document.querySelector('iframe.giscus-frame');
+            if (giscusFrame && giscusFrame.contentWindow) {
+              giscusFrame.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: isDark ? 'dark_dimmed' : 'light' } } },
+                'https://giscus.app'
+              );
+            }
+          });
+        }
+
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            const hidden = mobileMenu.classList.toggle('hidden');
+            mobileBtn.setAttribute('aria-expanded', String(!hidden));
+          });
+        }
+
+        // Code Copy Buttons
+        document.addEventListener('click', async e => {
+          const btn = e.target.closest('.copy-button');
+          if (!btn) return;
+          const wrapper = btn.closest('.code-block-wrapper');
+          const codeEl = wrapper ? wrapper.querySelector('pre code') : null;
+          if (!codeEl) return;
+          try {
+            await navigator.clipboard.writeText(codeEl.innerText);
+            const copyIcon = btn.querySelector('.copy-icon');
+            const checkIcon = btn.querySelector('.check-icon');
+            btn.classList.add('copied');
+            if (copyIcon) copyIcon.classList.add('hidden');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              if (copyIcon) copyIcon.classList.remove('hidden');
+              if (checkIcon) checkIcon.classList.add('hidden');
+            }, 1800);
+          } catch (_) {}
+        });
+
+        // Search Modal
+        const searchBtn = document.getElementById('search-btn');
+        const searchModal = document.getElementById('search-modal');
+        const searchInput = document.getElementById('search-input');
+        const searchClose = document.getElementById('search-close');
+        const searchResults = document.getElementById('search-results');
+        let searchIndex = null;
+
+        async function ensureSearchIndex() {
+          if (searchIndex) return searchIndex;
+          try {
+            const res = await fetch('/search.json');
+            searchIndex = await res.json();
+          } catch (_) {
+            searchIndex = [];
+          }
+          return searchIndex;
+        }
+
+        function openSearch() {
+          if (!searchModal) return;
+          searchModal.classList.remove('hidden');
+          searchModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          ensureSearchIndex();
+          setTimeout(() => searchInput && searchInput.focus(), 30);
+        }
+
+        function closeSearch() {
+          if (!searchModal) return;
+          searchModal.classList.add('hidden');
+          searchModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
+
+        if (searchBtn) searchBtn.addEventListener('click', openSearch);
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        if (searchModal) {
+          searchModal.addEventListener('click', e => {
+            if (e.target === searchModal) closeSearch();
+          });
+        }
+
+        window.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (searchModal && searchModal.classList.contains('hidden')) openSearch();
+            else closeSearch();
+          } else if (e.key === 'Escape' && searchModal && !searchModal.classList.contains('hidden')) {
+            closeSearch();
+          }
+        });
+
+        function escapeHtml(s) {
+          return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
+
+        if (searchInput && searchResults) {
+          searchInput.addEventListener('input', async () => {
+            const q = searchInput.value.trim().toLowerCase();
+            if (!q) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p>';
+              return;
+            }
+            const data = await ensureSearchIndex();
+            const matched = data.filter(item => {
+              const title = (item.title || '').toLowerCase();
+              const content = (item.content || '').toLowerCase();
+              const tags = (item.tags || []).join(' ').toLowerCase();
+              const cats = (item.categories || []).join(' ').toLowerCase();
+              return title.includes(q) || tags.includes(q) || cats.includes(q) || content.includes(q);
+            });
+
+            if (!matched.length) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">没有找到匹配的文章</p>';
+              return;
+            }
+
+            searchResults.innerHTML = matched
+              .slice(0, 15)
+              .map(item => {
+                const rawText = item.content || '';
+                const idx = rawText.toLowerCase().indexOf(q);
+                let snippet = rawText.slice(0, 110);
+                if (idx > 30) {
+                  snippet = '…' + rawText.slice(idx - 25, idx + 85) + '…';
+                }
+                return `
+                  <a href="${item.url}" class="block py-3.5 transition-colors hover:text-[var(--accent)]">
+                    <div class="flex items-baseline justify-between gap-2">
+                      <span class="font-semibold text-[var(--text-primary)]">${escapeHtml(item.title)}</span>
+                      <span class="shrink-0 text-xs text-[var(--text-tertiary)]">${escapeHtml(item.date || '')}</span>
+                    </div>
+                    <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">${escapeHtml(snippet)}</p>
+                  </a>
+                `;
+              })
+              .join('');
+          });
+        }
+      })();
+    </script> </body> </html>

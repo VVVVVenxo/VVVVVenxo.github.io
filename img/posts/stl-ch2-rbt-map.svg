@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：std::list 环状双向链表哨兵与 std::map / std::set 红黑树 Header 节点布局</text>
+
+  <!-- 左栏：std::list -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. std::list 环状双向链表哨兵节点与 O(1) splice 拼接</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">为什么 STL list 采用“带空白哨兵节点的环状双向链表”：</text>
+    <text x="56" y="134" fill="#17343B">• 哨兵节点 <tspan font-family="Consolas, monospace">_M_node</tspan> 本身即为尾后位置 <tspan font-weight="700" fill="#287B73">end()</tspan></text>
+    <text x="56" y="155" fill="#17343B">• <tspan font-family="Consolas, monospace">node-&gt;next</tspan> 指首元 <tspan font-weight="700">begin()</tspan>；<tspan font-family="Consolas, monospace">prev</tspan> 指尾元 <tspan font-weight="700">back()</tspan></text>
+    <text x="56" y="175" fill="#17343B">• 环状设计使头尾插入/删除无需任何空指针分支判断，且对</text>
+    <text x="56" y="194" fill="#61747A">  end() 迭代器执行 --it 可直接 O(1) 退回到最后一个真实节点</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">节点内存开销与专属成员函数：</text>
+    <text x="56" y="252" fill="#17343B">• <tspan font-weight="700">指针开销</tspan>：每个元素除数据外固定附带 <tspan font-weight="700" fill="#C47743">16B (prev+next)</tspan></text>
+    <text x="56" y="273" fill="#17343B">  及堆分配器头，且节点离散分布导致 CPU Cache Miss 高</text>
+    <text x="56" y="294" fill="#17343B">• <tspan font-weight="700">splice 零拷贝接合</tspan>：仅改 6 次指针即可将另一链表子段</text>
+    <text x="56" y="314" fill="#287B73" font-weight="700">  O(1) 移入当前链表（LRU 命中节点移至表头核心操作）</text>
+  </g>
+
+  <!-- 右栏：std::map / set 红黑树 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. std::map / set 红黑树节点结构（32B 头）与 Header 哨兵</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">_Rb_tree_node_base 节点头（每节点固定 32B 开销）：</text>
+    <text x="468" y="134" fill="#17343B">• 含颜色枚举 <tspan font-family="Consolas, monospace">color</tspan> + 3 个指针（<tspan font-family="Consolas, monospace">parent, left, right</tspan>）</text>
+    <text x="468" y="155" fill="#17343B">• 树对象内置虚拟哨兵节点 <tspan font-weight="700" fill="#C47743">_M_header</tspan>（作为 <tspan font-family="Consolas, monospace">end()</tspan>）：</text>
+    <text x="468" y="175" fill="#17343B">  - <tspan font-family="Consolas, monospace">header.parent</tspan> 与真实根节点 Root <tspan font-weight="700">互指为父</tspan></text>
+    <text x="468" y="194" fill="#287B73" font-weight="700">  - header.left 指最小节点(begin)，right 指最大节点</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">为什么选红黑树而非 AVL 树，且 set 迭代器只读：</text>
+    <text x="468" y="252" fill="#17343B">• <tspan font-weight="700">旋转极少</tspan>：红黑树最长路径 ≤ 2 倍最短路径，插入最多</text>
+    <text x="468" y="272" fill="#17343B">  <tspan font-weight="700" fill="#287B73">2 次旋转</tspan>、删除最多 <tspan font-weight="700" fill="#287B73">3 次旋转</tspan>（AVL 删除达 O(log N) 次）</text>
+    <text x="468" y="294" fill="#17343B">• <tspan font-weight="700">Key 不可原地修改</tspan>：set 的 iterator 即 const_iterator，</text>
+    <text x="468" y="314" fill="#17343B">  防止用户直接改值破坏二叉搜索树左小右大的全局有序性</text>
+  </g>
+</svg>
