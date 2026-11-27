@@ -26,7 +26,7 @@
       <link>https://VVVVVenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
       <pubDate>Mon, 26 Oct 2026 00:00:00 GMT</pubDate>
-      <description>基于严蔚敏《数据结构》与 408 统考考点的系统复习笔记：涵盖线性表（顺序表与链表）、栈与循环队列、KMP 模式匹配、树与二叉树、图论算法、查找（AVL/红黑树/B+树/散列表）及内外部排序体系。</description>
+      <description>基于严蔚敏《数据结构》与 408 统考考点的系统复习笔记：涵盖线性表（顺序表与链表）、栈与循环队列、KMP 模式匹配、树与二叉树、图论算法、查找（AVL/红黑树/B+ 树/散列表）及内外部排序体系。</description>
     </item>
     <item>
       <title>【计算机基础】离散数学</title>
@@ -145,7 +145,7 @@
       <link>https://VVVVVenxo.github.io/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/</link>
       <guid>https://VVVVVenxo.github.io/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/</guid>
       <pubDate>Thu, 15 Jan 2026 00:00:00 GMT</pubDate>
-      <description>基于C++与Modern OpenGL构建的大规模自然场景实时漫游系统，实现了地形渲染、水体仿真、天空盒、日夜循环、LOD优化、视锥体剔除、SSAO等核心功能，是一个具备&quot;游戏级&quot;视觉表现的室外场景漫游系统。</description>
+      <description>基于 C++ 与 Modern OpenGL 构建的大规模自然场景实时漫游系统，实现了地形渲染、水体仿真、天空盒、日夜循环、LOD 优化、视锥体剔除、SSAO 等核心功能，是一个具备&quot;游戏级&quot;视觉表现的室外场景漫游系统。</description>
     </item>
     <item>
       <title>【Unity】UI与渲染优化</title>
