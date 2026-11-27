@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：游戏 AI 决策架构对比：有限状态机（FSM / HFSM）与行为树（Behavior Tree）</text>
+
+  <!-- 左栏：FSM 与 HFSM -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 有限状态机 (FSM) 的 O(N²) 跃迁爆炸与分层状态机 (HFSM)</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#C47743" font-weight="700">平铺有限状态机（Flat FSM）的工程痛点：</text>
+    <text x="56" y="134" fill="#17343B">• N 个状态两两之间潜在转移边多达 <tspan font-weight="700" fill="#C47743">N × (N - 1)</tspan> 条</text>
+    <text x="56" y="156" fill="#17343B">• 状态与跳转逻辑强耦合（状态内硬编码 ChangeState），</text>
+    <text x="56" y="176" fill="#17343B">  新增“受击眩晕/死亡”全局状态时需在所有状态内补写判断</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">分层状态机（HFSM · Hierarchical FSM）改进方案：</text>
+    <text x="56" y="252" fill="#17343B">• 引入<tspan font-weight="700">父状态 (Super-State)</tspan> 聚合公共跳转（如将巡逻/</text>
+    <text x="56" y="272" fill="#17343B">  追击/攻击归入“存活”父状态，统一响应“死亡”跳转）</text>
+    <text x="56" y="294" fill="#17343B">• 消除重复转移边，非常适合<tspan font-weight="700" fill="#287B73">角色动作层 (Animator)</tspan> 控制</text>
+  </g>
+
+  <!-- 右栏：行为树与黑板 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 行为树（Behavior Tree）控制节点语义与 Blackboard 黑板</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="116" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#287B73" font-weight="700">复合控制节点（返回 Success / Failure / Running）：</text>
+    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700" fill="#287B73">Sequence (顺序节点 · AND)</tspan>：从左到右执行，遇 Failure</text>
+    <text x="468" y="154" fill="#17343B">  或 Running 立即中断返回；全成功才返回 Success</text>
+    <text x="468" y="174" fill="#17343B">• <tspan font-weight="700" fill="#C47743">Selector (选择节点 · OR)</tspan>：按优先级依次尝试，遇首个</text>
+    <text x="468" y="194" fill="#17343B">  Success 或 Running 即返回（高优分支打断低优分支）</text>
+
+    <rect x="456" y="218" width="362" height="106" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="238" fill="#C47743" font-weight="700">Blackboard（黑板数据解耦）与事件驱动优化：</text>
+    <text x="468" y="260" fill="#17343B">• <tspan font-weight="700">数据解耦</tspan>：各节点仅通过键值读写共享 <tspan font-weight="700">Blackboard</tspan></text>
+    <text x="468" y="282" fill="#17343B">• <tspan font-weight="700">打断优化 (Abort)</tspan>：避免每帧从根全树重刷，驻留当前</text>
+    <text x="468" y="302" fill="#17343B">  Running 节点，仅在黑板被监听键值变化时触发条件打断</text>
+  </g>
+</svg>

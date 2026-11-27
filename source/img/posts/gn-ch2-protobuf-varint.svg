@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：Protobuf 二进制序列化原理（TLV 编码结构、Base-128 Varint 与 ZigZag 映射）</text>
+
+  <!-- 左栏：TLV 与 Varint -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. Tag-Length-Value (TLV) 紧凑布局与 Varint 变长编码</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">为什么 Protobuf 不传字段名字符串且天然向前向后兼容：</text>
+    <text x="56" y="134" fill="#17343B">• 每个字段仅编码为 <tspan font-weight="700" fill="#287B73">[Tag | (Length) | Value]</tspan> 字节流</text>
+    <text x="56" y="156" fill="#17343B" font-weight="700" font-family="Consolas, monospace">Tag = (field_number &lt;&lt; 3) | wire_type</text>
+    <text x="56" y="176" fill="#17343B">• 低 3 位 <tspan font-family="Consolas, monospace">wire_type</tspan> 指明类型（0=Varint, 2=Len-delim）</text>
+    <text x="56" y="194" fill="#61747A">• 遇到未知新字段时，旧客户端按 wire_type 直接跳过即可</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">Base-128 Varints 变长整数编码（以整数 300 为例）：</text>
+    <text x="56" y="252" fill="#17343B">• 每字节最高位 <tspan font-weight="700" fill="#C47743">MSB 为延续位</tspan>（1=后续有字节，0=结束），</text>
+    <text x="56" y="272" fill="#17343B">  低 7 位存储有效数值，按<tspan font-weight="700">小端序（低 7 位在前）</tspan>排列：</text>
+    <text x="56" y="294" fill="#287B73" font-weight="700" font-family="Consolas, monospace">300 = 00000010 0101100(2) → [10101100, 00000010]</text>
+    <text x="56" y="314" fill="#17343B">• 0~127 的高频小整数仅占 <tspan font-weight="700" fill="#287B73">1 字节</tspan>（比 4B int 省 75%）</text>
+  </g>
+
+  <!-- 右栏：ZigZag 负数映射 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 为什么负数不能直接用 int32 Varint 及 ZigZag 编码</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">负数补码直接走 Varint 的“10 字节膨胀陷阱”：</text>
+    <text x="468" y="134" fill="#17343B">• 补码下 -1 的 64 位表示为全 1 (<tspan font-family="Consolas, monospace">0xFFFFFFFFFFFFFFFF</tspan>)</text>
+    <text x="468" y="156" fill="#17343B">• 若字段声明为普通 <tspan font-family="Consolas, monospace">int32 / int64</tspan>，按每 7 位切分后，</text>
+    <text x="468" y="175" fill="#C47743" font-weight="700">  任何负数在 Varint 下都会固定占满整整 10 个字节！</text>
+    <text x="468" y="194" fill="#61747A">• 若坐标或属性差值常出现负数，必须改用 sint32 / sint64</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">ZigZag 有符号数交错映射（sint32 / sint64 底层机制）：</text>
+    <text x="468" y="252" fill="#17343B">• 将正负整数按绝对值大小交错映射为无符号正整数：</text>
+    <text x="468" y="272" fill="#17343B" font-family="Consolas, monospace">0 → 0,  -1 → 1,  1 → 2,  -2 → 3,  2 → 4 ...</text>
+    <text x="468" y="294" fill="#287B73" font-weight="700" font-family="Consolas, monospace">编码：(n &lt;&lt; 1) ^ (n &gt;&gt; 31)   （算术右移复制符号位）</text>
+    <text x="468" y="314" fill="#287B73" font-weight="700" font-family="Consolas, monospace">解码：(u &gt;&gt; 1) ^ -(u &amp; 1)   （小负数同样仅占 1B）</text>
+  </g>
+</svg>

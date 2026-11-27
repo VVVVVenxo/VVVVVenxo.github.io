@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：应用层心跳保活、静默断线重连缓存补发与 Unity 网络线程双队列投递</text>
+
+  <!-- 左栏：心跳与断线重连 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 为什么必须自己做应用层心跳与静默断线重连</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#17343B" font-weight="700">为什么不能依赖 TCP KeepAlive 检测断网：</text>
+    <text x="56" y="133" fill="#17343B">• 系统默认 KeepAlive 探测周期长达 <tspan font-weight="700" fill="#C47743">2 小时</tspan>，且蜂窝网切</text>
+    <text x="56" y="153" fill="#17343B">  Wi-Fi 或 NAT 路由老化假死时，Socket 不会立即报异常</text>
+    <text x="56" y="173" fill="#287B73" font-weight="700">• 应用层 Ping/Pong 心跳：每 5~10s 发带时间戳心跳包，</text>
+    <text x="56" y="193" fill="#287B73" font-weight="700">  既测量实时 RTT 延迟，又在 3 次超时后主动触发重连</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">两级断线重连机制（静默闪断恢复 vs 全量重刷）：</text>
+    <text x="56" y="252" fill="#17343B">1. <tspan font-weight="700">静默重连</tspan>：携带 Token 与客户端最后收到的服务端序号</text>
+    <text x="56" y="272" fill="#17343B">   <tspan font-family="Consolas, monospace">last_svr_seq</tspan>；服务端直接从环形缓存补发断线期间</text>
+    <text x="56" y="292" fill="#17343B">   缺失的增量包（玩家全程无感，不退回登录或切加载页）</text>
+    <text x="56" y="313" fill="#17343B">2. <tspan font-weight="700">全量重同步</tspan>：若断线过久缓存已覆盖，拉取全量快照</text>
+  </g>
+
+  <!-- 右栏：网络线程与主线程双队列 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 网络 I/O 线程与 Unity 主线程双队列解耦架构</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">为什么不能在异步 Socket 回调线程中直接调 Unity API：</text>
+    <text x="468" y="134" fill="#17343B">• Unity 绝大多数引擎组件 API <tspan font-weight="700" fill="#C47743">非线程安全</tspan>，强制要求在</text>
+    <text x="468" y="154" fill="#17343B">  主线程调用；且主线程若因加载资源卡顿，绝不能阻塞</text>
+    <text x="468" y="174" fill="#17343B">  底层网络心跳与 KCP <tspan font-family="Consolas, monospace">ikcp_update</tspan> 定时重传驱动</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">生产者-消费者双缓冲队列（Double-Buffered Queue）：</text>
+    <text x="468" y="252" fill="#17343B">• <tspan font-weight="700">网络线程</tspan>：负责 Socket 收发、RingBuffer 拆包、解密</text>
+    <text x="468" y="272" fill="#17343B">  与后台完成 Protobuf 反序列化，将消息推入写队列</text>
+    <text x="468" y="294" fill="#287B73" font-weight="700">• <tspan font-weight="700">主线程 Update</tspan>：每帧通过 <tspan font-family="Consolas, monospace">Swap</tspan> 交换读写队列引用</text>
+    <text x="468" y="314" fill="#287B73" font-weight="700">  （临界区仅一次指针交换），按帧预算派发业务回调</text>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：BFS / Dijkstra / A* 寻路评估函数对比、可采纳性条件与三种网格启发函数</text>
+
+  <!-- 左栏：三种算法与可采纳性 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 搜索算法评估函数 f(n) = g(n) + h(n) 与最优性定理</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">四类图搜索算法的统一优先级队列框架：</text>
+    <text x="56" y="133" fill="#17343B">• <tspan font-weight="700">BFS (广度优先)</tspan>：边权全为 1 的特例，队列层序扩展</text>
+    <text x="56" y="153" fill="#17343B">• <tspan font-weight="700">Dijkstra</tspan>：<tspan font-family="Consolas, monospace">f(n) = g(n)</tspan>（h=0，同心圆无方向均匀扩展）</text>
+    <text x="56" y="173" fill="#17343B">• <tspan font-weight="700">Greedy Best-First</tspan>：<tspan font-family="Consolas, monospace">f(n) = h(n)</tspan>（快，但<tspan font-weight="700" fill="#C47743">不保最短路</tspan>）</text>
+    <text x="56" y="193" fill="#287B73" font-weight="700">• <tspan font-weight="700">A* 启发搜索</tspan>：<tspan font-family="Consolas, monospace">f(n) = g(n) + h(n)</tspan>（兼顾最优与效率）</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">A* 保证找到全局最短路径的两大数学性质：</text>
+    <text x="56" y="252" fill="#17343B">1. <tspan font-weight="700">可采纳性 (Admissible)</tspan>：对所有节点满足 <tspan font-weight="700" fill="#C47743">h(n) ≤ h*(n)</tspan></text>
+    <text x="56" y="272" fill="#17343B">   （启发估计值绝不高估真实剩余距离，保证<tspan font-weight="700">路径最优</tspan>）</text>
+    <text x="56" y="294" fill="#17343B">2. <tspan font-weight="700">一致性 (Consistent)</tspan>：满足 <tspan font-family="Consolas, monospace">h(n) ≤ c(n, n') + h(n')</tspan></text>
+    <text x="56" y="314" fill="#17343B">   （三角不等式，保证节点移入 Closed 表后无需重入）</text>
+  </g>
+
+  <!-- 右栏：三种网格距离与 Breaking Ties -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 网格地图移动规则对应的启发函数与破平局优化</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#17343B" font-weight="700">设 Δx = |x1 - x2|, Δy = |y1 - y2|，三种标准启发函数：</text>
+    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700" fill="#287B73">四方向网格 → 曼哈顿距离</tspan>：<tspan font-family="Consolas, monospace">h = D * (Δx + Δy)</tspan></text>
+    <text x="468" y="156" fill="#17343B">• <tspan font-weight="700" fill="#C47743">八方向网格 → 对角距离</tspan> (正交代价 D=1, 斜向 D2=√2)：</text>
+    <text x="468" y="176" fill="#C47743" font-weight="700" font-family="Consolas, monospace">h = D * (Δx + Δy) + (D2 - 2*D) * min(Δx, Δy)</text>
+    <text x="468" y="196" fill="#17343B">• <tspan font-weight="700">任意方向 → 欧氏距离</tspan>：<tspan font-family="Consolas, monospace">h = D * sqrt(Δx² + Δy²)</tspan></text>
+
+    <rect x="456" y="216" width="362" height="108" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="236" fill="#C47743" font-weight="700">为什么空旷网格 A* 仍会展开大量等值节点（破平局）：</text>
+    <text x="468" y="257" fill="#17343B">• 在无障碍网格中，从起点到终点存在大量长度完全相同</text>
+    <text x="468" y="277" fill="#17343B">  的最短路径，路径上所有节点的 <tspan font-family="Consolas, monospace">f(n) = g(n) + h(n)</tspan> 相等</text>
+    <text x="468" y="297" fill="#287B73" font-weight="700">• 破平局：f 相同时优先选 h 小者，或令 h *= (1 + p)</text>
+    <text x="468" y="316" fill="#61747A">  （微小正数 p &lt; 步长/最大路径长，瞬间剪除等值分支）</text>
+  </g>
+</svg>

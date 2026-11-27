@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：TCP 字节流粘包/半包成因、长度前缀封包协议与 RingBuffer 环形缓冲区拆包</text>
+
+  <!-- 左栏：粘包半包与封包格式 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 为什么 TCP 会发生粘包/半包及长度前缀封包头</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#C47743" font-weight="700">TCP 面向字节流（Byte Stream）无消息边界特性：</text>
+    <text x="56" y="134" fill="#17343B">• <tspan font-weight="700">粘包成因</tspan>：Nagle 算法合并小包，或接收端应用层未及时</text>
+    <text x="56" y="154" fill="#17343B">  读取内核 Recv Buffer，导致多个业务包首尾相连一次读出</text>
+    <text x="56" y="176" fill="#17343B">• <tspan font-weight="700">半包成因</tspan>：单个业务包大于 MSS/MTU 被拆片，或对端</text>
+    <text x="56" y="194" fill="#61747A">  滑动窗口剩余空间不足，一次 Read 仅读到半截报文</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">游戏标准封包结构：Length-Prefix（定长头 + 变长体）</text>
+    <text x="56" y="252" fill="#17343B" font-weight="700" font-family="Consolas, monospace">[ BodyLen(4B) | MsgId(2B) | Seq(2B) | Body(NB) ]</text>
+    <text x="56" y="274" fill="#17343B">• <tspan font-weight="700">字节序</tspan>：包头整数字段统一采用<tspan font-weight="700" fill="#287B73">网络大端序 (Big-Endian)</tspan></text>
+    <text x="56" y="294" fill="#17343B">• <tspan font-weight="700">拆包判定</tspan>：先看可读字节是否 ≥ 8B 包头；若够则解析</text>
+    <text x="56" y="314" fill="#17343B">  BodyLen，待可读字节 ≥ 8 + BodyLen 时切出完整报文</text>
+  </g>
+
+  <!-- 右栏：RingBuffer -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 为什么接收缓冲区必须用 RingBuffer 环形缓冲区</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#17343B" font-weight="700">普通线性数组移位（memmove）的性能缺陷：</text>
+    <text x="468" y="134" fill="#17343B">• 若每次切出一个完整包后都将剩余半包字节向前平移到</text>
+    <text x="468" y="154" fill="#17343B">  数组索引 0，高频收包下会产生大量 <tspan font-weight="700" fill="#C47743">O(N) 内存拷贝开销</tspan></text>
+    <text x="468" y="175" fill="#287B73" font-weight="700">• RingBuffer 双游标：维护 readPos 与 writePos 索引，</text>
+    <text x="468" y="194" fill="#287B73" font-weight="700">  通过位与 (pos &amp; (cap - 1)) 循环复用定长数组</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">RingBuffer 读写游标不变量与边界处理：</text>
+    <text x="468" y="252" fill="#17343B">• <tspan font-weight="700">容量取 2 的幂</tspan>：用位与 <tspan font-family="Consolas, monospace">idx &amp; (N-1)</tspan> 替代高开销取模 <tspan font-family="Consolas, monospace">%</tspan></text>
+    <text x="468" y="274" fill="#17343B">• <tspan font-weight="700">可读长度</tspan>：<tspan font-family="Consolas, monospace">readable = writePos - readPos</tspan></text>
+    <text x="468" y="294" fill="#17343B">• <tspan font-weight="700">跨环尾折返</tspan>：若包体跨越物理数组末尾，分两段读取或</text>
+    <text x="468" y="314" fill="#17343B">  使用镜像虚拟页映射 / 双缓冲区池化消除拼接拷贝</text>
+  </g>
+</svg>
