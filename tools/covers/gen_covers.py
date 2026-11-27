@@ -416,6 +416,7 @@ def select_variant(top, sub, title):
         if "计算机网络" in title: return "network"
         if "离散数学" in title: return "graph"
         if "数据结构" in title: return "huffman"
+        if "组成原理" in title: return "memory"
         return "process"
     if sub == "网络":
         if "帧同步" in title: return "frame-sync"

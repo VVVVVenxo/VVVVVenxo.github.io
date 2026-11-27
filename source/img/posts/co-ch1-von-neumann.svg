@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="冯诺依曼计算机硬件五大部件与CPU性能定量公式">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 1-1 · 冯·诺依曼计算机硬件结构（CPU 与主存寄存器交互）及 CPU 性能公式</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <defs>
+    <marker id="aT" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <path d="M0,0 L7,3.5 L0,7 Z" fill="#287B73"/>
+    </marker>
+    <marker id="aO" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <path d="M0,0 L7,3.5 L0,7 Z" fill="#C47743"/>
+    </marker>
+  </defs>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: Von Neumann Architecture & Registers -->
+    <rect x="28" y="64" width="400" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="228" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 冯·诺依曼结构（以运算器为中心 → 现代以存储器为中心）</text>
+
+    <!-- CPU Box (Left inside) -->
+    <rect x="44" y="106" width="184" height="148" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.4"/>
+    <text x="136" y="126" fill="#287B73" font-weight="700" text-anchor="middle">CPU（运算器 + 控制器）</text>
+    <rect x="56" y="136" width="160" height="28" rx="3" fill="#FAFBF8" stroke="#287B73" stroke-width="1"/>
+    <text x="136" y="155" fill="#17343B" font-weight="700" text-anchor="middle">PC（程序计数器·下条指令址）</text>
+    <rect x="56" y="172" width="160" height="28" rx="3" fill="#FAFBF8" stroke="#287B73" stroke-width="1"/>
+    <text x="136" y="191" fill="#17343B" font-weight="700" text-anchor="middle">IR（指令寄存器·当前指令）</text>
+    <rect x="56" y="208" width="160" height="32" rx="3" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="136" y="229" fill="#C47743" font-weight="700" text-anchor="middle">ALU + ACC / 通用寄存器</text>
+
+    <!-- Main Memory Box (Right inside) -->
+    <rect x="252" y="106" width="160" height="148" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.4"/>
+    <text x="332" y="126" fill="#17343B" font-weight="700" text-anchor="middle">主存储器（Main Memory）</text>
+    <rect x="264" y="136" width="136" height="34" rx="3" fill="#FAFBF8" stroke="#17343B" stroke-width="1.2"/>
+    <text x="332" y="158" fill="#17343B" font-weight="700" text-anchor="middle">MAR（地址寄存器）</text>
+    <rect x="264" y="178" width="136" height="34" rx="3" fill="#FAFBF8" stroke="#17343B" stroke-width="1.2"/>
+    <text x="332" y="200" fill="#17343B" font-weight="700" text-anchor="middle">MDR（数据寄存器）</text>
+    <text x="332" y="236" fill="#61747A" text-anchor="middle">存储体（按地址寻址）</text>
+
+    <!-- Arrows between CPU and Memory -->
+    <line x1="216" y1="150" x2="258" y2="150" stroke="#287B73" stroke-width="1.8" marker-end="url(#aT)"/>
+    <line x1="264" y1="195" x2="222" y2="195" stroke="#C47743" stroke-width="1.8" marker-end="url(#aO)"/>
+
+    <rect x="44" y="264" width="368" height="56" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="286" fill="#17343B" font-weight="700">• MAR 位数 = 地址码长度（决定可寻址单元数 2^MAR）</text>
+    <text x="56" y="306" fill="#17343B" font-weight="700">• MDR 位数 = 存储字长（MAR、MDR、IR 对程序员透明）</text>
+
+    <!-- Right Panel: Quantitative Performance Formulas -->
+    <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="640" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 计算机系统核心性能指标与定量公式（必背）</text>
+
+    <rect x="458" y="106" width="364" height="104" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="470" y="128" fill="#287B73" font-weight="700">① 主频 f、时钟周期 T 与 CPI（每条指令平均周期数）：</text>
+    <text x="470" y="150" fill="#17343B" font-weight="700">• 时钟周期 T = 1 / 主频 f（如 f = 2GHz ⇒ T = 0.5ns）</text>
+    <text x="470" y="172" fill="#17343B">• 加权平均 <tspan font-weight="700" fill="#287B73">CPI = Σ (CPI_i × 第 i 类指令占比 Pi)</tspan></text>
+    <text x="470" y="194" fill="#17343B">• 程序总时钟周期数 = <tspan font-weight="700">指令总条数 I × CPI</tspan></text>
+
+    <rect x="458" y="220" width="364" height="100" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="470" y="242" fill="#C47743" font-weight="700">② CPU 执行时间与 MIPS（每秒执行百万条指令数）：</text>
+    <text x="470" y="266" fill="#C47743" font-weight="700">• CPU 执行时间 = I × CPI × T = (I × CPI) / f</text>
+    <text x="470" y="290" fill="#17343B" font-weight="700">• MIPS = I / (执行时间 × 10^6) = f / (CPI × 10^6)</text>
+    <text x="470" y="310" fill="#61747A">（指令数 I 由编译器和 ISA 决定，CPI 由硬件与 ISA 决定）</text>
+  </g>
+</svg>

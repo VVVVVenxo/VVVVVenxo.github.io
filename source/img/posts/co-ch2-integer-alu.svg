@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="定点数原码补码移码转换与ALU四大标志位溢出判定">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 2-1 · 定点数编码（原码 / 补码 / 移码）与 ALU 四大标志位（OF / CF / ZF / SF）</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: Integer Encodings -->
+    <rect x="28" y="64" width="400" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="228" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 8 位定点数四种机器码对比与快速转换</text>
+
+    <rect x="44" y="106" width="368" height="106" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="128" fill="#17343B" font-weight="700">• 原码 / 反码范围：<tspan fill="#61747A">-127 ～ +127</tspan>（含 +0 和 -0 两种零）</text>
+    <text x="56" y="150" fill="#287B73" font-weight="700">• 补码范围：-128 ～ +127（8 位 1000 0000B 规定为 -128）</text>
+    <text x="56" y="172" fill="#17343B">• <tspan font-weight="700">原码 ⇔ 补码捷径</tspan>：负数从右往左找<tspan font-weight="700" fill="#287B73">第 1 个 1</tspan>，其右侧不变，</text>
+    <text x="56" y="192" fill="#17343B">  其左边的数值位（除符号位外）全部按位取反</text>
+
+    <rect x="44" y="222" width="368" height="98" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="56" y="244" fill="#17343B" font-weight="700">• <tspan fill="#C47743">[-X]_补</tspan>（已知 [X]_补 求 [-X]_补，补码减法核心）：</text>
+    <text x="56" y="264" fill="#C47743" font-weight="700">  连同符号位在内，全体按位取反，末位加 1</text>
+    <text x="56" y="286" fill="#17343B" font-weight="700">• 移码（偏置码）：[X]_移 = 2^(n-1) + X</text>
+    <text x="56" y="306" fill="#61747A">  移码与补码数值位相同，<tspan font-weight="700" fill="#17343B">仅符号位相反</tspan>（便于浮点数阶码比大小）</text>
+
+    <!-- Right Panel: ALU Flags & Overflow -->
+    <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#C47743" stroke-width="1.5"/>
+    <text x="640" y="90" fill="#C47743" font-weight="700" text-anchor="middle">2. 补码加减溢出判定与 ALU 四大标志位（必考）</text>
+
+    <rect x="458" y="106" width="364" height="98" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="470" y="128" fill="#C47743" font-weight="700">有符号补码溢出判定三种等价方法：</text>
+    <text x="470" y="150" fill="#17343B">① <tspan font-weight="700">单符号位</tspan>：两正数相加得负，或两负数相加得正 ⇒ 溢出</text>
+    <text x="470" y="170" fill="#17343B">② <tspan font-weight="700">双符号位（模 4 补码 S1 S2）</tspan>：<tspan font-weight="700" fill="#C47743">01 为正溢出，10 为负溢出</tspan></text>
+    <text x="470" y="190" fill="#17343B">③ <tspan font-weight="700">进位异或</tspan>：符号进位与最高值进位异或 <tspan font-weight="700" fill="#C47743">OF = Cn ⊕ Cn-1</tspan></text>
+
+    <rect x="458" y="214" width="364" height="106" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="470" y="236" fill="#17343B" font-weight="700">ALU 四大标志位（硬件同时生成，由指令区分有/无符号）：</text>
+    <text x="470" y="258" fill="#C47743" font-weight="700">• OF (Overflow)：仅对“有符号数”有意义，OF = Cn ⊕ Cn-1</text>
+    <text x="470" y="278" fill="#287B73" font-weight="700">• CF (Carry)：仅对“无符号数”有意义，CF = Sub ⊕ Cout</text>
+    <text x="470" y="298" fill="#17343B">• <tspan font-weight="700">ZF (Zero)</tspan>：结果全 0 为 1  |  <tspan font-weight="700">SF (Sign)</tspan>：取结果最高符号位</text>
+    <text x="470" y="314" fill="#61747A">（有符号数比大小看 SF ⊕ OF；无符号数比大小看 CF 和 ZF）</text>
+  </g>
+</svg>
