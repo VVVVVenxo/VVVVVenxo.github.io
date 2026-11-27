@@ -8,20 +8,6 @@
     <managingEditor>VVVVVenxo</managingEditor>
     <atom:link href="https://VVVVVenxo.github.io/atom.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>【C++】整体框架</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C%2B%2B%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90C%2B%2B%E3%80%91%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>基于《C++ Primer》第五版与游戏客户端工程实践构建的 C++ 知识索引，串联本博客已完成的 C++ 核心专题文章。</description>
-    </item>
-    <item>
-      <title>【随笔】学习方法论</title>
-      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/</link>
-      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E8%AE%BA/</guid>
-      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
-      <description>如何建立有效的知识体系？从结构化、时间线、流程化三个维度构建学习框架，掌握 3W 学习法则。</description>
-    </item>
-    <item>
       <title>【计算机基础】编译原理与链接</title>
       <link>https://VVVVVenxo.github.io/2026/10/29/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E4%B8%8E%E9%93%BE%E6%8E%A5/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/29/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E4%B8%8E%E9%93%BE%E6%8E%A5/</guid>
@@ -181,6 +167,20 @@
       <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E5%8D%8F%E7%A8%8B%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/</guid>
       <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
       <description>理解 Unity 协程的原理与用法，协程与线程的区别，以及 JobSystem 多线程方案。</description>
+    </item>
+    <item>
+      <title>【Unity】物理系统</title>
+      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E7%89%A9%E7%90%86%E7%B3%BB%E7%BB%9F/</link>
+      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E7%89%A9%E7%90%86%E7%B3%BB%E7%BB%9F/</guid>
+      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
+      <description>详解 Unity 物理系统：碰撞检测模式、穿透问题解决方案，以及 NavMesh 导航系统。</description>
+    </item>
+    <item>
+      <title>【Unity】生命周期函数</title>
+      <link>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0/</link>
+      <guid>https://VVVVVenxo.github.io/2025/06/05/%E3%80%90Unity%E3%80%91%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0/</guid>
+      <pubDate>Thu, 05 Jun 2025 00:00:00 GMT</pubDate>
+      <description>详解 Unity MonoBehaviour 的生命周期函数执行顺序，包括 Awake、Start、Update、FixedUpdate、LateUpdate 等。</description>
     </item>
   </channel>
 </rss>
