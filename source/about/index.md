@@ -79,8 +79,6 @@ comments: false
 
 这里是一份持续更新的**游戏客户端工程手记**，用来记录 Unity 引擎底层、C++ / C# 语言机制、客户端架构、实时渲染与计算机基础的学习与思考。
 
-> *To be a rock and not to roll.*
-
 - **GitHub**：[github.com/VVVVVenxo](https://github.com/VVVVVenxo)
 - **Email**：[1263147353@qq.com](mailto:1263147353@qq.com)
 - **Steam**：[Steam Profile](https://steamcommunity.com/profiles/76561198863443106/)
