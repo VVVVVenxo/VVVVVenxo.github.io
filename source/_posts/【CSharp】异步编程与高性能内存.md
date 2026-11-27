@@ -24,7 +24,7 @@ description: 深入剖析 C# 编译器 async/await 状态机（IAsyncStateMachin
 
 ### 1.1 `async` 方法零线程创建本质与 `IAsyncStateMachine` 结构体
 
-C# 中的 `async` 和 `await` 并非运行时虚拟机指令，而是由 Roslyn 编译器在编译期展开的**有限状态机（Finite State Machine）语法糖**。调用一个 `async` 方法本身**绝不会开启任何新线程**，在遇到第一个未完成的 `await` 挂起点之前，所有代码完全在当前调用者线程上同步顺序执行。
+C# 中的 `async` 和 `await` 是由 Roslyn 编译器在编译期展开的**有限状态机（Finite State Machine）**。调用 `async` 方法**不会创建新线程**，在遇到第一个未完成的 `await` 挂起点之前，代码均在当前调用线程上同步执行。
 
 ![C# async / await 编译器状态机（IAsyncStateMachine）展开与堆装箱机制](/img/posts/cs-ch1-async-statemachine.svg)
 
@@ -49,13 +49,13 @@ if (!awaiter.IsCompleted) {
     this.<>u__1 = awaiter;
     // 若状态机仍在栈上，此处触发装箱（Box）上堆，并向 awaiter 注册完成回调
     this.<>t__builder.AwaitUnsafeOnCompleted(ref awaiter, ref this);
-    return; // 立即退栈，释放当前线程执行权！
+    return; // 挂起退栈，交还当前线程控制权
 }
 // --- 若 IsCompleted 为 true（或异步回调再次调入 MoveNext 跳转到 Label_0） ---
 int result = awaiter.GetResult();
 ```
 
-- **核心结论 1（同步完成快路径 0 装箱）**：若被等待的 `subTask` 在到达 `await` 的一瞬间已经完成（例如命中本地内存缓存直接返回 `Task.FromResult` 或已完成状态），`awaiter.IsCompleted` 为 `true`，代码不会挂起退栈，而是直接顺序向下执行——**此时状态机结构体全程驻留在线程栈上，不发生任何装箱（Boxing）与委托分配**！
+- **核心结论 1（同步完成快路径零装箱）**：若被等待的 `subTask` 在到达 `await` 时已完成（如命中缓存），`awaiter.IsCompleted` 为 `true`，代码不挂起而直接顺序向下执行；**此时状态机结构体全程驻留在栈上，不发生装箱（Boxing）与委托分配**。
 - **核心结论 2（原生 `Task` 发生异步挂起时的三处托管堆 GC 分配）**：
   一旦 `awaiter.IsCompleted == false` 进入异步挂起慢路径，原生 `System.Threading.Tasks.Task` 会产生三处堆内存分配：
   1. **`Task<T>` 引用对象本身**：因为 `Task` 是 `class`，每次异步操作都必须在托管堆上 `new` 一个新的 `Task` 实例（除非是 `Task.CompletedTask` 或布尔/`0~8` 小整数缓存）。
@@ -68,7 +68,7 @@ int result = awaiter.GetResult();
 
 ### 2.1 为什么 `await` 之后的代码能自动回到 Unity 主线程
 
-在 Unity 引擎中，如果在 `MonoBehaviour.Start()` 里写一行 `await Task.Run(() => HeavyWork());`，尽管 `HeavyWork()` 是在后台 `.NET ThreadPool` 线程池线程上执行的，但在 `await` 下一行的 `transform.position = ...` 却能分毫不差地自动切回 **Unity 主线程** 安全执行。这一机制完全由 **`SynchronizationContext`（同步上下文）**驱动：
+在 Unity 的 `MonoBehaviour` 中执行 `await Task.Run(() => HeavyWork());` 时，尽管 `HeavyWork()` 在后台线程池运行，`await` 之后的代码仍会自动回到 **Unity 主线程** 执行。该机制由 **`SynchronizationContext`（同步上下文）** 实现：
 
 ![SynchronizationContext 线程切回机制、.Wait() 死锁成因与 ConfigureAwait](/img/posts/cs-ch2-sync-context.svg)
 
@@ -81,12 +81,12 @@ int result = awaiter.GetResult();
 
 ### 2.2 为什么在主线程调用 `task.Wait()` 或 `task.Result` 会永久死锁
 
-在带有单线程 `SynchronizationContext` 的环境（Unity 主线程、WPF / WinForms UI 线程）中，如果同步方法里调用了未配置 `ConfigureAwait(false)` 的异步方法并强行同步阻塞等待 `.Result` 或 `.Wait()`，会导致 **100% 必现的永久死锁**：
+在单线程 `SynchronizationContext` 环境（Unity 主线程、WPF / WinForms UI 线程）中，若同步方法调用了未配置 `ConfigureAwait(false)` 的异步方法，并同步阻塞调用 `.Result` 或 `.Wait()`，会触发**永久死锁**：
 
 ```csharp
-// 【死锁代码示例】在 Unity 主线程中执行：
+// 在 Unity 主线程中同步阻塞等待异步结果会导致死锁：
 void Start() {
-    string data = DownloadAsync().Result; // 主线程在此处同步休眠阻塞，等待 Task 完成！
+    string data = DownloadAsync().Result; // 主线程同步阻塞，等待 Task 完成
 }
 async Task<string> DownloadAsync() {
     await Task.Delay(100); // 1. 捕获了主线程 UnitySynchronizationContext
@@ -116,8 +116,8 @@ async Task<string> DownloadAsync() {
    - 返回给调用方的 `UniTask<T>` 本身是一个仅占十几个字节的轻量级 **`readonly struct`**，内部只持有一个 `IUniTaskSource<T> source` 接口引用、内联结果值 `T result`（同步完成时直接使用）以及一个 16 位版本号 **`short token`**。
    - 当遇到未完成任务必须异步挂起时，`AsyncUniTaskMethodBuilder` **不会每次在堆上 `new` 状态机装箱对象**，而是直接从静态无锁栈式对象池 `TaskPool<AsyncUniTask<TStateMachine, T>>` 中 **`TryPop` 租借一个现成的池化 Runner 节点**，将状态机结构体存入该节点字段中。
 3. **消费即归还（`GetResult` 自动回池）与 `short token` 版本号防复用冲突**：
-   - 为什么原生 `Task` 无法放入对象池复用？因为原生 `Task` 允许外部调用者保存引用并在未来任意时刻重复 `await` 多次，运行时根本不知道调用者什么时候不再使用该 `Task`。
-   - `UniTask` 制定了一条严格的工程契约：**每个 `UniTask` 实例只允许被 `await` 消费唯一一次**！当外部 `await` 结束调用 `source.GetResult(token)` 读取返回值的同一瞬间，池化 Runner 节点内部立即校验 `token == this.version`，随后**当场清空内部状态机引用、将自身的 `version++` 自增，并把自己在 `GetResult` 返回前直接 `Push` 归还回静态对象池**！若外部违规对该 `UniTask` 结构体执行第二次 `await`，由于其携带的旧 `token` 与池中节点自增后的 `version` 不匹配，立即抛出 `InvalidOperationException`，从而在 100% 内存安全的前提下实现了 **0 Byte 堆分配**。
+   - 原生 `Task` 允许被保存引用并重复 `await` 多次，运行时无法确定何时可以安全回收该实例。
+   - `UniTask` 规定**每个 `UniTask` 实例仅允许被 `await` 消费一次**。当外部 `await` 结束并调用 `source.GetResult(token)` 读取返回值时，池化 Runner 节点校验 `token == this.version`，随后**清空内部状态机、将 `version++` 自增，并在 `GetResult` 返回前将自身归还至静态对象池**。若外部对该 `UniTask` 执行第二次 `await`，旧 `token` 与自增后的 `version` 不匹配，立即抛出 `InvalidOperationException`，从而实现**零堆内存分配**。
 
 ---
 
@@ -171,8 +171,8 @@ struct Span<T> {
 | **`Memory<T>` / `ReadOnlyMemory<T>`** | 普通 `struct`（可上堆） | **是**（可存入类字段、可作为异步方法参数） | `(object owner, int index, int length)` | 跨 `await` 异步 I/O 传递，进入同步块后调 `.Span` 转为 `Span<T>` |
 | **`ArrayPool<T>.Shared`** | 线程安全全局数组池 | 是（租借返回真实 `T[]` 数组） | 按 `2^k` 容量分桶的线程本地缓存 + 共享桶队列 | 替代 `new byte[N]`，彻底消除大缓冲区分配与 LOH 碎片 |
 
-- **`ArrayPool<T>.Shared` 工程使用两项铁律**：
-  1. **租借数组长度通常大于请求长度**：调用 `byte[] buf = ArrayPool<byte>.Shared.Rent(1000)` 时，数组池按 2 的幂次桶向上取整，实际返回的 `buf.Length` 是 **`1024`**（而非 `1000`）！因此后续传给流读取或切片时，**必须显式传入真实有效长度 `buf.AsSpan(0, 1000)`**，绝不能直接使用 `buf.Length`。
+- **`ArrayPool<T>.Shared` 使用规范**：
+  1. **租借数组长度通常大于请求长度**：调用 `byte[] buf = ArrayPool<byte>.Shared.Rent(1000)` 时，数组池按 2 的幂次容量桶向上取整，实际返回的 `buf.Length` 为 **`1024`**。因此后续切片或读取时，**必须显式传入实际请求长度 `buf.AsSpan(0, 1000)`**，不能直接使用 `buf.Length`。
   2. **必须在 `try-finally` 中配对归还**：借出的数组若因异常漏掉 `Return(buf)`，虽然不会内存泄漏（最终会被 GC 回收），但会导致数组池枯竭退化回频繁 `new` 分配：
      ```csharp
      byte[] buffer = ArrayPool<byte>.Shared.Rent(requiredSize);

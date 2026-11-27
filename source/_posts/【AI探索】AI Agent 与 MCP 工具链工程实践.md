@@ -15,7 +15,7 @@ tags:
 description: 系统梳理现代工程级 Coding Agent 的底层架构：ReAct 推理执行闭环与 CodeMode 沙箱批处理、MCP（Model Context Protocol）三层协议与 BM25 延迟工具发现、Skill 三级渐进式披露与前缀 KV Cache 优化、以及多 Subagent 上下文隔离与读写分离编排纪律。
 ---
 
-本文从现代工程级 AI Coding Agent（如 Claude Code、Pi Coding Agent、Cursor Agent）的实际运行底座（Agent Harness）出发，系统拆解将大语言模型从“单轮文本问答器”转化为“可自主读写代码库、操作外部系统并闭环验证的工程智能体”的四大核心架构模块：**ReAct 循环、结构化工具调用与 CodeMode 沙箱编排**、**MCP（Model Context Protocol）协议架构与按需工具发现（Tool Search）**、**上下文工程（Skill 渐进式披露、前缀 KV Cache 保护与状态压缩）**、**多智能体（Subagent）上下文隔离与分治编排纪律**。
+本文围绕现代工程级 AI Coding Agent 的运行底座（Agent Harness），分为四个章节：**ReAct 循环、结构化工具调用与 CodeMode 沙箱编排**、**MCP（Model Context Protocol）协议架构与按需工具发现（Tool Search）**、**上下文工程（Skill 渐进式加载、前缀 KV Cache 与状态压缩）**、**多智能体（Subagent）上下文隔离与分治编排**。
 
 ---
 
@@ -47,9 +47,9 @@ while (response.stop_reason == "tool_use") {
 
 当面对“批量检查并修复全站 50 张 SVG 配图的文字边界”或“依次读取 8 个配置文件并汇总差异”这类多步批处理任务时，传统的逐次 JSON `tool_use` 存在两大显著工程瓶颈：
 1. **多轮推理往返延迟（Round-Trip Latency）**：若每调用一次工具就必须等待一次云端大模型流式生成，串行调用 20 次工具就需要经历 20 次 LLM 首字延迟（TTFT）与网络往返。
-2. **中间原始大输出污染主上下文**：若某个查询工具返回了 `20,000` 行 JSON 日志，传统模式下必须将这 `20,000` 行全量塞进主对话上下文，才能让模型从中挑出 3 行错误记录，瞬間耗尽上下文窗口。
+2. **中间大输出占用主上下文**：若查询工具返回上万行原始日志，传统模式下需将全部内容写入主对话上下文才能提取少量关键字段。
 
-- **CodeMode（以代码作为工具调用胶水层）**：
+- **CodeMode（以脚本代码批量编排工具调用）**：
   Harness 提供一个内嵌轻量级 JavaScript 引擎（如 **QuickJS 无网络隔离沙箱**）的 `codemode` 工具，将所有底层工具映射为沙箱内的异步函数 `await tools.<name>(args)`：
   - **并发批处理（Fan-Out）**：模型只需在单轮输出一段几行的 JS 脚本，通过 `await Promise.all([tools.edit(...), tools.edit(...)])` 在一轮对话内并行完成十几个文件的精准修改。
   - **沙箱内过滤与计算（In-Sandbox Filtering）**：模型可在 JS 脚本内调用工具获取数万行输出，直接在沙箱内用正则表达式或 `JSON.parse` 过滤聚合，最后仅将提炼出的几十字节最终结果 `return` 回主模型上下文，将 Token 消耗与推理轮次同时降低 **80% 以上**。
@@ -91,7 +91,7 @@ while (response.stop_reason == "tool_use") {
 
 ## 第 3 章：上下文工程：Skill 渐进式披露、KV Cache 与状态压缩
 
-即使现代前沿大模型拥有 `200K ~ 1M` 的上下文窗口，**“塞得下”也绝不等于“用得好”**。随着上下文长度增长，Transformer 自注意力机制不仅面临二次方计算开销，还会出现显著的 **“中间迷失（Lost in the Middle）”注意力退化**。**上下文工程（Context Engineering）**的核心目标是在任意时刻只让模型看到**信噪比最高**的最小必要信息集。
+随着上下文长度增长，Transformer 自注意力机制的计算开销呈二次方增加，且长上下文中间区域的信息召回率会下降（Lost in the Middle）。**上下文工程（Context Engineering）**的目标是在任意时刻仅向模型提供当前任务所需的最小必要信息集。
 
 ![上下文工程（Context Engineering）：Skill 渐进式披露、KV Cache 与状态压缩](/img/posts/ag-ch3-context-skill.svg)
 
@@ -99,7 +99,7 @@ while (response.stop_reason == "tool_use") {
 
 在日常工程中，开发者有许多特定场景的标准操作规程（SOP，例如：如何操作内网 Linux 云服务器、如何通过 CLI 操作飞书多维表格、如何对 Office 文档排版巡检）。如果把这十几套 SOP（每套数千字）全部硬编码写进全局 `CLAUDE.md` 或 `AGENTS.md`，每一次写普通 C++ 代码时模型都要被迫阅读数万字的飞书与运维手册。
 
-**Skill 机制**将领域知识组织为按需加载的三级金字塔结构：
+**Skill 机制**将领域知识组织为三级按需加载结构：
 1. **L1 路由索引层（常驻系统提示词，每项仅占 ~50 Token）**：
    在 `<available_skills>` 列表中仅保留每个技能的 `name`、`description`（明确写出 **TRIGGER 触发条件**与不负责边界）以及本地 `SKILL.md` 的绝对路径。
 2. **L2 核心指令层（命中意图时按需 `read(SKILL.md)`）**：
@@ -109,11 +109,11 @@ while (response.stop_reason == "tool_use") {
 
 ---
 
-### 3.2 前缀 KV Cache（Prompt Caching）命中率优化铁律
+### 3.2 前缀 KV Cache（Prompt Caching）命中率优化
 
-在多轮 Agent 循环中，每一轮请求都会把前面所有轮次的系统提示词、工具定义与历史对话重新发送给大模型推理端。为了避免每轮重复计算数万 Token 的注意力矩阵，现代模型服务商普遍提供**前缀键值缓存（Prefix KV Cache / Prompt Caching，缓存命中的输入 Token 成本降低 75%～90%，首字延迟降低 80%）**。
+在多轮 Agent 循环中，每轮请求均需发送系统提示词、工具定义与历史消息。为避免重复计算历史 Token 的注意力矩阵，模型推理端普遍采用**前缀键值缓存（Prefix KV Cache / Prompt Caching，命中的输入 Token 成本可降低 75%～90%，首字延迟显著下降）**。
 
-由于 Transformer 的因果注意力掩码（Causal Mask）要求每个位置的 Key/Value 向量严格依赖于其**前面的所有 Token 序列**，哪怕前缀中第 100 个 Token 改变了 1 个字符，从第 100 个 Token 往后的全部 KV Cache 都会立即失效重算！因此 Agent Harness 必须遵守三条**缓存友好的上下文构造纪律**：
+由于 Transformer 的因果注意力掩码（Causal Mask）要求每个位置的 Key/Value 向量严格依赖其**前方全部 Token 序列**，一旦前缀中某处的 Token 发生变化，该位置之后的全部 KV Cache 均会失效并重新计算。因此上下文构造需遵循三条规则：
 1. **严格静态前缀置顶**：将 `System Prompt` → `固定工具声明列表（按确定性字典序排列）` → `全局项目规范 CLAUDE.md` → `技能路由表` 严格固定在消息序列最前端。
 2. **禁止在静态前缀中混入动态变量**：严禁在系统提示词开头插入精确到秒的当前时间戳 `new Date().toISOString()`、随机 UUID 或未排序的哈希表键值；会话中途严禁动态修改系统提示词。
 3. **纯追加式消息流（Append-Only History）**：所有新产生的用户指令、工具调用与环境反馈一律向消息队列尾部追加，保持历史前缀字节级 100% 恒定。
@@ -124,7 +124,7 @@ while (response.stop_reason == "tool_use") {
 
 当一个持续数小时的大型开发任务历经上百次工具调用、上下文累积逼近窗口阈值（如 `160K` Token）时，Harness 会自动触发 **Context Compaction（上下文压缩）**：
 - **结构化状态快照提炼**：调用一次摘要模型，将此前冗长的原始工具输出、中间排查废案与对话流水账，浓缩为一份高密度的结构化 `<summary>` 块，固定包含六个核心维度：**`Goal`（总体目标）**、**`Constraints & Preferences`（用户约束与风格偏好）**、**`Progress (Done / In Progress / Blocked)`（精确到文件路径与函数名的进度表）**、**`Key Decisions`（关键技术决策及原因）**、**`Next Steps`（下一步行动）** 以及 **`read-files / modified-files` 清单**。
-- **文件系统作为外部持久化记忆（File-Backed Memory）**：为了确保跨多次 Compaction 甚至跨会话重启后绝不遗忘长期架构路线或项目规范，应将稳定的项目约定、踩坑复盘与待办大纲及时沉淀到仓库的 `CLAUDE.md`、计划文档或个人知识库 Skill 中——**对话上下文是易失的高速缓存（RAM），而代码库文件与外部文档才是持久化的磁盘（Disk）**。
+- **文件系统持久化记忆（File-Backed Memory）**：对话上下文仅在当前会话内有效；长期项目规范、架构决策与任务清单应持久化写入仓库的 `CLAUDE.md` 或知识库文档中，以保证跨 Compaction 与跨会话状态的一致性。
 
 ---
 
@@ -132,7 +132,7 @@ while (response.stop_reason == "tool_use") {
 
 ### 4.1 为什么单 Agent 需要派生子智能体（Subagent）
 
-即便有 Context Compaction，如果让主 Agent 亲自去完成“阅读全项目 30 个源码文件定位某个隐蔽 Bug”或“查阅五份外部飞书文档提炼接口规范”，这 30 个文件的原始源码（数万 Token）会瞬间塞满主 Agent 的上下文，冲淡主 Agent 对全局架构与用户约束的注意力。
+当任务需要检索大量源码文件或阅读长篇外部文档时，若在主 Agent 会话中直接读取，数万 Token 的原始文本会直接占用主会话上下文窗口。
 
 ![多智能体（Subagent）上下文隔离、并行/链式编排模式与并发写冲突防护](/img/posts/ag-ch4-subagent-orchestration.svg)
 
@@ -151,7 +151,7 @@ while (response.stop_reason == "tool_use") {
 | **2. 并行扇出（Parallel）** | `{ tasks: [{agent, task}, ...] }` | 同时启动多个子 Agent 并行探索不同子系统、或从安全性/性能/规范三个维度并行 Code Review，耗时缩减为最慢单任务耗时 |
 | **3. 流水线串联（Chain）** | `{ chain: [..., {task: "...{previous}"}] }` | 前一个子 Agent（如 `scout` 代码侦察员）的输出自动填入 `{previous}` 传给下一个子 Agent（如 `planner` 方案规划师 → `worker` 实现者） |
 
-- **多智能体并行协同的三条工程铁律**：
-  1. **只读任务满并发、写入任务正交隔离（Read-Parallel, Write-Disjoint）**：代码检索、问题排查、文档阅读等无副作用的只读任务可以放心地使用 `Parallel` 模式并发提速；但如果多个并行子 Agent 需要修改代码，**必须在任务指令中严格划分互不重叠的文件集合（Disjoint File Sets）**，严禁两个并行 Agent 同时编辑同一个文件或同时执行 `git commit` 抢占 `.git/index.lock`。
-  2. **自包含任务契约（Self-Contained Prompting）**：子智能体无法看到主会话的历史对话！因此主 Agent 在下发 `task` 描述时，不能只写一句模糊的“把刚才那个问题修一下”，而必须显式传入**完整的目标文件路径、背景约束、期望输出格式与验收命令**。
+- **多智能体并行协同的三条规范**：
+  1. **只读任务并行、写入任务隔离（Read-Parallel, Write-Disjoint）**：代码检索、问题排查、文档阅读等只读任务可使用 `Parallel` 模式并发执行；若多个并行子 Agent 需修改代码，**必须划分互不重叠的文件集合（Disjoint File Sets）**，避免同时编辑同一文件或并发操作 Git 暂存区。
+  2. **自包含任务描述（Self-Contained Prompting）**：子智能体不共享主会话的历史对话，因此主 Agent 下发 `task` 时需显式提供**目标文件路径、背景约束、期望输出格式与验证命令**。
   3. **客观验证闭环准出**：主 Agent 在收到子 Agent 的完成报告后，必须运行一次全局集成构建或自动化测试（如 `npm run build`、单元测试或无头浏览器渲染巡检），用确定性工具验证最终产物无误后再提交发布。

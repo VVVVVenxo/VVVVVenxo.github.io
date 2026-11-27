@@ -16,7 +16,7 @@ tags:
 description: 遵循《Real-Time Rendering (4th Ed.)》与迪士尼/Epic Games PBR 白皮书主线，系统梳理辐射度量学与渲染方程、Cook-Torrance 微表面 BRDF（GGX D / Schlick F / Smith G）、金属度-粗糙度能量守恒、IBL 漫反射辐照度图与镜面 Split-Sum 预滤波，以及 Shadow Map / PCF / PCSS / CSM 级联阴影技术。
 ---
 
-本文紧接《【图形学】现代渲染管线与 Shader 编程精要》，遵循《Real-Time Rendering (4th Edition)》与迪士尼（Burley 2012）/ Epic Games（Karis 2013 Unreal Engine 4）PBR 技术白皮书主线，系统拆解现代实时渲染引擎的两大核心支柱：**基于物理的渲染（Physically Based Rendering, PBR）与基于图像的环境光照（IBL）**、以及**实时阴影渲染体系（Shadow Map 走样抑制、PCF、PCSS 接触硬化软阴影与 CSM 级联阴影贴图）**。
+本文围绕现代实时渲染中的物理光照与阴影算法，分为四个章节：**辐射度量学基础与渲染方程**、**Cook-Torrance 微表面模型与金属度-粗糙度工作流**、**基于图像的光照（IBL）与 Split-Sum 近似**、**实时阴影技术（Shadow Map、PCF、PCSS 与 CSM 级联阴影）**。
 
 ---
 
@@ -45,7 +45,7 @@ description: 遵循《Real-Time Rendering (4th Ed.)》与迪士尼/Epic Games PB
 
 ### 1.2 双向反射分布函数（BRDF）与 Kajiya 渲染方程
 
-当来自入射方向 $\omega_i$ 的微分辐照度 $\mathrm{d}E_i(p, \omega_i) = L_i(p, \omega_i)\cos\theta_i\,\mathrm{d}\omega_i$ 照射到表面点 $p$ 时，表面会将多少比例的能量反射到观察方向 $\omega_o$ 的微分出射辐射率 $\mathrm{d}L_o(p, \omega_o)$ 中？这一比例函数即定义为**双向反射分布函数（Bidirectional Reflectance Distribution Function, BRDF）**（量纲为 $1 / \text{sr}$）：
+当入射方向 $\omega_i$ 的微分辐照度 $\mathrm{d}E_i(p, \omega_i) = L_i(p, \omega_i)\cos\theta_i\,\mathrm{d}\omega_i$ 照射到表面点 $p$ 时，观察方向 $\omega_o$ 的微分出射辐射率 $\mathrm{d}L_o(p, \omega_o)$ 与入射微分辐照度之比定义为**双向反射分布函数（Bidirectional Reflectance Distribution Function, BRDF）**（量纲为 $1 / \text{sr}$）：
 
 $$
 f_r(p, \omega_i, \omega_o) = \frac{\mathrm{d}L_o(p, \omega_o)}{\mathrm{d}E_i(p, \omega_i)} = \frac{\mathrm{d}L_o(p, \omega_o)}{L_i(p, \omega_i)\cos\theta_i\,\mathrm{d}\omega_i}
@@ -57,14 +57,14 @@ $$
 L_o(p, \omega_o) = L_e(p, \omega_o) + \int_{\Omega} f_r(p, \omega_i, \omega_o)\,L_i(p, \omega_i)\,(\mathbf{n} \cdot \omega_i)\,\mathrm{d}\omega_i
 $$
 
-- **物理有效 BRDF 必须满足的三条铁律**：
+- **物理有效 BRDF 的三条约束条件**：
   1. **非负性**：$f_r(\omega_i, \omega_o) \ge 0$。
-  2. **亥姆霍兹互易律（Helmholtz Reciprocity）**：交换光源入射方向与相机观察方向，BRDF 值严格不变：$f_r(\omega_i, \omega_o) = f_r(\omega_o, \omega_i)$（这也是正向路径追踪与反向光线追踪等价的物理依据）。
-  3. **能量守恒定律（Energy Conservation）**：表面朝整个上半球反射出去的总光通量，绝不能超过入射光通量：
+  2. **亥姆霍兹互易律（Helmholtz Reciprocity）**：交换入射方向与观察方向，BRDF 值不变：$f_r(\omega_i, \omega_o) = f_r(\omega_o, \omega_i)$。
+  3. **能量守恒（Energy Conservation）**：表面向整个上半球反射的总光通量不超过入射光通量：
      $$
      \forall \omega_i, \qquad \int_{\Omega} f_r(p, \omega_i, \omega_o)\cos\theta_o\,\mathrm{d}\omega_o \le 1
      $$
-     **推论（为什么 Lambert 漫反射必须除以 $\pi$）**：设理想均匀漫反射材质的反照率（Albedo）为 $\mathbf{c} \in [0, 1]$，其常数 BRDF 为 $f_{\text{diff}}$。代入能量守恒积分得 $f_{\text{diff}} \int_0^{2\pi} \mathrm{d}\phi \int_0^{\pi/2} \cos\theta\sin\theta\,\mathrm{d}\theta = f_{\text{diff}} \cdot \pi = \mathbf{c}$，故 **Lambertian 漫反射 BRDF 必为 $f_{\text{diff}} = \mathbf{c} / \pi$**！
+     **推论（Lambert 漫反射除以 $\pi$ 的原因）**：设均匀漫反射材质的反照率（Albedo）为 $\mathbf{c} \in [0, 1]$，其常数 BRDF 为 $f_{\text{diff}}$。代入半球积分得 $f_{\text{diff}} \int_0^{2\pi} \mathrm{d}\phi \int_0^{\pi/2} \cos\theta\sin\theta\,\mathrm{d}\theta = f_{\text{diff}} \cdot \pi = \mathbf{c}$，因此 **Lambertian 漫反射 BRDF 为 $f_{\text{diff}} = \mathbf{c} / \pi$**。
 
 ---
 
@@ -105,7 +105,7 @@ $$
   $$
 
 #### 3. 几何遮蔽函数 $G(\mathbf{l}, \mathbf{v}, \mathbf{h})$（Geometry Function）：Smith-Schlick-GGX
-- **物理含义**：在粗糙度较高的凹凸微表面上，一部分微平面会被相邻突起的微平面挡住入射光线（**自阴影 Shadowing**），或者反射出的光线在半路被相邻微平面截获（**自掩蔽 Masking**）。几何函数 $G \in [0, 1]$ 即描述未被遮蔽而成功逃逸的能量比例（若缺失 $G$ 项，粗糙表面在掠射角除以趋近于 $0$ 的 $(\mathbf{n}\cdot\mathbf{l})(\mathbf{n}\cdot\mathbf{v})$ 分母时会产生刺眼的白边过曝伪影）。
+- **物理含义**：在粗糙微表面上，部分微平面会被相邻微平面遮挡入射光（**自阴影 Shadowing**），或反射光被相邻微平面截挡（**自掩蔽 Masking**）。几何函数 $G \in [0, 1]$ 描述未被遮蔽的能量比例（若缺失 $G$ 项，粗糙表面在掠射角除以趋近于 $0$ 的 $(\mathbf{n}\cdot\mathbf{l})(\mathbf{n}\cdot\mathbf{v})$ 分母时会出现边缘过亮伪影）。
 - **Smith 分离近似与 Schlick-GGX 公式**：将双向遮蔽拆为入射方向与观察方向两个独立单向项的乘积（直接光照下重映射参数取 $k = (\text{roughness} + 1)^2 / 8$；IBL 环境光下取 $k = \text{roughness}^2 / 2$）：
   $$
   G_{\text{Smith}}(\mathbf{n}, \mathbf{v}, \mathbf{l}, k) = G_1(\mathbf{n}, \mathbf{v}, k)\,G_1(\mathbf{n}, \mathbf{l}, k), \qquad G_1(\mathbf{n}, \mathbf{v}, k) = \frac{\mathbf{n} \cdot \mathbf{v}}{(\mathbf{n} \cdot \mathbf{v})(1 - k) + k}
@@ -115,13 +115,13 @@ $$
 
 ### 2.2 导体（金属）vs 电介质（非金属）与金属度工作流能量守恒
 
-为什么现代游戏引擎统一使用 **`BaseColor（基础色 RGB）+ Metallic（金属度）+ Roughness（粗糙度）`** 参数化材质？
-1. **电介质（Dielectrics / 非金属，如塑料、木头、石头、皮肤，$\text{metallic} = 0$）**：
-   - 垂直基础反射率 $F_0$ 极低且不带颜色（绝大多数非金属的 $F_0$ 集中在 $0.02 \sim 0.05$ 之间，引擎统一取无色常数 **`float3(0.04, 0.04, 0.04)`**）。
-   - 折射进入非金属内部的光线经过次表面颗粒散射重新射出，形成带有 `BaseColor` 颜色的**漫反射（Diffuse）**。
+现代渲染引擎通常采用 **`BaseColor（基础色 RGB）+ Metallic（金属度）+ Roughness（粗糙度）`** 参数化材质：
+1. **电介质（Dielectrics / 非金属，如塑料、木材、石材、皮肤，$\text{metallic} = 0$）**：
+   - 垂直基础反射率 $F_0$ 较低且无色（通常在 $0.02 \sim 0.05$ 之间，引擎取常数 **`float3(0.04, 0.04, 0.04)`**）。
+   - 折射进入非金属内部的光线经次表面散射后重新穿出，形成带有 `BaseColor` 颜色的**漫反射（Diffuse）**。
 2. **导体（Conductors / 金属，如金、银、铜、铁，$\text{metallic} = 1$）**：
-   - 金属内部的自由电子会**立即吸收并湮灭全部折射进入内部的电磁波**，因此**纯金属完全没有次表面漫反射（$k_d = 0$）**！
-   - 同时，金属的垂直基础反射率 $F_0$ 极高（$0.5 \sim 0.98$）且对不同波长的光具有选择性反射（例如黄金的高光反射本身就是金黄色的）。因此在金属度工作流中，直接复用 `BaseColor` 贴图来存储纯金属的有色 $F_0$！
+   - 金属内部的自由电子会吸收折射进入内部的电磁波，因此**纯金属无次表面漫反射（$k_d = 0$）**。
+   - 金属的垂直基础反射率 $F_0$ 较高（$0.5 \sim 0.98$）且具有波长选择性（有色高光）。在金属度工作流中，直接复用 `BaseColor` 贴图存储金属的有色 $F_0$。
 3. **Shader 统一插值与能量守恒代码实现**：
    ```hlsl
    // 1. 根据金属度在非金属常数 0.04 与金属有色 BaseColor 之间插值得到 F0
@@ -141,7 +141,7 @@ $$
 
 ## 第 3 章：基于图像的光照（IBL）与 Epic Split-Sum 拆解近似
 
-仅靠有限个方向光/点光源（Direct Lighting）渲染出的 PBR 材质在背光面会呈现死黑，尤其高光泽金属必须依靠反射周围全景环境才能体现金属质感。**基于图像的光照（Image-Based Lighting, IBL）**将包围场景的高动态范围全景贴图（HDR Cubemap）视为一个由无穷多个方向光源组成的球面，求解半球积分。
+**基于图像的光照（Image-Based Lighting, IBL）**将包围场景的高动态范围全景贴图（HDR Cubemap）视为连续球面光源，通过对环境贴图求解半球积分提供间接环境漫反射与环境镜面反射。
 
 ![IBL 基于图像的光照：漫反射辐照度图卷积与镜面反射 Split-Sum 拆解近似](/img/posts/pbr-ch3-ibl-splitsum.svg)
 
@@ -153,7 +153,7 @@ $$
 L_{\text{diffuse}}(p, \mathbf{n}) = k_d \frac{\mathbf{c}}{\pi} \underbrace{\int_{\Omega} L_i(\omega_i)\,(\mathbf{n} \cdot \omega_i)\,\mathrm{d}\omega_i}_{\text{Irradiance Map } E(\mathbf{n})}
 $$
 
-观察大括号内的半球积分可知：**该积分的结果仅仅取决于表面法线方向 $\mathbf{n}$，与视线方向 $\mathbf{v}$ 和材质粗糙度完全无关**！
+由上式可知：**大括号内的半球积分结果仅取决于表面法线方向 $\mathbf{n}$，与视线方向 $\mathbf{v}$ 和材质粗糙度无关**。
 - **离线烘焙方案 A（Irradiance Cubemap）**：在离线阶段遍历一个低分辨率（如 $32 \times 32 \times 6$）Cubemap 的每个纹素方向作为法线 $\mathbf{n}$，对原始高清 HDR 环境图执行半球余弦加权卷积积分并存入该纹素；运行时片元着色器只需以世界法线 $\mathbf{N}$ 执行 **1 次 `texCUBE(irradianceMap, N)` 采样**即可拿到全场漫反射环境光。
 - **离线烘焙方案 B（二阶球谐函数 Spherical Harmonics, SH）**：由于余弦卷积后的漫反射辐照度极其平滑（仅含低频信号），Unity 与 Unreal 的 Light Probes 直接将其投影到前 3 阶（$l = 0, 1, 2$，共 $1 + 3 + 5 = 9$ 个基函数）**球谐函数系数**上——每个光照探针只需存储 **9 个 RGB 向量（27 个浮点数）**，运行时通过简单的多项式点积即可极速还原任意法线方向的漫反射环境光。
 
@@ -179,7 +179,7 @@ $$
      &= F_0 \cdot \operatorname{Scale}(\mathbf{n}\cdot\mathbf{v},\; \text{roughness}) + \operatorname{Bias}(\mathbf{n}\cdot\mathbf{v},\; \text{roughness})
      \end{aligned}
      $$
-   - 注意到 $\text{Scale}$ 和 $\text{Bias}$ 这两个积分值与具体环境光和 $F_0$ 均无关，仅仅是 **$\cos\theta_v = (\mathbf{n} \cdot \mathbf{v}) \in [0, 1]$ 与 $\text{roughness} \in [0, 1]$ 的二元函数**！
+   - 其中 $\text{Scale}$ 和 $\text{Bias}$ 与具体环境贴图和 $F_0$ 无关，仅是 **$\cos\theta_v = (\mathbf{n} \cdot \mathbf{v}) \in [0, 1]$ 与 $\text{roughness} \in [0, 1]$ 的二元函数**。
    - 因此只需离线生成一张全游戏共用的 **$512 \times 512$ 双通道浮点贴图（BRDF LUT，横轴为 `NdotV`，纵轴为 `roughness`，R 通道存 `Scale`，G 通道存 `Bias`）**，运行时采样一次即可合成完整镜面环境光：
      ```hlsl
      float2 envBRDF = brdfLUT.Sample(sampler_Clamp, float2(NdotV, roughness)).rg;
@@ -212,7 +212,7 @@ $$
 ### 4.2 PCF 抗锯齿滤波与 PCSS 接触硬化软阴影
 
 1. **PCF（Percentage-Closer Filtering，百分比渐近滤波）**：
-   - **注意**：对 Shadow Map 不能直接对深度值本身做双线性插值再比较（先平均深度再做 $>$ 比较的结果仍然是非 0 即 1 的硬边界）！
+   - **注意**：不能对 Shadow Map 的深度值直接做双线性插值后再比较（先平均深度再比较仍会得到非 0 即 1 的硬边界）。
    - **正确做法**：在当前片元对应的 Shadow Map $(u, v)$ 周围（如 $3 \times 3$ 或 Poisson Disk 圆盘采样核）采样 $K$ 个邻近纹素，**分别将 $z_{\text{cur}}$ 与这 $K$ 个深度值逐一做大小比较得到 $K$ 个 $0/1$ 可见性结果，最后对这 $K$ 个 $0/1$ 结果求加权平均**，得到平滑过渡的半影灰度值 $\text{visibility} \in [0, 1]$。
 2. **PCSS（Percentage-Closer Soft Shadows，Fernando 2005）**：
    真实世界中面光源产生的阴影具有显著的**接触硬化（Contact Hardening）**现象：遮挡物（如树枝或脚底）离受影地面越近，阴影边缘越锐利清晰；离受影地面越远，半影区（Penumbra）越宽、阴影越模糊柔和。固定核半径的 PCF 无法模拟这一物理现象，PCSS 通过三步动态计算滤波核半径：
@@ -238,6 +238,6 @@ $$
   3. **级联接缝平滑混合（Cascade Blending）**：在相邻两级 Cascade 交界处的过渡带（如 10% 宽度）内，同时采样前后两级 Shadow Map 并按距离线性插值，消除级联切换处的硬突变分界线。
 - **为什么主相机移动或旋转时 CSM 阴影边缘会发生剧烈闪烁（Shadow Shimmering）及根治方法**：
   - **原因**：当主相机微移或旋转时，如果每帧重新根据子视锥体 8 个角点计算紧凑轴对齐包围盒（AABB），光源正交投影框的宽高尺寸和中心坐标会随帧连续微变，导致世界空间中的固定物体在 Shadow Map 纹素网格上不断错位滑动，引发阴影边缘高频闪烁。
-  - **两步根治铁律**：
+  - **两步稳定化方法**：
     1. **使用固定半径的球体包围盒（Bounding Sphere）替代 AABB**：子视锥体对应的最小外接球半径在相机任意旋转下**恒定不变**，从而锁死光源正交投影矩阵的缩放尺寸。
     2. **世界空间纹素步长对齐（Texel Snapping）**：计算光源空间下单个 Shadow Map 纹素对应的世界宽度 $\text{worldUnitsPerTexel} = W_{\text{ortho}} / R_{\text{map}}$，将光源相机在 $XY$ 平面上的平移坐标强制向下取整对齐到纹素步长的整数倍网格点上（`pos.xy = floor(pos.xy / worldUnitsPerTexel) * worldUnitsPerTexel`），使相机移动时阴影纹素在世界空间中保持绝对静止。

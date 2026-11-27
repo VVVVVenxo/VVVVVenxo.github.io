@@ -15,7 +15,7 @@ tags:
 description: 基于《STL 源码剖析》（侯捷著）与 GCC libstdc++ 实现，深入剖析 C++ STL 六大部件、vector 倍增均摊推导、deque 中控器分段连续布局、list 与 map/set 红黑树哨兵节点、unordered_map 全局单链表前驱桶设计、以及全容器复杂度与迭代器失效规则总表。
 ---
 
-本文遵循《STL 源码剖析》（侯捷著）与 GCC `libstdc++` 标准库源码实现，按容器底层内存布局与算法契约将 C++ 标准模板库拆解为四个章节：**序列式容器底层（`std::vector` 三指针与倍增均摊 vs `std::deque` 分段连续中控器）**、**链表与有序关联容器（`std::list` 环状哨兵与 `std::map / set` 红黑树节点布局）**、**无序哈希容器（`std::unordered_map` 指针稳定约束、前驱桶链表与 Rehash 机制）**、**STL 迭代器五级范畴、`std::sort` 内省排序与全容器迭代器失效铁律**。
+本文结合 GCC `libstdc++` 源码实现，按容器内存布局与算法复杂度将 C++ 标准模板库分为四个章节：**序列式容器底层（`std::vector` 与 `std::deque`）**、**链表与有序关联容器（`std::list` 与 `std::map / set` 红黑树）**、**无序哈希容器（`std::unordered_map` 前驱桶链表与 Rehash 机制）**、**STL 迭代器范畴、`std::sort` 内省排序与迭代器失效规则**。
 
 ---
 
@@ -41,7 +41,7 @@ description: 基于《STL 源码剖析》（侯捷著）与 GCC libstdc++ 实现
 
 #### 2. `push_back` vs `emplace_back` 与 `noexcept` 移动保证
 - **`emplace_back(args...)` 原位构造**：通过可变参数模板与完美转发（`std::forward<Args>(args)...`），直接在 `_M_finish` 指向的未初始化内存上调用 placement new `new ((void*)_M_finish) T(args...)`，当传入构造参数而非现成对象时，比 `push_back` 省去一次临时对象的构造与移动/析构。
-- **为什么自定义类的移动构造函数必须加上 `noexcept`**：`std::vector` 扩容搬移旧元素时，为了满足**强异常安全保证（Strong Exception Guarantee：若搬移中途抛出异常，原 vector 必须保持完好无损）**，会通过 `std::move_if_noexcept` 检查元素类型 `T` 的移动构造函数是否标有 `noexcept`；若未标记 `noexcept`，`vector` 扩容时会**退化为调用拷贝构造函数**而非移动构造函数！
+- **移动构造函数声明 `noexcept` 的原因**：`std::vector` 扩容搬移旧元素时，为满足**强异常安全保证（Strong Exception Guarantee：若搬移中途抛出异常，原容器保持不变）**，会通过 `std::move_if_noexcept` 检查元素类型 `T` 的移动构造函数是否带有 `noexcept`；若未标记 `noexcept`，`vector` 扩容时会**回退为调用拷贝构造函数**。
 
 ---
 
@@ -94,12 +94,12 @@ description: 基于《STL 源码剖析》（侯捷著）与 GCC libstdc++ 实现
 
 ## 第 3 章：无序哈希容器：`std::unordered_map` 底层与 Rehash
 
-### 3.1 为什么 C++ 标准迫使 `unordered_map` 必须用拉链法而非开放寻址
+### 3.1 `unordered_map` 采用拉链法而非开放寻址的原因
 
-在现代 CPU 缓存体系下，基于连续数组的开放寻址哈希表（Open Addressing）由于缓存行极佳的空间局部性，查找性能远高于链表节点分散在堆上的拉链法。但为什么 GCC、Clang（libc++）和 MSVC 的 `std::unordered_map` 全部采用**独立堆分配节点的拉链法（Separate Chaining）**？
-- **根本原因在于 C++11 标准对“引用与指针稳定性（Pointer / Reference Stability）”的硬性规定**：
-  C++ 标准明确规定：`unordered_map::insert` 或 `rehash` 扩容时，虽然允许所有**迭代器失效**，但**指向容器内已有元素的指针（`Value*`）与引用（`Value&`）必须绝对保持有效，绝不能失效**！
-  若采用开放寻址平坦数组，扩容时必然将元素搬移到新数组中，导致旧元素的内存地址改变、外部持有的引用悬空。因此标准库实现被迫为每个键值对单独执行一次 `new Node` 堆分配。
+基于连续数组的开放寻址哈希表（Open Addressing）具有较好的缓存局部性，但 GCC、Clang（libc++）和 MSVC 的 `std::unordered_map` 均采用**独立堆分配节点的拉链法（Separate Chaining）**：
+- **原因在于 C++11 标准的引用与指针稳定性（Pointer / Reference Stability）规定**：
+  C++ 标准规定：`unordered_map::insert` 或 `rehash` 扩容时，允许**迭代器失效**，但**指向容器内已有元素的指针（`Value*`）与引用（`Value&`）必须保持有效**。
+  若采用开放寻址连续数组，扩容搬移元素会改变已有元素的内存地址，导致外部持有的指针和引用悬空。因此标准库实现需为每个节点单独分配堆内存。
 
 ![std::unordered_map 开链哈希表底层结构、前驱指针 Trick 与 Rehash 扩容](/img/posts/stl-ch3-unordered-hash.svg)
 
@@ -107,7 +107,7 @@ description: 基于《STL 源码剖析》（侯捷著）与 GCC libstdc++ 实现
 
 ### 3.2 GCC `libstdc++` 的“全局单链表 + 桶存前驱指针”精妙设计
 
-若每个哈希桶各自维护一条双向链表：不仅每个节点多花 8 字节存 `prev` 指针，而且当负载因子较低、存在大量空桶时，对迭代器执行 `++it` 在当前桶走到末尾后，必须遍历扫描后面成百上千个空桶才能找到下一个非空桶，导致遍历退化！
+若每个哈希桶各自维护独立链表，当负载因子较低、存在大量空桶时，对迭代器执行 `++it` 到达当前桶末尾后，需线性扫描后续空桶才能找到下一个非空桶，导致遍历耗时增加。
 
 为同时兼顾 **单指针省内存**、**跨桶 `++it` 严格 `O(1)`** 以及 **单链表 `O(1)` 删除当前桶首元**，GCC `libstdc++` 采用了极为精巧的底层结构：
 1. **所有元素串联成唯一一条全局单向链表**：新插入某个桶的节点直接插进全局单链表的对应区段中。因此迭代器 `++it` 永远只需执行一次 `node = node->_M_next`，完全无视中间有多少个空桶，严格耗时 `O(1)`。
@@ -122,7 +122,7 @@ description: 基于《STL 源码剖析》（侯捷著）与 GCC libstdc++ 实现
 
 STL 通过 `std::iterator_traits<Iter>::iterator_category` 提取迭代器的五种能力标签，并在编译期利用函数重载（Tag Dispatching）或 C++20 Concepts 自动分派最优算法（如 `std::advance(it, n)` 对随机访问迭代器直接编译为 `it += n`，对双向迭代器编译为 `n` 次循环自增）：
 
-![STL 五级迭代器能力层级、算法分派（Tag Dispatching）与迭代器失效铁律](/img/posts/stl-ch4-iterator-invalidation.svg)
+![STL 五级迭代器能力层级、算法分派（Tag Dispatching）与迭代器失效规则](/img/posts/stl-ch4-iterator-invalidation.svg)
 
 - **为什么 `std::sort` 工程实现采用混合内省排序（Introsort）**：
   单纯的快速排序在面对精心构造的数据（如大量重复元素或特定逆序）时，递归树可能严重失衡退化至 `O(N^2)` 且引发栈溢出。`std::sort` 结合了三种排序算法的优势：
