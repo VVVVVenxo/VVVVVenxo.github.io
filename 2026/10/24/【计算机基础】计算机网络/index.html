@@ -1,178 +1,16 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【计算机基础】计算机网络 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基于《计算机网络（第 7 版）》的复习笔记：围绕五层协议体系结构（物理层、数据链路层、网络层、运输层、应用层），记录各层的核心概念、工作原理与协议机制。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="【计算机基础】计算机网络">
-<meta property="og:url" content="https://vvvvvenxo.github.io/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">
-<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
-<meta property="og:description" content="基于《计算机网络（第 7 版）》的复习笔记：围绕五层协议体系结构（物理层、数据链路层、网络层、运输层、应用层），记录各层的核心概念、工作原理与协议机制。">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C.png">
-<meta property="article:published_time" content="2026-10-24T00:00:00.000Z">
-<meta property="article:modified_time" content="2026-11-27T03:30:39.501Z">
-<meta property="article:author" content="VVVVVenxo">
-<meta property="article:tag" content="TCP">
-<meta property="article:tag" content="UDP">
-<meta property="article:tag" content="操作系统">
-<meta property="article:tag" content="计算机网络">
-<meta property="article:tag" content="IP">
-<meta property="article:tag" content="HTTP">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C.png"><script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "【计算机基础】计算机网络",
-  "url": "https://vvvvvenxo.github.io/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/",
-  "image": "https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C.png",
-  "datePublished": "2026-10-24T00:00:00.000Z",
-  "dateModified": "2026-11-27T03:30:39.501Z",
-  "author": [
-    {
-      "@type": "Person",
-      "name": "VVVVVenxo",
-      "url": "https://VVVVVenxo.github.io"
-    }
-  ]
-}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Astro v5.18.2"><title>【计算机基础】计算机网络 | VVVVVenxo 的博客</title><meta name="description" content="基于《计算机网络（第 7 版）》的复习笔记：围绕五层协议体系结构（物理层、数据链路层、网络层、运输层、应用层），记录各层的核心概念、工作原理与协议机制。"><meta name="keywords" content="VVVVVenxo, 游戏客户端开发, Unity, C++, C#, 图形学, 实时渲染, 网络同步, 算法, AI Agent"><meta name="author" content="VVVVVenxo"><meta name="theme-color" content="#f7f5ef" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#201f1c" media="(prefers-color-scheme: dark)"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"><link rel="icon" href="/img/cat.ico"><link rel="alternate" type="application/rss+xml" title="VVVVVenxo 的博客" href="/atom.xml"><meta property="og:type" content="article"><meta property="og:url" content="https://vvvvvenxo.github.io/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"><meta property="og:title" content="【计算机基础】计算机网络 | VVVVVenxo 的博客"><meta property="og:description" content="基于《计算机网络（第 7 版）》的复习笔记：围绕五层协议体系结构（物理层、数据链路层、网络层、运输层、应用层），记录各层的核心概念、工作原理与协议机制。"><meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C.png"><script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
-        return value
-      }
-    }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!true && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
-  
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
-        }
-      }
-
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
-
-      const theme = saveToLocal.get('theme')
-    
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
-        
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-  
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
-  translate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":false},
-  copy: {
-    success: '复制成功',
-    error: '复制失败',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: true
-  },
-  runtime: '',
-  dateSuffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
-    buttonText: '加载更多'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: false,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: '【计算机基础】计算机网络',
-  isHighlightShrink: false,
-  isToc: true,
-  pageType: 'post'
-}</script><meta name="referrer" content="no-referrer"><link rel="stylesheet" href="/css/site-refinement.css?v=20261024-1"><meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
-  restartOnPushState: false
-}
-
-btf.addGlobalFn('pjaxSend', () => {
-  Pace.restart()
-}, 'pace_restart')
-
-</script><link rel="stylesheet" href="/css/pace-theme-editorial.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #F1F4F1;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">138</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【计算机基础】计算机网络</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【计算机基础】计算机网络</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-24T00:00:00.000Z" title="发表于 2026-10-24 00:00:00">2026-10-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-27T03:30:39.501Z" title="更新于 2026-11-27 03:30:39">2026-11-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">12.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>41分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="第一章-概述"><a href="#第一章-概述" class="headerlink" title="第一章 概述"></a>第一章 概述</h2><h3 id="1-1-三种数据交换方式"><a href="#1-1-三种数据交换方式" class="headerlink" title="1.1 三种数据交换方式"></a>1.1 三种数据交换方式</h3><p>计算机网络的核心作用是实现主机之间的数据交换，交换方式经历了以下演进：</p>
+      })();
+    </script><link rel="stylesheet" href="/_astro/index.CgpjNjEc.css"></head> <body> <header class="site-header sticky top-0 z-40 w-full border-b border-[var(--border-color)]"> <div class="container flex h-16 items-center justify-between"> <a href="/" aria-label="VVVVVenxo 的博客，返回首页" class="brand-link text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]"> <span class="brand-mark" style="--brand-logo: url('/logo.svg')" aria-hidden="true"></span> <span class="brand-name">VVVVVenxo</span> <span class="brand-caption">游戏客户端工程手记</span> </a> <nav class="hidden items-center gap-1 md:flex" aria-label="主导航"> <a href="/" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 首页 </a><a href="/blog" aria-current="page" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 分类 </a><a href="/tags" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 标签 </a><a href="/about" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 关于 </a> </nav> <div class="flex items-center gap-1.5"> <button id="search-btn" type="button" class="header-action" aria-label="搜索 (Ctrl+K)" title="搜索 (Ctrl+K)"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </button> <button id="theme-toggle" type="button" class="header-action" aria-label="切换主题" title="切换明暗主题"> <svg class="sun-icon hidden dark:block" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> <svg class="moon-icon block dark:hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="mobile-menu-btn" type="button" class="header-action md:hidden" aria-label="菜单" aria-controls="mobile-menu" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> </div> </div> <div id="mobile-menu" class="hidden border-t border-[var(--border-subtle)] md:hidden"> <nav class="container py-3" aria-label="移动导航"> <div class="bg-[var(--bg-surface)]"> <a href="/" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 首页 </a><a href="/blog" aria-current="page" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors bg-[var(--bg-muted)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 分类 </a><a href="/tags" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 标签 </a><a href="/about" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 关于 </a> </div> </nav> </div> </header> <main class="flex-1">  <div class="post-reading-shell container-wide flex py-10 md:py-14"> <article class="min-w-0 flex-1"> <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8"> <div class="flex flex-wrap items-center gap-2"> <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" class="section-kicker hover:underline"> 计算机基础 </a> <span class="text-xs text-[var(--text-tertiary)]">
+/ 技术笔记 · 计算机基础 </span> </div> <h1 lang="zh-CN" class="mt-4 text-3xl font-bold tracking-tight text-balance text-[var(--text-primary)] md:text-5xl"> 【计算机基础】计算机网络 </h1> <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-tertiary)]"> <time datetime="2026-10-24">2026年10月24日</time> <span>·</span> <span>41 分钟阅读</span> <span>·</span> <span>约 13,240 字</span> </div> <div class="mt-5 flex flex-wrap gap-2"> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" class="tag"> 计算机网络 </a><a href="/tags/TCP/" class="tag"> TCP </a><a href="/tags/UDP/" class="tag"> UDP </a><a href="/tags/IP/" class="tag"> IP </a><a href="/tags/HTTP/" class="tag"> HTTP </a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="tag"> 操作系统 </a> </div> </header> <div class="prose max-w-none" lang="zh-CN"><h2 id="第一章-概述"><a aria-hidden="true" tabindex="-1" href="#第一章-概述"><span class="icon icon-link"></span></a>第一章 概述</h2>
+<h3 id="11-三种数据交换方式"><a aria-hidden="true" tabindex="-1" href="#11-三种数据交换方式"><span class="icon icon-link"></span></a>1.1 三种数据交换方式</h3>
+<p>计算机网络的核心作用是实现主机之间的数据交换，交换方式经历了以下演进：</p>
 <ol>
 <li><strong>电路交换（Circuit Switching）</strong><ul>
 <li><strong>原理</strong>：通信前必须先拨号建立端到端的物理通路（建立连接 → 通话 → 释放连接），通信期间双方始终独占该物理链路。</li>
@@ -220,18 +58,21 @@ btf.addGlobalFn('pjaxSend', () => {
 </tr>
 </tbody></table>
 <hr>
-<h3 id="1-2-网络性能指标与四类时延"><a href="#1-2-网络性能指标与四类时延" class="headerlink" title="1.2 网络性能指标与四类时延"></a>1.2 网络性能指标与四类时延</h3><ol>
+<h3 id="12-网络性能指标与四类时延"><a aria-hidden="true" tabindex="-1" href="#12-网络性能指标与四类时延"><span class="icon icon-link"></span></a>1.2 网络性能指标与四类时延</h3>
+<ol>
 <li><strong>速率、带宽与吞吐量</strong><ul>
-<li><strong>速率</strong>：每秒传送的比特数，单位为 bit&#x2F;s（bps）。通信速率中的千&#x2F;兆&#x2F;吉按十进制换算：1 kb&#x2F;s &#x3D; 10^3 bit&#x2F;s，1 Mb&#x2F;s &#x3D; 10^6 bit&#x2F;s，1 Gb&#x2F;s &#x3D; 10^9 bit&#x2F;s。</li>
-<li><strong>带宽</strong>：数字信道所能传送的最高数据率（单位 bit&#x2F;s）。</li>
+<li><strong>速率</strong>：每秒传送的比特数，单位为 bit/s（bps）。通信速率中的千/兆/吉按十进制换算：1 kb/s = 10^3 bit/s，1 Mb/s = 10^6 bit/s，1 Gb/s = 10^9 bit/s。</li>
+<li><strong>带宽</strong>：数字信道所能传送的最高数据率（单位 bit/s）。</li>
 <li><strong>吞吐量</strong>：单位时间内通过某个网络或接口的实际数据量。</li>
 </ul>
 </li>
-<li><strong>四类时延（总时延 &#x3D; 发送时延 + 传播时延 + 处理时延 + 排队时延）</strong><ul>
-<li><strong>发送时延（传输时延）</strong>：主机或路由器将分组的全部比特推向通信链路所需的时间，发生在网卡发送器出口。<br><code>发送时延 = 数据帧长度 (bit) / 发送速率 (bit/s)</code></li>
-<li><strong>传播时延</strong>：电磁波在信道中传播一定物理距离所需的时间，发生在物理传输媒体上（铜线约 2.3 × 10^8 m&#x2F;s，光纤约 2.0 × 10^8 m&#x2F;s）。提高带宽只会减小发送时延，不会改变传播时延。<br><code>传播时延 = 信道长度 (m) / 电磁波传播速率 (m/s)</code></li>
+<li><strong>四类时延（总时延 = 发送时延 + 传播时延 + 处理时延 + 排队时延）</strong><ul>
+<li><strong>发送时延（传输时延）</strong>：主机或路由器将分组的全部比特推向通信链路所需的时间，发生在网卡发送器出口。
+<code>发送时延 = 数据帧长度 (bit) / 发送速率 (bit/s)</code></li>
+<li><strong>传播时延</strong>：电磁波在信道中传播一定物理距离所需的时间，发生在物理传输媒体上（铜线约 2.3 × 10^8 m/s，光纤约 2.0 × 10^8 m/s）。提高带宽只会减小发送时延，不会改变传播时延。
+<code>传播时延 = 信道长度 (m) / 电磁波传播速率 (m/s)</code></li>
 <li><strong>处理时延</strong>：主机或路由器收到分组后分析首部、检验差错、查找转发表所需的时间。</li>
-<li><strong>排队时延</strong>：分组在路由器输入&#x2F;输出队列中等待处理和转发的时间，取决于当时的网络拥塞程度。</li>
+<li><strong>排队时延</strong>：分组在路由器输入/输出队列中等待处理和转发的时间，取决于当时的网络拥塞程度。</li>
 </ul>
 </li>
 <li><strong>时延带宽积与往返时间（RTT）</strong><ul>
@@ -241,18 +82,19 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="1-3-网络体系结构与五层模型"><a href="#1-3-网络体系结构与五层模型" class="headerlink" title="1.3 网络体系结构与五层模型"></a>1.3 网络体系结构与五层模型</h3><p>为了降低网络设计的复杂度，计算机网络采用<strong>分层体系结构</strong>：每一层只负责解决一类独立问题，在下一层提供服务的基础上实现本层功能，并向上一层提供服务接口。</p>
+<h3 id="13-网络体系结构与五层模型"><a aria-hidden="true" tabindex="-1" href="#13-网络体系结构与五层模型"><span class="icon icon-link"></span></a>1.3 网络体系结构与五层模型</h3>
+<p>为了降低网络设计的复杂度，计算机网络采用<strong>分层体系结构</strong>：每一层只负责解决一类独立问题，在下一层提供服务的基础上实现本层功能，并向上一层提供服务接口。</p>
 <ul>
 <li><strong>OSI 七层模型</strong>：理论参考模型（物理层、数据链路层、网络层、运输层、会话层、表示层、应用层）。</li>
-<li><strong>TCP&#x2F;IP 四层模型</strong>：工业界实际标准（网络接口层、网际层、运输层、应用层）。</li>
-<li><strong>五层协议体系结构</strong>：综合 OSI 与 TCP&#x2F;IP 的教学模型，自顶向下依次为应用层、运输层、网络层、数据链路层、物理层。</li>
+<li><strong>TCP/IP 四层模型</strong>：工业界实际标准（网络接口层、网际层、运输层、应用层）。</li>
+<li><strong>五层协议体系结构</strong>：综合 OSI 与 TCP/IP 的教学模型，自顶向下依次为应用层、运输层、网络层、数据链路层、物理层。</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th align="left">五层体系结构</th>
 <th align="left">OSI 七层</th>
-<th align="left">TCP&#x2F;IP 四层</th>
+<th align="left">TCP/IP 四层</th>
 <th align="left">协议数据单元 (PDU)</th>
 <th align="left">核心协议与设备</th>
 <th align="left">核心职责</th>
@@ -260,7 +102,7 @@ btf.addGlobalFn('pjaxSend', () => {
 </thead>
 <tbody><tr>
 <td align="left"><strong>5. 应用层</strong></td>
-<td align="left">应用层 &#x2F; 表示层 &#x2F; 会话层</td>
+<td align="left">应用层 / 表示层 / 会话层</td>
 <td align="left">应用层</td>
 <td align="left">报文 (Message)</td>
 <td align="left">HTTP, DNS, DHCP</td>
@@ -270,7 +112,7 @@ btf.addGlobalFn('pjaxSend', () => {
 <td align="left"><strong>4. 运输层</strong></td>
 <td align="left">运输层</td>
 <td align="left">运输层</td>
-<td align="left">报文段 (TCP) &#x2F; 用户数据报 (UDP)</td>
+<td align="left">报文段 (TCP) / 用户数据报 (UDP)</td>
 <td align="left">TCP, UDP</td>
 <td align="left">通过端口号定位应用进程，提供端到端传输与可靠控制</td>
 </tr>
@@ -278,7 +120,7 @@ btf.addGlobalFn('pjaxSend', () => {
 <td align="left"><strong>3. 网络层</strong></td>
 <td align="left">网络层</td>
 <td align="left">网际层</td>
-<td align="left">IP 数据报 &#x2F; 分组 (Packet)</td>
+<td align="left">IP 数据报 / 分组 (Packet)</td>
 <td align="left">IP, ICMP, ARP, OSPF（路由器）</td>
 <td align="left">通过 IP 地址实现跨网段主机寻址与路由转发</td>
 </tr>
@@ -302,7 +144,9 @@ btf.addGlobalFn('pjaxSend', () => {
 <p><strong>数据的封装与解封装</strong>：发送方自顶向下逐层附加本层首部（数据链路层还需附加尾部 FCS），最终转为比特流发送；接收方自底向上逐层剥离首部与尾部，还原数据交付应用进程。</p>
 <p><img width="860" height="410" src="/img/posts/net-ch1-encapsulation.svg" alt="五层协议体系结构与数据逐层封装过程" loading="lazy" decoding="async"></p>
 <hr>
-<h2 id="第二章-物理层"><a href="#第二章-物理层" class="headerlink" title="第二章 物理层"></a>第二章 物理层</h2><h3 id="2-1-物理层的职责与四大特性"><a href="#2-1-物理层的职责与四大特性" class="headerlink" title="2.1 物理层的职责与四大特性"></a>2.1 物理层的职责与四大特性</h3><p>物理层用于屏蔽底层传输媒体（双绞线、光纤、无线信道）和通信手段的差异，使上面的数据链路层只需考虑如何传输比特流。物理层接口规程包含四个特性：</p>
+<h2 id="第二章-物理层"><a aria-hidden="true" tabindex="-1" href="#第二章-物理层"><span class="icon icon-link"></span></a>第二章 物理层</h2>
+<h3 id="21-物理层的职责与四大特性"><a aria-hidden="true" tabindex="-1" href="#21-物理层的职责与四大特性"><span class="icon icon-link"></span></a>2.1 物理层的职责与四大特性</h3>
+<p>物理层用于屏蔽底层传输媒体（双绞线、光纤、无线信道）和通信手段的差异，使上面的数据链路层只需考虑如何传输比特流。物理层接口规程包含四个特性：</p>
 <ol>
 <li><strong>机械特性</strong>：接线器的形状、尺寸、引脚数目与排列。</li>
 <li><strong>电气特性</strong>：接口电缆各条线上出现的电压范围。</li>
@@ -310,7 +154,8 @@ btf.addGlobalFn('pjaxSend', () => {
 <li><strong>过程特性</strong>：不同功能的各种可能事件的出现顺序。</li>
 </ol>
 <hr>
-<h3 id="2-2-交互方式、数字编码与带通调制"><a href="#2-2-交互方式、数字编码与带通调制" class="headerlink" title="2.2 交互方式、数字编码与带通调制"></a>2.2 交互方式、数字编码与带通调制</h3><ol>
+<h3 id="22-交互方式数字编码与带通调制"><a aria-hidden="true" tabindex="-1" href="#22-交互方式数字编码与带通调制"><span class="icon icon-link"></span></a>2.2 交互方式、数字编码与带通调制</h3>
+<ol>
 <li><strong>三种通信交互方式</strong><ul>
 <li><strong>单工通信</strong>：只能单向传输，无反向交互（如广播）。</li>
 <li><strong>半双工通信</strong>：双方均可收发，但不能同时发送（如对讲机、传统集线器共享以太网）。</li>
@@ -336,21 +181,25 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="2-3-信道极限容量：奈氏准则与香农公式"><a href="#2-3-信道极限容量：奈氏准则与香农公式" class="headerlink" title="2.3 信道极限容量：奈氏准则与香农公式"></a>2.3 信道极限容量：奈氏准则与香农公式</h3><ol>
+<h3 id="23-信道极限容量奈氏准则与香农公式"><a aria-hidden="true" tabindex="-1" href="#23-信道极限容量奈氏准则与香农公式"><span class="icon icon-link"></span></a>2.3 信道极限容量：奈氏准则与香农公式</h3>
+<ol>
 <li><strong>奈氏准则（限制码元传输速率，防止码间串扰）</strong><ul>
-<li>高频分量衰减会导致脉冲展宽并相互重叠，产生<strong>码间串扰</strong>。在带宽为 W (Hz) 的理想低通信道中，无码间串扰的最高码元传输速率为：<br><code>最高码元传输速率 = 2W (Baud, 码元/秒)</code></li>
+<li>高频分量衰减会导致脉冲展宽并相互重叠，产生<strong>码间串扰</strong>。在带宽为 W (Hz) 的理想低通信道中，无码间串扰的最高码元传输速率为：
+<code>最高码元传输速率 = 2W (Baud, 码元/秒)</code></li>
 <li>若每个码元有 V 种离散状态（携带 <code>log2(V)</code> 比特），则理想低通信道下的极限数据传输率为 <code>2W × log2(V) (bit/s)</code>。</li>
 </ul>
 </li>
 <li><strong>香农公式（受限于热噪声的信息速率绝对上限）</strong><ul>
-<li>当信道存在随机高斯白噪声时，码元状态数 V 无法无限细分。带宽为 W (Hz)、信噪比为 S&#x2F;N 的信道，其无差错极限信息传输速率 C 为：<br><code>C = W × log2(1 + S / N) (bit/s)</code></li>
+<li>当信道存在随机高斯白噪声时，码元状态数 V 无法无限细分。带宽为 W (Hz)、信噪比为 S/N 的信道，其无差错极限信息传输速率 C 为：
+<code>C = W × log2(1 + S / N) (bit/s)</code></li>
 <li><strong>信噪比分贝（dB）换算</strong>：<code>信噪比 (dB) = 10 × log10(S / N)</code>。例如信噪比为 30 dB 时，<code>S/N = 10^(30/10) = 1000</code>。</li>
-<li><strong>结论</strong>：信道带宽 W 或信噪比 S&#x2F;N 越大，极限速率 C 越高；只要实际传输速率低于 C，就一定存在实现无差错传输的编码方法。</li>
+<li><strong>结论</strong>：信道带宽 W 或信噪比 S/N 越大，极限速率 C 越高；只要实际传输速率低于 C，就一定存在实现无差错传输的编码方法。</li>
 </ul>
 </li>
 </ol>
 <hr>
-<h3 id="2-4-传输媒体与信道复用技术"><a href="#2-4-传输媒体与信道复用技术" class="headerlink" title="2.4 传输媒体与信道复用技术"></a>2.4 传输媒体与信道复用技术</h3><ol>
+<h3 id="24-传输媒体与信道复用技术"><a aria-hidden="true" tabindex="-1" href="#24-传输媒体与信道复用技术"><span class="icon icon-link"></span></a>2.4 传输媒体与信道复用技术</h3>
+<ol>
 <li><strong>导引型传输媒体</strong><ul>
 <li><strong>双绞线</strong>：两根绝缘铜线相互绞合，利用差分信号抵消外部电磁干扰并减少自身电磁辐射。</li>
 <li><strong>光纤</strong>：利用光脉冲在纤芯内壁发生全反射传输。<strong>多模光纤</strong>纤芯粗，多条光线反射前进易产生色散，适于近距离；<strong>单模光纤</strong>纤芯极细，光线沿直线传播无多次反射，衰减小，适于长途干线。</li>
@@ -366,10 +215,11 @@ btf.addGlobalFn('pjaxSend', () => {
 </ol>
 <p><img width="860" height="350" src="/img/posts/net-ch2-multiplexing.svg" alt="信道复用技术对比" loading="lazy" decoding="async"></p>
 <ol start="3">
-<li><strong>码分复用（CDM &#x2F; CDMA）与正交码片计算</strong><ul>
+<li><strong>码分复用（CDM / CDMA）与正交码片计算</strong><ul>
 <li>各用户在相同时间、使用相同频带通信，每个站点分配一个唯一的 m 位<strong>码片序列</strong>（将 0 记为 -1，1 记为 +1）。</li>
 <li><strong>发送规则</strong>：发送比特 1 时发出原码片向量 S；发送比特 0 时发出反码向量 -S。</li>
-<li><strong>正交约束</strong>：任意两个不同站点的码片向量 S 与 T 正交，规格化内积为 0；自身规格化内积为 +1：<br><code>S · T = (1 / m) × Σ(Si × Ti) = 0</code> ， <code>S · S = +1</code> ， <code>S · (-S) = -1</code></li>
+<li><strong>正交约束</strong>：任意两个不同站点的码片向量 S 与 T 正交，规格化内积为 0；自身规格化内积为 +1：
+<code>S · T = (1 / m) × Σ(Si × Ti) = 0</code> ， <code>S · S = +1</code> ， <code>S · (-S) = -1</code></li>
 <li><strong>接收端分离计算</strong>：设信道总叠加信号为 X，接收端想提取 S 站的数据，只需计算规格化内积 <code>S · X</code>：<ul>
 <li>结果为 <strong>+1</strong> → S 站发送了比特 <strong>1</strong>；</li>
 <li>结果为 <strong>-1</strong> → S 站发送了比特 <strong>0</strong>；</li>
@@ -380,7 +230,9 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h2 id="第三章-数据链路层"><a href="#第三章-数据链路层" class="headerlink" title="第三章 数据链路层"></a>第三章 数据链路层</h2><h3 id="3-1-数据链路层的三个基本问题"><a href="#3-1-数据链路层的三个基本问题" class="headerlink" title="3.1 数据链路层的三个基本问题"></a>3.1 数据链路层的三个基本问题</h3><p>数据链路层在物理层提供的比特流服务基础上，通过规程控制将有差错的物理线路改造为对网络层无差错的数据链路。其核心任务是将网络层交下来的 IP 数据报组装成<strong>帧（Frame）</strong>，并在同一链路的相邻节点之间传输。所有数据链路层协议都必须解决以下三个基本问题：</p>
+<h2 id="第三章-数据链路层"><a aria-hidden="true" tabindex="-1" href="#第三章-数据链路层"><span class="icon icon-link"></span></a>第三章 数据链路层</h2>
+<h3 id="31-数据链路层的三个基本问题"><a aria-hidden="true" tabindex="-1" href="#31-数据链路层的三个基本问题"><span class="icon icon-link"></span></a>3.1 数据链路层的三个基本问题</h3>
+<p>数据链路层在物理层提供的比特流服务基础上，通过规程控制将有差错的物理线路改造为对网络层无差错的数据链路。其核心任务是将网络层交下来的 IP 数据报组装成<strong>帧（Frame）</strong>，并在同一链路的相邻节点之间传输。所有数据链路层协议都必须解决以下三个基本问题：</p>
 <ol>
 <li><strong>封装成帧（Framing）</strong><ul>
 <li>在一段数据的前后分别添加<strong>首部（Header）<strong>和</strong>尾部（Trailer）</strong>，构成一个帧。首部和尾部包含帧定界符（如控制字符 SOH 表示帧首，EOT 表示帧尾），用于让接收端从连续的比特流中识别出帧的开始与结束位置。</li>
@@ -403,7 +255,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </ol>
 <p><img width="860" height="390" src="/img/posts/net-ch3-framing.svg" alt="透明传输字节填充与以太网V2的MAC帧格式" loading="lazy" decoding="async"></p>
 <hr>
-<h3 id="3-2-点对点协议-PPP"><a href="#3-2-点对点协议-PPP" class="headerlink" title="3.2 点对点协议 PPP"></a>3.2 点对点协议 PPP</h3><p>用户计算机拨号接入 ISP 或路由器间点对点专线直连时，数据链路层通常使用 <strong>PPP（Point-to-Point Protocol）</strong>。</p>
+<h3 id="32-点对点协议-ppp"><a aria-hidden="true" tabindex="-1" href="#32-点对点协议-ppp"><span class="icon icon-link"></span></a>3.2 点对点协议 PPP</h3>
+<p>用户计算机拨号接入 ISP 或路由器间点对点专线直连时，数据链路层通常使用 <strong>PPP（Point-to-Point Protocol）</strong>。</p>
 <ol>
 <li><strong>PPP 的组成</strong>：<ul>
 <li>一个将 IP 数据报封装到串行链路的方法；</li>
@@ -411,39 +264,41 @@ btf.addGlobalFn('pjaxSend', () => {
 <li><strong>网络控制协议（NCP）</strong>：用于协商网络层不同协议的参数。</li>
 </ul>
 </li>
-<li><strong>PPP 的设计特点</strong>：因为点对点链路不存在多点竞争碰撞，PPP <strong>不需要 MAC 地址</strong>（地址字段固定填充 <code>0xFF</code>），也<strong>不提供序号与确认重传机制</strong>，仅通过尾部 2 字节 FCS 做 CRC 差错检验；异步传输时使用字节填充，同步 SONET&#x2F;SDH 链路传输时使用零比特填充。</li>
+<li><strong>PPP 的设计特点</strong>：因为点对点链路不存在多点竞争碰撞，PPP <strong>不需要 MAC 地址</strong>（地址字段固定填充 <code>0xFF</code>），也<strong>不提供序号与确认重传机制</strong>，仅通过尾部 2 字节 FCS 做 CRC 差错检验；异步传输时使用字节填充，同步 SONET/SDH 链路传输时使用零比特填充。</li>
 </ol>
 <hr>
-<h3 id="3-3-广播信道与-CSMA-CD-协议"><a href="#3-3-广播信道与-CSMA-CD-协议" class="headerlink" title="3.3 广播信道与 CSMA&#x2F;CD 协议"></a>3.3 广播信道与 CSMA&#x2F;CD 协议</h3><p>早期的传统以太网将多台主机连接在同一根共享总线上（广播信道）。当多台主机同时发送帧时，信号会在总线上叠加产生<strong>碰撞（冲突）</strong>，导致数据全部损坏。为此传统半双工以太网采用 <strong>CSMA&#x2F;CD（载波监听多点接入 &#x2F; 碰撞检测）</strong> 协议：</p>
+<h3 id="33-广播信道与-csmacd-协议"><a aria-hidden="true" tabindex="-1" href="#33-广播信道与-csmacd-协议"><span class="icon icon-link"></span></a>3.3 广播信道与 CSMA/CD 协议</h3>
+<p>早期的传统以太网将多台主机连接在同一根共享总线上（广播信道）。当多台主机同时发送帧时，信号会在总线上叠加产生<strong>碰撞（冲突）</strong>，导致数据全部损坏。为此传统半双工以太网采用 <strong>CSMA/CD（载波监听多点接入 / 碰撞检测）</strong> 协议：</p>
 <ol>
-<li><strong>CSMA&#x2F;CD 四大工作要点</strong><ul>
+<li><strong>CSMA/CD 四大工作要点</strong><ul>
 <li><strong>多点接入</strong>：多台计算机以多点接入方式连接在一根总线上（总线型网络）。</li>
 <li><strong>载波监听（先听后发）</strong>：发送数据前先检测总线上是否有其他计算机正在发送信号；若有则暂时等待，直到信道空闲满帧间最小间隔（9.6 μs）后再发送。</li>
 <li><strong>碰撞检测（边发边听）</strong>：发送过程中适配器边发送边检测信道上的信号电压摆动值。若摆动值超过门限，说明总线上至少有两台主机同时在发，发生了碰撞。</li>
-<li><strong>强化碰撞与二进制指数退避（冲突停发、随机重传）</strong>：一旦检测到碰撞，立即停止发送数据，并发出人为干扰信号通知所有站点；随后执行<strong>截断二进制指数退避算法</strong>——在第 k 次重传失败后（k &#x3D; min(重传次数, 10)），从离散集合 [0, 1, …, 2^k - 1] 中随机取一个数 r，等待 r × 争用期的时间后再重新尝试；若连续重传 16 次仍失败则丢弃该帧并向高层报错。</li>
+<li><strong>强化碰撞与二进制指数退避（冲突停发、随机重传）</strong>：一旦检测到碰撞，立即停止发送数据，并发出人为干扰信号通知所有站点；随后执行<strong>截断二进制指数退避算法</strong>——在第 k 次重传失败后（k = min(重传次数, 10)），从离散集合 [0, 1, ..., 2^k - 1] 中随机取一个数 r，等待 r × 争用期的时间后再重新尝试；若连续重传 16 次仍失败则丢弃该帧并向高层报错。</li>
 </ul>
 </li>
 <li><strong>争用期与最短有效帧长（64 字节）</strong><ul>
-<li><strong>争用期（碰撞窗口）</strong>：设信号在总线最远两端之间的单程传播时延为 τ，则发送站发出帧后，最迟需要经过 <strong>2τ</strong>（信号传到最远端发生碰撞、碰撞信号再传回发送端）才能得知是否发生碰撞。这 2τ 即为争用期（10 Mbps 以太网规定争用期 2τ &#x3D; 51.2 μs）。</li>
-<li><strong>最短有效帧长推导</strong>：CSMA&#x2F;CD 必须在整帧发送完毕之前检测到可能发生的碰撞；若帧过短，在碰撞信号传回前（&lt; 2τ）发送端已发完该帧并停止检测，将无法获知碰撞发生。因此<strong>帧的发送时延必须不小于争用期 2τ</strong>。在 10 Mbps 以太网中，51.2 μs 可发送 10 × 10^6 bit&#x2F;s × 51.2 × 10^-6 s &#x3D; 512 bit &#x3D; <strong>64 字节</strong>。</li>
+<li><strong>争用期（碰撞窗口）</strong>：设信号在总线最远两端之间的单程传播时延为 τ，则发送站发出帧后，最迟需要经过 <strong>2τ</strong>（信号传到最远端发生碰撞、碰撞信号再传回发送端）才能得知是否发生碰撞。这 2τ 即为争用期（10 Mbps 以太网规定争用期 2τ = 51.2 μs）。</li>
+<li><strong>最短有效帧长推导</strong>：CSMA/CD 必须在整帧发送完毕之前检测到可能发生的碰撞；若帧过短，在碰撞信号传回前（&lt; 2τ）发送端已发完该帧并停止检测，将无法获知碰撞发生。因此<strong>帧的发送时延必须不小于争用期 2τ</strong>。在 10 Mbps 以太网中，51.2 μs 可发送 10 × 10^6 bit/s × 51.2 × 10^-6 s = 512 bit = <strong>64 字节</strong>。</li>
 <li><strong>规定</strong>：以太网最短有效帧长为 <strong>64 字节</strong>。若数据加上 18 字节帧首尾不足 64 字节，必须在数据字段后填充字节补足至 64 字节；任何长度小于 64 字节的帧均视为冲突碎片帧直接丢弃。</li>
 </ul>
 </li>
 </ol>
 <hr>
-<h3 id="3-4-以太网-MAC-层、交换机与-VLAN"><a href="#3-4-以太网-MAC-层、交换机与-VLAN" class="headerlink" title="3.4 以太网 MAC 层、交换机与 VLAN"></a>3.4 以太网 MAC 层、交换机与 VLAN</h3><ol>
-<li><strong>MAC 地址（硬件地址 &#x2F; 物理地址）</strong><ul>
+<h3 id="34-以太网-mac-层交换机与-vlan"><a aria-hidden="true" tabindex="-1" href="#34-以太网-mac-层交换机与-vlan"><span class="icon icon-link"></span></a>3.4 以太网 MAC 层、交换机与 VLAN</h3>
+<ol>
+<li><strong>MAC 地址（硬件地址 / 物理地址）</strong><ul>
 <li>固化在网卡 ROM 中的 48 位（6 字节）全球唯一标识符（前 24 位为组织唯一标识符 OUI，后 24 位由厂家指派），用于在局域网（数据链路层）内标识收发节点。</li>
 </ul>
 </li>
 <li><strong>以太网 V2 的 MAC 帧格式</strong><ul>
 <li>组成：<strong>目的地址（6B）+ 源地址（6B）+ 类型（2B，指明上层协议，如 0x0800 为 IP 数据报）+ 数据（46～1500B）+ FCS（4B）</strong>。</li>
-<li>帧首部（14B）与帧尾部（4B）合计 <strong>18 字节</strong>。由于最短有效帧长为 64 字节，数据字段最短为 64 - 18 &#x3D; <strong>46 字节</strong>；物理层在帧前额外插入 8 字节前同步码以实现位同步。</li>
+<li>帧首部（14B）与帧尾部（4B）合计 <strong>18 字节</strong>。由于最短有效帧长为 64 字节，数据字段最短为 64 - 18 = <strong>46 字节</strong>；物理层在帧前额外插入 8 字节前同步码以实现位同步。</li>
 </ul>
 </li>
 <li><strong>以太网交换机（Switch）与自学习算法</strong><ul>
 <li>传统<strong>集线器（Hub）<strong>工作在物理层，只做信号放大转发，所有接口处于同一个</strong>冲突域</strong>，同一时刻只能有一台主机发送。</li>
-<li><strong>以太网交换机</strong>工作在数据链路层（多接口网桥），每个接口与所连主机形成独立的冲突域，支持<strong>全双工无碰撞传输</strong>（不再需要 CSMA&#x2F;CD）。</li>
+<li><strong>以太网交换机</strong>工作在数据链路层（多接口网桥），每个接口与所连主机形成独立的冲突域，支持<strong>全双工无碰撞传输</strong>（不再需要 CSMA/CD）。</li>
 <li><strong>交换机自学习过程</strong>：交换机内部维护一张空的 <strong>MAC 地址表（转发表）</strong>。每当从某个接口收到一个帧：<ol>
 <li><strong>登记源地址</strong>：读取帧的<strong>源 MAC 地址</strong>和进入接口号，写入或更新转发表（附带有效时间戳，超时自动删除以适应拓扑变化）；</li>
 <li><strong>查找目的地址</strong>：读取帧的<strong>目的 MAC 地址</strong>查询转发表——若表中找到对应接口，则直接从该接口<strong>单播转发</strong>（若对应接口就是进入接口则直接丢弃）；若表中找不到，则向除进入接口外的所有其他接口<strong>广播（泛洪）</strong>。</li>
@@ -462,7 +317,9 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h2 id="第四章-网络层"><a href="#第四章-网络层" class="headerlink" title="第四章 网络层"></a>第四章 网络层</h2><h3 id="4-1-网络层的设计思路：虚电路-vs-数据报"><a href="#4-1-网络层的设计思路：虚电路-vs-数据报" class="headerlink" title="4.1 网络层的设计思路：虚电路 vs 数据报"></a>4.1 网络层的设计思路：虚电路 vs 数据报</h3><p>数据链路层只解决同一个局域网内部的帧传输，而<strong>网络层</strong>负责在不同网段（异构网络）之间通过路由器实现主机到主机的分组转发。网络层向上提供何种服务曾有两种设计路线：</p>
+<h2 id="第四章-网络层"><a aria-hidden="true" tabindex="-1" href="#第四章-网络层"><span class="icon icon-link"></span></a>第四章 网络层</h2>
+<h3 id="41-网络层的设计思路虚电路-vs-数据报"><a aria-hidden="true" tabindex="-1" href="#41-网络层的设计思路虚电路-vs-数据报"><span class="icon icon-link"></span></a>4.1 网络层的设计思路：虚电路 vs 数据报</h3>
+<p>数据链路层只解决同一个局域网内部的帧传输，而<strong>网络层</strong>负责在不同网段（异构网络）之间通过路由器实现主机到主机的分组转发。网络层向上提供何种服务曾有两种设计路线：</p>
 <table>
 <thead>
 <tr>
@@ -493,12 +350,13 @@ btf.addGlobalFn('pjaxSend', () => {
 </tr>
 </tbody></table>
 <hr>
-<h3 id="4-2-IPv4-地址演进：分类编址-→-子网划分-→-无分类编址-CIDR"><a href="#4-2-IPv4-地址演进：分类编址-→-子网划分-→-无分类编址-CIDR" class="headerlink" title="4.2 IPv4 地址演进：分类编址 → 子网划分 → 无分类编址 CIDR"></a>4.2 IPv4 地址演进：分类编址 → 子网划分 → 无分类编址 CIDR</h3><p>IPv4 地址是由 <strong>32 位二进制数</strong>（4 字节，通常写成点分十进制如 <code>192.168.1.1</code>）组成的全网唯一逻辑地址，其结构始终遵循 <code>&lt;网络号, 主机号&gt;</code> 的两级或三级层次，经历了三个发展阶段：</p>
+<h3 id="42-ipv4-地址演进分类编址-子网划分-无分类编址-cidr"><a aria-hidden="true" tabindex="-1" href="#42-ipv4-地址演进分类编址-子网划分-无分类编址-cidr"><span class="icon icon-link"></span></a>4.2 IPv4 地址演进：分类编址 → 子网划分 → 无分类编址 CIDR</h3>
+<p>IPv4 地址是由 <strong>32 位二进制数</strong>（4 字节，通常写成点分十进制如 <code>192.168.1.1</code>）组成的全网唯一逻辑地址，其结构始终遵循 <code>&lt;网络号, 主机号&gt;</code> 的两级或三级层次，经历了三个发展阶段：</p>
 <ol>
 <li><strong>第一阶段：分类的 IP 地址</strong><ul>
 <li><strong>A 类</strong>：前 8 位为网络号（首位固定为 0），网络号范围 1 ～ 126（0 表示本网络，127 用于本地环回测试 <code>127.0.0.1</code>），每个网络可容纳 2^24 - 2 台主机。</li>
-<li><strong>B 类</strong>：前 16 位为网络号（前 2 位固定为 10），首字节范围 128 ～ 191，每个网络可容纳 2^16 - 2 &#x3D; 65534 台主机。</li>
-<li><strong>C 类</strong>：前 24 位为网络号（前 3 位固定为 110），首字节范围 192 ～ 223，每个网络可容纳 2^8 - 2 &#x3D; 254 台主机。</li>
+<li><strong>B 类</strong>：前 16 位为网络号（前 2 位固定为 10），首字节范围 128 ～ 191，每个网络可容纳 2^16 - 2 = 65534 台主机。</li>
+<li><strong>C 类</strong>：前 24 位为网络号（前 3 位固定为 110），首字节范围 192 ～ 223，每个网络可容纳 2^8 - 2 = 254 台主机。</li>
 <li><strong>特殊地址</strong>：主机号<strong>全 0</strong> 代表本网络的网络地址，主机号<strong>全 1</strong> 代表本网络的直接广播地址，因此可用主机数均需减 2。</li>
 <li><strong>局限</strong>：地址块粒度固定，B 类地址过大易造成大量 IP 闲置浪费，C 类地址过小不够中型机构使用。</li>
 </ul>
@@ -510,14 +368,15 @@ btf.addGlobalFn('pjaxSend', () => {
 </ul>
 </li>
 <li><strong>第三阶段：无分类编址 CIDR（构造超网）与路由聚合</strong><ul>
-<li><strong>原理</strong>：取消 A&#x2F;B&#x2F;C 分类，采用<strong>斜线记法</strong>（如 <code>128.14.32.0/20</code>），表示前 20 位为<strong>网络前缀</strong>（对应掩码 <code>255.255.240.0</code>），后 12 位为主机号。</li>
+<li><strong>原理</strong>：取消 A/B/C 分类，采用<strong>斜线记法</strong>（如 <code>128.14.32.0/20</code>），表示前 20 位为<strong>网络前缀</strong>（对应掩码 <code>255.255.240.0</code>），后 12 位为主机号。</li>
 <li><strong>路由聚合</strong>：将多个连续子网合并为一个更大的 CIDR 地址块，在路由表中用一条汇总记录代替多条子网记录，缩减路由表规模。</li>
 <li><strong>最长前缀匹配原则</strong>：使用 CIDR 后，若路由表中存在多条匹配目的 IP 的记录，路由器必须选择<strong>网络前缀最长（最具体）</strong>的那条路由进行转发。</li>
 </ul>
 </li>
 </ol>
 <hr>
-<h3 id="4-3-ARP-地址解析协议与跨网段转发过程"><a href="#4-3-ARP-地址解析协议与跨网段转发过程" class="headerlink" title="4.3 ARP 地址解析协议与跨网段转发过程"></a>4.3 ARP 地址解析协议与跨网段转发过程</h3><p>网络层使用 32 位 IP 地址寻路，而在局域网链路上发送帧时必须填写下一跳的 48 位 MAC 地址。<strong>ARP（Address Resolution Protocol）</strong> 用于<strong>根据已知的 IP 地址解析出对应的 MAC 地址</strong>。</p>
+<h3 id="43-arp-地址解析协议与跨网段转发过程"><a aria-hidden="true" tabindex="-1" href="#43-arp-地址解析协议与跨网段转发过程"><span class="icon icon-link"></span></a>4.3 ARP 地址解析协议与跨网段转发过程</h3>
+<p>网络层使用 32 位 IP 地址寻路，而在局域网链路上发送帧时必须填写下一跳的 48 位 MAC 地址。<strong>ARP（Address Resolution Protocol）</strong> 用于<strong>根据已知的 IP 地址解析出对应的 MAC 地址</strong>。</p>
 <ol>
 <li><strong>ARP 工作原理（同网段内）</strong><ul>
 <li>每台主机维护一张 <strong>ARP 高速缓存表</strong>（记录本网段 <code>&lt;IP 地址, MAC 地址&gt;</code> 映射）。</li>
@@ -533,7 +392,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </ol>
 <p><img width="860" height="360" src="/img/posts/net-ch4-arp-routing.svg" alt="跨网段路由转发过程中IP地址与MAC地址的变化" loading="lazy" decoding="async"></p>
 <hr>
-<h3 id="4-4-IP-数据报首部格式与分片计算"><a href="#4-4-IP-数据报首部格式与分片计算" class="headerlink" title="4.4 IP 数据报首部格式与分片计算"></a>4.4 IP 数据报首部格式与分片计算</h3><p>IPv4 数据报由<strong>首部</strong>和<strong>数据</strong>两部分组成，首部固定部分为 <strong>20 字节</strong>。</p>
+<h3 id="44-ip-数据报首部格式与分片计算"><a aria-hidden="true" tabindex="-1" href="#44-ip-数据报首部格式与分片计算"><span class="icon icon-link"></span></a>4.4 IP 数据报首部格式与分片计算</h3>
+<p>IPv4 数据报由<strong>首部</strong>和<strong>数据</strong>两部分组成，首部固定部分为 <strong>20 字节</strong>。</p>
 <ol>
 <li><strong>20 字节固定首部关键字段</strong><ul>
 <li><strong>版本（4 位）</strong>：IPv4 固定为 4。</li>
@@ -549,22 +409,22 @@ btf.addGlobalFn('pjaxSend', () => {
 <li><strong>IP 数据报分片与片偏移计算</strong><ul>
 <li>当 IP 数据报总长度超过下一段链路的 <strong>MTU</strong> 时，需切分为多个分片独立转发，到达<strong>最终目的主机</strong>后才重组。</li>
 <li><strong>标识</strong>：同一原始数据报的所有分片具有相同的标识值。</li>
-<li><strong>标志（低 2 位）</strong>：DF &#x3D; 0 表示允许分片；<strong>MF &#x3D; 1 表示后面还有分片，MF &#x3D; 0 表示这是最后一个分片</strong>。</li>
+<li><strong>标志（低 2 位）</strong>：DF = 0 表示允许分片；<strong>MF = 1 表示后面还有分片，MF = 0 表示这是最后一个分片</strong>。</li>
 <li><strong>片偏移（13 位）</strong>：表示本分片数据在原始数据报数据区中的相对起始位置，<strong>以 8 字节为偏移单位</strong>（因此除最后一个分片外，每个分片的数据长度必须是 8 字节的整数倍）：</li>
 </ul>
 </li>
 </ol>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">片偏移值 = 当前分片数据在原始数据区中的起始字节号 / 8</span><br></pre></td></tr></table></figure>
-
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>片偏移值 = 当前分片数据在原始数据区中的起始字节号 / 8</span></span></code></pre></div>
 <p><img width="860" height="360" src="/img/posts/net-ch4-fragmentation.svg" alt="IP数据报分片与片偏移计算示例" loading="lazy" decoding="async"></p>
 <hr>
-<h3 id="4-5-ICMP-协议、路由选择协议与-NAT"><a href="#4-5-ICMP-协议、路由选择协议与-NAT" class="headerlink" title="4.5 ICMP 协议、路由选择协议与 NAT"></a>4.5 ICMP 协议、路由选择协议与 NAT</h3><ol>
+<h3 id="45-icmp-协议路由选择协议与-nat"><a aria-hidden="true" tabindex="-1" href="#45-icmp-协议路由选择协议与-nat"><span class="icon icon-link"></span></a>4.5 ICMP 协议、路由选择协议与 NAT</h3>
+<ol>
 <li><strong>网际控制报文协议 ICMP</strong><ul>
 <li>封装在 IP 数据报内部传输（网络层协议），用于报告差错情况和探测网络状态。</li>
 <li><strong>分类</strong>：<strong>ICMP 差错报告报文</strong>（终点不可达、时间超过、参数问题、改变路由）与 <strong>ICMP 询问报文</strong>（回送请求和回答、时间戳请求和回答）。</li>
 <li><strong>典型应用</strong>：<ul>
-<li><strong><code>ping</code></strong>：直接发送 ICMP 回送请求与回送回答报文测试连通性，不经过 TCP&#x2F;UDP。</li>
-<li><strong><code>traceroute</code></strong>：先后发送 TTL &#x3D; 1, 2, 3… 的探测包，利用沿途路由器丢包发回的 <strong>ICMP 时间超过</strong> 报文逐跳获取路径上各路由器的 IP 地址。</li>
+<li><strong><code>ping</code></strong>：直接发送 ICMP 回送请求与回送回答报文测试连通性，不经过 TCP/UDP。</li>
+<li><strong><code>traceroute</code></strong>：先后发送 TTL = 1, 2, 3... 的探测包，利用沿途路由器丢包发回的 <strong>ICMP 时间超过</strong> 报文逐跳获取路径上各路由器的 IP 地址。</li>
 </ul>
 </li>
 </ul>
@@ -624,7 +484,9 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h2 id="第五章-运输层"><a href="#第五章-运输层" class="headerlink" title="第五章 运输层"></a>第五章 运输层</h2><h3 id="5-1-运输层职责、端口号与-UDP-TCP-对比"><a href="#5-1-运输层职责、端口号与-UDP-TCP-对比" class="headerlink" title="5.1 运输层职责、端口号与 UDP&#x2F;TCP 对比"></a>5.1 运输层职责、端口号与 UDP&#x2F;TCP 对比</h3><p>网络层虽然能把分组送到目的主机（按 IP 地址寻址），但真正进行通信的实体是位于两台主机中的<strong>应用程序进程</strong>。<strong>运输层（Transport Layer）<strong>负责向应用层提供</strong>端到端的进程间逻辑通信</strong>。</p>
+<h2 id="第五章-运输层"><a aria-hidden="true" tabindex="-1" href="#第五章-运输层"><span class="icon icon-link"></span></a>第五章 运输层</h2>
+<h3 id="51-运输层职责端口号与-udptcp-对比"><a aria-hidden="true" tabindex="-1" href="#51-运输层职责端口号与-udptcp-对比"><span class="icon icon-link"></span></a>5.1 运输层职责、端口号与 UDP/TCP 对比</h3>
+<p>网络层虽然能把分组送到目的主机（按 IP 地址寻址），但真正进行通信的实体是位于两台主机中的<strong>应用程序进程</strong>。<strong>运输层（Transport Layer）<strong>负责向应用层提供</strong>端到端的进程间逻辑通信</strong>。</p>
 <ol>
 <li><strong>复用、分用与端口号（Port，16 位，范围 0 ～ 65535）</strong><ul>
 <li><strong>复用</strong>：发送方不同的应用进程都可以使用同一个运输层协议传送数据。</li>
@@ -669,7 +531,7 @@ btf.addGlobalFn('pjaxSend', () => {
 </tr>
 <tr>
 <td align="left"><strong>通信端点关系</strong></td>
-<td align="left">支持一对一、一对多、多对一和多对多（支持广播&#x2F;多播）</td>
+<td align="left">支持一对一、一对多、多对一和多对多（支持广播/多播）</td>
 <td align="left">仅支持<strong>点对点一对一</strong>通信（每条 TCP 连接唯一由套接字四元组 <code>&lt;源IP, 源端口, 目的IP, 目的端口&gt;</code> 标识）</td>
 </tr>
 <tr>
@@ -680,11 +542,12 @@ btf.addGlobalFn('pjaxSend', () => {
 <tr>
 <td align="left"><strong>典型应用场景</strong></td>
 <td align="left">DNS、DHCP、实时音视频、多人实时动作游戏状态同步</td>
-<td align="left">HTTP&#x2F;HTTPS、FTP、文件传输、金融交易、游戏登录与结算</td>
+<td align="left">HTTP/HTTPS、FTP、文件传输、金融交易、游戏登录与结算</td>
 </tr>
 </tbody></table>
 <hr>
-<h3 id="5-2-可靠传输原理与-TCP-报文段首部"><a href="#5-2-可靠传输原理与-TCP-报文段首部" class="headerlink" title="5.2 可靠传输原理与 TCP 报文段首部"></a>5.2 可靠传输原理与 TCP 报文段首部</h3><ol>
+<h3 id="52-可靠传输原理与-tcp-报文段首部"><a aria-hidden="true" tabindex="-1" href="#52-可靠传输原理与-tcp-报文段首部"><span class="icon icon-link"></span></a>5.2 可靠传输原理与 TCP 报文段首部</h3>
+<ol>
 <li><strong>可靠传输的演进：停止等待协议 → 连续 ARQ 与滑动窗口</strong><ul>
 <li><strong>停止等待协议</strong>：每发送完一个分组就停止发送，等待对方确认（ACK），收到确认后再发下一个分组；若超时未收到确认则重传（超时重传时间 RTO 略大于往返时间 RTT）。缺点是等待期间信道完全闲置，信道利用率极低。</li>
 <li><strong>连续 ARQ（自动重传请求）与滑动窗口</strong>：发送方维持一个<strong>发送窗口</strong>，位于发送窗口内的多个分组无需等待确认即可<strong>连续流水线发出</strong>；接收方采用<strong>累积确认</strong>方式——不必对收到的每个分组逐一确认，而是对<strong>按序到达的最后一个分组</strong>发送确认，表示到这个分组为止的所有数据均已正确收齐。</li>
@@ -693,13 +556,13 @@ btf.addGlobalFn('pjaxSend', () => {
 <li><strong>TCP 报文段 20 字节固定首部的关键字段</strong><ul>
 <li><strong>源端口（2B）与目的端口（2B）</strong>：标识发送端与接收端的应用进程。</li>
 <li><strong>序号 seq（4B，Sequence Number）</strong>：TCP 是面向字节流的，连接传送的每一个字节都按顺序编号。首部中的序号字段值是<strong>本报文段所发送数据的第一个字节的序号</strong>。</li>
-<li><strong>确认号 ack（4B，Acknowledgment Number）</strong>：<strong>期望收到对方下一个报文段的第一个数据字节的序号</strong>。若确认号 ack &#x3D; N，则表明到序号 N - 1 为止的所有字节都已正确收到（累积确认）。</li>
+<li><strong>确认号 ack（4B，Acknowledgment Number）</strong>：<strong>期望收到对方下一个报文段的第一个数据字节的序号</strong>。若确认号 ack = N，则表明到序号 N - 1 为止的所有字节都已正确收到（累积确认）。</li>
 <li><strong>数据偏移（4 位）</strong>：即 TCP 首部长度，以 <strong>4 字节</strong>为单位（最小为 5 即 20 字节，最大为 15 即 60 字节）。</li>
 <li><strong>6 个控制标志位</strong>：<ul>
-<li><strong>ACK</strong>：ACK &#x3D; 1 时确认号字段才有效（连接建立后所有传送的报文段都必须把 ACK 置 1）。</li>
-<li><strong>SYN</strong>：在连接建立时用来同步序号（SYN &#x3D; 1, ACK &#x3D; 0 为连接请求，SYN &#x3D; 1, ACK &#x3D; 1 为连接接受）。</li>
-<li><strong>FIN</strong>：FIN &#x3D; 1 表示发送方数据已发完，要求释放单向连接。</li>
-<li><strong>RST</strong>：RST &#x3D; 1 表示连接出现严重差错，必须强制释放重连。</li>
+<li><strong>ACK</strong>：ACK = 1 时确认号字段才有效（连接建立后所有传送的报文段都必须把 ACK 置 1）。</li>
+<li><strong>SYN</strong>：在连接建立时用来同步序号（SYN = 1, ACK = 0 为连接请求，SYN = 1, ACK = 1 为连接接受）。</li>
+<li><strong>FIN</strong>：FIN = 1 表示发送方数据已发完，要求释放单向连接。</li>
+<li><strong>RST</strong>：RST = 1 表示连接出现严重差错，必须强制释放重连。</li>
 <li><strong>PSH</strong>：提示接收端尽快将数据交付应用进程，不必等缓存填满。</li>
 <li><strong>URG</strong>：紧急指针有效。</li>
 </ul>
@@ -709,7 +572,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="5-3-TCP-滑动窗口与流量控制"><a href="#5-3-TCP-滑动窗口与流量控制" class="headerlink" title="5.3 TCP 滑动窗口与流量控制"></a>5.3 TCP 滑动窗口与流量控制</h3><ol>
+<h3 id="53-tcp-滑动窗口与流量控制"><a aria-hidden="true" tabindex="-1" href="#53-tcp-滑动窗口与流量控制"><span class="icon icon-link"></span></a>5.3 TCP 滑动窗口与流量控制</h3>
+<ol>
 <li><strong>以字节为单位的滑动窗口</strong><ul>
 <li>发送方的发送窗口由三个指针（P1、P2、P3）将字节序列划分为四部分：<ul>
 <li><strong>P1 之前</strong>：已发送并已收到确认的字节（已从发送缓存移除）；</li>
@@ -728,33 +592,33 @@ btf.addGlobalFn('pjaxSend', () => {
 <li><strong>TCP 流量控制（Flow Control）</strong><ul>
 <li><strong>目的</strong>：让发送方的发送速率不要太快，防止接收方来不及读取而导致<strong>接收方缓存溢出丢包</strong>（属于端到端的速率匹配）。</li>
 <li><strong>实现机制</strong>：接收方在每次返回的确认报文段首部中，将<strong>窗口字段（rwnd）</strong>设为当前自身接收缓存的剩余空闲字节数，动态调整发送方的发送窗口上限。</li>
-<li><strong>零窗口死锁与持续计时器（Persistence Timer）</strong>：当接收方缓存已满，返回 rwnd &#x3D; 0 的零窗口通知后，发送方暂停发送；之后若接收方腾出空间发出的非零窗口通知报文在网络中丢失，双方会陷入互相等待的死锁。为此，发送方收到零窗口通知时必须启动<strong>持续计时器</strong>，到期后发送一个仅含 1 字节数据的<strong>零窗口探测报文段</strong>，使接收方在回应中重新通告当前窗口大小。</li>
+<li><strong>零窗口死锁与持续计时器（Persistence Timer）</strong>：当接收方缓存已满，返回 rwnd = 0 的零窗口通知后，发送方暂停发送；之后若接收方腾出空间发出的非零窗口通知报文在网络中丢失，双方会陷入互相等待的死锁。为此，发送方收到零窗口通知时必须启动<strong>持续计时器</strong>，到期后发送一个仅含 1 字节数据的<strong>零窗口探测报文段</strong>，使接收方在回应中重新通告当前窗口大小。</li>
 </ul>
 </li>
 </ol>
 <hr>
-<h3 id="5-4-TCP-拥塞控制（四大算法）"><a href="#5-4-TCP-拥塞控制（四大算法）" class="headerlink" title="5.4 TCP 拥塞控制（四大算法）"></a>5.4 TCP 拥塞控制（四大算法）</h3><ul>
+<h3 id="54-tcp-拥塞控制四大算法"><a aria-hidden="true" tabindex="-1" href="#54-tcp-拥塞控制四大算法"><span class="icon icon-link"></span></a>5.4 TCP 拥塞控制（四大算法）</h3>
+<ul>
 <li><strong>拥塞控制与流量控制的区别</strong>：流量控制解决点对点接收端缓存不足问题；<strong>拥塞控制（Congestion Control）</strong>防止过多数据注入网络导致互联网中的路由器队列与链路过载。</li>
 <li><strong>发送窗口上限</strong>：发送方维护一个状态变量<strong>拥塞窗口（cwnd）</strong>，发送窗口上限同时受接收方窗口和网络拥塞程度制约：</li>
 </ul>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">真正的发送窗口上限 = min(接收方窗口 rwnd, 拥塞窗口 cwnd)</span><br></pre></td></tr></table></figure>
-
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span>真正的发送窗口上限 = min(接收方窗口 rwnd, 拥塞窗口 cwnd)</span></span></code></pre></div>
 <p>TCP 拥塞控制由以下四个核心算法组成（常以最大报文段长度 MSS 的个数为单位描述 cwnd）：</p>
 <ol>
 <li><strong>慢开始（Slow Start）</strong><ul>
 <li><strong>触发条件</strong>：连接刚建立或发生超时重传后，当 cwnd &lt; ssthresh（慢开始门限）时使用。</li>
-<li><strong>增长规律</strong>：初始设 cwnd &#x3D; 1；每收到一个对新报文段的确认，cwnd 加 1。因此<strong>每经过一个传输轮次（一个 RTT），拥塞窗口 cwnd 翻倍（指数增长：1 → 2 → 4 → 8 → 16…）</strong>。</li>
+<li><strong>增长规律</strong>：初始设 cwnd = 1；每收到一个对新报文段的确认，cwnd 加 1。因此<strong>每经过一个传输轮次（一个 RTT），拥塞窗口 cwnd 翻倍（指数增长：1 → 2 → 4 → 8 → 16...）</strong>。</li>
 </ul>
 </li>
 <li><strong>拥塞避免（Congestion Avoidance）</strong><ul>
-<li><strong>触发条件</strong>：当 cwnd &gt;&#x3D; ssthresh 时切换为拥塞避免算法。</li>
+<li><strong>触发条件</strong>：当 cwnd &gt;= ssthresh 时切换为拥塞避免算法。</li>
 <li><strong>增长规律</strong>：<strong>加法增大</strong>——<strong>每经过一个传输轮次（RTT），拥塞窗口 cwnd 仅线性加 1</strong>，使窗口缓慢增长。</li>
 </ul>
 </li>
 <li><strong>发生超时（Timeout）时的处理</strong><ul>
 <li>重传计时器超时说明网络已发生严重拥塞：<ol>
 <li>将慢开始门限更新为当前拥塞窗口的一半：<code>ssthresh = max(cwnd / 2, 2)</code>（<strong>乘法减小</strong>）；</li>
-<li>将拥塞窗口直接重置为 <strong>cwnd &#x3D; 1</strong>；</li>
+<li>将拥塞窗口直接重置为 <strong>cwnd = 1</strong>；</li>
 <li>重新执行<strong>慢开始</strong>算法。</li>
 </ol>
 </li>
@@ -764,7 +628,7 @@ btf.addGlobalFn('pjaxSend', () => {
 <li><strong>快重传</strong>：接收方每收到一个失序报文段，立即发出对已按序收到的最后一个字节的<strong>重复确认（Duplicate ACK）</strong>。一旦发送方<strong>连续收到 3 个重复确认</strong>，不必等待重传计时器超时，<strong>立即重传对方尚未收到的报文段</strong>。</li>
 <li><strong>快恢复</strong>：连续收到 3 个重复 ACK 说明网络仍有一定传输能力，因此不将 cwnd 降为 1，而是：<ol>
 <li>将慢开始门限减半：<code>ssthresh = cwnd / 2</code>；</li>
-<li>将拥塞窗口设为减半后的新门限：<strong>cwnd &#x3D; ssthresh</strong>；</li>
+<li>将拥塞窗口设为减半后的新门限：<strong>cwnd = ssthresh</strong>；</li>
 <li>直接执行<strong>拥塞避免</strong>算法（每轮线性加 1）。</li>
 </ol>
 </li>
@@ -773,7 +637,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </ol>
 <p><img width="860" height="390" src="/img/posts/net-ch5-congestion.svg" alt="TCP拥塞控制cwnd变化曲线" loading="lazy" decoding="async"></p>
 <hr>
-<h3 id="5-5-TCP-连接管理：三次握手与四次挥手"><a href="#5-5-TCP-连接管理：三次握手与四次挥手" class="headerlink" title="5.5 TCP 连接管理：三次握手与四次挥手"></a>5.5 TCP 连接管理：三次握手与四次挥手</h3><p><img width="860" height="410" src="/img/posts/net-ch5-handshake.svg" alt="TCP三次握手建立连接与四次挥手释放连接时序图" loading="lazy" decoding="async"></p>
+<h3 id="55-tcp-连接管理三次握手与四次挥手"><a aria-hidden="true" tabindex="-1" href="#55-tcp-连接管理三次握手与四次挥手"><span class="icon icon-link"></span></a>5.5 TCP 连接管理：三次握手与四次挥手</h3>
+<p><img width="860" height="410" src="/img/posts/net-ch5-handshake.svg" alt="TCP三次握手建立连接与四次挥手释放连接时序图" loading="lazy" decoding="async"></p>
 <ol>
 <li><strong>三次握手建立连接</strong><ul>
 <li><strong>第 1 次握手</strong>：客户端发送连接请求报文段（<code>SYN = 1, seq = x</code>），不携带数据但<strong>消耗一个序号</strong>，进入 <code>SYN-SENT</code> 状态。</li>
@@ -799,7 +664,9 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h2 id="第六章-应用层"><a href="#第六章-应用层" class="headerlink" title="第六章 应用层"></a>第六章 应用层</h2><h3 id="6-1-域名系统-DNS（Domain-Name-System）"><a href="#6-1-域名系统-DNS（Domain-Name-System）" class="headerlink" title="6.1 域名系统 DNS（Domain Name System）"></a>6.1 域名系统 DNS（Domain Name System）</h3><p>应用层定义了应用进程间通信的报文规范。互联网核心采用 IP 地址寻址，但数字难以记忆，<strong>DNS</strong> 负责将人类易读的<strong>域名（如 <code>www.example.com</code>）解析转换为机器使用的 IP 地址</strong>，使用运输层 <strong>UDP 协议（端口 53）</strong> 传输以降低握手时延。</p>
+<h2 id="第六章-应用层"><a aria-hidden="true" tabindex="-1" href="#第六章-应用层"><span class="icon icon-link"></span></a>第六章 应用层</h2>
+<h3 id="61-域名系统-dnsdomain-name-system"><a aria-hidden="true" tabindex="-1" href="#61-域名系统-dnsdomain-name-system"><span class="icon icon-link"></span></a>6.1 域名系统 DNS（Domain Name System）</h3>
+<p>应用层定义了应用进程间通信的报文规范。互联网核心采用 IP 地址寻址，但数字难以记忆，<strong>DNS</strong> 负责将人类易读的<strong>域名（如 <code>www.example.com</code>）解析转换为机器使用的 IP 地址</strong>，使用运输层 <strong>UDP 协议（端口 53）</strong> 传输以降低握手时延。</p>
 <ol>
 <li><strong>层次树状域名空间与四类域名服务器</strong><ul>
 <li>域名结构<strong>由右向左级别递减</strong>：<code>... . 三级域名 . 二级域名 . 顶级域名</code>（如 <code>.com</code>、<code>.cn</code> 为顶级域名）。</li>
@@ -808,19 +675,20 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 <li><strong>递归查询与迭代查询（常考区分）</strong><ul>
 <li><strong>主机向本地域名服务器的查询</strong>：一般采用<strong>递归查询（Recursive Query）</strong>——主机只发一次请求给本地域名服务器；若本地域名服务器没有缓存，就以 DNS 客户的身份替主机去查，直到拿到最终 IP 再返回给主机。</li>
-<li><strong>本地域名服务器向根&#x2F;顶级&#x2F;权限域名服务器的查询</strong>：通常采用<strong>迭代查询（Iterative Query）</strong>——根域名服务器收到请求后，不替它往下查，而是直接告诉本地域名服务器：“下一步你应该去问哪个顶级域名服务器”；本地域名服务器再自己依次去问顶级域名服务器和权限域名服务器，最终查出目标 IP。</li>
+<li><strong>本地域名服务器向根/顶级/权限域名服务器的查询</strong>：通常采用<strong>迭代查询（Iterative Query）</strong>——根域名服务器收到请求后，不替它往下查，而是直接告诉本地域名服务器：“下一步你应该去问哪个顶级域名服务器”；本地域名服务器再自己依次去问顶级域名服务器和权限域名服务器，最终查出目标 IP。</li>
 </ul>
 </li>
 </ol>
 <p><img width="860" height="360" src="/img/posts/net-ch6-dns-http.svg" alt="DNS递归查询与迭代查询完整流程" loading="lazy" decoding="async"></p>
 <hr>
-<h3 id="6-2-万维网、HTTP-与-HTTPS"><a href="#6-2-万维网、HTTP-与-HTTPS" class="headerlink" title="6.2 万维网、HTTP 与 HTTPS"></a>6.2 万维网、HTTP 与 HTTPS</h3><ol>
+<h3 id="62-万维网http-与-https"><a aria-hidden="true" tabindex="-1" href="#62-万维网http-与-https"><span class="icon icon-link"></span></a>6.2 万维网、HTTP 与 HTTPS</h3>
+<ol>
 <li><strong>HTTP（超文本传输协议，基于 TCP 端口 80）</strong><ul>
-<li><strong>无状态性（Stateless）</strong>：HTTP 服务器默认不记录哪个客户端曾访问过它。为了在电商购物车、登录态中跟踪用户状态，引入了 <strong>Cookie</strong>（保存在客户端浏览器的小文本，每次请求自动在首部携带）与 <strong>Session</strong>（保存在服务端内存&#x2F;数据库中的会话记录，通过 Cookie 中的 Session ID 关联）。</li>
+<li><strong>无状态性（Stateless）</strong>：HTTP 服务器默认不记录哪个客户端曾访问过它。为了在电商购物车、登录态中跟踪用户状态，引入了 <strong>Cookie</strong>（保存在客户端浏览器的小文本，每次请求自动在首部携带）与 <strong>Session</strong>（保存在服务端内存/数据库中的会话记录，通过 Cookie 中的 Session ID 关联）。</li>
 <li><strong>连接方式演进</strong>：<ul>
-<li><strong>HTTP&#x2F;1.0（非持续连接）</strong>：每请求一个文档或图片都要重新建立一次 TCP 连接（耗费 <code>2 × RTT</code>：1 个 RTT 用于 TCP 三次握手，1 个 RTT 用于 HTTP 请求与响应），开销极大。</li>
-<li><strong>HTTP&#x2F;1.1（持续连接 Persistent Connection）</strong>：默认开启 <code>Connection: keep-alive</code>，服务器发送响应后保持该 TCP 连接一段时间，后续多个页面元素可在同一条连接上连续传输（支持流水线方式）。</li>
-<li><strong>HTTP&#x2F;2</strong>：引入二进制分帧、多路复用、首部压缩，解决应用层队头阻塞。</li>
+<li><strong>HTTP/1.0（非持续连接）</strong>：每请求一个文档或图片都要重新建立一次 TCP 连接（耗费 <code>2 × RTT</code>：1 个 RTT 用于 TCP 三次握手，1 个 RTT 用于 HTTP 请求与响应），开销极大。</li>
+<li><strong>HTTP/1.1（持续连接 Persistent Connection）</strong>：默认开启 <code>Connection: keep-alive</code>，服务器发送响应后保持该 TCP 连接一段时间，后续多个页面元素可在同一条连接上连续传输（支持流水线方式）。</li>
+<li><strong>HTTP/2</strong>：引入二进制分帧、多路复用、首部压缩，解决应用层队头阻塞。</li>
 </ul>
 </li>
 <li><strong>HTTP 报文结构与状态码</strong>：<ul>
@@ -830,8 +698,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ul>
 </li>
-<li><strong>HTTPS（HTTP over TLS&#x2F;SSL，基于 TCP 端口 443）</strong><ul>
-<li>HTTP 明文传输易遭受窃听、篡改和伪装。HTTPS 在 HTTP 与 TCP 之间加入了 <strong>TLS&#x2F;SSL 安全层</strong>，采用<strong>非对称加密与对称加密相结合的混合加密机制</strong>：<ol>
+<li><strong>HTTPS（HTTP over TLS/SSL，基于 TCP 端口 443）</strong><ul>
+<li>HTTP 明文传输易遭受窃听、篡改和伪装。HTTPS 在 HTTP 与 TCP 之间加入了 <strong>TLS/SSL 安全层</strong>，采用<strong>非对称加密与对称加密相结合的混合加密机制</strong>：<ol>
 <li><strong>非对称加密（公钥 + 私钥）</strong>：安全性高但加解密计算极慢，因此<strong>仅在 TLS 握手阶段用于验证数字证书（CA 签发，防中间人伪造公钥）并安全协商出一个临时的“对称会话密钥”</strong>。</li>
 <li><strong>对称加密（双方共用同一个会话密钥）</strong>：握手完成后，后续所有 HTTP 报文正文均使用刚才协商出的<strong>对称会话密钥</strong>进行高速加密传输，并通过消息认证码校验完整性。</li>
 </ol>
@@ -840,7 +708,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="6-3-动态主机配置协议-DHCP"><a href="#6-3-动态主机配置协议-DHCP" class="headerlink" title="6.3 动态主机配置协议 DHCP"></a>6.3 动态主机配置协议 DHCP</h3><p>一台新接入局域网的主机最初没有 IP 地址、子网掩码、默认网关和本地 DNS 服务器地址。<strong>DHCP（Dynamic Host Configuration Protocol）</strong> 提供即插即用联网机制，使用 <strong>UDP 协议</strong>（客户端端口 <strong>68</strong>，服务器端口 <strong>67</strong>）。因为客户端此时还没有 IP 地址，全程需借助 <strong>UDP 广播</strong>完成四步交互：</p>
+<h3 id="63-动态主机配置协议-dhcp"><a aria-hidden="true" tabindex="-1" href="#63-动态主机配置协议-dhcp"><span class="icon icon-link"></span></a>6.3 动态主机配置协议 DHCP</h3>
+<p>一台新接入局域网的主机最初没有 IP 地址、子网掩码、默认网关和本地 DNS 服务器地址。<strong>DHCP（Dynamic Host Configuration Protocol）</strong> 提供即插即用联网机制，使用 <strong>UDP 协议</strong>（客户端端口 <strong>68</strong>，服务器端口 <strong>67</strong>）。因为客户端此时还没有 IP 地址，全程需借助 <strong>UDP 广播</strong>完成四步交互：</p>
 <ol>
 <li><strong>DHCP 发现报文（DHCP DISCOVER）</strong>：客户端广播发送（源 IP 填 <code>0.0.0.0</code>，目的 IP 填广播地址 <code>255.255.255.255</code>），寻找局域网内的 DHCP 服务器。</li>
 <li><strong>DHCP 提供报文（DHCP OFFER）</strong>：DHCP 服务器收到后，从地址池中挑出一个待租用 IP 地址，广播返回提供报文。</li>
@@ -848,7 +717,8 @@ btf.addGlobalFn('pjaxSend', () => {
 <li><strong>DHCP 确认报文（DHCP ACK）</strong>：被选中的 DHCP 服务器广播返回确认报文，客户端拿到 IP、子网掩码、默认网关、DNS 地址并进入已绑定状态（租期过半 <code>50%</code> 时客户端单播向服务器请求续租）。</li>
 </ol>
 <hr>
-<h3 id="6-4-全书总结：在浏览器输入-URL-到页面显示的完整五层流转过程"><a href="#6-4-全书总结：在浏览器输入-URL-到页面显示的完整五层流转过程" class="headerlink" title="6.4 全书总结：在浏览器输入 URL 到页面显示的完整五层流转过程"></a>6.4 全书总结：在浏览器输入 URL 到页面显示的完整五层流转过程</h3><p>将前六章所有协议串联起来，当用户在刚开机的电脑浏览器中输入 <code>https://www.example.com/index.html</code> 并按下回车时，五层协议栈按以下顺序依次协作：</p>
+<h3 id="64-全书总结在浏览器输入-url-到页面显示的完整五层流转过程"><a aria-hidden="true" tabindex="-1" href="#64-全书总结在浏览器输入-url-到页面显示的完整五层流转过程"><span class="icon icon-link"></span></a>6.4 全书总结：在浏览器输入 URL 到页面显示的完整五层流转过程</h3>
+<p>将前六章所有协议串联起来，当用户在刚开机的电脑浏览器中输入 <code>https://www.example.com/index.html</code> 并按下回车时，五层协议栈按以下顺序依次协作：</p>
 <ol>
 <li><strong>主机自动获取网络配置（应用层 DHCP → 运输层 UDP → 网络层 IP 广播 → 链路层以太网广播）</strong><ul>
 <li>若本机刚接入网络尚未配置 IP，先通过 <strong>DHCP 四步广播（Discover → Offer → Request → ACK）</strong> 获取本机 IP、子网掩码、默认网关 IP 以及本地 DNS 服务器 IP。</li>
@@ -864,151 +734,297 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 <li><strong>建立 TCP 可靠连接（运输层 TCP 三次握手 → 网络层 IP 路由 → 链路层逐跳 MAC 转发）</strong><ul>
 <li>浏览器拿到目标 IP 和端口（443），向服务器发起 <strong>TCP 三次握手</strong>（<code>SYN</code> → <code>SYN+ACK</code> → <code>ACK</code>）。</li>
-<li>每个握手报文段向下封装为 <strong>IP 数据报</strong>（源 IP 为本机，目的 IP 为目标服务器；若经过家庭路由器 NAT，源 IP 会被替换为公网 IP），再封装为 <strong>MAC 帧</strong>；沿途每台路由器根据 <strong>OSPF&#x2F;BGP 路由表</strong>按<strong>最长前缀匹配</strong>查找下一跳，逐跳剥离并替换源&#x2F;目的 MAC 地址，最终抵达目标服务器完成三次握手。</li>
+<li>每个握手报文段向下封装为 <strong>IP 数据报</strong>（源 IP 为本机，目的 IP 为目标服务器；若经过家庭路由器 NAT，源 IP 会被替换为公网 IP），再封装为 <strong>MAC 帧</strong>；沿途每台路由器根据 <strong>OSPF/BGP 路由表</strong>按<strong>最长前缀匹配</strong>查找下一跳，逐跳剥离并替换源/目的 MAC 地址，最终抵达目标服务器完成三次握手。</li>
 </ul>
 </li>
-<li><strong>TLS 安全握手与 HTTP 请求&#x2F;响应（应用层 HTTPS &#x2F; HTTP + 运输层滑动窗口与拥塞控制）</strong><ul>
+<li><strong>TLS 安全握手与 HTTP 请求/响应（应用层 HTTPS / HTTP + 运输层滑动窗口与拥塞控制）</strong><ul>
 <li>TCP 连接建立后，双方先完成 <strong>TLS 握手</strong>：服务器下发 CA 数字证书，客户端验证证书合法性后，通过非对称加密协商出对称会话密钥。</li>
-<li>浏览器发送加密后的 <strong><code>HTTP GET /index.html</code> 请求报文</strong>；服务器处理后返回 <code>200 OK</code> 及 HTML 正文。传输过程中，TCP 通过<strong>滑动窗口、确认重传、流量控制（<code>rwnd</code>）与拥塞控制（慢开始&#x2F;拥塞避免&#x2F;快重传&#x2F;快恢复）</strong>保证网页字节流无差错按序到达。</li>
+<li>浏览器发送加密后的 <strong><code>HTTP GET /index.html</code> 请求报文</strong>；服务器处理后返回 <code>200 OK</code> 及 HTML 正文。传输过程中，TCP 通过<strong>滑动窗口、确认重传、流量控制（<code>rwnd</code>）与拥塞控制（慢开始/拥塞避免/快重传/快恢复）</strong>保证网页字节流无差错按序到达。</li>
 </ul>
 </li>
 <li><strong>浏览器渲染与连接释放（TCP 四次挥手）</strong><ul>
-<li>浏览器解析 HTML&#x2F;CSS&#x2F;JS 并渲染出页面；当持续连接空闲超时或关闭页面后，双方通过 <strong>TCP 四次挥手</strong>（客户端历经 <code>2MSL</code> 的 <code>TIME-WAIT</code> 状态）安全释放连接。</li>
+<li>浏览器解析 HTML/CSS/JS 并渲染出页面；当持续连接空闲超时或关闭页面后，双方通过 <strong>TCP 四次挥手</strong>（客户端历经 <code>2MSL</code> 的 <code>TIME-WAIT</code> 状态）安全释放连接。</li>
 </ul>
 </li>
 </ol>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">https://vvvvvenxo.github.io/2026/10/24/【计算机基础】计算机网络/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/TCP/">TCP</a><a class="post-meta__tags" href="/tags/UDP/">UDP</a><a class="post-meta__tags" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><a class="post-meta__tags" href="/tags/IP/">IP</a><a class="post-meta__tags" href="/tags/HTTP/">HTTP</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学"><img class="cover" src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6-thumb.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post" loading="lazy" decoding="async"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【计算机基础】离散数学</div></div><div class="info-2"><div class="info-item-1">基于屈婉玲《离散数学》的系统复习笔记：涵盖数理逻辑（命题与一阶谓词逻辑、范式与推理）、集合与二元关系（关系性质、闭包、等价关系与偏序集哈斯图）、函数、图论及代数结构。</div></div></div></a><a class="pagination-related" href="/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/" title="【计算机基础】为什么开发云服务器首选 Linux"><img class="cover" src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89-Linux-thumb.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post" loading="lazy" decoding="async"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【计算机基础】为什么开发云服务器首选 Linux</div></div><div class="info-2"><div class="info-item-1">结合项目部署开发云与自动化构建服务器的实践，总结为什么服务端与构建机清一色选择 Linux：零 GUI 资源损耗、7×24 高可用、一切皆文件与命令行驱动，以及开源工具链生态。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/06/05/%E3%80%90%E7%BD%91%E7%BB%9C%E3%80%91%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="【网络】游戏客户端网络基础"><img class="cover" src="/img/covers/gen/%E7%BD%91%E7%BB%9C-%E6%B8%B8%E6%88%8F%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80-thumb.svg" alt="cover" loading="lazy" decoding="async"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-05</div><div class="info-item-2">【网络】游戏客户端网络基础</div></div><div class="info-2"><div class="info-item-1">游戏客户端网络开发入门：理解 OSI/TCP-IP 网络模型、TCP 与 UDP 的区别，以及 Socket 编程基础。</div></div></div></a><a class="pagination-related" href="/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="【计算机基础】操作系统"><img class="cover" src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-thumb.svg" alt="cover" loading="lazy" decoding="async"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-27</div><div class="info-item-2">【计算机基础】操作系统</div></div><div class="info-2"><div class="info-item-1">基于汤小丹《计算机操作系统》与 408 统考考点的系统复习笔记：涵盖用户态/内核态与中断异常机制、进程与线程调度、信号量同步互斥与死锁银行家算法、页式虚拟内存与页面置换、文件系统 inode 以及设备 I/O 与磁盘调度。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">138</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div class="profile-note">
-  <p>软件工程背景，专注游戏客户端开发。</p>
-  <p><strong>关注</strong> Unity 架构、网络同步与实时渲染。</p>
-  <p class="profile-note__meta">游戏开发 · AI 工具 · 图形技术</p>
-</div>
-</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E6%A6%82%E8%BF%B0"><span class="toc-text">第一章 概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%B8%89%E7%A7%8D%E6%95%B0%E6%8D%AE%E4%BA%A4%E6%8D%A2%E6%96%B9%E5%BC%8F"><span class="toc-text">1.1 三种数据交换方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87%E4%B8%8E%E5%9B%9B%E7%B1%BB%E6%97%B6%E5%BB%B6"><span class="toc-text">1.2 网络性能指标与四类时延</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BA%94%E5%B1%82%E6%A8%A1%E5%9E%8B"><span class="toc-text">1.3 网络体系结构与五层模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E7%89%A9%E7%90%86%E5%B1%82"><span class="toc-text">第二章 物理层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E7%89%A9%E7%90%86%E5%B1%82%E7%9A%84%E8%81%8C%E8%B4%A3%E4%B8%8E%E5%9B%9B%E5%A4%A7%E7%89%B9%E6%80%A7"><span class="toc-text">2.1 物理层的职责与四大特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%BA%A4%E4%BA%92%E6%96%B9%E5%BC%8F%E3%80%81%E6%95%B0%E5%AD%97%E7%BC%96%E7%A0%81%E4%B8%8E%E5%B8%A6%E9%80%9A%E8%B0%83%E5%88%B6"><span class="toc-text">2.2 交互方式、数字编码与带通调制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E4%BF%A1%E9%81%93%E6%9E%81%E9%99%90%E5%AE%B9%E9%87%8F%EF%BC%9A%E5%A5%88%E6%B0%8F%E5%87%86%E5%88%99%E4%B8%8E%E9%A6%99%E5%86%9C%E5%85%AC%E5%BC%8F"><span class="toc-text">2.3 信道极限容量：奈氏准则与香农公式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E4%BC%A0%E8%BE%93%E5%AA%92%E4%BD%93%E4%B8%8E%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF"><span class="toc-text">2.4 传输媒体与信道复用技术</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="toc-text">第三章 数据链路层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E7%9A%84%E4%B8%89%E4%B8%AA%E5%9F%BA%E6%9C%AC%E9%97%AE%E9%A2%98"><span class="toc-text">3.1 数据链路层的三个基本问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AE-PPP"><span class="toc-text">3.2 点对点协议 PPP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%B9%BF%E6%92%AD%E4%BF%A1%E9%81%93%E4%B8%8E-CSMA-CD-%E5%8D%8F%E8%AE%AE"><span class="toc-text">3.3 广播信道与 CSMA&#x2F;CD 协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E4%BB%A5%E5%A4%AA%E7%BD%91-MAC-%E5%B1%82%E3%80%81%E4%BA%A4%E6%8D%A2%E6%9C%BA%E4%B8%8E-VLAN"><span class="toc-text">3.4 以太网 MAC 层、交换机与 VLAN</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="toc-text">第四章 网络层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E7%BD%91%E7%BB%9C%E5%B1%82%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF%EF%BC%9A%E8%99%9A%E7%94%B5%E8%B7%AF-vs-%E6%95%B0%E6%8D%AE%E6%8A%A5"><span class="toc-text">4.1 网络层的设计思路：虚电路 vs 数据报</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-IPv4-%E5%9C%B0%E5%9D%80%E6%BC%94%E8%BF%9B%EF%BC%9A%E5%88%86%E7%B1%BB%E7%BC%96%E5%9D%80-%E2%86%92-%E5%AD%90%E7%BD%91%E5%88%92%E5%88%86-%E2%86%92-%E6%97%A0%E5%88%86%E7%B1%BB%E7%BC%96%E5%9D%80-CIDR"><span class="toc-text">4.2 IPv4 地址演进：分类编址 → 子网划分 → 无分类编址 CIDR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-ARP-%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE%E4%B8%8E%E8%B7%A8%E7%BD%91%E6%AE%B5%E8%BD%AC%E5%8F%91%E8%BF%87%E7%A8%8B"><span class="toc-text">4.3 ARP 地址解析协议与跨网段转发过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-IP-%E6%95%B0%E6%8D%AE%E6%8A%A5%E9%A6%96%E9%83%A8%E6%A0%BC%E5%BC%8F%E4%B8%8E%E5%88%86%E7%89%87%E8%AE%A1%E7%AE%97"><span class="toc-text">4.4 IP 数据报首部格式与分片计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-ICMP-%E5%8D%8F%E8%AE%AE%E3%80%81%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE%E4%B8%8E-NAT"><span class="toc-text">4.5 ICMP 协议、路由选择协议与 NAT</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E8%BF%90%E8%BE%93%E5%B1%82"><span class="toc-text">第五章 运输层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E8%BF%90%E8%BE%93%E5%B1%82%E8%81%8C%E8%B4%A3%E3%80%81%E7%AB%AF%E5%8F%A3%E5%8F%B7%E4%B8%8E-UDP-TCP-%E5%AF%B9%E6%AF%94"><span class="toc-text">5.1 运输层职责、端口号与 UDP&#x2F;TCP 对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93%E5%8E%9F%E7%90%86%E4%B8%8E-TCP-%E6%8A%A5%E6%96%87%E6%AE%B5%E9%A6%96%E9%83%A8"><span class="toc-text">5.2 可靠传输原理与 TCP 报文段首部</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-TCP-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E4%B8%8E%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="toc-text">5.3 TCP 滑动窗口与流量控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-TCP-%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%EF%BC%88%E5%9B%9B%E5%A4%A7%E7%AE%97%E6%B3%95%EF%BC%89"><span class="toc-text">5.4 TCP 拥塞控制（四大算法）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-TCP-%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86%EF%BC%9A%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="toc-text">5.5 TCP 连接管理：三次握手与四次挥手</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BA%94%E7%94%A8%E5%B1%82"><span class="toc-text">第六章 应用层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F-DNS%EF%BC%88Domain-Name-System%EF%BC%89"><span class="toc-text">6.1 域名系统 DNS（Domain Name System）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E4%B8%87%E7%BB%B4%E7%BD%91%E3%80%81HTTP-%E4%B8%8E-HTTPS"><span class="toc-text">6.2 万维网、HTTP 与 HTTPS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E5%8D%8F%E8%AE%AE-DHCP"><span class="toc-text">6.3 动态主机配置协议 DHCP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E5%85%A8%E4%B9%A6%E6%80%BB%E7%BB%93%EF%BC%9A%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5-URL-%E5%88%B0%E9%A1%B5%E9%9D%A2%E6%98%BE%E7%A4%BA%E7%9A%84%E5%AE%8C%E6%95%B4%E4%BA%94%E5%B1%82%E6%B5%81%E8%BD%AC%E8%BF%87%E7%A8%8B"><span class="toc-text">6.4 全书总结：在浏览器输入 URL 到页面显示的完整五层流转过程</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="【计算机基础】操作系统"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】操作系统"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="【计算机基础】操作系统">【计算机基础】操作系统</a><time datetime="2026-10-27T00:00:00.000Z" title="发表于 2026-10-27 00:00:00">2026-10-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="【计算机基础】数据结构"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】数据结构"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="【计算机基础】数据结构">【计算机基础】数据结构</a><time datetime="2026-10-26T00:00:00.000Z" title="发表于 2026-10-26 00:00:00">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】离散数学"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学">【计算机基础】离散数学</a><time datetime="2026-10-25T00:00:00.000Z" title="发表于 2026-10-25 00:00:00">2026-10-25</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"><script>(() => {
-  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
-  const option = {"data-mapping":"pathname","data-strict":"0","data-reactions-enabled":"1","data-emit-metadata":"0","data-input-position":"top","data-lang":"zh-CN"}
+</div> <!-- Prev / Next Flat Navigation --> <nav class="mt-16 grid grid-cols-1 gap-6 border-t border-[var(--border-color)] pt-8 md:grid-cols-2" aria-label="上下篇文章导航"> <div> <a href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+← 新一篇
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 【计算机基础】离散数学 </p> </a> </div> <div class="md:text-right"> <a href="/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+旧一篇 →
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 【计算机基础】为什么开发云服务器首选 Linux </p> </a> </div> </nav> <!-- Giscus Comments --> <section class="mt-14 border-t border-[var(--border-subtle)] pt-8" aria-label="评论区"> <div class="mb-5 flex items-baseline gap-3"> <h2 class="text-lg font-semibold text-[var(--text-primary)]">讨论与评论</h2> <span class="text-xs text-[var(--text-tertiary)]">由 GitHub Discussions 驱动</span> </div> <div id="giscus-container"></div> </section> </article> <!-- Mobile TOC Trigger & Drawer -->  <button id="toc-toggle" class="toc-trigger fixed right-6 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded transition-colors hover:bg-[var(--accent-hover)] lg:hidden" aria-label="目录" title="文章目录"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="8" y1="6" x2="21" y2="6"></line> <line x1="8" y1="12" x2="21" y2="12"></line> <line x1="8" y1="18" x2="21" y2="18"></line> <line x1="3" y1="6" x2="3.01" y2="6"></line> <line x1="3" y1="12" x2="3.01" y2="12"></line> <line x1="3" y1="18" x2="3.01" y2="18"></line> </svg> </button> <div id="toc-mobile-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-xs lg:hidden"></div> <nav id="toc-mobile" aria-label="移动端目录" class="fixed right-0 bottom-0 left-0 z-50 max-h-[64vh] translate-y-full overflow-hidden rounded-t-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl transition-transform duration-300 lg:hidden"> <div class="flex items-center justify-between border-b border-[var(--border-subtle)] p-4"> <h4 class="font-semibold text-[var(--text-primary)]">目录</h4> <button id="toc-close" class="header-action -mr-1" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> <ul class="max-h-[calc(64vh-4rem)] space-y-1 overflow-y-auto p-4 text-sm"> <li> <a href="#第一章-概述" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第一章-概述" lang="zh-CN"> 第一章 概述 </a> </li><li> <a href="#11-三种数据交换方式" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="11-三种数据交换方式" lang="zh-CN"> 1.1 三种数据交换方式 </a> </li><li> <a href="#12-网络性能指标与四类时延" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="12-网络性能指标与四类时延" lang="zh-CN"> 1.2 网络性能指标与四类时延 </a> </li><li> <a href="#13-网络体系结构与五层模型" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="13-网络体系结构与五层模型" lang="zh-CN"> 1.3 网络体系结构与五层模型 </a> </li><li> <a href="#第二章-物理层" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第二章-物理层" lang="zh-CN"> 第二章 物理层 </a> </li><li> <a href="#21-物理层的职责与四大特性" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="21-物理层的职责与四大特性" lang="zh-CN"> 2.1 物理层的职责与四大特性 </a> </li><li> <a href="#22-交互方式数字编码与带通调制" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="22-交互方式数字编码与带通调制" lang="zh-CN"> 2.2 交互方式、数字编码与带通调制 </a> </li><li> <a href="#23-信道极限容量奈氏准则与香农公式" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="23-信道极限容量奈氏准则与香农公式" lang="zh-CN"> 2.3 信道极限容量：奈氏准则与香农公式 </a> </li><li> <a href="#24-传输媒体与信道复用技术" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="24-传输媒体与信道复用技术" lang="zh-CN"> 2.4 传输媒体与信道复用技术 </a> </li><li> <a href="#第三章-数据链路层" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第三章-数据链路层" lang="zh-CN"> 第三章 数据链路层 </a> </li><li> <a href="#31-数据链路层的三个基本问题" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="31-数据链路层的三个基本问题" lang="zh-CN"> 3.1 数据链路层的三个基本问题 </a> </li><li> <a href="#32-点对点协议-ppp" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="32-点对点协议-ppp" lang="zh-CN"> 3.2 点对点协议 PPP </a> </li><li> <a href="#33-广播信道与-csmacd-协议" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="33-广播信道与-csmacd-协议" lang="zh-CN"> 3.3 广播信道与 CSMA/CD 协议 </a> </li><li> <a href="#34-以太网-mac-层交换机与-vlan" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="34-以太网-mac-层交换机与-vlan" lang="zh-CN"> 3.4 以太网 MAC 层、交换机与 VLAN </a> </li><li> <a href="#第四章-网络层" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第四章-网络层" lang="zh-CN"> 第四章 网络层 </a> </li><li> <a href="#41-网络层的设计思路虚电路-vs-数据报" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="41-网络层的设计思路虚电路-vs-数据报" lang="zh-CN"> 4.1 网络层的设计思路：虚电路 vs 数据报 </a> </li><li> <a href="#42-ipv4-地址演进分类编址-子网划分-无分类编址-cidr" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="42-ipv4-地址演进分类编址-子网划分-无分类编址-cidr" lang="zh-CN"> 4.2 IPv4 地址演进：分类编址 → 子网划分 → 无分类编址 CIDR </a> </li><li> <a href="#43-arp-地址解析协议与跨网段转发过程" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="43-arp-地址解析协议与跨网段转发过程" lang="zh-CN"> 4.3 ARP 地址解析协议与跨网段转发过程 </a> </li><li> <a href="#44-ip-数据报首部格式与分片计算" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="44-ip-数据报首部格式与分片计算" lang="zh-CN"> 4.4 IP 数据报首部格式与分片计算 </a> </li><li> <a href="#45-icmp-协议路由选择协议与-nat" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="45-icmp-协议路由选择协议与-nat" lang="zh-CN"> 4.5 ICMP 协议、路由选择协议与 NAT </a> </li><li> <a href="#第五章-运输层" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第五章-运输层" lang="zh-CN"> 第五章 运输层 </a> </li><li> <a href="#51-运输层职责端口号与-udptcp-对比" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="51-运输层职责端口号与-udptcp-对比" lang="zh-CN"> 5.1 运输层职责、端口号与 UDP/TCP 对比 </a> </li><li> <a href="#52-可靠传输原理与-tcp-报文段首部" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="52-可靠传输原理与-tcp-报文段首部" lang="zh-CN"> 5.2 可靠传输原理与 TCP 报文段首部 </a> </li><li> <a href="#53-tcp-滑动窗口与流量控制" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="53-tcp-滑动窗口与流量控制" lang="zh-CN"> 5.3 TCP 滑动窗口与流量控制 </a> </li><li> <a href="#54-tcp-拥塞控制四大算法" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="54-tcp-拥塞控制四大算法" lang="zh-CN"> 5.4 TCP 拥塞控制（四大算法） </a> </li><li> <a href="#55-tcp-连接管理三次握手与四次挥手" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="55-tcp-连接管理三次握手与四次挥手" lang="zh-CN"> 5.5 TCP 连接管理：三次握手与四次挥手 </a> </li><li> <a href="#第六章-应用层" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第六章-应用层" lang="zh-CN"> 第六章 应用层 </a> </li><li> <a href="#61-域名系统-dnsdomain-name-system" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="61-域名系统-dnsdomain-name-system" lang="zh-CN"> 6.1 域名系统 DNS（Domain Name System） </a> </li><li> <a href="#62-万维网http-与-https" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="62-万维网http-与-https" lang="zh-CN"> 6.2 万维网、HTTP 与 HTTPS </a> </li><li> <a href="#63-动态主机配置协议-dhcp" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="63-动态主机配置协议-dhcp" lang="zh-CN"> 6.3 动态主机配置协议 DHCP </a> </li><li> <a href="#64-全书总结在浏览器输入-url-到页面显示的完整五层流转过程" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="64-全书总结在浏览器输入-url-到页面显示的完整五层流转过程" lang="zh-CN"> 6.4 全书总结：在浏览器输入 URL 到页面显示的完整五层流转过程 </a> </li> </ul> </nav>  <nav class="toc hidden lg:block" aria-label="目录"> <div class="reading-toc sticky top-24"> <h4 class="mb-3 text-sm font-semibold text-[var(--text-primary)]">目录</h4> <ul class="max-h-[calc(100vh-12rem)] space-y-1 overflow-y-auto text-sm"> <li> <a href="#第一章-概述" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第一章-概述" lang="zh-CN"> 第一章 概述 </a> </li><li> <a href="#11-三种数据交换方式" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="11-三种数据交换方式" lang="zh-CN"> 1.1 三种数据交换方式 </a> </li><li> <a href="#12-网络性能指标与四类时延" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="12-网络性能指标与四类时延" lang="zh-CN"> 1.2 网络性能指标与四类时延 </a> </li><li> <a href="#13-网络体系结构与五层模型" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="13-网络体系结构与五层模型" lang="zh-CN"> 1.3 网络体系结构与五层模型 </a> </li><li> <a href="#第二章-物理层" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第二章-物理层" lang="zh-CN"> 第二章 物理层 </a> </li><li> <a href="#21-物理层的职责与四大特性" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="21-物理层的职责与四大特性" lang="zh-CN"> 2.1 物理层的职责与四大特性 </a> </li><li> <a href="#22-交互方式数字编码与带通调制" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="22-交互方式数字编码与带通调制" lang="zh-CN"> 2.2 交互方式、数字编码与带通调制 </a> </li><li> <a href="#23-信道极限容量奈氏准则与香农公式" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="23-信道极限容量奈氏准则与香农公式" lang="zh-CN"> 2.3 信道极限容量：奈氏准则与香农公式 </a> </li><li> <a href="#24-传输媒体与信道复用技术" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="24-传输媒体与信道复用技术" lang="zh-CN"> 2.4 传输媒体与信道复用技术 </a> </li><li> <a href="#第三章-数据链路层" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第三章-数据链路层" lang="zh-CN"> 第三章 数据链路层 </a> </li><li> <a href="#31-数据链路层的三个基本问题" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="31-数据链路层的三个基本问题" lang="zh-CN"> 3.1 数据链路层的三个基本问题 </a> </li><li> <a href="#32-点对点协议-ppp" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="32-点对点协议-ppp" lang="zh-CN"> 3.2 点对点协议 PPP </a> </li><li> <a href="#33-广播信道与-csmacd-协议" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="33-广播信道与-csmacd-协议" lang="zh-CN"> 3.3 广播信道与 CSMA/CD 协议 </a> </li><li> <a href="#34-以太网-mac-层交换机与-vlan" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="34-以太网-mac-层交换机与-vlan" lang="zh-CN"> 3.4 以太网 MAC 层、交换机与 VLAN </a> </li><li> <a href="#第四章-网络层" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第四章-网络层" lang="zh-CN"> 第四章 网络层 </a> </li><li> <a href="#41-网络层的设计思路虚电路-vs-数据报" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="41-网络层的设计思路虚电路-vs-数据报" lang="zh-CN"> 4.1 网络层的设计思路：虚电路 vs 数据报 </a> </li><li> <a href="#42-ipv4-地址演进分类编址-子网划分-无分类编址-cidr" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="42-ipv4-地址演进分类编址-子网划分-无分类编址-cidr" lang="zh-CN"> 4.2 IPv4 地址演进：分类编址 → 子网划分 → 无分类编址 CIDR </a> </li><li> <a href="#43-arp-地址解析协议与跨网段转发过程" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="43-arp-地址解析协议与跨网段转发过程" lang="zh-CN"> 4.3 ARP 地址解析协议与跨网段转发过程 </a> </li><li> <a href="#44-ip-数据报首部格式与分片计算" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="44-ip-数据报首部格式与分片计算" lang="zh-CN"> 4.4 IP 数据报首部格式与分片计算 </a> </li><li> <a href="#45-icmp-协议路由选择协议与-nat" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="45-icmp-协议路由选择协议与-nat" lang="zh-CN"> 4.5 ICMP 协议、路由选择协议与 NAT </a> </li><li> <a href="#第五章-运输层" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第五章-运输层" lang="zh-CN"> 第五章 运输层 </a> </li><li> <a href="#51-运输层职责端口号与-udptcp-对比" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="51-运输层职责端口号与-udptcp-对比" lang="zh-CN"> 5.1 运输层职责、端口号与 UDP/TCP 对比 </a> </li><li> <a href="#52-可靠传输原理与-tcp-报文段首部" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="52-可靠传输原理与-tcp-报文段首部" lang="zh-CN"> 5.2 可靠传输原理与 TCP 报文段首部 </a> </li><li> <a href="#53-tcp-滑动窗口与流量控制" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="53-tcp-滑动窗口与流量控制" lang="zh-CN"> 5.3 TCP 滑动窗口与流量控制 </a> </li><li> <a href="#54-tcp-拥塞控制四大算法" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="54-tcp-拥塞控制四大算法" lang="zh-CN"> 5.4 TCP 拥塞控制（四大算法） </a> </li><li> <a href="#55-tcp-连接管理三次握手与四次挥手" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="55-tcp-连接管理三次握手与四次挥手" lang="zh-CN"> 5.5 TCP 连接管理：三次握手与四次挥手 </a> </li><li> <a href="#第六章-应用层" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第六章-应用层" lang="zh-CN"> 第六章 应用层 </a> </li><li> <a href="#61-域名系统-dnsdomain-name-system" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="61-域名系统-dnsdomain-name-system" lang="zh-CN"> 6.1 域名系统 DNS（Domain Name System） </a> </li><li> <a href="#62-万维网http-与-https" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="62-万维网http-与-https" lang="zh-CN"> 6.2 万维网、HTTP 与 HTTPS </a> </li><li> <a href="#63-动态主机配置协议-dhcp" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="63-动态主机配置协议-dhcp" lang="zh-CN"> 6.3 动态主机配置协议 DHCP </a> </li><li> <a href="#64-全书总结在浏览器输入-url-到页面显示的完整五层流转过程" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="64-全书总结在浏览器输入-url-到页面显示的完整五层流转过程" lang="zh-CN"> 6.4 全书总结：在浏览器输入 URL 到页面显示的完整五层流转过程 </a> </li> </ul> </div> </nav>  </div> <script>
+    (function () {
+      // TOC Mobile Drawer & Scroll Spy
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocMobile = document.getElementById('toc-mobile');
+      const tocClose = document.getElementById('toc-close');
+      const tocBackdrop = document.getElementById('toc-mobile-backdrop');
+      let isOpen = false;
 
-  const getGiscusTheme = theme => theme === 'dark' ? 'dark_dimmed' : 'light'
-
-  const createScriptElement = config => {
-    const ele = document.createElement('script')
-    Object.entries(config).forEach(([key, value]) => {
-      ele.setAttribute(key, value)
-    })
-    return ele
-  }
-
-  const loadGiscus = (el = document, key) => {
-    const mappingConfig = isShuoshuo
-      ? { 'data-mapping': 'specific', 'data-term': key }
-      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
-
-    const giscusConfig = {
-      src: 'https://giscus.app/client.js',
-      'data-repo': 'VVVVVenxo/VVVVVenxo.github.io',
-      'data-repo-id': 'R_kgDOQ5Bk1Q',
-      'data-category-id': 'DIC_kwDOQ5Bk1c4DJO_-',
-      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
-      'data-reactions-enabled': '1',
-      crossorigin: 'anonymous',
-      async: true,
-      ...option,
-      ...mappingConfig
-    }
-
-    const scriptElement = createScriptElement(giscusConfig)
-
-    el.querySelector('#giscus-wrap').appendChild(scriptElement)
-
-    if (isShuoshuo) {
-      window.shuoshuoComment.destroyGiscus = () => {
-        if (el.children.length) {
-          el.innerHTML = ''
-          el.classList.add('no-comment')
-        }
+      function openMobileToc() {
+        if (isOpen) return;
+        isOpen = true;
+        if (tocMobile) tocMobile.classList.remove('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.remove('hidden');
+        if (tocToggle) tocToggle.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
       }
-    }
-  }
 
-  const changeGiscusTheme = theme => {
-    const iframe = document.querySelector('#giscus-wrap iframe')
-    if (iframe) {
-      const message = {
-        giscus: {
-          setConfig: {
-            theme: getGiscusTheme(theme)
+      function closeMobileToc() {
+        if (!isOpen) return;
+        isOpen = false;
+        if (tocMobile) tocMobile.classList.add('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.add('hidden');
+        if (tocToggle) tocToggle.classList.remove('hidden');
+        document.body.style.overflow = '';
+      }
+
+      if (tocToggle) tocToggle.addEventListener('click', openMobileToc);
+      if (tocClose) tocClose.addEventListener('click', closeMobileToc);
+      if (tocBackdrop) tocBackdrop.addEventListener('click', closeMobileToc);
+
+      document.querySelectorAll('.toc-link-mobile').forEach(link => {
+        link.addEventListener('click', () => setTimeout(closeMobileToc, 100));
+      });
+
+      const tocLinks = document.querySelectorAll('.toc-link');
+      if (tocLinks.length > 0) {
+        const headingIds = Array.from(tocLinks)
+          .map(link => link.getAttribute('data-heading'))
+          .filter(Boolean);
+        const headingElements = headingIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateActiveLink() {
+          if (!headingElements.length) return;
+          let activeId = headingIds[0];
+          for (let i = 0; i < headingElements.length; i++) {
+            const rect = headingElements[i].getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.28) {
+              activeId = headingElements[i].id;
+            }
           }
+          tocLinks.forEach(link => {
+            if (link.getAttribute('data-heading') === activeId) {
+              link.classList.add('toc-active');
+            } else {
+              link.classList.remove('toc-active');
+            }
+          });
+        }
+
+        let ticking = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateActiveLink();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        updateActiveLink();
+      }
+
+      // Lazy Load Giscus Comments
+      const giscusContainer = document.getElementById('giscus-container');
+      if (giscusContainer) {
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded) return;
+          giscusContainer.dataset.loaded = 'true';
+          const isDark = document.documentElement.classList.contains('dark');
+          const s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.setAttribute('data-repo', 'VVVVVenxo/VVVVVenxo.github.io');
+          s.setAttribute('data-repo-id', 'R_kgDOQ5Bk1Q');
+          s.setAttribute('data-category', 'Announcements');
+          s.setAttribute('data-category-id', 'DIC_kwDOQ5Bk1c4DJO_-');
+          s.setAttribute('data-mapping', 'pathname');
+          s.setAttribute('data-strict', '0');
+          s.setAttribute('data-reactions-enabled', '1');
+          s.setAttribute('data-emit-metadata', '0');
+          s.setAttribute('data-input-position', 'top');
+          s.setAttribute('data-theme', isDark ? 'dark_dimmed' : 'light');
+          s.setAttribute('data-lang', 'zh-CN');
+          s.crossOrigin = 'anonymous';
+          s.async = true;
+          giscusContainer.appendChild(s);
+        };
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            entries => {
+              if (entries.some(e => e.isIntersecting)) {
+                loadGiscus();
+                io.disconnect();
+              }
+            },
+            { rootMargin: '300px' }
+          );
+          io.observe(giscusContainer);
+        } else {
+          loadGiscus();
         }
       }
-      iframe.contentWindow.postMessage(message, 'https://giscus.app')
-    }
-  }
+    })();
+  </script>  </main> <footer class="site-footer border-t border-[var(--border-color)]"> <div class="container py-8"> <div class="flex flex-col items-center justify-between gap-4 md:flex-row"> <div class="flex items-center gap-3"> <a href="https://github.com/VVVVVenxo" target="_blank" rel="noopener noreferrer" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="GitHub" title="GitHub"> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="mailto:1263147353@qq.com" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="Email" title="Email"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="4" width="20" height="16" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> </a> <a href="/atom.xml" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="RSS 订阅" title="RSS 订阅"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M4 11a9 9 0 0 1 9 9"></path> <path d="M4 4a16 16 0 0 1 16 16"></path> <circle cx="5" cy="19" r="1"></circle> </svg> </a> </div> <p class="text-xs text-[var(--text-tertiary)]">
+© 2024–2026 VVVVVenxo · To be a rock and not to roll.
+</p> </div> </div> </footer> <!-- Flat Search Modal --> <div id="search-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/45 px-4 pt-[10vh] backdrop-blur-xs" role="dialog" aria-modal="true" aria-label="全站搜索"> <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl"> <div class="flex items-center gap-3 border-b border-[var(--border-subtle)] px-4 py-3"> <svg class="shrink-0 text-[var(--text-tertiary)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> <input id="search-input" type="search" placeholder="搜索文章标题、关键词、技术栈（支持 C++ / Unity / 渲染 / 网络...）" class="w-full bg-transparent text-base text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none" autocomplete="off"> <button id="search-close" type="button" class="rounded border border-[var(--border-color)] px-2 py-0.5 text-xs text-[var(--text-tertiary)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
+ESC
+</button> </div> <div id="search-results" class="max-h-[62vh] overflow-y-auto divide-y divide-[var(--border-subtle)] px-4 py-2 text-sm"> <p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p> </div> </div> </div> <script>
+      (function () {
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const giscusFrame = document.querySelector('iframe.giscus-frame');
+            if (giscusFrame && giscusFrame.contentWindow) {
+              giscusFrame.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: isDark ? 'dark_dimmed' : 'light' } } },
+                'https://giscus.app'
+              );
+            }
+          });
+        }
 
-  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            const hidden = mobileMenu.classList.toggle('hidden');
+            mobileBtn.setAttribute('aria-expanded', String(!hidden));
+          });
+        }
 
-  if (isShuoshuo) {
-    'Giscus' === 'Giscus'
-      ? window.shuoshuoComment = { loadComment: loadGiscus }
-      : window.loadOtherComment = loadGiscus
-    return
-  }
+        // Code Copy Buttons
+        document.addEventListener('click', async e => {
+          const btn = e.target.closest('.copy-button');
+          if (!btn) return;
+          const wrapper = btn.closest('.code-block-wrapper');
+          const codeEl = wrapper ? wrapper.querySelector('pre code') : null;
+          if (!codeEl) return;
+          try {
+            await navigator.clipboard.writeText(codeEl.innerText);
+            const copyIcon = btn.querySelector('.copy-icon');
+            const checkIcon = btn.querySelector('.check-icon');
+            btn.classList.add('copied');
+            if (copyIcon) copyIcon.classList.add('hidden');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              if (copyIcon) copyIcon.classList.remove('hidden');
+              if (checkIcon) checkIcon.classList.add('hidden');
+            }, 1800);
+          } catch (_) {}
+        });
 
-  if ('Giscus' === 'Giscus' || !true) {
-    if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
-    else loadGiscus()
-  } else {
-    window.loadOtherComment = loadGiscus
-  }
-})()</script></div><script src="/js/site-refinement.js?v=20261020-1" defer></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
-  const pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:description\"]","link[rel=\"canonical\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+        // Search Modal
+        const searchBtn = document.getElementById('search-btn');
+        const searchModal = document.getElementById('search-modal');
+        const searchInput = document.getElementById('search-input');
+        const searchClose = document.getElementById('search-close');
+        const searchResults = document.getElementById('search-results');
+        let searchIndex = null;
 
-  window.pjax = new Pjax({
-    elements: 'a:not([target="_blank"])',
-    selectors: pjaxSelectors,
-    cacheBust: false,
-    analytics: false,
-    scrollRestoration: false
-  })
+        async function ensureSearchIndex() {
+          if (searchIndex) return searchIndex;
+          try {
+            const res = await fetch('/search.json');
+            searchIndex = await res.json();
+          } catch (_) {
+            searchIndex = [];
+          }
+          return searchIndex;
+        }
 
-  const triggerPjaxFn = (val) => {
-    if (!val) return
-    Object.values(val).forEach(fn => {
-      try {
-        fn()
-      } catch (err) {
-        console.debug('Pjax callback failed:', err)
-      }
-    })
-  }
+        function openSearch() {
+          if (!searchModal) return;
+          searchModal.classList.remove('hidden');
+          searchModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          ensureSearchIndex();
+          setTimeout(() => searchInput && searchInput.focus(), 30);
+        }
 
-  document.addEventListener('pjax:send', () => {
-    // removeEventListener
-    btf.removeGlobalFnEvent('pjaxSendOnce')
-    btf.removeGlobalFnEvent('themeChange')
+        function closeSearch() {
+          if (!searchModal) return;
+          searchModal.classList.add('hidden');
+          searchModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
 
-    // reset readmode
-    const $bodyClassList = document.body.classList
-    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+        if (searchBtn) searchBtn.addEventListener('click', openSearch);
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        if (searchModal) {
+          searchModal.addEventListener('click', e => {
+            if (e.target === searchModal) closeSearch();
+          });
+        }
 
-    triggerPjaxFn(window.globalFn.pjaxSend)
-  })
+        window.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (searchModal && searchModal.classList.contains('hidden')) openSearch();
+            else closeSearch();
+          } else if (e.key === 'Escape' && searchModal && !searchModal.classList.contains('hidden')) {
+            closeSearch();
+          }
+        });
 
-  document.addEventListener('pjax:complete', () => {
-    btf.removeGlobalFnEvent('pjaxCompleteOnce')
-    document.querySelectorAll('script[data-pjax]').forEach(item => {
-      const newScript = document.createElement('script')
-      const content = item.text || item.textContent || item.innerHTML || ""
-      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
-      newScript.appendChild(document.createTextNode(content))
-      item.parentNode.replaceChild(newScript, item)
-    })
+        function escapeHtml(s) {
+          return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
 
-    triggerPjaxFn(window.globalFn.pjaxComplete)
-  })
+        if (searchInput && searchResults) {
+          searchInput.addEventListener('input', async () => {
+            const q = searchInput.value.trim().toLowerCase();
+            if (!q) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p>';
+              return;
+            }
+            const data = await ensureSearchIndex();
+            const matched = data.filter(item => {
+              const title = (item.title || '').toLowerCase();
+              const content = (item.content || '').toLowerCase();
+              const tags = (item.tags || []).join(' ').toLowerCase();
+              const cats = (item.categories || []).join(' ').toLowerCase();
+              return title.includes(q) || tags.includes(q) || cats.includes(q) || content.includes(q);
+            });
 
-  document.addEventListener('pjax:error', e => {
-    if (e.request.status === 404) {
-      false
-        ? pjax.loadUrl('/404.html')
-        : window.location.href = e.request.responseURL
-    }
-  })
-})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章、Unity、C++、C#…" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.3"></script></div></div></body></html>
+            if (!matched.length) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">没有找到匹配的文章</p>';
+              return;
+            }
+
+            searchResults.innerHTML = matched
+              .slice(0, 15)
+              .map(item => {
+                const rawText = item.content || '';
+                const idx = rawText.toLowerCase().indexOf(q);
+                let snippet = rawText.slice(0, 110);
+                if (idx > 30) {
+                  snippet = '…' + rawText.slice(idx - 25, idx + 85) + '…';
+                }
+                return `
+                  <a href="${item.url}" class="block py-3.5 transition-colors hover:text-[var(--accent)]">
+                    <div class="flex items-baseline justify-between gap-2">
+                      <span class="font-semibold text-[var(--text-primary)]">${escapeHtml(item.title)}</span>
+                      <span class="shrink-0 text-xs text-[var(--text-tertiary)]">${escapeHtml(item.date || '')}</span>
+                    </div>
+                    <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">${escapeHtml(snippet)}</p>
+                  </a>
+                `;
+              })
+              .join('');
+          });
+        }
+      })();
+    </script> </body> </html>

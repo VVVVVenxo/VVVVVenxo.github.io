@@ -1,177 +1,16 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【计算机基础】离散数学 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基于屈婉玲《离散数学》的系统复习笔记：涵盖数理逻辑（命题与一阶谓词逻辑、范式与推理）、集合与二元关系（关系性质、闭包、等价关系与偏序集哈斯图）、函数、图论及代数结构。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="【计算机基础】离散数学">
-<meta property="og:url" content="https://vvvvvenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/index.html">
-<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
-<meta property="og:description" content="基于屈婉玲《离散数学》的系统复习笔记：涵盖数理逻辑（命题与一阶谓词逻辑、范式与推理）、集合与二元关系（关系性质、闭包、等价关系与偏序集哈斯图）、函数、图论及代数结构。">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6.png">
-<meta property="article:published_time" content="2026-10-25T00:00:00.000Z">
-<meta property="article:modified_time" content="2026-11-27T03:30:39.501Z">
-<meta property="article:author" content="VVVVVenxo">
-<meta property="article:tag" content="离散数学">
-<meta property="article:tag" content="数理逻辑">
-<meta property="article:tag" content="集合论">
-<meta property="article:tag" content="图论">
-<meta property="article:tag" content="代数结构">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6.png"><script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "【计算机基础】离散数学",
-  "url": "https://vvvvvenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/",
-  "image": "https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6.png",
-  "datePublished": "2026-10-25T00:00:00.000Z",
-  "dateModified": "2026-11-27T03:30:39.501Z",
-  "author": [
-    {
-      "@type": "Person",
-      "name": "VVVVVenxo",
-      "url": "https://VVVVVenxo.github.io"
-    }
-  ]
-}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Astro v5.18.2"><title>【计算机基础】离散数学 | VVVVVenxo 的博客</title><meta name="description" content="基于屈婉玲《离散数学》的系统复习笔记：涵盖数理逻辑（命题与一阶谓词逻辑、范式与推理）、集合与二元关系（关系性质、闭包、等价关系与偏序集哈斯图）、函数、图论及代数结构。"><meta name="keywords" content="VVVVVenxo, 游戏客户端开发, Unity, C++, C#, 图形学, 实时渲染, 网络同步, 算法, AI Agent"><meta name="author" content="VVVVVenxo"><meta name="theme-color" content="#f7f5ef" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#201f1c" media="(prefers-color-scheme: dark)"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/"><link rel="icon" href="/img/cat.ico"><link rel="alternate" type="application/rss+xml" title="VVVVVenxo 的博客" href="/atom.xml"><meta property="og:type" content="article"><meta property="og:url" content="https://vvvvvenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/"><meta property="og:title" content="【计算机基础】离散数学 | VVVVVenxo 的博客"><meta property="og:description" content="基于屈婉玲《离散数学》的系统复习笔记：涵盖数理逻辑（命题与一阶谓词逻辑、范式与推理）、集合与二元关系（关系性质、闭包、等价关系与偏序集哈斯图）、函数、图论及代数结构。"><meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6.png"><script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
-        return value
-      }
-    }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!true && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
-  
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
-        }
-      }
-
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
-
-      const theme = saveToLocal.get('theme')
-    
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
-        
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-  
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
-  translate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":false},
-  copy: {
-    success: '复制成功',
-    error: '复制失败',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: true
-  },
-  runtime: '',
-  dateSuffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
-    buttonText: '加载更多'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: false,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: '【计算机基础】离散数学',
-  isHighlightShrink: false,
-  isToc: true,
-  pageType: 'post'
-}</script><meta name="referrer" content="no-referrer"><link rel="stylesheet" href="/css/site-refinement.css?v=20261024-1"><meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
-  restartOnPushState: false
-}
-
-btf.addGlobalFn('pjaxSend', () => {
-  Pace.restart()
-}, 'pace_restart')
-
-</script><link rel="stylesheet" href="/css/pace-theme-editorial.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #F1F4F1;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">138</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【计算机基础】离散数学</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【计算机基础】离散数学</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-25T00:00:00.000Z" title="发表于 2026-10-25 00:00:00">2026-10-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-27T03:30:39.501Z" title="更新于 2026-11-27 03:30:39">2026-11-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">11.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>41分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="第一章-数理逻辑"><a href="#第一章-数理逻辑" class="headerlink" title="第一章 数理逻辑"></a>第一章 数理逻辑</h2><h3 id="1-1-命题与五种基本联结词"><a href="#1-1-命题与五种基本联结词" class="headerlink" title="1.1 命题与五种基本联结词"></a>1.1 命题与五种基本联结词</h3><ol>
+      })();
+    </script><link rel="stylesheet" href="/_astro/index.CgpjNjEc.css"></head> <body> <header class="site-header sticky top-0 z-40 w-full border-b border-[var(--border-color)]"> <div class="container flex h-16 items-center justify-between"> <a href="/" aria-label="VVVVVenxo 的博客，返回首页" class="brand-link text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]"> <span class="brand-mark" style="--brand-logo: url('/logo.svg')" aria-hidden="true"></span> <span class="brand-name">VVVVVenxo</span> <span class="brand-caption">游戏客户端工程手记</span> </a> <nav class="hidden items-center gap-1 md:flex" aria-label="主导航"> <a href="/" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 首页 </a><a href="/blog" aria-current="page" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 分类 </a><a href="/tags" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 标签 </a><a href="/about" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 关于 </a> </nav> <div class="flex items-center gap-1.5"> <button id="search-btn" type="button" class="header-action" aria-label="搜索 (Ctrl+K)" title="搜索 (Ctrl+K)"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </button> <button id="theme-toggle" type="button" class="header-action" aria-label="切换主题" title="切换明暗主题"> <svg class="sun-icon hidden dark:block" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> <svg class="moon-icon block dark:hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="mobile-menu-btn" type="button" class="header-action md:hidden" aria-label="菜单" aria-controls="mobile-menu" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> </div> </div> <div id="mobile-menu" class="hidden border-t border-[var(--border-subtle)] md:hidden"> <nav class="container py-3" aria-label="移动导航"> <div class="bg-[var(--bg-surface)]"> <a href="/" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 首页 </a><a href="/blog" aria-current="page" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors bg-[var(--bg-muted)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 分类 </a><a href="/tags" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 标签 </a><a href="/about" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 关于 </a> </div> </nav> </div> </header> <main class="flex-1">  <div class="post-reading-shell container-wide flex py-10 md:py-14"> <article class="min-w-0 flex-1"> <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8"> <div class="flex flex-wrap items-center gap-2"> <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" class="section-kicker hover:underline"> 计算机基础 </a> <span class="text-xs text-[var(--text-tertiary)]">
+/ 技术笔记 · 计算机基础 </span> </div> <h1 lang="zh-CN" class="mt-4 text-3xl font-bold tracking-tight text-balance text-[var(--text-primary)] md:text-5xl"> 【计算机基础】离散数学 </h1> <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-tertiary)]"> <time datetime="2026-10-25">2026年10月25日</time> <span>·</span> <span>38 分钟阅读</span> <span>·</span> <span>约 12,048 字</span> </div> <div class="mt-5 flex flex-wrap gap-2"> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" class="tag"> 离散数学 </a><a href="/tags/%E6%95%B0%E7%90%86%E9%80%BB%E8%BE%91/" class="tag"> 数理逻辑 </a><a href="/tags/%E9%9B%86%E5%90%88%E8%AE%BA/" class="tag"> 集合论 </a><a href="/tags/%E5%9B%BE%E8%AE%BA/" class="tag"> 图论 </a><a href="/tags/%E4%BB%A3%E6%95%B0%E7%BB%93%E6%9E%84/" class="tag"> 代数结构 </a> </div> </header> <div class="prose max-w-none" lang="zh-CN"><h2 id="第一章-数理逻辑"><a aria-hidden="true" tabindex="-1" href="#第一章-数理逻辑"><span class="icon icon-link"></span></a>第一章 数理逻辑</h2>
+<h3 id="11-命题与五种基本联结词"><a aria-hidden="true" tabindex="-1" href="#11-命题与五种基本联结词"><span class="icon icon-link"></span></a>1.1 命题与五种基本联结词</h3>
+<ol>
 <li><strong>命题（Proposition）</strong><ul>
 <li><strong>定义</strong>：非真即假的陈述句称为命题。判断结果为真的称为真命题（真值记为 1 或 T），判断结果为假的称为假命题（真值记为 0 或 F）。疑问句、祈使句、感叹句以及真值随变量变化的开语句（如 x &gt; 3）均不是命题。</li>
 <li><strong>分类</strong>：不能再分解为更简单命题的称为<strong>原子命题（简单命题）</strong>；由原子命题通过逻辑联结词组合而成的称为<strong>复合命题</strong>。</li>
@@ -189,7 +28,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </ol>
 <p><img width="860" height="360" src="/img/posts/dm-ch1-logic.svg" alt="基本逻辑联结词真值表与极小项极大项编码规则" loading="lazy" decoding="async"></p>
 <hr>
-<h3 id="1-2-命题公式、等值演算与主范式"><a href="#1-2-命题公式、等值演算与主范式" class="headerlink" title="1.2 命题公式、等值演算与主范式"></a>1.2 命题公式、等值演算与主范式</h3><ol>
+<h3 id="12-命题公式等值演算与主范式"><a aria-hidden="true" tabindex="-1" href="#12-命题公式等值演算与主范式"><span class="icon icon-link"></span></a>1.2 命题公式、等值演算与主范式</h3>
+<ol>
 <li><strong>命题公式的三种类型</strong><ul>
 <li><strong>重言式（永真式，Tautology）</strong>：在所有可能的真值赋值下，公式的真值恒为 1。</li>
 <li><strong>矛盾式（永假式，Contradiction）</strong>：在所有可能的真值赋值下，公式的真值恒为 0。</li>
@@ -215,18 +55,19 @@ btf.addGlobalFn('pjaxSend', () => {
 <li><strong>合取范式</strong>：由有限个简单析取式通过合取 <code>∧</code> 组成的公式，形如 <code>(A1 ∨ A2) ∧ (B1 ∨ B2)</code>。</li>
 </ul>
 </li>
-<li><strong>极小项、极大项与主析取&#x2F;主合取范式（唯一标准形式）</strong><ul>
+<li><strong>极小项、极大项与主析取/主合取范式（唯一标准形式）</strong><ul>
 <li>设命题公式含有 n 个命题变元（共有 2^n 组赋值）：</li>
 <li><strong>极小项（mi）</strong>：包含全部 n 个变元的简单合取式，且<strong>仅有对应二进制下标 i 的那一组赋值使其真值为 1</strong>（编码规则：赋值为 <strong>1</strong> 的变元取<strong>原形</strong>，赋值为 <strong>0</strong> 的变元取<strong>否定</strong>，中间用 <strong><code>∧</code></strong> 连接）。</li>
 <li><strong>极大项（Mi）</strong>：包含全部 n 个变元的简单析取式，且<strong>仅有对应二进制下标 i 的那一组赋值使其真值为 0</strong>（编码规则：赋值为 <strong>0</strong> 的变元取<strong>原形</strong>，赋值为 <strong>1</strong> 的变元取<strong>否定</strong>，中间用 <strong><code>∨</code></strong> 连接）。性质：<code>¬mi ⇔ Mi</code>。</li>
 <li><strong>主析取范式</strong>：完全由<strong>极小项</strong>析取（<code>∨</code>）构成的公式，包含了使原公式真值为 <strong>1（成真赋值）</strong> 的所有极小项。</li>
 <li><strong>主合取范式</strong>：完全由<strong>极大项</strong>合取（<code>∧</code>）构成的公式，包含了使原公式真值为 <strong>0（成假赋值）</strong> 的所有极大项。</li>
-<li><strong>主析取范式与主合取范式的互补转换</strong>：若含 3 个变元（下标全集为 <code>&#123;0, 1, 2, 3, 4, 5, 6, 7&#125;</code>）的公式 A 的主析取范式为 <code>m1 ∨ m3 ∨ m5</code>（记作 <code>Σ(1, 3, 5)</code>），则其成假赋值下标必为剩余补集，可直接写出主合取范式为 <code>M0 ∧ M2 ∧ M4 ∧ M6 ∧ M7</code>（记作 <code>Π(0, 2, 4, 6, 7)</code>）。</li>
+<li><strong>主析取范式与主合取范式的互补转换</strong>：若含 3 个变元（下标全集为 <code>{0, 1, 2, 3, 4, 5, 6, 7}</code>）的公式 A 的主析取范式为 <code>m1 ∨ m3 ∨ m5</code>（记作 <code>Σ(1, 3, 5)</code>），则其成假赋值下标必为剩余补集，可直接写出主合取范式为 <code>M0 ∧ M2 ∧ M4 ∧ M6 ∧ M7</code>（记作 <code>Π(0, 2, 4, 6, 7)</code>）。</li>
 </ul>
 </li>
 </ol>
 <hr>
-<h3 id="1-3-命题逻辑的推理理论"><a href="#1-3-命题逻辑的推理理论" class="headerlink" title="1.3 命题逻辑的推理理论"></a>1.3 命题逻辑的推理理论</h3><p>设前提集合为 <code>&#123;A1, A2, ..., Ak&#125;</code>，结论为 <code>B</code>。若蕴涵式 <code>(A1 ∧ A2 ∧ ... ∧ Ak) → B</code> 为<strong>重言式</strong>，则称由前提推出结论 <code>B</code> 的推理是<strong>有效的（正确的）</strong>，记作 <code>A1 ∧ A2 ∧ ... ∧ Ak ⇒ B</code>。</p>
+<h3 id="13-命题逻辑的推理理论"><a aria-hidden="true" tabindex="-1" href="#13-命题逻辑的推理理论"><span class="icon icon-link"></span></a>1.3 命题逻辑的推理理论</h3>
+<p>设前提集合为 <code>{A1, A2, ..., Ak}</code>，结论为 <code>B</code>。若蕴涵式 <code>(A1 ∧ A2 ∧ ... ∧ Ak) → B</code> 为<strong>重言式</strong>，则称由前提推出结论 <code>B</code> 的推理是<strong>有效的（正确的）</strong>，记作 <code>A1 ∧ A2 ∧ ... ∧ Ak ⇒ B</code>。</p>
 <ol>
 <li><strong>常用基本推理定律（永真蕴涵式）</strong><ul>
 <li><strong>附加律</strong>：<code>A ⇒ (A ∨ B)</code></li>
@@ -246,10 +87,11 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="1-4-一阶谓词逻辑"><a href="#1-4-一阶谓词逻辑" class="headerlink" title="1.4 一阶谓词逻辑"></a>1.4 一阶谓词逻辑</h3><p>命题逻辑将原子命题视为不可拆分的整体，无法表达“凡人皆有一死，苏格拉底是人，所以苏格拉底会死”这类内部性质推理。<strong>一阶谓词逻辑</strong>引入了<strong>个体词、谓词与量词</strong>：</p>
+<h3 id="14-一阶谓词逻辑"><a aria-hidden="true" tabindex="-1" href="#14-一阶谓词逻辑"><span class="icon icon-link"></span></a>1.4 一阶谓词逻辑</h3>
+<p>命题逻辑将原子命题视为不可拆分的整体，无法表达“凡人皆有一死，苏格拉底是人，所以苏格拉底会死”这类内部性质推理。<strong>一阶谓词逻辑</strong>引入了<strong>个体词、谓词与量词</strong>：</p>
 <ol>
 <li><strong>个体词、谓词与量词符号化规则</strong><ul>
-<li><strong>个体词</strong>：所研究对象（具体的称为个体常项 a, b, c；泛指的称为个体变项 x, y, z；个体变项的取值范围称为<strong>个体域 &#x2F; 论域 D</strong>）。</li>
+<li><strong>个体词</strong>：所研究对象（具体的称为个体常项 a, b, c；泛指的称为个体变项 x, y, z；个体变项的取值范围称为<strong>个体域 / 论域 D</strong>）。</li>
 <li><strong>谓词</strong>：刻画个体性质或个体间关系的词（如 <code>F(x)</code> 表示 x 是人，<code>G(x)</code> 表示 x 会死）。</li>
 <li><strong>全称量词（∀x，对任意 x）与存在量词（∃x，存在某个 x）的标准符号化模板（必考）</strong>：<ul>
 <li>当使用全集个体域时，必须引入<strong>特性谓词</strong> <code>F(x)</code> 限定范围：</li>
@@ -278,14 +120,17 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h2 id="第二章-集合与二元关系"><a href="#第二章-集合与二元关系" class="headerlink" title="第二章 集合与二元关系"></a>第二章 集合与二元关系</h2><h3 id="2-1-集合的基本运算与幂集"><a href="#2-1-集合的基本运算与幂集" class="headerlink" title="2.1 集合的基本运算与幂集"></a>2.1 集合的基本运算与幂集</h3><ol>
+<h2 id="第二章-集合与二元关系"><a aria-hidden="true" tabindex="-1" href="#第二章-集合与二元关系"><span class="icon icon-link"></span></a>第二章 集合与二元关系</h2>
+<h3 id="21-集合的基本运算与幂集"><a aria-hidden="true" tabindex="-1" href="#21-集合的基本运算与幂集"><span class="icon icon-link"></span></a>2.1 集合的基本运算与幂集</h3>
+<ol>
 <li><strong>集合的基本运算</strong><ul>
 <li><strong>并集（A ∪ B）</strong>、<strong>交集（A ∩ B）</strong>、<strong>差集（相对补，A - B）</strong>：属于 A 但不属于 B 的元素集合。</li>
-<li><strong>对称差（A ⊕ B）</strong>：属于 A 或属于 B，但不同时属于两者的元素集合：<br><code>A ⊕ B = (A - B) ∪ (B - A) = (A ∪ B) - (A ∩ B)</code></li>
+<li><strong>对称差（A ⊕ B）</strong>：属于 A 或属于 B，但不同时属于两者的元素集合：
+<code>A ⊕ B = (A - B) ∪ (B - A) = (A ∪ B) - (A ∩ B)</code></li>
 </ul>
 </li>
 <li><strong>幂集（Power Set）</strong><ul>
-<li><strong>定义</strong>：集合 A 的<strong>所有子集</strong>所组成的集合称为 A 的幂集，记作 <strong>P(A)</strong>，即 <code>P(A) = &#123; x | x ⊆ A &#125;</code>。</li>
+<li><strong>定义</strong>：集合 A 的<strong>所有子集</strong>所组成的集合称为 A 的幂集，记作 <strong>P(A)</strong>，即 <code>P(A) = { x | x ⊆ A }</code>。</li>
 <li><strong>基数公式</strong>：若有限集合 A 含有 n 个元素（<code>|A| = n</code>），则其幂集 P(A) 含有 <strong><code>2^n</code></strong> 个元素（<code>|P(A)| = 2^n</code>）。注意空集 <code>∅ ∈ P(A)</code> 且 <code>∅ ⊆ P(A)</code>。</li>
 </ul>
 </li>
@@ -296,29 +141,31 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="2-2-笛卡尔积与二元关系的表示"><a href="#2-2-笛卡尔积与二元关系的表示" class="headerlink" title="2.2 笛卡尔积与二元关系的表示"></a>2.2 笛卡尔积与二元关系的表示</h3><ol>
+<h3 id="22-笛卡尔积与二元关系的表示"><a aria-hidden="true" tabindex="-1" href="#22-笛卡尔积与二元关系的表示"><span class="icon icon-link"></span></a>2.2 笛卡尔积与二元关系的表示</h3>
+<ol>
 <li><strong>有序对与笛卡尔积（Cartesian Product）</strong><ul>
 <li><strong>有序对 <code>&lt;x, y&gt;</code></strong>：具有先后次序的两个元素，<code>&lt;x, y&gt; = &lt;u, v&gt;</code> 当且仅当 <code>x = u</code> 且 <code>y = v</code>。</li>
-<li><strong>笛卡尔积（A × B）</strong>：<code>A × B = &#123; &lt;x, y&gt; | x ∈ A ∧ y ∈ B &#125;</code>。笛卡尔积<strong>不满足交换律，也不满足结合律</strong>，但对并、交运算满足分配律。</li>
+<li><strong>笛卡尔积（A × B）</strong>：<code>A × B = { &lt;x, y&gt; | x ∈ A ∧ y ∈ B }</code>。笛卡尔积<strong>不满足交换律，也不满足结合律</strong>，但对并、交运算满足分配律。</li>
 <li><strong>元素个数</strong>：若 <code>|A| = m, |B| = n</code>，则 <strong><code>|A × B| = m × n</code></strong>。</li>
 </ul>
 </li>
 <li><strong>二元关系的定义与数量</strong><ul>
 <li><strong>定义</strong>：笛卡尔积 <code>A × B</code> 的<strong>任意一个子集 R</strong>（<code>R ⊆ A × B</code>）都称为从 A 到 B 的一个二元关系；当 <code>A = B</code> 时，称 <code>R ⊆ A × A</code> 为<strong>集合 A 上的二元关系</strong>。</li>
 <li><strong>关系总数</strong>：因为 <code>|A × B| = m × n</code>，其子集个数（即幂集元素个数）为 <strong><code>2^(m × n)</code></strong>，故从 A 到 B 共有 <code>2^(m × n)</code> 种不同的二元关系（集合 A 上共有 <code>2^(n^2)</code> 种二元关系）。</li>
-<li><strong>三种特殊关系</strong>：空关系 <code>∅</code>、全域关系 <code>EA = A × A</code>、<strong>恒等关系 <code>IA = &#123; &lt;x, x&gt; | x ∈ A &#125;</code></strong>。</li>
+<li><strong>三种特殊关系</strong>：空关系 <code>∅</code>、全域关系 <code>EA = A × A</code>、<strong>恒等关系 <code>IA = { &lt;x, x&gt; | x ∈ A }</code></strong>。</li>
 </ul>
 </li>
 <li><strong>关系的表示与基本运算</strong><ul>
 <li><strong>表示方法</strong>：集合枚举法、<strong>关系矩阵 <code>M_R</code></strong>（若 <code>&lt;xi, xj&gt; ∈ R</code> 则 <code>m_ij = 1</code>，否则为 <code>0</code>）、<strong>关系图 <code>G_R</code></strong>（有向图）。</li>
 <li><strong>定义域 <code>dom R</code></strong>（所有有序对第 1 元素集合）与<strong>值域 <code>ran R</code></strong>（所有有序对第 2 元素集合）。</li>
-<li><strong>逆关系（<code>R^-1</code>）</strong>：将 R 中所有有序对颠倒顺序，<code>R^-1 = &#123; &lt;y, x&gt; | &lt;x, y&gt; ∈ R &#125;</code>（对应关系矩阵转置 <code>M^T</code>，关系图所有箭头反向）。</li>
-<li><strong>关系的右复合（<code>R ◦ S</code>）</strong>：<code>R ◦ S = &#123; &lt;x, z&gt; | ∃y (&lt;x, y&gt; ∈ R ∧ &lt;y, z&gt; ∈ S) &#125;</code>（对应关系矩阵做布尔矩阵乘法，其中加法按逻辑或 <code>1 + 1 = 1</code> 计算）。</li>
+<li><strong>逆关系（<code>R^-1</code>）</strong>：将 R 中所有有序对颠倒顺序，<code>R^-1 = { &lt;y, x&gt; | &lt;x, y&gt; ∈ R }</code>（对应关系矩阵转置 <code>M^T</code>，关系图所有箭头反向）。</li>
+<li><strong>关系的右复合（<code>R ◦ S</code>）</strong>：<code>R ◦ S = { &lt;x, z&gt; | ∃y (&lt;x, y&gt; ∈ R ∧ &lt;y, z&gt; ∈ S) }</code>（对应关系矩阵做布尔矩阵乘法，其中加法按逻辑或 <code>1 + 1 = 1</code> 计算）。</li>
 </ul>
 </li>
 </ol>
 <hr>
-<h3 id="2-3-二元关系的五种基本性质"><a href="#2-3-二元关系的五种基本性质" class="headerlink" title="2.3 二元关系的五种基本性质"></a>2.3 二元关系的五种基本性质</h3><p>设 R 为非空集合 A 上的二元关系，其五种基本性质的定义及在关系矩阵 <code>M</code>、关系图 <code>G</code> 上的判定特征如下：</p>
+<h3 id="23-二元关系的五种基本性质"><a aria-hidden="true" tabindex="-1" href="#23-二元关系的五种基本性质"><span class="icon icon-link"></span></a>2.3 二元关系的五种基本性质</h3>
+<p>设 R 为非空集合 A 上的二元关系，其五种基本性质的定义及在关系矩阵 <code>M</code>、关系图 <code>G</code> 上的判定特征如下：</p>
 <p><img width="860" height="360" src="/img/posts/dm-ch2-relations.svg" alt="二元关系五种基本性质在关系矩阵与关系图上的判定特征" loading="lazy" decoding="async"></p>
 <table>
 <thead>
@@ -368,7 +215,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ul>
 <hr>
-<h3 id="2-4-关系的闭包（Closure）"><a href="#2-4-关系的闭包（Closure）" class="headerlink" title="2.4 关系的闭包（Closure）"></a>2.4 关系的闭包（Closure）</h3><p>给定集合 A 上的关系 R，若希望在 R 中<strong>添加最少数量的有序对</strong>，使其具备自反性、对称性或传递性，所得的新关系分别称为 R 的<strong>自反闭包 <code>r(R)</code></strong>、<strong>对称闭包 <code>s(R)</code></strong> 和<strong>传递闭包 <code>t(R)</code></strong>：</p>
+<h3 id="24-关系的闭包closure"><a aria-hidden="true" tabindex="-1" href="#24-关系的闭包closure"><span class="icon icon-link"></span></a>2.4 关系的闭包（Closure）</h3>
+<p>给定集合 A 上的关系 R，若希望在 R 中<strong>添加最少数量的有序对</strong>，使其具备自反性、对称性或传递性，所得的新关系分别称为 R 的<strong>自反闭包 <code>r(R)</code></strong>、<strong>对称闭包 <code>s(R)</code></strong> 和<strong>传递闭包 <code>t(R)</code></strong>：</p>
 <ol>
 <li><strong>自反闭包 <code>r(R)</code></strong><ul>
 <li><strong>公式</strong>：<code>r(R) = R ∪ IA</code></li>
@@ -381,8 +229,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </ul>
 </li>
 <li><strong>传递闭包 <code>t(R)</code> 与 Warshall 算法</strong><ul>
-<li><strong>公式</strong>：<code>t(R) = R ∪ R^2 ∪ R^3 ∪ ... ∪ R^n</code>（其中 n &#x3D; |A|）。</li>
-<li><strong>Warshall 算法（在 n 阶关系矩阵 M 上直接求传递闭包，共迭代 k &#x3D; 1, 2, …, n 步）</strong>：<ul>
+<li><strong>公式</strong>：<code>t(R) = R ∪ R^2 ∪ R^3 ∪ ... ∪ R^n</code>（其中 n = |A|）。</li>
+<li><strong>Warshall 算法（在 n 阶关系矩阵 M 上直接求传递闭包，共迭代 k = 1, 2, ..., n 步）</strong>：<ul>
 <li>第 k 步：<strong>以第 k 列和第 k 行为桥梁</strong>——扫描第 k 列，找出第 k 列中所有值为 <code>1</code> 的行号 <code>i</code>（即 <code>M[i][k] == 1</code>）；</li>
 <li>将<strong>第 k 行的元素逐位逻辑或（加）到第 i 行上</strong>（即对所有 <code>j</code> 更新 <code>M[i][j] = M[i][j] ∨ M[k][j]</code>）；</li>
 <li>依次令 <code>k</code> 从 1 执行到 <code>n</code>，最终得到的矩阵即为传递闭包 <code>t(R)</code> 的关系矩阵。</li>
@@ -392,11 +240,12 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="2-5-等价关系与偏序关系"><a href="#2-5-等价关系与偏序关系" class="headerlink" title="2.5 等价关系与偏序关系"></a>2.5 等价关系与偏序关系</h3><ol>
+<h3 id="25-等价关系与偏序关系"><a aria-hidden="true" tabindex="-1" href="#25-等价关系与偏序关系"><span class="icon icon-link"></span></a>2.5 等价关系与偏序关系</h3>
+<ol>
 <li><strong>等价关系（Equivalence Relation）与商集、划分</strong><ul>
 <li><strong>定义</strong>：若非空集合 A 上的关系 R 同时满足<strong>自反性、对称性、传递性</strong>，则称 R 为 A 上的<strong>等价关系</strong>（如整数集上的“模 n 同余关系”）。</li>
-<li><strong>等价类（<code>[x]_R</code>）</strong>：所有与元素 <code>x</code> 具有等价关系的 A 中元素构成的集合，即 <code>[x]_R = &#123; y ∈ A | &lt;x, y&gt; ∈ R &#125;</code>。两个等价类要么<strong>完全相等</strong>，要么<strong>交集为空（互不相交）</strong>。</li>
-<li><strong>商集（<code>A / R</code>）</strong>：以 R 的所有不同等价类作为元素构成的集合，称为 A 关于 R 的商集：<code>A / R = &#123; [x]_R | x ∈ A &#125;</code>。</li>
+<li><strong>等价类（<code>[x]_R</code>）</strong>：所有与元素 <code>x</code> 具有等价关系的 A 中元素构成的集合，即 <code>[x]_R = { y ∈ A | &lt;x, y&gt; ∈ R }</code>。两个等价类要么<strong>完全相等</strong>，要么<strong>交集为空（互不相交）</strong>。</li>
+<li><strong>商集（<code>A / R</code>）</strong>：以 R 的所有不同等价类作为元素构成的集合，称为 A 关于 R 的商集：<code>A / R = { [x]_R | x ∈ A }</code>。</li>
 <li><strong>等价关系与集合划分的一一对应</strong>：集合 A 上的每一个等价关系 R，其商集 <code>A / R</code> 都是 A 的一个<strong>划分（Partition，将 A 切分为若干个非空且两两不相交的子集块）</strong>；反之，A 的任意一个划分也唯一确定一个等价关系（每个划分块内部的元素两两全连通，块内构成完全子图）。</li>
 </ul>
 </li>
@@ -411,7 +260,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ul>
 </li>
-<li><strong>偏序集中的八类特殊元素（必考辨析）</strong><br>设 <code>&lt;A, ≼&gt;</code> 为偏序集，<code>B ⊆ A</code> 为其非空子集：<ul>
+<li><strong>偏序集中的八类特殊元素（必考辨析）</strong>
+设 <code>&lt;A, ≼&gt;</code> 为偏序集，<code>B ⊆ A</code> 为其非空子集：<ul>
 <li><strong>极小元与极大元（在 B 内部找，一定存在，可能不唯一）</strong>：<ul>
 <li><strong>极小元</strong>：B 中没有比它更小的元素（在 B 的哈斯图中<strong>下方没有任何连线</strong>的顶点）。</li>
 <li><strong>极大元</strong>：B 中没有比它更大的元素（在 B 的哈斯图中<strong>上方没有任何连线</strong>的顶点）。</li>
@@ -434,7 +284,9 @@ btf.addGlobalFn('pjaxSend', () => {
 </ol>
 <p><img width="860" height="370" src="/img/posts/dm-ch2-hasse.svg" alt="偏序集哈斯图构造与特殊元素判定示例" loading="lazy" decoding="async"></p>
 <hr>
-<h2 id="第三章-函数与集合基数"><a href="#第三章-函数与集合基数" class="headerlink" title="第三章 函数与集合基数"></a>第三章 函数与集合基数</h2><h3 id="3-1-函数的定义与三类特殊性质"><a href="#3-1-函数的定义与三类特殊性质" class="headerlink" title="3.1 函数的定义与三类特殊性质"></a>3.1 函数的定义与三类特殊性质</h3><ol>
+<h2 id="第三章-函数与集合基数"><a aria-hidden="true" tabindex="-1" href="#第三章-函数与集合基数"><span class="icon icon-link"></span></a>第三章 函数与集合基数</h2>
+<h3 id="31-函数的定义与三类特殊性质"><a aria-hidden="true" tabindex="-1" href="#31-函数的定义与三类特殊性质"><span class="icon icon-link"></span></a>3.1 函数的定义与三类特殊性质</h3>
+<ol>
 <li><strong>函数的关系定义与计数</strong><ul>
 <li><strong>定义</strong>：设 A, B 为非空集合，若从 A 到 B 的二元关系 <code>f</code> 满足以下两个条件，则称 <code>f</code> 为从 A 到 B 的<strong>函数（或映射）</strong>，记作 <strong><code>f: A → B</code></strong>：<ol>
 <li><strong>像的存在性（处处有定义）</strong>：<code>dom f = A</code>，即 A 中每一个元素 <code>x</code> 都必须参与映射；</li>
@@ -465,9 +317,12 @@ btf.addGlobalFn('pjaxSend', () => {
 </ol>
 <p><img width="860" height="350" src="/img/posts/dm-ch3-functions.svg" alt="函数的三类基本性质单射满射与双射" loading="lazy" decoding="async"></p>
 <hr>
-<h3 id="3-2-复合函数与逆函数"><a href="#3-2-复合函数与逆函数" class="headerlink" title="3.2 复合函数与逆函数"></a>3.2 复合函数与逆函数</h3><ol>
+<h3 id="32-复合函数与逆函数"><a aria-hidden="true" tabindex="-1" href="#32-复合函数与逆函数"><span class="icon icon-link"></span></a>3.2 复合函数与逆函数</h3>
+<ol>
 <li><strong>复合函数（左复合 <code>g ◦ f</code>）</strong><ul>
-<li><strong>定义</strong>：设函数 <code>f: A → B</code> 且 <code>g: B → C</code>，则复合函数 <code>g ◦ f: A → C</code> 定义为对任意 <code>x ∈ A</code>，有：<br><strong><code>(g ◦ f)(x) = g(f(x))</code></strong><br>（注意：函数复合默认采用<strong>左复合</strong>，即先作用右边的内层函数 <code>f</code>，再作用左边的外层函数 <code>g</code>；这与二元关系的右复合顺序相反）。</li>
+<li><strong>定义</strong>：设函数 <code>f: A → B</code> 且 <code>g: B → C</code>，则复合函数 <code>g ◦ f: A → C</code> 定义为对任意 <code>x ∈ A</code>，有：
+<strong><code>(g ◦ f)(x) = g(f(x))</code></strong>
+（注意：函数复合默认采用<strong>左复合</strong>，即先作用右边的内层函数 <code>f</code>，再作用左边的外层函数 <code>g</code>；这与二元关系的右复合顺序相反）。</li>
 <li><strong>函数复合的性质保持与逆推规律（常考）</strong>：<ul>
 <li><strong>正向保持</strong>：若 <code>f</code> 和 <code>g</code> 都是单射（或满射、双射），则复合函数 <code>g ◦ f</code> 必为单射（或满射、双射）。</li>
 <li><strong>逆向推导（不对称性）</strong>：<ol>
@@ -482,19 +337,21 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 <li><strong>逆函数（<code>f^-1</code>）</strong><ul>
 <li><strong>存在充要条件</strong>：函数 <code>f: A → B</code> 的逆关系 <code>f^-1</code> 仍然构成从 B 到 A 的函数，<strong>当且仅当 <code>f</code> 是双射</strong>。</li>
-<li><strong>基本性质</strong>：若 <code>f: A → B</code> 是双射，则 <code>f^-1: B → A</code> 也是双射，且满足：<br><code>f^-1 ◦ f = IA</code>（A 上的恒等函数）， <code>f ◦ f^-1 = IB</code>（B 上的恒等函数）。</li>
+<li><strong>基本性质</strong>：若 <code>f: A → B</code> 是双射，则 <code>f^-1: B → A</code> 也是双射，且满足：
+<code>f^-1 ◦ f = IA</code>（A 上的恒等函数）， <code>f ◦ f^-1 = IB</code>（B 上的恒等函数）。</li>
 </ul>
 </li>
 </ol>
 <hr>
-<h3 id="3-3-集合的等势与基数"><a href="#3-3-集合的等势与基数" class="headerlink" title="3.3 集合的等势与基数"></a>3.3 集合的等势与基数</h3><ol>
+<h3 id="33-集合的等势与基数"><a aria-hidden="true" tabindex="-1" href="#33-集合的等势与基数"><span class="icon icon-link"></span></a>3.3 集合的等势与基数</h3>
+<ol>
 <li><strong>集合的等势（Equinumerosity）</strong><ul>
 <li><strong>定义</strong>：设 A, B 为两个集合，若存在从 A 到 B 的<strong>双射函数 <code>f: A → B</code></strong>，则称集合 A 与 B <strong>等势（基数相同）</strong>，记作 <strong><code>A ≈ B</code></strong>。等势关系满足自反性、对称性与传递性。</li>
-<li><strong>无限集的特征定义</strong>：一个集合是无限集，当且仅当它能<strong>与自己的某个真子集等势</strong>（如自然数集 <code>N</code> 与正偶数集 <code>&#123;2, 4, 6, ...&#125;</code> 通过双射 <code>f(n) = 2n</code> 等势）。</li>
+<li><strong>无限集的特征定义</strong>：一个集合是无限集，当且仅当它能<strong>与自己的某个真子集等势</strong>（如自然数集 <code>N</code> 与正偶数集 <code>{2, 4, 6, ...}</code> 通过双射 <code>f(n) = 2n</code> 等势）。</li>
 </ul>
 </li>
 <li><strong>可数集（Countable Set）与不可数集（Uncountable Set）</strong><ul>
-<li><strong>可数集（基数记作阿列夫零 <code>ℵ0</code>）</strong>：凡与自然数集 <code>N = &#123;0, 1, 2, ...&#125;</code> 等势的无限集合统称为可数集（可列集）。<ul>
+<li><strong>可数集（基数记作阿列夫零 <code>ℵ0</code>）</strong>：凡与自然数集 <code>N = {0, 1, 2, ...}</code> 等势的无限集合统称为可数集（可列集）。<ul>
 <li><strong>常见可数集</strong>：自然数集 <code>N</code>、整数集 <code>Z</code>、<strong>有理数集 <code>Q</code></strong>、代数数集，以及有限个或可数无穷多个可数集的并集、笛卡尔积 <code>N × N</code>。</li>
 </ul>
 </li>
@@ -507,19 +364,25 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h2 id="第四章-图论与树"><a href="#第四章-图论与树" class="headerlink" title="第四章 图论与树"></a>第四章 图论与树</h2><h3 id="4-1-图的基本概念与握手定理"><a href="#4-1-图的基本概念与握手定理" class="headerlink" title="4.1 图的基本概念与握手定理"></a>4.1 图的基本概念与握手定理</h3><ol>
+<h2 id="第四章-图论与树"><a aria-hidden="true" tabindex="-1" href="#第四章-图论与树"><span class="icon icon-link"></span></a>第四章 图论与树</h2>
+<h3 id="41-图的基本概念与握手定理"><a aria-hidden="true" tabindex="-1" href="#41-图的基本概念与握手定理"><span class="icon icon-link"></span></a>4.1 图的基本概念与握手定理</h3>
+<ol>
 <li><strong>无向图、有向图与特殊图类</strong><ul>
 <li><strong>基本概念</strong>：图 <code>G = &lt;V, E&gt;</code> 由非空顶点集 <code>V</code>（顶点数 <code>|V| = n</code> 称为图的<strong>阶</strong>）和边集 <code>E</code>（边数 <code>|E| = m</code>）组成。两端点重合的边称为<strong>自环</strong>；连接同一对顶点的多条无向边（或同向有向边）称为<strong>平行边（重边）</strong>。</li>
 <li><strong>简单图（Simple Graph）</strong>：<strong>既不含自环、也不含平行边</strong>的图（图论定理默认均针对简单图）。</li>
-<li><strong>n 阶无向完全图（<code>Kn</code>）</strong>：任意两个不同顶点之间都有一条边相连的无向简单图。每个顶点的度数均为 <code>n - 1</code>，总边数为：<br><strong><code>m = C(n, 2) = n(n - 1) / 2</code></strong><br>（n 阶有向完全图的边数为 <strong><code>n(n - 1)</code></strong>）。</li>
+<li><strong>n 阶无向完全图（<code>Kn</code>）</strong>：任意两个不同顶点之间都有一条边相连的无向简单图。每个顶点的度数均为 <code>n - 1</code>，总边数为：
+<strong><code>m = C(n, 2) = n(n - 1) / 2</code></strong>
+（n 阶有向完全图的边数为 <strong><code>n(n - 1)</code></strong>）。</li>
 <li><strong>k-正则图（k-Regular Graph）</strong>：每个顶点的度数都等于常数 <code>k</code> 的无向简单图（总边数 <code>m = n × k / 2</code>）。</li>
 <li><strong>子图、生成子图与导出子图</strong>：若 <code>V&#39; ⊆ V</code> 且 <code>E&#39; ⊆ E</code>，称 <code>G&#39; = &lt;V&#39;, E&#39;&gt;</code> 为 G 的<strong>子图</strong>；若 <strong><code>V&#39; = V</code>（包含原图全部顶点）</strong>，则称 <code>G&#39;</code> 为 G 的<strong>生成子图（支撑子图）</strong>。</li>
 <li><strong>补图（<code>G_bar</code>）</strong>：从完全图 <code>Kn</code> 中删去原图 <code>G</code> 的所有边后剩余的生成子图，满足 <code>m(G) + m(G_bar) = n(n - 1) / 2</code>。</li>
 </ul>
 </li>
 <li><strong>顶点的度数与握手定理（Handshaking Lemma）</strong><ul>
-<li><strong>无向图握手定理</strong>：无向图 <code>G = &lt;V, E&gt;</code> 中所有顶点的度数之和等于<strong>边数 m 的 2 倍</strong>（因为每条边恰好为两个端点各贡献 1 度）：<br><strong><code>Σ d(v) = 2m</code></strong></li>
-<li><strong>有向图握手定理</strong>：有向图 <code>D = &lt;V, E&gt;</code> 中所有顶点的<strong>入度之和等于出度之和，且等于总边数 m</strong>：<br><strong><code>Σ d+(v) = Σ d-(v) = m</code></strong></li>
+<li><strong>无向图握手定理</strong>：无向图 <code>G = &lt;V, E&gt;</code> 中所有顶点的度数之和等于<strong>边数 m 的 2 倍</strong>（因为每条边恰好为两个端点各贡献 1 度）：
+<strong><code>Σ d(v) = 2m</code></strong></li>
+<li><strong>有向图握手定理</strong>：有向图 <code>D = &lt;V, E&gt;</code> 中所有顶点的<strong>入度之和等于出度之和，且等于总边数 m</strong>：
+<strong><code>Σ d+(v) = Σ d-(v) = m</code></strong></li>
 <li><strong>握手定理的重要推论</strong>：在任何无向图或有向图中，<strong>度数为奇数的顶点（奇度顶点）的个数必定是偶数</strong>。</li>
 </ul>
 </li>
@@ -530,11 +393,12 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="4-2-通路、回路与图的连通性"><a href="#4-2-通路、回路与图的连通性" class="headerlink" title="4.2 通路、回路与图的连通性"></a>4.2 通路、回路与图的连通性</h3><ol>
+<h3 id="42-通路回路与图的连通性"><a aria-hidden="true" tabindex="-1" href="#42-通路回路与图的连通性"><span class="icon icon-link"></span></a>4.2 通路、回路与图的连通性</h3>
+<ol>
 <li><strong>通路（Walk）与回路（Closed Walk）的分类</strong><ul>
-<li><strong>通路 &#x2F; 回路</strong>：顶点与边交替出现的序列，起点与终点相同的通路称为回路，包含的边数称为<strong>长度</strong>。</li>
-<li><strong>简单通路（迹，Trail）&#x2F; 简单回路（闭迹）</strong>：<strong>所有边互不重复</strong>的通路 &#x2F; 回路（允许顶点重复）。</li>
-<li><strong>初级通路（路径，Path）&#x2F; 初级回路（圈，Cycle）</strong>：<strong>所有顶点互不重复</strong>（从而边也必不重复）的通路 &#x2F; 回路（初级回路仅起点与终点重合）。在 n 阶图中，任何初级通路长度不超过 <code>n - 1</code>，任何初级回路长度不超过 <code>n</code>。</li>
+<li><strong>通路 / 回路</strong>：顶点与边交替出现的序列，起点与终点相同的通路称为回路，包含的边数称为<strong>长度</strong>。</li>
+<li><strong>简单通路（迹，Trail）/ 简单回路（闭迹）</strong>：<strong>所有边互不重复</strong>的通路 / 回路（允许顶点重复）。</li>
+<li><strong>初级通路（路径，Path）/ 初级回路（圈，Cycle）</strong>：<strong>所有顶点互不重复</strong>（从而边也必不重复）的通路 / 回路（初级回路仅起点与终点重合）。在 n 阶图中，任何初级通路长度不超过 <code>n - 1</code>，任何初级回路长度不超过 <code>n</code>。</li>
 </ul>
 </li>
 <li><strong>无向图的连通性、割点与桥</strong><ul>
@@ -556,7 +420,8 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="4-3-欧拉图与哈密顿图"><a href="#4-3-欧拉图与哈密顿图" class="headerlink" title="4.3 欧拉图与哈密顿图"></a>4.3 欧拉图与哈密顿图</h3><table>
+<h3 id="43-欧拉图与哈密顿图"><a aria-hidden="true" tabindex="-1" href="#43-欧拉图与哈密顿图"><span class="icon icon-link"></span></a>4.3 欧拉图与哈密顿图</h3>
+<table>
 <thead>
 <tr>
 <th align="left">对比维度</th>
@@ -597,7 +462,9 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 <li><strong>哈密顿图的必要条件与充分条件</strong><ul>
 <li><strong>必要条件（考题中用于证明“某个图不是哈密顿图”的核心武器）</strong>：<ul>
-<li><strong>定理</strong>：若无向图 <code>G = &lt;V, E&gt;</code> 是哈密顿图，则对于顶点集 V 的<strong>任意非空真子集 <code>V1</code></strong>，从 G 中删去 <code>V1</code> 后所得剩余子图的连通分支数 <code>p(G - V1)</code> 必定满足：<br><strong><code>p(G - V1) ≤ |V1|</code></strong><br>（若仅含哈密顿通路，则满足 <strong><code>p(G - V1) ≤ |V1| + 1</code></strong>）。</li>
+<li><strong>定理</strong>：若无向图 <code>G = &lt;V, E&gt;</code> 是哈密顿图，则对于顶点集 V 的<strong>任意非空真子集 <code>V1</code></strong>，从 G 中删去 <code>V1</code> 后所得剩余子图的连通分支数 <code>p(G - V1)</code> 必定满足：
+<strong><code>p(G - V1) ≤ |V1|</code></strong>
+（若仅含哈密顿通路，则满足 <strong><code>p(G - V1) ≤ |V1| + 1</code></strong>）。</li>
 <li><strong>推论 1</strong>：若图中存在<strong>割点</strong>（即取 <code>|V1| = 1</code> 时 <code>p(G - V1) ≥ 2 &gt; 1</code>）或<strong>桥</strong>，则该图<strong>一定不是哈密顿图</strong>。</li>
 <li><strong>推论 2（二分图判定）</strong>：设二分图 <code>G = &lt;V1, V2, E&gt;</code>（不妨设 <code>|V1| ≤ |V2|</code>），由于哈密顿回路必须在 <code>V1</code> 和 <code>V2</code> 之间交替穿梭：<ul>
 <li>若 <code>|V1| ≠ |V2|</code>，则 G <strong>一定不是哈密顿图</strong>；</li>
@@ -615,16 +482,22 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="4-4-平面图、无向树与最优二叉树"><a href="#4-4-平面图、无向树与最优二叉树" class="headerlink" title="4.4 平面图、无向树与最优二叉树"></a>4.4 平面图、无向树与最优二叉树</h3><ol>
+<h3 id="44-平面图无向树与最优二叉树"><a aria-hidden="true" tabindex="-1" href="#44-平面图无向树与最优二叉树"><span class="icon icon-link"></span></a>4.4 平面图、无向树与最优二叉树</h3>
+<ol>
 <li><strong>平面图（Planar Graph）与欧拉公式</strong><ul>
-<li><strong>平面图与面的次数定理</strong>：能画在平面上使任何两条边除端点外均不相交的图称为平面图。平面图的边将平面划分为若干个区域，称为<strong>面（Face，包含 1 个无限面 &#x2F; 外部面和若干个有限面 &#x2F; 内部面）</strong>。包围面 <code>Ri</code> 的闭回路长度称为该<strong>面的次数 <code>deg(Ri)</code></strong>（其内部悬挂的桥计算 2 次）。所有面的次数之和等于边数的 2 倍：<br><strong><code>Σ deg(Ri) = 2m</code></strong></li>
-<li><strong>平面图欧拉公式</strong>：设 G 是具有 <code>n</code> 个顶点、<code>m</code> 条边、<code>r</code> 个面的<strong>连通平面图</strong>，则恒有：<br><strong><code>n - m + r = 2</code></strong><br>（若平面图 G 有 <code>k</code> 个连通分支，则广义欧拉公式为 <strong><code>n - m + r = k + 1</code></strong>）。</li>
+<li><strong>平面图与面的次数定理</strong>：能画在平面上使任何两条边除端点外均不相交的图称为平面图。平面图的边将平面划分为若干个区域，称为<strong>面（Face，包含 1 个无限面 / 外部面和若干个有限面 / 内部面）</strong>。包围面 <code>Ri</code> 的闭回路长度称为该<strong>面的次数 <code>deg(Ri)</code></strong>（其内部悬挂的桥计算 2 次）。所有面的次数之和等于边数的 2 倍：
+<strong><code>Σ deg(Ri) = 2m</code></strong></li>
+<li><strong>平面图欧拉公式</strong>：设 G 是具有 <code>n</code> 个顶点、<code>m</code> 条边、<code>r</code> 个面的<strong>连通平面图</strong>，则恒有：
+<strong><code>n - m + r = 2</code></strong>
+（若平面图 G 有 <code>k</code> 个连通分支，则广义欧拉公式为 <strong><code>n - m + r = k + 1</code></strong>）。</li>
 <li><strong>简单平面图的边数上限不等式（用于证明非平面图）</strong>：<ul>
-<li>设 G 为 <code>n ≥ 3</code> 的连通<strong>简单平面图</strong>，因无自环和平行边，每个面至少由 3 条边围成（<code>deg(Ri) ≥ 3</code>），故 <code>2m = Σ deg(Ri) ≥ 3r</code>，代入 <code>r = 2 - n + m</code> 可得：<br><strong><code>m ≤ 3n - 6</code></strong></li>
-<li>若连通简单平面图 G 中<strong>不含三角形（每个面至少由 4 条边围成，<code>deg(Ri) ≥ 4</code>，例如所有二分图）</strong>，则同理可得更紧的上限：<br><strong><code>m ≤ 2n - 4</code></strong></li>
+<li>设 G 为 <code>n ≥ 3</code> 的连通<strong>简单平面图</strong>，因无自环和平行边，每个面至少由 3 条边围成（<code>deg(Ri) ≥ 3</code>），故 <code>2m = Σ deg(Ri) ≥ 3r</code>，代入 <code>r = 2 - n + m</code> 可得：
+<strong><code>m ≤ 3n - 6</code></strong></li>
+<li>若连通简单平面图 G 中<strong>不含三角形（每个面至少由 4 条边围成，<code>deg(Ri) ≥ 4</code>，例如所有二分图）</strong>，则同理可得更紧的上限：
+<strong><code>m ≤ 2n - 4</code></strong></li>
 </ul>
 </li>
-<li><strong>库拉托夫斯基（Kuratowski）定理</strong>：一个图是平面图，<strong>当且仅当它不包含与 <code>K5</code>（5 阶完全图，n&#x3D;5, m&#x3D;10 &gt; 3×5-6&#x3D;9）或 <code>K3,3</code>（完全二分图，n&#x3D;6, m&#x3D;9 &gt; 2×6-4&#x3D;8）同胚（或可收缩）的子图</strong>。<code>K5</code> 是顶点数最少的非平面图，<code>K3,3</code> 是边数最少的非平面图。</li>
+<li><strong>库拉托夫斯基（Kuratowski）定理</strong>：一个图是平面图，<strong>当且仅当它不包含与 <code>K5</code>（5 阶完全图，n=5, m=10 &gt; 3×5-6=9）或 <code>K3,3</code>（完全二分图，n=6, m=9 &gt; 2×6-4=8）同胚（或可收缩）的子图</strong>。<code>K5</code> 是顶点数最少的非平面图，<code>K3,3</code> 是边数最少的非平面图。</li>
 <li><strong>平面图的对偶图（<code>G*</code>）與着色定理</strong>：<ul>
 <li>对偶图的顶点数 <code>n* = r</code>（原图面数）、边数 <code>m* = m</code>（原图边数）、面数 <code>r* = n</code>（当原图连通时）。</li>
 <li><strong>四色定理</strong>：任何平面图的顶点着色数（相邻顶点颜色不同所需的最少颜色数 <code>χ(G)</code>）均满足 <strong><code>χ(G) ≤ 4</code></strong>。</li>
@@ -636,7 +509,7 @@ btf.addGlobalFn('pjaxSend', () => {
 <p><img width="860" height="360" src="/img/posts/dm-ch4-planar-tree.svg" alt="平面图欧拉公式与哈夫曼树构造" loading="lazy" decoding="async"></p>
 <ol start="2">
 <li><strong>无向树的六个等价定义与最小生成树</strong><ul>
-<li><strong>无向树（Tree）</strong>：连通且不含回路的无向图（多个互不相交的无向树构成森林；树中度数为 1 的顶点称为<strong>树叶</strong>，度数 ≥ 2 的顶点称为<strong>分支点 &#x2F; 内点</strong>）。</li>
+<li><strong>无向树（Tree）</strong>：连通且不含回路的无向图（多个互不相交的无向树构成森林；树中度数为 1 的顶点称为<strong>树叶</strong>，度数 ≥ 2 的顶点称为<strong>分支点 / 内点</strong>）。</li>
 <li><strong>n 阶无向树 <code>T = &lt;V, E&gt;</code> 的六个等价充要条件</strong>（核心恒等式：<strong>边数 <code>m = n - 1</code></strong>）：<ol>
 <li>G 连通且无回路；</li>
 <li>G 无回路且 <strong><code>m = n - 1</code></strong>；</li>
@@ -648,16 +521,20 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 <li><strong>树叶个数计算题型</strong>：利用<strong>边数 <code>m = n - 1</code></strong> 与<strong>握手定理 <code>Σ d(v) = 2m = 2(n - 1)</code></strong> 联立求解。</li>
 <li><strong>生成树与最小生成树（MST）</strong>：<ul>
-<li>连通无向图 G 的生成子图若是一棵树，则称为 G 的<strong>生成树</strong>（含 <strong><code>n - 1</code> 条树枝</strong>，其余不在生成树中的 <strong><code>m - n + 1</code> 条边称为弦 &#x2F; 连枝</strong>，也等于<strong>基本回路系统中的基本回路个数</strong>）。</li>
+<li>连通无向图 G 的生成子图若是一棵树，则称为 G 的<strong>生成树</strong>（含 <strong><code>n - 1</code> 条树枝</strong>，其余不在生成树中的 <strong><code>m - n + 1</code> 条边称为弦 / 连枝</strong>，也等于<strong>基本回路系统中的基本回路个数</strong>）。</li>
 <li><strong>Kruskal 算法（避圈法）</strong>：将所有边按权值从小到大排序，依次选入不与已选边构成回路的最小权边，直到选满 <code>n - 1</code> 条树枝。</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong>根树、正则 m 叉树与最优二叉树（哈夫曼树）</strong><ul>
-<li><strong>正则 m 叉树（完全 m 叉树）的分支点与树叶数量关系</strong>：<br>若一棵正则 m 叉树（每个分支点都恰好有 m 个儿子）共有 <strong><code>i</code> 个分支点</strong>和 <strong><code>t</code> 片树叶</strong>，则总顶点数 <code>n = i + t</code>，总边数 <code>m_edge = m × i = n - 1 = i + t - 1</code>，化简即得必考公式：<br><strong><code>(m - 1) × i = t - 1</code></strong><br>特别地，对于<strong>正则二叉树（<code>m = 2</code>）</strong>，恒有：<strong>树叶数 <code>t = i + 1</code></strong>（叶子数永远比二分支节点数多 1）。</li>
+<li><strong>正则 m 叉树（完全 m 叉树）的分支点与树叶数量关系</strong>：
+若一棵正则 m 叉树（每个分支点都恰好有 m 个儿子）共有 <strong><code>i</code> 个分支点</strong>和 <strong><code>t</code> 片树叶</strong>，则总顶点数 <code>n = i + t</code>，总边数 <code>m_edge = m × i = n - 1 = i + t - 1</code>，化简即得必考公式：
+<strong><code>(m - 1) × i = t - 1</code></strong>
+特别地，对于<strong>正则二叉树（<code>m = 2</code>）</strong>，恒有：<strong>树叶数 <code>t = i + 1</code></strong>（叶子数永远比二分支节点数多 1）。</li>
 <li><strong>带权路径长度（WPL）与哈夫曼（Huffman）算法</strong>：<ul>
-<li>给定 <code>t</code> 个叶节点的权值 <code>&#123;w1, w2, ..., wt&#125;</code>，设叶节点 <code>wi</code> 到根节点的路径长度（层数，根为第 0 层）为 <code>li</code>，则树的带权路径长度为：<br><strong><code>WPL = Σ (wi × li)</code></strong>（数值上也等于<strong>所有非叶分支节点的权值之和</strong>）。</li>
+<li>给定 <code>t</code> 个叶节点的权值 <code>{w1, w2, ..., wt}</code>，设叶节点 <code>wi</code> 到根节点的路径长度（层数，根为第 0 层）为 <code>li</code>，则树的带权路径长度为：
+<strong><code>WPL = Σ (wi × li)</code></strong>（数值上也等于<strong>所有非叶分支节点的权值之和</strong>）。</li>
 <li><strong>哈夫曼构造法</strong>：每次从当前森林中选出<strong>权值最小的两棵树</strong>作为左右子树合并为一棵新树，新树根节点的权值为左右子树根权值之和；重复合并 <strong><code>t - 1</code> 次</strong>后得到的正则二叉树即为使 WPL 最小的<strong>最优二叉树（哈夫曼树）</strong>。由左分支标 <code>0</code>、右分支标 <code>1</code> 即可得到每个叶节点的<strong>最佳前缀码</strong>。</li>
 </ul>
 </li>
@@ -665,7 +542,9 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h2 id="第五章-代数结构"><a href="#第五章-代数结构" class="headerlink" title="第五章 代数结构"></a>第五章 代数结构</h2><h3 id="5-1-二元运算与特殊元素"><a href="#5-1-二元运算与特殊元素" class="headerlink" title="5.1 二元运算与特殊元素"></a>5.1 二元运算与特殊元素</h3><ol>
+<h2 id="第五章-代数结构"><a aria-hidden="true" tabindex="-1" href="#第五章-代数结构"><span class="icon icon-link"></span></a>第五章 代数结构</h2>
+<h3 id="51-二元运算与特殊元素"><a aria-hidden="true" tabindex="-1" href="#51-二元运算与特殊元素"><span class="icon icon-link"></span></a>5.1 二元运算与特殊元素</h3>
+<ol>
 <li><strong>代数系统与二元运算的基本性质</strong><ul>
 <li><strong>代数系统（Algebraic System）</strong>：非空集合 S（称为载体）连同定义在 S 上的若干个封闭运算 <code>f1, f2, ..., fk</code> 所组成的系统，记作 <code>&lt;S, f1, f2, ..., fk&gt;</code>。</li>
 <li><strong>二元运算的封闭性（Closure）</strong>：对任意 <code>x, y ∈ S</code>，运算结果 <code>x * y</code> 都有定义且唯一地属于集合 <code>S</code>（运算表中所有单元格的值均属于 S）。</li>
@@ -680,13 +559,14 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ul>
 </li>
-<li><strong>三类特殊元素：单位元（幺元）、零元与逆元</strong><br>设 <code>*</code> 为集合 S 上的二元运算：</li>
+<li><strong>三类特殊元素：单位元（幺元）、零元与逆元</strong>
+设 <code>*</code> 为集合 S 上的二元运算：</li>
 </ol>
 <table>
 <thead>
 <tr>
 <th align="left">特殊元素</th>
-<th align="left">左 &#x2F; 右元素定义</th>
+<th align="left">左 / 右元素定义</th>
 <th align="left">运算表中的直观判定特征</th>
 <th align="left">唯一性定理</th>
 </tr>
@@ -701,7 +581,7 @@ btf.addGlobalFn('pjaxSend', () => {
 <td align="left"><strong>2. 零元（<code>θ</code>）</strong></td>
 <td align="left">• <strong>左零元 <code>θl</code></strong>：<code>∀x (θl * x = θl)</code><br>• <strong>右零元 <code>θr</code></strong>：<code>∀x (x * θr = θr)</code></td>
 <td align="left">• <strong><code>θl</code> 所在行</strong>所有元素全为 <code>θl</code><br>• <strong><code>θr</code> 所在列</strong>所有元素全为 <code>θr</code></td>
-<td align="left">若既有左零元 <code>θl</code> 又有右零元 <code>θr</code>，则必有 <strong><code>θl = θr = θ</code></strong>，且<strong>零元 <code>θ</code> 唯一</strong>（当 &#96;</td>
+<td align="left">若既有左零元 <code>θl</code> 又有右零元 <code>θr</code>，则必有 <strong><code>θl = θr = θ</code></strong>，且<strong>零元 <code>θ</code> 唯一</strong>（当 `</td>
 </tr>
 <tr>
 <td align="left"><strong>3. 逆元（<code>x^-1</code>）</strong></td>
@@ -711,8 +591,10 @@ btf.addGlobalFn('pjaxSend', () => {
 </tr>
 </tbody></table>
 <hr>
-<h3 id="5-2-半群、独异点与群"><a href="#5-2-半群、独异点与群" class="headerlink" title="5.2 半群、独异点与群"></a>5.2 半群、独异点与群</h3><ol>
-<li><strong>代数系统的五层公理递进关系</strong><br>根据二元运算 <code>*</code> 所满足公理的由弱到强，代数系统 <code>&lt;G, *&gt;</code> 依次演进为以下五类结构：<ol>
+<h3 id="52-半群独异点与群"><a aria-hidden="true" tabindex="-1" href="#52-半群独异点与群"><span class="icon icon-link"></span></a>5.2 半群、独异点与群</h3>
+<ol>
+<li><strong>代数系统的五层公理递进关系</strong>
+根据二元运算 <code>*</code> 所满足公理的由弱到强，代数系统 <code>&lt;G, *&gt;</code> 依次演进为以下五类结构：<ol>
 <li><strong>广群（Magma）</strong>：仅满足二元运算<strong>封闭性</strong>。</li>
 <li><strong>半群（Semigroup）</strong>：广群 + <strong>结合律</strong>（如正整数加法 <code>&lt;Z+, +&gt;</code>、n 阶矩阵乘法）。</li>
 <li><strong>独异点（含幺半群，Monoid）</strong>：半群 + <strong>存在单位元（幺元 <code>e</code>）</strong>（如自然数加法 <code>&lt;N, +, 0&gt;</code>、字符串连接运算）。</li>
@@ -731,16 +613,17 @@ btf.addGlobalFn('pjaxSend', () => {
 <li><strong>群中幂等元唯一</strong>：群 G 中<strong>唯一的幂等元就是单位元 <code>e</code></strong>（因为若 <code>x * x = x = x * e</code>，由消去律立得 <code>x = e</code>）。</li>
 <li><strong>元素的阶（Order <code>|a|</code>）</strong>：设 <code>a ∈ G</code>，使 <strong><code>a^k = e</code></strong> 成立的<strong>最小正整数 <code>k</code></strong> 称为元素 <code>a</code> 的阶，记作 <code>|a| = k</code>（若不存在这样的正整数，则称 <code>a</code> 为无限阶元）。<ul>
 <li><strong>核心性质 1</strong>：<code>a^m = e</code> 当且仅当 <strong><code>|a|</code> 整除 <code>m</code></strong>（即 <code>|a| | m</code>），且元素与它的逆元同阶（<strong><code>|a| = |a^-1|</code></strong>）。</li>
-<li><strong>核心性质 2</strong>：若 <code>|a| = n</code>，则对任意正整数 <code>k</code>，幂元素 <code>a^k</code> 的阶为：<br><strong><code>|a^k| = n / gcd(k, n)</code></strong></li>
+<li><strong>核心性质 2</strong>：若 <code>|a| = n</code>，则对任意正整数 <code>k</code>，幂元素 <code>a^k</code> 的阶为：
+<strong><code>|a^k| = n / gcd(k, n)</code></strong></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong>循环群（Cyclic Group）及其生成元</strong><ul>
-<li><strong>定义</strong>：若群 G 中存在一个元素 <code>g</code>，使得 G 中任意元素都能表示为 <code>g</code> 的整数次幂（<code>G = &#123; g^k | k ∈ Z &#125;</code>），则称 G 为<strong>循环群</strong>，记作 <strong><code>G = &lt;g&gt;</code></strong>，称 <code>g</code> 为群 G 的<strong>生成元</strong>。任何循环群都满足交换律，故<strong>循环群必为阿贝尔群</strong>。</li>
+<li><strong>定义</strong>：若群 G 中存在一个元素 <code>g</code>，使得 G 中任意元素都能表示为 <code>g</code> 的整数次幂（<code>G = { g^k | k ∈ Z }</code>），则称 G 为<strong>循环群</strong>，记作 <strong><code>G = &lt;g&gt;</code></strong>，称 <code>g</code> 为群 G 的<strong>生成元</strong>。任何循环群都满足交换律，故<strong>循环群必为阿贝尔群</strong>。</li>
 <li><strong>两类标准循环群的生成元个数（必考）</strong>：<ol>
 <li><strong>无限循环群</strong>（同构于整数加法群 <code>&lt;Z, +&gt;</code>）：<strong>有且仅有 2 个生成元</strong>，即 <strong><code>g</code> 和 <code>g^-1</code></strong>（在 <code>&lt;Z, +&gt;</code> 中对应 <code>1</code> 和 <code>-1</code>）。</li>
-<li><strong><code>n</code> 阶有限循环群</strong>（<code>G = &#123;e, g, g^2, ..., g^(n-1)&#125;</code>，同构于模 n 加法群 <code>&lt;Zn, +n&gt;</code>）：元素 <strong><code>g^r</code> 是 G 的生成元，当且仅当 <code>gcd(r, n) = 1</code>（<code>r</code> 与 <code>n</code> 互质）</strong>。因此，<code>n</code> 阶循环群的生成元个数恰好等于<strong>欧拉函数 <code>φ(n)</code></strong>（小于等于 <code>n</code> 且与 <code>n</code> 互质的正整数个数）。</li>
+<li><strong><code>n</code> 阶有限循环群</strong>（<code>G = {e, g, g^2, ..., g^(n-1)}</code>，同构于模 n 加法群 <code>&lt;Zn, +n&gt;</code>）：元素 <strong><code>g^r</code> 是 G 的生成元，当且仅当 <code>gcd(r, n) = 1</code>（<code>r</code> 与 <code>n</code> 互质）</strong>。因此，<code>n</code> 阶循环群的生成元个数恰好等于<strong>欧拉函数 <code>φ(n)</code></strong>（小于等于 <code>n</code> 且与 <code>n</code> 互质的正整数个数）。</li>
 </ol>
 </li>
 </ul>
@@ -751,10 +634,12 @@ btf.addGlobalFn('pjaxSend', () => {
 </ul>
 </li>
 <li><strong>陪集与拉格朗日定理（有限群核心定理）</strong>：<ul>
-<li>设 <code>H ≤ G</code>，对任意 <code>a ∈ G</code>，集合 <code>aH = &#123; a * h | h ∈ H &#125;</code> 称为 H 的一个左陪集。所有左陪集构成群 G 的一个<strong>划分</strong>，且每个陪集的元素个数都等于 <code>|H|</code>。</li>
-<li><strong>拉格朗日定理</strong>：设 G 是有限群，<code>H</code> 是 G 的子群，则<strong>子群 H 的阶（<code>|H|</code>）以及群中任意元素的阶（<code>|a|</code>）都必定整除群 G 的阶（<code>|G|</code>）</strong>：<br><strong><code>|G| = |H| × [G : H]</code></strong><br>（其中 <code>[G : H]</code> 为不同左陪集的个数，称为子群 H 在 G 中的指数）。</li>
+<li>设 <code>H ≤ G</code>，对任意 <code>a ∈ G</code>，集合 <code>aH = { a * h | h ∈ H }</code> 称为 H 的一个左陪集。所有左陪集构成群 G 的一个<strong>划分</strong>，且每个陪集的元素个数都等于 <code>|H|</code>。</li>
+<li><strong>拉格朗日定理</strong>：设 G 是有限群，<code>H</code> 是 G 的子群，则<strong>子群 H 的阶（<code>|H|</code>）以及群中任意元素的阶（<code>|a|</code>）都必定整除群 G 的阶（<code>|G|</code>）</strong>：
+<strong><code>|G| = |H| × [G : H]</code></strong>
+（其中 <code>[G : H]</code> 为不同左陪集的个数，称为子群 H 在 G 中的指数）。</li>
 <li><strong>重要推论</strong>：<ol>
-<li><strong>素数阶群（<code>|G| = p</code>，p 为质数）必为循环群</strong>（进而必为阿贝尔群），且除平凡子群 <code>&#123;e&#125;</code> 和 <code>G</code> 外没有任何真子群，其中<strong>除单位元 <code>e</code> 以外的其余 <code>p - 1</code> 个元素全都是生成元</strong>。</li>
+<li><strong>素数阶群（<code>|G| = p</code>，p 为质数）必为循环群</strong>（进而必为阿贝尔群），且除平凡子群 <code>{e}</code> 和 <code>G</code> 外没有任何真子群，其中<strong>除单位元 <code>e</code> 以外的其余 <code>p - 1</code> 个元素全都是生成元</strong>。</li>
 <li><strong>小于等于 5 阶的群全部都是阿贝尔群</strong>；最小的非交换群（非阿贝尔群）是 <strong>6 阶三次对称群 <code>S3</code></strong>。</li>
 </ol>
 </li>
@@ -764,9 +649,10 @@ btf.addGlobalFn('pjaxSend', () => {
 </li>
 </ol>
 <hr>
-<h3 id="5-3-格与布尔代数"><a href="#5-3-格与布尔代数" class="headerlink" title="5.3 格与布尔代数"></a>5.3 格与布尔代数</h3><ol>
+<h3 id="53-格与布尔代数"><a aria-hidden="true" tabindex="-1" href="#53-格与布尔代数"><span class="icon icon-link"></span></a>5.3 格与布尔代数</h3>
+<ol>
 <li><strong>格（Lattice）的偏序定义与代数定义</strong><ul>
-<li><strong>偏序定义</strong>：设 <code>&lt;L, ≼&gt;</code> 是偏序集，若 L 中<strong>任意两个元素 <code>&#123;a, b&#125;</code> 都既有最小上界（上确界 <code>sup&#123;a, b&#125;</code>，记作并 <code>a ∨ b</code>）又有最大下界（下确界 <code>inf&#123;a, b&#125;</code>，记作交 <code>a ∧ b</code>）</strong>，则称 <code>&lt;L, ≼&gt;</code> 为一个<strong>格</strong>（全序集、整除格 <code>&lt;Sn, |&gt;</code>、幂集格 <code>&lt;P(A), ⊆&gt;</code> 都是格）。</li>
+<li><strong>偏序定义</strong>：设 <code>&lt;L, ≼&gt;</code> 是偏序集，若 L 中<strong>任意两个元素 <code>{a, b}</code> 都既有最小上界（上确界 <code>sup{a, b}</code>，记作并 <code>a ∨ b</code>）又有最大下界（下确界 <code>inf{a, b}</code>，记作交 <code>a ∧ b</code>）</strong>，则称 <code>&lt;L, ≼&gt;</code> 为一个<strong>格</strong>（全序集、整除格 <code>&lt;Sn, |&gt;</code>、幂集格 <code>&lt;P(A), ⊆&gt;</code> 都是格）。</li>
 <li><strong>代数定义</strong>：设 <code>&lt;L, ∧, ∨&gt;</code> 是具有两个二元运算的代数系统，若运算 <code>∧</code> 和 <code>∨</code> 满足以下三组定律（共 6 条等式），则构成格：<ol>
 <li><strong>交换律</strong>：<code>a ∧ b = b ∧ a</code> ， <code>a ∨ b = b ∨ a</code></li>
 <li><strong>结合律</strong>：<code>(a ∧ b) ∧ c = a ∧ (b ∧ c)</code> ， <code>(a ∨ b) ∨ c = a ∨ (b ∨ c)</code></li>
@@ -783,8 +669,9 @@ btf.addGlobalFn('pjaxSend', () => {
 <p><img width="860" height="360" src="/img/posts/dm-ch5-lattice-boolean.svg" alt="格与布尔代数非分配格五元构型与判定路径" loading="lazy" decoding="async"></p>
 <ul>
 <li><strong>分配格（Distributive Lattice）</strong>：<ul>
-<li><strong>定义</strong>：在格 <code>&lt;L, ∧, ∨&gt;</code> 中，若运算 <code>∧</code> 和 <code>∨</code> <strong>互相满足分配律</strong>：<br><code>a ∧ (b ∨ c) = (a ∧ b) ∨ (a ∧ c)</code> 且 <code>a ∨ (b ∧ c) = (a ∨ b) ∧ (a ∨ c)</code>，则称 L 为分配格（任何普通的格只满足分配不等式，不一定满足分配律）。</li>
-<li><strong>分配格的哈斯图充要判定定理</strong>：一个格是分配格，<strong>当且仅当它不包含与五元钻石格（<code>M3</code>）或五元五边形格（<code>N5</code>）同构的子格</strong>（推论：所有全序集 &#x2F; 链、所有小于 5 个元素的格都是分配格）。</li>
+<li><strong>定义</strong>：在格 <code>&lt;L, ∧, ∨&gt;</code> 中，若运算 <code>∧</code> 和 <code>∨</code> <strong>互相满足分配律</strong>：
+<code>a ∧ (b ∨ c) = (a ∧ b) ∨ (a ∧ c)</code> 且 <code>a ∨ (b ∧ c) = (a ∨ b) ∧ (a ∨ c)</code>，则称 L 为分配格（任何普通的格只满足分配不等式，不一定满足分配律）。</li>
+<li><strong>分配格的哈斯图充要判定定理</strong>：一个格是分配格，<strong>当且仅当它不包含与五元钻石格（<code>M3</code>）或五元五边形格（<code>N5</code>）同构的子格</strong>（推论：所有全序集 / 链、所有小于 5 个元素的格都是分配格）。</li>
 </ul>
 </li>
 <li><strong>有界格与有补格（Complemented Lattice）</strong>：<ul>
@@ -794,144 +681,291 @@ btf.addGlobalFn('pjaxSend', () => {
 </ul>
 </li>
 <li><strong>布尔代数（Boolean Algebra）</strong>：<ul>
-<li><strong>定义</strong>：<strong>既有补、又分配的有界格（即有补分配格）<strong>称为</strong>布尔代数</strong>，将每个元素 <code>a</code> 的唯一补元记为 <code>a&#39;</code>，构成代数系统 <code>&lt;B, ∧, ∨, &#39;, 0, 1&gt;</code>（命题公式等价类系统、集合幂集系统 <code>&lt;P(S), ∩, ∪, ~, ∅, S&gt;</code>、开关电路 <code>&#123;0, 1&#125;</code> 都是布尔代数）。</li>
-<li><strong>有限布尔代数的结构定理（Stone 表示定理有限情形）</strong>：<br>任何<strong>有限布尔代数</strong>的元素个数必定是 <strong>2 的幂次 <code>2^n</code>（<code>n ∈ Z+</code>）</strong>，且任意两个具有 <code>2^n</code> 个元素的有限布尔代数都同构于某个 <code>n</code> 元集合 <code>S</code> 的<strong>幂集布尔代数 <code>&lt;P(S), ∩, ∪, ~, ∅, S&gt;</code></strong>。</li>
+<li><strong>定义</strong>：<strong>既有补、又分配的有界格（即有补分配格）<strong>称为</strong>布尔代数</strong>，将每个元素 <code>a</code> 的唯一补元记为 <code>a&#39;</code>，构成代数系统 <code>&lt;B, ∧, ∨, &#39;, 0, 1&gt;</code>（命题公式等价类系统、集合幂集系统 <code>&lt;P(S), ∩, ∪, ~, ∅, S&gt;</code>、开关电路 <code>{0, 1}</code> 都是布尔代数）。</li>
+<li><strong>有限布尔代数的结构定理（Stone 表示定理有限情形）</strong>：
+任何<strong>有限布尔代数</strong>的元素个数必定是 <strong>2 的幂次 <code>2^n</code>（<code>n ∈ Z+</code>）</strong>，且任意两个具有 <code>2^n</code> 个元素的有限布尔代数都同构于某个 <code>n</code> 元集合 <code>S</code> 的<strong>幂集布尔代数 <code>&lt;P(S), ∩, ∪, ~, ∅, S&gt;</code></strong>。</li>
 <li><strong>整除格 <code>&lt;Sn, |&gt;</code> 构成布尔代数的充要条件</strong>：设 <code>Sn</code> 为正整数 <code>n</code> 的所有正因子集合，偏序为整除关系 <code>|</code>，则 <code>&lt;Sn, |&gt;</code> 是布尔代数，<strong>当且仅当 <code>n</code> 的质因数分解中没有重复的质因子</strong>（即 <code>n = p1 × p2 × ... × pk</code>，每个质因子的指数均为 1，例如 <code>S6, S10, S30</code> 是布尔代数，而 <code>S4, S12, S24</code> 因含有平方因子 <code>2^2 = 4</code> 故不是有补格，从而不是布尔代数）。</li>
 </ul>
 </li>
 </ul>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/">https://vvvvvenxo.github.io/2026/10/25/【计算机基础】离散数学/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/">离散数学</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E7%90%86%E9%80%BB%E8%BE%91/">数理逻辑</a><a class="post-meta__tags" href="/tags/%E9%9B%86%E5%90%88%E8%AE%BA/">集合论</a><a class="post-meta__tags" href="/tags/%E5%9B%BE%E8%AE%BA/">图论</a><a class="post-meta__tags" href="/tags/%E4%BB%A3%E6%95%B0%E7%BB%93%E6%9E%84/">代数结构</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="【计算机基础】数据结构"><img class="cover" src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-thumb.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post" loading="lazy" decoding="async"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【计算机基础】数据结构</div></div><div class="info-2"><div class="info-item-1">基于严蔚敏《数据结构》与 408 统考考点的系统复习笔记：涵盖线性表（顺序表与链表）、栈与循环队列、KMP 模式匹配、树与二叉树、图论算法、查找（AVL/红黑树/B+树/散列表）及内外部排序体系。</div></div></div></a><a class="pagination-related" href="/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" title="【计算机基础】计算机网络"><img class="cover" src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-thumb.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post" loading="lazy" decoding="async"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【计算机基础】计算机网络</div></div><div class="info-2"><div class="info-item-1">基于《计算机网络（第 7 版）》的复习笔记：围绕五层协议体系结构（物理层、数据链路层、网络层、运输层、应用层），记录各层的核心概念、工作原理与协议机制。</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">138</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div class="profile-note">
-  <p>软件工程背景，专注游戏客户端开发。</p>
-  <p><strong>关注</strong> Unity 架构、网络同步与实时渲染。</p>
-  <p class="profile-note__meta">游戏开发 · AI 工具 · 图形技术</p>
-</div>
-</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E6%95%B0%E7%90%86%E9%80%BB%E8%BE%91"><span class="toc-text">第一章 数理逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%91%BD%E9%A2%98%E4%B8%8E%E4%BA%94%E7%A7%8D%E5%9F%BA%E6%9C%AC%E8%81%94%E7%BB%93%E8%AF%8D"><span class="toc-text">1.1 命题与五种基本联结词</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%91%BD%E9%A2%98%E5%85%AC%E5%BC%8F%E3%80%81%E7%AD%89%E5%80%BC%E6%BC%94%E7%AE%97%E4%B8%8E%E4%B8%BB%E8%8C%83%E5%BC%8F"><span class="toc-text">1.2 命题公式、等值演算与主范式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%91%BD%E9%A2%98%E9%80%BB%E8%BE%91%E7%9A%84%E6%8E%A8%E7%90%86%E7%90%86%E8%AE%BA"><span class="toc-text">1.3 命题逻辑的推理理论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E4%B8%80%E9%98%B6%E8%B0%93%E8%AF%8D%E9%80%BB%E8%BE%91"><span class="toc-text">1.4 一阶谓词逻辑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E9%9B%86%E5%90%88%E4%B8%8E%E4%BA%8C%E5%85%83%E5%85%B3%E7%B3%BB"><span class="toc-text">第二章 集合与二元关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E9%9B%86%E5%90%88%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%BF%90%E7%AE%97%E4%B8%8E%E5%B9%82%E9%9B%86"><span class="toc-text">2.1 集合的基本运算与幂集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E7%AC%9B%E5%8D%A1%E5%B0%94%E7%A7%AF%E4%B8%8E%E4%BA%8C%E5%85%83%E5%85%B3%E7%B3%BB%E7%9A%84%E8%A1%A8%E7%A4%BA"><span class="toc-text">2.2 笛卡尔积与二元关系的表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E4%BA%8C%E5%85%83%E5%85%B3%E7%B3%BB%E7%9A%84%E4%BA%94%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8"><span class="toc-text">2.3 二元关系的五种基本性质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E5%85%B3%E7%B3%BB%E7%9A%84%E9%97%AD%E5%8C%85%EF%BC%88Closure%EF%BC%89"><span class="toc-text">2.4 关系的闭包（Closure）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E7%AD%89%E4%BB%B7%E5%85%B3%E7%B3%BB%E4%B8%8E%E5%81%8F%E5%BA%8F%E5%85%B3%E7%B3%BB"><span class="toc-text">2.5 等价关系与偏序关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%87%BD%E6%95%B0%E4%B8%8E%E9%9B%86%E5%90%88%E5%9F%BA%E6%95%B0"><span class="toc-text">第三章 函数与集合基数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9A%E4%B9%89%E4%B8%8E%E4%B8%89%E7%B1%BB%E7%89%B9%E6%AE%8A%E6%80%A7%E8%B4%A8"><span class="toc-text">3.1 函数的定义与三类特殊性质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%A4%8D%E5%90%88%E5%87%BD%E6%95%B0%E4%B8%8E%E9%80%86%E5%87%BD%E6%95%B0"><span class="toc-text">3.2 复合函数与逆函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E9%9B%86%E5%90%88%E7%9A%84%E7%AD%89%E5%8A%BF%E4%B8%8E%E5%9F%BA%E6%95%B0"><span class="toc-text">3.3 集合的等势与基数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%9B%BE%E8%AE%BA%E4%B8%8E%E6%A0%91"><span class="toc-text">第四章 图论与树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%9B%BE%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E6%8F%A1%E6%89%8B%E5%AE%9A%E7%90%86"><span class="toc-text">4.1 图的基本概念与握手定理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E9%80%9A%E8%B7%AF%E3%80%81%E5%9B%9E%E8%B7%AF%E4%B8%8E%E5%9B%BE%E7%9A%84%E8%BF%9E%E9%80%9A%E6%80%A7"><span class="toc-text">4.2 通路、回路与图的连通性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E6%AC%A7%E6%8B%89%E5%9B%BE%E4%B8%8E%E5%93%88%E5%AF%86%E9%A1%BF%E5%9B%BE"><span class="toc-text">4.3 欧拉图与哈密顿图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%B9%B3%E9%9D%A2%E5%9B%BE%E3%80%81%E6%97%A0%E5%90%91%E6%A0%91%E4%B8%8E%E6%9C%80%E4%BC%98%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="toc-text">4.4 平面图、无向树与最优二叉树</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E4%BB%A3%E6%95%B0%E7%BB%93%E6%9E%84"><span class="toc-text">第五章 代数结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E4%BA%8C%E5%85%83%E8%BF%90%E7%AE%97%E4%B8%8E%E7%89%B9%E6%AE%8A%E5%85%83%E7%B4%A0"><span class="toc-text">5.1 二元运算与特殊元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%8D%8A%E7%BE%A4%E3%80%81%E7%8B%AC%E5%BC%82%E7%82%B9%E4%B8%8E%E7%BE%A4"><span class="toc-text">5.2 半群、独异点与群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E6%A0%BC%E4%B8%8E%E5%B8%83%E5%B0%94%E4%BB%A3%E6%95%B0"><span class="toc-text">5.3 格与布尔代数</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="【计算机基础】操作系统"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】操作系统"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="【计算机基础】操作系统">【计算机基础】操作系统</a><time datetime="2026-10-27T00:00:00.000Z" title="发表于 2026-10-27 00:00:00">2026-10-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="【计算机基础】数据结构"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】数据结构"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="【计算机基础】数据结构">【计算机基础】数据结构</a><time datetime="2026-10-26T00:00:00.000Z" title="发表于 2026-10-26 00:00:00">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】离散数学"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学">【计算机基础】离散数学</a><time datetime="2026-10-25T00:00:00.000Z" title="发表于 2026-10-25 00:00:00">2026-10-25</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"><script>(() => {
-  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
-  const option = {"data-mapping":"pathname","data-strict":"0","data-reactions-enabled":"1","data-emit-metadata":"0","data-input-position":"top","data-lang":"zh-CN"}
+</div> <!-- Prev / Next Flat Navigation --> <nav class="mt-16 grid grid-cols-1 gap-6 border-t border-[var(--border-color)] pt-8 md:grid-cols-2" aria-label="上下篇文章导航"> <div> <a href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+← 新一篇
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 【计算机基础】数据结构 </p> </a> </div> <div class="md:text-right"> <a href="/2026/10/24/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+旧一篇 →
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 【计算机基础】计算机网络 </p> </a> </div> </nav> <!-- Giscus Comments --> <section class="mt-14 border-t border-[var(--border-subtle)] pt-8" aria-label="评论区"> <div class="mb-5 flex items-baseline gap-3"> <h2 class="text-lg font-semibold text-[var(--text-primary)]">讨论与评论</h2> <span class="text-xs text-[var(--text-tertiary)]">由 GitHub Discussions 驱动</span> </div> <div id="giscus-container"></div> </section> </article> <!-- Mobile TOC Trigger & Drawer -->  <button id="toc-toggle" class="toc-trigger fixed right-6 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded transition-colors hover:bg-[var(--accent-hover)] lg:hidden" aria-label="目录" title="文章目录"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="8" y1="6" x2="21" y2="6"></line> <line x1="8" y1="12" x2="21" y2="12"></line> <line x1="8" y1="18" x2="21" y2="18"></line> <line x1="3" y1="6" x2="3.01" y2="6"></line> <line x1="3" y1="12" x2="3.01" y2="12"></line> <line x1="3" y1="18" x2="3.01" y2="18"></line> </svg> </button> <div id="toc-mobile-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-xs lg:hidden"></div> <nav id="toc-mobile" aria-label="移动端目录" class="fixed right-0 bottom-0 left-0 z-50 max-h-[64vh] translate-y-full overflow-hidden rounded-t-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl transition-transform duration-300 lg:hidden"> <div class="flex items-center justify-between border-b border-[var(--border-subtle)] p-4"> <h4 class="font-semibold text-[var(--text-primary)]">目录</h4> <button id="toc-close" class="header-action -mr-1" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> <ul class="max-h-[calc(64vh-4rem)] space-y-1 overflow-y-auto p-4 text-sm"> <li> <a href="#第一章-数理逻辑" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第一章-数理逻辑" lang="zh-CN"> 第一章 数理逻辑 </a> </li><li> <a href="#11-命题与五种基本联结词" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="11-命题与五种基本联结词" lang="zh-CN"> 1.1 命题与五种基本联结词 </a> </li><li> <a href="#12-命题公式等值演算与主范式" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="12-命题公式等值演算与主范式" lang="zh-CN"> 1.2 命题公式、等值演算与主范式 </a> </li><li> <a href="#13-命题逻辑的推理理论" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="13-命题逻辑的推理理论" lang="zh-CN"> 1.3 命题逻辑的推理理论 </a> </li><li> <a href="#14-一阶谓词逻辑" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="14-一阶谓词逻辑" lang="zh-CN"> 1.4 一阶谓词逻辑 </a> </li><li> <a href="#第二章-集合与二元关系" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第二章-集合与二元关系" lang="zh-CN"> 第二章 集合与二元关系 </a> </li><li> <a href="#21-集合的基本运算与幂集" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="21-集合的基本运算与幂集" lang="zh-CN"> 2.1 集合的基本运算与幂集 </a> </li><li> <a href="#22-笛卡尔积与二元关系的表示" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="22-笛卡尔积与二元关系的表示" lang="zh-CN"> 2.2 笛卡尔积与二元关系的表示 </a> </li><li> <a href="#23-二元关系的五种基本性质" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="23-二元关系的五种基本性质" lang="zh-CN"> 2.3 二元关系的五种基本性质 </a> </li><li> <a href="#24-关系的闭包closure" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="24-关系的闭包closure" lang="zh-CN"> 2.4 关系的闭包（Closure） </a> </li><li> <a href="#25-等价关系与偏序关系" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="25-等价关系与偏序关系" lang="zh-CN"> 2.5 等价关系与偏序关系 </a> </li><li> <a href="#第三章-函数与集合基数" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第三章-函数与集合基数" lang="zh-CN"> 第三章 函数与集合基数 </a> </li><li> <a href="#31-函数的定义与三类特殊性质" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="31-函数的定义与三类特殊性质" lang="zh-CN"> 3.1 函数的定义与三类特殊性质 </a> </li><li> <a href="#32-复合函数与逆函数" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="32-复合函数与逆函数" lang="zh-CN"> 3.2 复合函数与逆函数 </a> </li><li> <a href="#33-集合的等势与基数" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="33-集合的等势与基数" lang="zh-CN"> 3.3 集合的等势与基数 </a> </li><li> <a href="#第四章-图论与树" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第四章-图论与树" lang="zh-CN"> 第四章 图论与树 </a> </li><li> <a href="#41-图的基本概念与握手定理" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="41-图的基本概念与握手定理" lang="zh-CN"> 4.1 图的基本概念与握手定理 </a> </li><li> <a href="#42-通路回路与图的连通性" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="42-通路回路与图的连通性" lang="zh-CN"> 4.2 通路、回路与图的连通性 </a> </li><li> <a href="#43-欧拉图与哈密顿图" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="43-欧拉图与哈密顿图" lang="zh-CN"> 4.3 欧拉图与哈密顿图 </a> </li><li> <a href="#44-平面图无向树与最优二叉树" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="44-平面图无向树与最优二叉树" lang="zh-CN"> 4.4 平面图、无向树与最优二叉树 </a> </li><li> <a href="#第五章-代数结构" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第五章-代数结构" lang="zh-CN"> 第五章 代数结构 </a> </li><li> <a href="#51-二元运算与特殊元素" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="51-二元运算与特殊元素" lang="zh-CN"> 5.1 二元运算与特殊元素 </a> </li><li> <a href="#52-半群独异点与群" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="52-半群独异点与群" lang="zh-CN"> 5.2 半群、独异点与群 </a> </li><li> <a href="#53-格与布尔代数" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="53-格与布尔代数" lang="zh-CN"> 5.3 格与布尔代数 </a> </li> </ul> </nav>  <nav class="toc hidden lg:block" aria-label="目录"> <div class="reading-toc sticky top-24"> <h4 class="mb-3 text-sm font-semibold text-[var(--text-primary)]">目录</h4> <ul class="max-h-[calc(100vh-12rem)] space-y-1 overflow-y-auto text-sm"> <li> <a href="#第一章-数理逻辑" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第一章-数理逻辑" lang="zh-CN"> 第一章 数理逻辑 </a> </li><li> <a href="#11-命题与五种基本联结词" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="11-命题与五种基本联结词" lang="zh-CN"> 1.1 命题与五种基本联结词 </a> </li><li> <a href="#12-命题公式等值演算与主范式" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="12-命题公式等值演算与主范式" lang="zh-CN"> 1.2 命题公式、等值演算与主范式 </a> </li><li> <a href="#13-命题逻辑的推理理论" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="13-命题逻辑的推理理论" lang="zh-CN"> 1.3 命题逻辑的推理理论 </a> </li><li> <a href="#14-一阶谓词逻辑" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="14-一阶谓词逻辑" lang="zh-CN"> 1.4 一阶谓词逻辑 </a> </li><li> <a href="#第二章-集合与二元关系" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第二章-集合与二元关系" lang="zh-CN"> 第二章 集合与二元关系 </a> </li><li> <a href="#21-集合的基本运算与幂集" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="21-集合的基本运算与幂集" lang="zh-CN"> 2.1 集合的基本运算与幂集 </a> </li><li> <a href="#22-笛卡尔积与二元关系的表示" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="22-笛卡尔积与二元关系的表示" lang="zh-CN"> 2.2 笛卡尔积与二元关系的表示 </a> </li><li> <a href="#23-二元关系的五种基本性质" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="23-二元关系的五种基本性质" lang="zh-CN"> 2.3 二元关系的五种基本性质 </a> </li><li> <a href="#24-关系的闭包closure" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="24-关系的闭包closure" lang="zh-CN"> 2.4 关系的闭包（Closure） </a> </li><li> <a href="#25-等价关系与偏序关系" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="25-等价关系与偏序关系" lang="zh-CN"> 2.5 等价关系与偏序关系 </a> </li><li> <a href="#第三章-函数与集合基数" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第三章-函数与集合基数" lang="zh-CN"> 第三章 函数与集合基数 </a> </li><li> <a href="#31-函数的定义与三类特殊性质" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="31-函数的定义与三类特殊性质" lang="zh-CN"> 3.1 函数的定义与三类特殊性质 </a> </li><li> <a href="#32-复合函数与逆函数" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="32-复合函数与逆函数" lang="zh-CN"> 3.2 复合函数与逆函数 </a> </li><li> <a href="#33-集合的等势与基数" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="33-集合的等势与基数" lang="zh-CN"> 3.3 集合的等势与基数 </a> </li><li> <a href="#第四章-图论与树" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第四章-图论与树" lang="zh-CN"> 第四章 图论与树 </a> </li><li> <a href="#41-图的基本概念与握手定理" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="41-图的基本概念与握手定理" lang="zh-CN"> 4.1 图的基本概念与握手定理 </a> </li><li> <a href="#42-通路回路与图的连通性" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="42-通路回路与图的连通性" lang="zh-CN"> 4.2 通路、回路与图的连通性 </a> </li><li> <a href="#43-欧拉图与哈密顿图" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="43-欧拉图与哈密顿图" lang="zh-CN"> 4.3 欧拉图与哈密顿图 </a> </li><li> <a href="#44-平面图无向树与最优二叉树" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="44-平面图无向树与最优二叉树" lang="zh-CN"> 4.4 平面图、无向树与最优二叉树 </a> </li><li> <a href="#第五章-代数结构" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第五章-代数结构" lang="zh-CN"> 第五章 代数结构 </a> </li><li> <a href="#51-二元运算与特殊元素" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="51-二元运算与特殊元素" lang="zh-CN"> 5.1 二元运算与特殊元素 </a> </li><li> <a href="#52-半群独异点与群" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="52-半群独异点与群" lang="zh-CN"> 5.2 半群、独异点与群 </a> </li><li> <a href="#53-格与布尔代数" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="53-格与布尔代数" lang="zh-CN"> 5.3 格与布尔代数 </a> </li> </ul> </div> </nav>  </div> <script>
+    (function () {
+      // TOC Mobile Drawer & Scroll Spy
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocMobile = document.getElementById('toc-mobile');
+      const tocClose = document.getElementById('toc-close');
+      const tocBackdrop = document.getElementById('toc-mobile-backdrop');
+      let isOpen = false;
 
-  const getGiscusTheme = theme => theme === 'dark' ? 'dark_dimmed' : 'light'
-
-  const createScriptElement = config => {
-    const ele = document.createElement('script')
-    Object.entries(config).forEach(([key, value]) => {
-      ele.setAttribute(key, value)
-    })
-    return ele
-  }
-
-  const loadGiscus = (el = document, key) => {
-    const mappingConfig = isShuoshuo
-      ? { 'data-mapping': 'specific', 'data-term': key }
-      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
-
-    const giscusConfig = {
-      src: 'https://giscus.app/client.js',
-      'data-repo': 'VVVVVenxo/VVVVVenxo.github.io',
-      'data-repo-id': 'R_kgDOQ5Bk1Q',
-      'data-category-id': 'DIC_kwDOQ5Bk1c4DJO_-',
-      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
-      'data-reactions-enabled': '1',
-      crossorigin: 'anonymous',
-      async: true,
-      ...option,
-      ...mappingConfig
-    }
-
-    const scriptElement = createScriptElement(giscusConfig)
-
-    el.querySelector('#giscus-wrap').appendChild(scriptElement)
-
-    if (isShuoshuo) {
-      window.shuoshuoComment.destroyGiscus = () => {
-        if (el.children.length) {
-          el.innerHTML = ''
-          el.classList.add('no-comment')
-        }
+      function openMobileToc() {
+        if (isOpen) return;
+        isOpen = true;
+        if (tocMobile) tocMobile.classList.remove('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.remove('hidden');
+        if (tocToggle) tocToggle.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
       }
-    }
-  }
 
-  const changeGiscusTheme = theme => {
-    const iframe = document.querySelector('#giscus-wrap iframe')
-    if (iframe) {
-      const message = {
-        giscus: {
-          setConfig: {
-            theme: getGiscusTheme(theme)
+      function closeMobileToc() {
+        if (!isOpen) return;
+        isOpen = false;
+        if (tocMobile) tocMobile.classList.add('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.add('hidden');
+        if (tocToggle) tocToggle.classList.remove('hidden');
+        document.body.style.overflow = '';
+      }
+
+      if (tocToggle) tocToggle.addEventListener('click', openMobileToc);
+      if (tocClose) tocClose.addEventListener('click', closeMobileToc);
+      if (tocBackdrop) tocBackdrop.addEventListener('click', closeMobileToc);
+
+      document.querySelectorAll('.toc-link-mobile').forEach(link => {
+        link.addEventListener('click', () => setTimeout(closeMobileToc, 100));
+      });
+
+      const tocLinks = document.querySelectorAll('.toc-link');
+      if (tocLinks.length > 0) {
+        const headingIds = Array.from(tocLinks)
+          .map(link => link.getAttribute('data-heading'))
+          .filter(Boolean);
+        const headingElements = headingIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateActiveLink() {
+          if (!headingElements.length) return;
+          let activeId = headingIds[0];
+          for (let i = 0; i < headingElements.length; i++) {
+            const rect = headingElements[i].getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.28) {
+              activeId = headingElements[i].id;
+            }
           }
+          tocLinks.forEach(link => {
+            if (link.getAttribute('data-heading') === activeId) {
+              link.classList.add('toc-active');
+            } else {
+              link.classList.remove('toc-active');
+            }
+          });
+        }
+
+        let ticking = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateActiveLink();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        updateActiveLink();
+      }
+
+      // Lazy Load Giscus Comments
+      const giscusContainer = document.getElementById('giscus-container');
+      if (giscusContainer) {
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded) return;
+          giscusContainer.dataset.loaded = 'true';
+          const isDark = document.documentElement.classList.contains('dark');
+          const s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.setAttribute('data-repo', 'VVVVVenxo/VVVVVenxo.github.io');
+          s.setAttribute('data-repo-id', 'R_kgDOQ5Bk1Q');
+          s.setAttribute('data-category', 'Announcements');
+          s.setAttribute('data-category-id', 'DIC_kwDOQ5Bk1c4DJO_-');
+          s.setAttribute('data-mapping', 'pathname');
+          s.setAttribute('data-strict', '0');
+          s.setAttribute('data-reactions-enabled', '1');
+          s.setAttribute('data-emit-metadata', '0');
+          s.setAttribute('data-input-position', 'top');
+          s.setAttribute('data-theme', isDark ? 'dark_dimmed' : 'light');
+          s.setAttribute('data-lang', 'zh-CN');
+          s.crossOrigin = 'anonymous';
+          s.async = true;
+          giscusContainer.appendChild(s);
+        };
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            entries => {
+              if (entries.some(e => e.isIntersecting)) {
+                loadGiscus();
+                io.disconnect();
+              }
+            },
+            { rootMargin: '300px' }
+          );
+          io.observe(giscusContainer);
+        } else {
+          loadGiscus();
         }
       }
-      iframe.contentWindow.postMessage(message, 'https://giscus.app')
-    }
-  }
+    })();
+  </script>  </main> <footer class="site-footer border-t border-[var(--border-color)]"> <div class="container py-8"> <div class="flex flex-col items-center justify-between gap-4 md:flex-row"> <div class="flex items-center gap-3"> <a href="https://github.com/VVVVVenxo" target="_blank" rel="noopener noreferrer" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="GitHub" title="GitHub"> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="mailto:1263147353@qq.com" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="Email" title="Email"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="4" width="20" height="16" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> </a> <a href="/atom.xml" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="RSS 订阅" title="RSS 订阅"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M4 11a9 9 0 0 1 9 9"></path> <path d="M4 4a16 16 0 0 1 16 16"></path> <circle cx="5" cy="19" r="1"></circle> </svg> </a> </div> <p class="text-xs text-[var(--text-tertiary)]">
+© 2024–2026 VVVVVenxo · To be a rock and not to roll.
+</p> </div> </div> </footer> <!-- Flat Search Modal --> <div id="search-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/45 px-4 pt-[10vh] backdrop-blur-xs" role="dialog" aria-modal="true" aria-label="全站搜索"> <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl"> <div class="flex items-center gap-3 border-b border-[var(--border-subtle)] px-4 py-3"> <svg class="shrink-0 text-[var(--text-tertiary)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> <input id="search-input" type="search" placeholder="搜索文章标题、关键词、技术栈（支持 C++ / Unity / 渲染 / 网络...）" class="w-full bg-transparent text-base text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none" autocomplete="off"> <button id="search-close" type="button" class="rounded border border-[var(--border-color)] px-2 py-0.5 text-xs text-[var(--text-tertiary)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
+ESC
+</button> </div> <div id="search-results" class="max-h-[62vh] overflow-y-auto divide-y divide-[var(--border-subtle)] px-4 py-2 text-sm"> <p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p> </div> </div> </div> <script>
+      (function () {
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const giscusFrame = document.querySelector('iframe.giscus-frame');
+            if (giscusFrame && giscusFrame.contentWindow) {
+              giscusFrame.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: isDark ? 'dark_dimmed' : 'light' } } },
+                'https://giscus.app'
+              );
+            }
+          });
+        }
 
-  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            const hidden = mobileMenu.classList.toggle('hidden');
+            mobileBtn.setAttribute('aria-expanded', String(!hidden));
+          });
+        }
 
-  if (isShuoshuo) {
-    'Giscus' === 'Giscus'
-      ? window.shuoshuoComment = { loadComment: loadGiscus }
-      : window.loadOtherComment = loadGiscus
-    return
-  }
+        // Code Copy Buttons
+        document.addEventListener('click', async e => {
+          const btn = e.target.closest('.copy-button');
+          if (!btn) return;
+          const wrapper = btn.closest('.code-block-wrapper');
+          const codeEl = wrapper ? wrapper.querySelector('pre code') : null;
+          if (!codeEl) return;
+          try {
+            await navigator.clipboard.writeText(codeEl.innerText);
+            const copyIcon = btn.querySelector('.copy-icon');
+            const checkIcon = btn.querySelector('.check-icon');
+            btn.classList.add('copied');
+            if (copyIcon) copyIcon.classList.add('hidden');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              if (copyIcon) copyIcon.classList.remove('hidden');
+              if (checkIcon) checkIcon.classList.add('hidden');
+            }, 1800);
+          } catch (_) {}
+        });
 
-  if ('Giscus' === 'Giscus' || !true) {
-    if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
-    else loadGiscus()
-  } else {
-    window.loadOtherComment = loadGiscus
-  }
-})()</script></div><script src="/js/site-refinement.js?v=20261020-1" defer></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
-  const pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:description\"]","link[rel=\"canonical\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+        // Search Modal
+        const searchBtn = document.getElementById('search-btn');
+        const searchModal = document.getElementById('search-modal');
+        const searchInput = document.getElementById('search-input');
+        const searchClose = document.getElementById('search-close');
+        const searchResults = document.getElementById('search-results');
+        let searchIndex = null;
 
-  window.pjax = new Pjax({
-    elements: 'a:not([target="_blank"])',
-    selectors: pjaxSelectors,
-    cacheBust: false,
-    analytics: false,
-    scrollRestoration: false
-  })
+        async function ensureSearchIndex() {
+          if (searchIndex) return searchIndex;
+          try {
+            const res = await fetch('/search.json');
+            searchIndex = await res.json();
+          } catch (_) {
+            searchIndex = [];
+          }
+          return searchIndex;
+        }
 
-  const triggerPjaxFn = (val) => {
-    if (!val) return
-    Object.values(val).forEach(fn => {
-      try {
-        fn()
-      } catch (err) {
-        console.debug('Pjax callback failed:', err)
-      }
-    })
-  }
+        function openSearch() {
+          if (!searchModal) return;
+          searchModal.classList.remove('hidden');
+          searchModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          ensureSearchIndex();
+          setTimeout(() => searchInput && searchInput.focus(), 30);
+        }
 
-  document.addEventListener('pjax:send', () => {
-    // removeEventListener
-    btf.removeGlobalFnEvent('pjaxSendOnce')
-    btf.removeGlobalFnEvent('themeChange')
+        function closeSearch() {
+          if (!searchModal) return;
+          searchModal.classList.add('hidden');
+          searchModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
 
-    // reset readmode
-    const $bodyClassList = document.body.classList
-    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+        if (searchBtn) searchBtn.addEventListener('click', openSearch);
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        if (searchModal) {
+          searchModal.addEventListener('click', e => {
+            if (e.target === searchModal) closeSearch();
+          });
+        }
 
-    triggerPjaxFn(window.globalFn.pjaxSend)
-  })
+        window.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (searchModal && searchModal.classList.contains('hidden')) openSearch();
+            else closeSearch();
+          } else if (e.key === 'Escape' && searchModal && !searchModal.classList.contains('hidden')) {
+            closeSearch();
+          }
+        });
 
-  document.addEventListener('pjax:complete', () => {
-    btf.removeGlobalFnEvent('pjaxCompleteOnce')
-    document.querySelectorAll('script[data-pjax]').forEach(item => {
-      const newScript = document.createElement('script')
-      const content = item.text || item.textContent || item.innerHTML || ""
-      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
-      newScript.appendChild(document.createTextNode(content))
-      item.parentNode.replaceChild(newScript, item)
-    })
+        function escapeHtml(s) {
+          return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
 
-    triggerPjaxFn(window.globalFn.pjaxComplete)
-  })
+        if (searchInput && searchResults) {
+          searchInput.addEventListener('input', async () => {
+            const q = searchInput.value.trim().toLowerCase();
+            if (!q) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p>';
+              return;
+            }
+            const data = await ensureSearchIndex();
+            const matched = data.filter(item => {
+              const title = (item.title || '').toLowerCase();
+              const content = (item.content || '').toLowerCase();
+              const tags = (item.tags || []).join(' ').toLowerCase();
+              const cats = (item.categories || []).join(' ').toLowerCase();
+              return title.includes(q) || tags.includes(q) || cats.includes(q) || content.includes(q);
+            });
 
-  document.addEventListener('pjax:error', e => {
-    if (e.request.status === 404) {
-      false
-        ? pjax.loadUrl('/404.html')
-        : window.location.href = e.request.responseURL
-    }
-  })
-})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章、Unity、C++、C#…" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.3"></script></div></div></body></html>
+            if (!matched.length) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">没有找到匹配的文章</p>';
+              return;
+            }
+
+            searchResults.innerHTML = matched
+              .slice(0, 15)
+              .map(item => {
+                const rawText = item.content || '';
+                const idx = rawText.toLowerCase().indexOf(q);
+                let snippet = rawText.slice(0, 110);
+                if (idx > 30) {
+                  snippet = '…' + rawText.slice(idx - 25, idx + 85) + '…';
+                }
+                return `
+                  <a href="${item.url}" class="block py-3.5 transition-colors hover:text-[var(--accent)]">
+                    <div class="flex items-baseline justify-between gap-2">
+                      <span class="font-semibold text-[var(--text-primary)]">${escapeHtml(item.title)}</span>
+                      <span class="shrink-0 text-xs text-[var(--text-tertiary)]">${escapeHtml(item.date || '')}</span>
+                    </div>
+                    <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">${escapeHtml(snippet)}</p>
+                  </a>
+                `;
+              })
+              .join('');
+          });
+        }
+      })();
+    </script> </body> </html>

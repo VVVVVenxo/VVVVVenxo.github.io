@@ -1,180 +1,20 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【AI探索】给技术博客做一套自动化封面生成系统 | VVVVVenxo's Blog</title><meta name="author" content="VVVVVenxo"><meta name="copyright" content="VVVVVenxo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="介绍博客当前的程序化封面流程：依据标题和分类选择 SVG 主题图解，生成完整封面与列表缩略图，并保留手动指定的项目截图。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="【AI探索】给技术博客做一套自动化封面生成系统">
-<meta property="og:url" content="https://vvvvvenxo.github.io/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F/index.html">
-<meta property="og:site_name" content="VVVVVenxo&#39;s Blog">
-<meta property="og:description" content="介绍博客当前的程序化封面流程：依据标题和分类选择 SVG 主题图解，生成完整封面与列表缩略图，并保留手动指定的项目截图。">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/AI%E6%8E%A2%E7%B4%A2-%E7%BB%99%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%81%9A%E4%B8%80%E5%A5%97%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F.png">
-<meta property="article:published_time" content="2026-07-30T22:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-13T00:00:00.000Z">
-<meta property="article:author" content="VVVVVenxo">
-<meta property="article:tag" content="Claude Code">
-<meta property="article:tag" content="AI Coding">
-<meta property="article:tag" content="自动化">
-<meta property="article:tag" content="SVG">
-<meta property="article:tag" content="设计系统">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://vvvvvenxo.github.io/img/covers/gen/AI%E6%8E%A2%E7%B4%A2-%E7%BB%99%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%81%9A%E4%B8%80%E5%A5%97%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F.png"><script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "【AI探索】给技术博客做一套自动化封面生成系统",
-  "url": "https://vvvvvenxo.github.io/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F/",
-  "image": "https://vvvvvenxo.github.io/img/covers/gen/AI%E6%8E%A2%E7%B4%A2-%E7%BB%99%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%81%9A%E4%B8%80%E5%A5%97%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F.png",
-  "datePublished": "2026-07-30T22:00:00.000Z",
-  "dateModified": "2026-10-13T00:00:00.000Z",
-  "author": [
-    {
-      "@type": "Person",
-      "name": "VVVVVenxo",
-      "url": "https://VVVVVenxo.github.io"
-    }
-  ]
-}</script><link rel="shortcut icon" href="/img/cat.ico"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Astro v5.18.2"><title>【AI探索】给技术博客做一套自动化封面生成系统 | VVVVVenxo 的博客</title><meta name="description" content="介绍博客当前的程序化封面流程：依据标题和分类选择 SVG 主题图解，生成完整封面与列表缩略图，并保留手动指定的项目截图。"><meta name="keywords" content="VVVVVenxo, 游戏客户端开发, Unity, C++, C#, 图形学, 实时渲染, 网络同步, 算法, AI Agent"><meta name="author" content="VVVVVenxo"><meta name="theme-color" content="#f7f5ef" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#201f1c" media="(prefers-color-scheme: dark)"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F/"><link rel="icon" href="/img/cat.ico"><link rel="alternate" type="application/rss+xml" title="VVVVVenxo 的博客" href="/atom.xml"><meta property="og:type" content="article"><meta property="og:url" content="https://vvvvvenxo.github.io/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F/"><meta property="og:title" content="【AI探索】给技术博客做一套自动化封面生成系统 | VVVVVenxo 的博客"><meta property="og:description" content="介绍博客当前的程序化封面流程：依据标题和分类选择 SVG 主题图解，生成完整封面与列表缩略图，并保留手动指定的项目截图。"><meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/AI%E6%8E%A2%E7%B4%A2-%E7%BB%99%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%81%9A%E4%B8%80%E5%A5%97%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F.png"><script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
-        return value
-      }
-    }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!true && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
-  
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
-        }
-      }
-
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
-
-      const theme = saveToLocal.get('theme')
-    
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
-        
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-  
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
-  translate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":false},
-  copy: {
-    success: '复制成功',
-    error: '复制失败',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: true
-  },
-  runtime: '',
-  dateSuffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
-    buttonText: '加载更多'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: false,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: '【AI探索】给技术博客做一套自动化封面生成系统',
-  isHighlightShrink: false,
-  isToc: true,
-  pageType: 'post'
-}</script><meta name="referrer" content="no-referrer"><link rel="stylesheet" href="/css/site-refinement.css?v=20261024-1"><meta name="generator" content="Hexo 7.3.0"></head><body><script>window.paceOptions = {
-  restartOnPushState: false
-}
-
-btf.addGlobalFn('pjaxSend', () => {
-  Pace.restart()
-}, 'pace_restart')
-
-</script><link rel="stylesheet" href="/css/pace-theme-editorial.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-color: #F1F4F1;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">138</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/gen/AI%E6%8E%A2%E7%B4%A2-%E7%BB%99%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%81%9A%E4%B8%80%E5%A5%97%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">VVVVVenxo's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【AI探索】给技术博客做一套自动化封面生成系统</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【AI探索】给技术博客做一套自动化封面生成系统</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-30T22:00:00.000Z" title="发表于 2026-07-30 22:00:00">2026-07-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-13T00:00:00.000Z" title="更新于 2026-10-13 00:00:00">2026-10-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI%E6%8E%A2%E7%B4%A2/">AI探索</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI%E6%8E%A2%E7%B4%A2/AI-Coding/">AI Coding</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">923</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="为什么自己生成封面"><a href="#为什么自己生成封面" class="headerlink" title="为什么自己生成封面"></a>为什么自己生成封面</h2><p>博客文章涉及内存管理、垃圾回收、排序和网络同步等抽象主题。图库照片往往只能提供泛化的电脑或代码画面，很难说明文章具体讲什么。现在我用 SVG 根据文章标题和分类排版标题，并绘制对应的技术示意图，让封面在保持统一的同时更贴近文章主题。</p>
-<h2 id="当前视觉与版式"><a href="#当前视觉与版式" class="headerlink" title="当前视觉与版式"></a>当前视觉与版式</h2><p>封面采用浅灰绿纸面、深色标题，以青绿为主色、暖橙作少量强调。完整封面为 <strong>1200 × 630</strong>：左侧放分类、标题和主题说明，右侧展示技术图解。列表缩略图为 <strong>600 × 360</strong>，只保留图解，不重复封面标题，缩小后也能看清内容。</p>
+      })();
+    </script><link rel="stylesheet" href="/_astro/index.CgpjNjEc.css"></head> <body> <header class="site-header sticky top-0 z-40 w-full border-b border-[var(--border-color)]"> <div class="container flex h-16 items-center justify-between"> <a href="/" aria-label="VVVVVenxo 的博客，返回首页" class="brand-link text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]"> <span class="brand-mark" style="--brand-logo: url('/logo.svg')" aria-hidden="true"></span> <span class="brand-name">VVVVVenxo</span> <span class="brand-caption">游戏客户端工程手记</span> </a> <nav class="hidden items-center gap-1 md:flex" aria-label="主导航"> <a href="/" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 首页 </a><a href="/blog" aria-current="page" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 分类 </a><a href="/tags" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 标签 </a><a href="/about" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 关于 </a> </nav> <div class="flex items-center gap-1.5"> <button id="search-btn" type="button" class="header-action" aria-label="搜索 (Ctrl+K)" title="搜索 (Ctrl+K)"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </button> <button id="theme-toggle" type="button" class="header-action" aria-label="切换主题" title="切换明暗主题"> <svg class="sun-icon hidden dark:block" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> <svg class="moon-icon block dark:hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="mobile-menu-btn" type="button" class="header-action md:hidden" aria-label="菜单" aria-controls="mobile-menu" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> </div> </div> <div id="mobile-menu" class="hidden border-t border-[var(--border-subtle)] md:hidden"> <nav class="container py-3" aria-label="移动导航"> <div class="bg-[var(--bg-surface)]"> <a href="/" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 首页 </a><a href="/blog" aria-current="page" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors bg-[var(--bg-muted)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 分类 </a><a href="/tags" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 标签 </a><a href="/about" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 关于 </a> </div> </nav> </div> </header> <main class="flex-1">  <div class="post-reading-shell container-wide flex py-10 md:py-14"> <article class="min-w-0 flex-1"> <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8"> <div class="flex flex-wrap items-center gap-2"> <a href="/categories/AI%E6%8E%A2%E7%B4%A2/" class="section-kicker hover:underline"> AI探索 </a> <span class="text-xs text-[var(--text-tertiary)]">
+/ AI探索 · AI Coding </span> </div> <h1 lang="zh-CN" class="mt-4 text-3xl font-bold tracking-tight text-balance text-[var(--text-primary)] md:text-5xl"> 【AI探索】给技术博客做一套自动化封面生成系统 </h1> <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-tertiary)]"> <time datetime="2026-07-30">2026年07月30日</time> <span>·</span> <span>3 分钟阅读</span> <span>·</span> <span>约 931 字</span> </div> <div class="mt-5 flex flex-wrap gap-2"> <a href="/tags/Claude%20Code/" class="tag"> Claude Code </a><a href="/tags/AI%20Coding/" class="tag"> AI Coding </a><a href="/tags/SVG/" class="tag"> SVG </a><a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" class="tag"> 自动化 </a><a href="/tags/%E8%AE%BE%E8%AE%A1%E7%B3%BB%E7%BB%9F/" class="tag"> 设计系统 </a> </div> </header> <div class="prose max-w-none" lang="zh-CN"><h2 id="为什么自己生成封面"><a aria-hidden="true" tabindex="-1" href="#为什么自己生成封面"><span class="icon icon-link"></span></a>为什么自己生成封面</h2>
+<p>博客文章涉及内存管理、垃圾回收、排序和网络同步等抽象主题。图库照片往往只能提供泛化的电脑或代码画面，很难说明文章具体讲什么。现在我用 SVG 根据文章标题和分类排版标题，并绘制对应的技术示意图，让封面在保持统一的同时更贴近文章主题。</p>
+<h2 id="当前视觉与版式"><a aria-hidden="true" tabindex="-1" href="#当前视觉与版式"><span class="icon icon-link"></span></a>当前视觉与版式</h2>
+<p>封面采用浅灰绿纸面、深色标题，以青绿为主色、暖橙作少量强调。完整封面为 <strong>1200 × 630</strong>：左侧放分类、标题和主题说明，右侧展示技术图解。列表缩略图为 <strong>600 × 360</strong>，只保留图解，不重复封面标题，缩小后也能看清内容。</p>
 <p>生成器会先写出完整封面的 SVG，再调用本机 Chrome、Chromium 或 Edge 渲染 PNG；缩略图则保留为 SVG。中文字体和线条由浏览器直接绘制，不需要额外的图像处理库。</p>
-<h2 id="标题和分类如何决定图解"><a href="#标题和分类如何决定图解" class="headerlink" title="标题和分类如何决定图解"></a>标题和分类如何决定图解</h2><p>脚本读取文章 front matter 中的标题和分类，按分类分支和标题关键词选择预先编写的 SVG 图解。它<strong>不读取正文，也不自动总结文章内容</strong>；图解旁的简短说明是代码中为主题预先设置的文案。</p>
+<h2 id="标题和分类如何决定图解"><a aria-hidden="true" tabindex="-1" href="#标题和分类如何决定图解"><span class="icon icon-link"></span></a>标题和分类如何决定图解</h2>
+<p>脚本读取文章 front matter 中的标题和分类，按分类分支和标题关键词选择预先编写的 SVG 图解。它<strong>不读取正文，也不自动总结文章内容</strong>；图解旁的简短说明是代码中为主题预先设置的文案。</p>
 <table>
 <thead>
 <tr>
@@ -183,7 +23,7 @@ btf.addGlobalFn('pjaxSend', () => {
 </tr>
 </thead>
 <tbody><tr>
-<td>C++ &#x2F; C#</td>
+<td>C++ / C#</td>
 <td>栈与堆、虚函数分派、资源所有权、参数传递</td>
 </tr>
 <tr>
@@ -212,152 +52,298 @@ btf.addGlobalFn('pjaxSend', () => {
 </tr>
 </tbody></table>
 <p>选图依赖规则而非正文理解。同一分类下的文章如果选择了相同主题图解，示意内容也可能相同；当前不保证每篇文章都有独一份的图。</p>
-<h2 id="从文章到页面图片"><a href="#从文章到页面图片" class="headerlink" title="从文章到页面图片"></a>从文章到页面图片</h2><ol>
+<h2 id="从文章到页面图片"><a aria-hidden="true" tabindex="-1" href="#从文章到页面图片"><span class="icon icon-link"></span></a>从文章到页面图片</h2>
+<ol>
 <li>运行生成脚本，读取没有封面字段的新文章，生成完整封面 SVG 和图解缩略图，并将完整 PNG 路径写入 front matter。</li>
 <li>SVG 转 PNG 脚本只渲染完整封面；已有且比 SVG 更新的 PNG 会跳过。</li>
 <li>构建 Hexo 时，<code>scripts/cover-thumbnails.js</code> 会将页面中指向自动封面 PNG 的图片替换为对应缩略图。分享元数据和封面原图仍使用 PNG。</li>
 </ol>
 <p>在项目根目录给新文章生成封面：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash tools/covers/new-cover.sh</span><br></pre></td></tr></table></figure>
-
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">bash</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> tools/covers/new-cover.sh</span></span></code></pre></div>
 <p>改过图解或版式后，重新生成所有程序封面：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash tools/covers/new-cover.sh --all</span><br></pre></td></tr></table></figure>
-
+<div class="code-block-wrapper"><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">bash</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> tools/covers/new-cover.sh</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> --all</span></span></code></pre></div>
 <p>已有 <code>cover:</code> 的文章默认跳过。<code>--all</code> 只覆盖路径位于 <code>/img/covers/gen/</code> 的自动封面；其他路径的手动封面（例如项目实景截图）会保留。Python 生成器和 shell 包装脚本位于 <code>tools/covers/</code>；<code>scripts/</code> 目录只保留 Hexo 插件，避免 Hexo 把 Python 和 shell 文件误当作 JavaScript 加载。图片在本地生成并提交，GitHub Actions 负责构建和部署。</p>
 <p>这套规则生成速度快、风格稳定，也不需要 AI 图片服务；代价是它只依据标题和分类选择模板，不理解正文。同一主题下可能复用图解，这是当前方案的限制。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这套流程让封面风格统一、示意图贴近主题，并为列表单独生成清晰的小图；项目实景截图仍可手动指定。新增主题时，需要在 <code>tools/covers/gen_covers.py</code> 中补上选择规则和对应图解。</p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VVVVVenxo.github.io">VVVVVenxo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vvvvvenxo.github.io/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F/">https://vvvvvenxo.github.io/2026/07/30/【AI探索】自动化封面生成系统/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://VVVVVenxo.github.io" target="_blank">VVVVVenxo's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Claude-Code/">Claude Code</a><a class="post-meta__tags" href="/tags/AI-Coding/">AI Coding</a><a class="post-meta__tags" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><a class="post-meta__tags" href="/tags/SVG/">SVG</a><a class="post-meta__tags" href="/tags/%E8%AE%BE%E8%AE%A1%E7%B3%BB%E7%BB%9F/">设计系统</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/gen/AI%E6%8E%A2%E7%B4%A2-%E7%BB%99%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%81%9A%E4%B8%80%E5%A5%97%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/10/20/%E3%80%90Unity%E3%80%91Lua%E7%BC%96%E7%A8%8B%E4%B8%8ExLua%E7%83%AD%E6%9B%B4%E6%96%B0%E6%9C%BA%E5%88%B6/" title="【Unity】Lua编程与xLua热更新机制"><img class="cover" src="/img/covers/gen/Unity-Lua%E7%BC%96%E7%A8%8B%E4%B8%8ExLua%E7%83%AD%E6%9B%B4%E6%96%B0%E6%9C%BA%E5%88%B6-thumb.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post" loading="lazy" decoding="async"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【Unity】Lua编程与xLua热更新机制</div></div><div class="info-2"><div class="info-item-1">梳理 Lua 核心语法、Table 底层与标准库、基于 Metatable 的面向对象与 Mixin 模式，以及 xLua 的 Wrap 桥接、延迟注册、跨语言数据传递与热更新机制。</div></div></div></a><a class="pagination-related" href="/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E7%94%A8ClaudeCode%E7%BB%B4%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" title="【AI探索】我如何用 Claude Code 盘活一个荒废的博客"><img class="cover" src="/img/covers/gen/AI%E6%8E%A2%E7%B4%A2-%E6%88%91%E5%A6%82%E4%BD%95%E7%94%A8-Claude-Code-%E7%9B%98%E6%B4%BB%E4%B8%80%E4%B8%AA%E8%8D%92%E5%BA%9F%E7%9A%84%E5%8D%9A%E5%AE%A2-thumb.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post" loading="lazy" decoding="async"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【AI探索】我如何用 Claude Code 盘活一个荒废的博客</div></div><div class="info-2"><div class="info-item-1">记录我用 Claude Code 整理 Hexo 博客的过程：找回源分支、筛选旧笔记、清理历史中的个人信息、修复站点问题，并把封面生成流程做成脚本。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E7%94%A8ClaudeCode%E7%BB%B4%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" title="【AI探索】我如何用 Claude Code 盘活一个荒废的博客"><img class="cover" src="/img/covers/gen/AI%E6%8E%A2%E7%B4%A2-%E6%88%91%E5%A6%82%E4%BD%95%E7%94%A8-Claude-Code-%E7%9B%98%E6%B4%BB%E4%B8%80%E4%B8%AA%E8%8D%92%E5%BA%9F%E7%9A%84%E5%8D%9A%E5%AE%A2-thumb.svg" alt="cover" loading="lazy" decoding="async"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-30</div><div class="info-item-2">【AI探索】我如何用 Claude Code 盘活一个荒废的博客</div></div><div class="info-2"><div class="info-item-1">记录我用 Claude Code 整理 Hexo 博客的过程：找回源分支、筛选旧笔记、清理历史中的个人信息、修复站点问题，并把封面生成流程做成脚本。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading="lazy" decoding="async"></div><div class="author-info-name">VVVVVenxo</div><div class="author-info-description">To be a rock and not to roll.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">138</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/VVVVVenxo"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/VVVVVenxo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1263147353@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div class="profile-note">
-  <p>软件工程背景，专注游戏客户端开发。</p>
-  <p><strong>关注</strong> Unity 架构、网络同步与实时渲染。</p>
-  <p class="profile-note__meta">游戏开发 · AI 工具 · 图形技术</p>
-</div>
-</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%87%AA%E5%B7%B1%E7%94%9F%E6%88%90%E5%B0%81%E9%9D%A2"><span class="toc-text">为什么自己生成封面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E8%A7%86%E8%A7%89%E4%B8%8E%E7%89%88%E5%BC%8F"><span class="toc-text">当前视觉与版式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E9%A2%98%E5%92%8C%E5%88%86%E7%B1%BB%E5%A6%82%E4%BD%95%E5%86%B3%E5%AE%9A%E5%9B%BE%E8%A7%A3"><span class="toc-text">标题和分类如何决定图解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E6%96%87%E7%AB%A0%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%9B%BE%E7%89%87"><span class="toc-text">从文章到页面图片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="【计算机基础】操作系统"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】操作系统"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="【计算机基础】操作系统">【计算机基础】操作系统</a><time datetime="2026-10-27T00:00:00.000Z" title="发表于 2026-10-27 00:00:00">2026-10-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="【计算机基础】数据结构"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】数据结构"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="【计算机基础】数据结构">【计算机基础】数据结构</a><time datetime="2026-10-26T00:00:00.000Z" title="发表于 2026-10-26 00:00:00">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学"><img src="/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6-thumb.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【计算机基础】离散数学"/ loading="lazy" decoding="async"></a><div class="content"><a class="title" href="/2026/10/25/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/" title="【计算机基础】离散数学">【计算机基础】离散数学</a><time datetime="2026-10-25T00:00:00.000Z" title="发表于 2026-10-25 00:00:00">2026-10-25</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By VVVVVenxo</span></div><div class="footer_custom_text">Everything's Alright</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"><script>(() => {
-  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
-  const option = {"data-mapping":"pathname","data-strict":"0","data-reactions-enabled":"1","data-emit-metadata":"0","data-input-position":"top","data-lang":"zh-CN"}
+<h2 id="小结"><a aria-hidden="true" tabindex="-1" href="#小结"><span class="icon icon-link"></span></a>小结</h2>
+<p>这套流程让封面风格统一、示意图贴近主题，并为列表单独生成清晰的小图；项目实景截图仍可手动指定。新增主题时，需要在 <code>tools/covers/gen_covers.py</code> 中补上选择规则和对应图解。</p>
+</div> <!-- Prev / Next Flat Navigation --> <nav class="mt-16 grid grid-cols-1 gap-6 border-t border-[var(--border-color)] pt-8 md:grid-cols-2" aria-label="上下篇文章导航"> <div> <a href="/2026/10/20/%E3%80%90Unity%E3%80%91Lua%E7%BC%96%E7%A8%8B%E4%B8%8ExLua%E7%83%AD%E6%9B%B4%E6%96%B0%E6%9C%BA%E5%88%B6/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+← 新一篇
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 【Unity】Lua编程与xLua热更新机制 </p> </a> </div> <div class="md:text-right"> <a href="/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E7%94%A8ClaudeCode%E7%BB%B4%E6%8A%A4%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+旧一篇 →
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 【AI探索】我如何用 Claude Code 盘活一个荒废的博客 </p> </a> </div> </nav> <!-- Giscus Comments --> <section class="mt-14 border-t border-[var(--border-subtle)] pt-8" aria-label="评论区"> <div class="mb-5 flex items-baseline gap-3"> <h2 class="text-lg font-semibold text-[var(--text-primary)]">讨论与评论</h2> <span class="text-xs text-[var(--text-tertiary)]">由 GitHub Discussions 驱动</span> </div> <div id="giscus-container"></div> </section> </article> <!-- Mobile TOC Trigger & Drawer -->  <button id="toc-toggle" class="toc-trigger fixed right-6 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded transition-colors hover:bg-[var(--accent-hover)] lg:hidden" aria-label="目录" title="文章目录"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="8" y1="6" x2="21" y2="6"></line> <line x1="8" y1="12" x2="21" y2="12"></line> <line x1="8" y1="18" x2="21" y2="18"></line> <line x1="3" y1="6" x2="3.01" y2="6"></line> <line x1="3" y1="12" x2="3.01" y2="12"></line> <line x1="3" y1="18" x2="3.01" y2="18"></line> </svg> </button> <div id="toc-mobile-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-xs lg:hidden"></div> <nav id="toc-mobile" aria-label="移动端目录" class="fixed right-0 bottom-0 left-0 z-50 max-h-[64vh] translate-y-full overflow-hidden rounded-t-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl transition-transform duration-300 lg:hidden"> <div class="flex items-center justify-between border-b border-[var(--border-subtle)] p-4"> <h4 class="font-semibold text-[var(--text-primary)]">目录</h4> <button id="toc-close" class="header-action -mr-1" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> <ul class="max-h-[calc(64vh-4rem)] space-y-1 overflow-y-auto p-4 text-sm"> <li> <a href="#为什么自己生成封面" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="为什么自己生成封面" lang="zh-CN"> 为什么自己生成封面 </a> </li><li> <a href="#当前视觉与版式" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="当前视觉与版式" lang="zh-CN"> 当前视觉与版式 </a> </li><li> <a href="#标题和分类如何决定图解" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="标题和分类如何决定图解" lang="zh-CN"> 标题和分类如何决定图解 </a> </li><li> <a href="#从文章到页面图片" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="从文章到页面图片" lang="zh-CN"> 从文章到页面图片 </a> </li><li> <a href="#小结" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="小结" lang="zh-CN"> 小结 </a> </li> </ul> </nav>  <nav class="toc hidden lg:block" aria-label="目录"> <div class="reading-toc sticky top-24"> <h4 class="mb-3 text-sm font-semibold text-[var(--text-primary)]">目录</h4> <ul class="max-h-[calc(100vh-12rem)] space-y-1 overflow-y-auto text-sm"> <li> <a href="#为什么自己生成封面" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="为什么自己生成封面" lang="zh-CN"> 为什么自己生成封面 </a> </li><li> <a href="#当前视觉与版式" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="当前视觉与版式" lang="zh-CN"> 当前视觉与版式 </a> </li><li> <a href="#标题和分类如何决定图解" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="标题和分类如何决定图解" lang="zh-CN"> 标题和分类如何决定图解 </a> </li><li> <a href="#从文章到页面图片" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="从文章到页面图片" lang="zh-CN"> 从文章到页面图片 </a> </li><li> <a href="#小结" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="小结" lang="zh-CN"> 小结 </a> </li> </ul> </div> </nav>  </div> <script>
+    (function () {
+      // TOC Mobile Drawer & Scroll Spy
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocMobile = document.getElementById('toc-mobile');
+      const tocClose = document.getElementById('toc-close');
+      const tocBackdrop = document.getElementById('toc-mobile-backdrop');
+      let isOpen = false;
 
-  const getGiscusTheme = theme => theme === 'dark' ? 'dark_dimmed' : 'light'
-
-  const createScriptElement = config => {
-    const ele = document.createElement('script')
-    Object.entries(config).forEach(([key, value]) => {
-      ele.setAttribute(key, value)
-    })
-    return ele
-  }
-
-  const loadGiscus = (el = document, key) => {
-    const mappingConfig = isShuoshuo
-      ? { 'data-mapping': 'specific', 'data-term': key }
-      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
-
-    const giscusConfig = {
-      src: 'https://giscus.app/client.js',
-      'data-repo': 'VVVVVenxo/VVVVVenxo.github.io',
-      'data-repo-id': 'R_kgDOQ5Bk1Q',
-      'data-category-id': 'DIC_kwDOQ5Bk1c4DJO_-',
-      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
-      'data-reactions-enabled': '1',
-      crossorigin: 'anonymous',
-      async: true,
-      ...option,
-      ...mappingConfig
-    }
-
-    const scriptElement = createScriptElement(giscusConfig)
-
-    el.querySelector('#giscus-wrap').appendChild(scriptElement)
-
-    if (isShuoshuo) {
-      window.shuoshuoComment.destroyGiscus = () => {
-        if (el.children.length) {
-          el.innerHTML = ''
-          el.classList.add('no-comment')
-        }
+      function openMobileToc() {
+        if (isOpen) return;
+        isOpen = true;
+        if (tocMobile) tocMobile.classList.remove('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.remove('hidden');
+        if (tocToggle) tocToggle.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
       }
-    }
-  }
 
-  const changeGiscusTheme = theme => {
-    const iframe = document.querySelector('#giscus-wrap iframe')
-    if (iframe) {
-      const message = {
-        giscus: {
-          setConfig: {
-            theme: getGiscusTheme(theme)
+      function closeMobileToc() {
+        if (!isOpen) return;
+        isOpen = false;
+        if (tocMobile) tocMobile.classList.add('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.add('hidden');
+        if (tocToggle) tocToggle.classList.remove('hidden');
+        document.body.style.overflow = '';
+      }
+
+      if (tocToggle) tocToggle.addEventListener('click', openMobileToc);
+      if (tocClose) tocClose.addEventListener('click', closeMobileToc);
+      if (tocBackdrop) tocBackdrop.addEventListener('click', closeMobileToc);
+
+      document.querySelectorAll('.toc-link-mobile').forEach(link => {
+        link.addEventListener('click', () => setTimeout(closeMobileToc, 100));
+      });
+
+      const tocLinks = document.querySelectorAll('.toc-link');
+      if (tocLinks.length > 0) {
+        const headingIds = Array.from(tocLinks)
+          .map(link => link.getAttribute('data-heading'))
+          .filter(Boolean);
+        const headingElements = headingIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateActiveLink() {
+          if (!headingElements.length) return;
+          let activeId = headingIds[0];
+          for (let i = 0; i < headingElements.length; i++) {
+            const rect = headingElements[i].getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.28) {
+              activeId = headingElements[i].id;
+            }
           }
+          tocLinks.forEach(link => {
+            if (link.getAttribute('data-heading') === activeId) {
+              link.classList.add('toc-active');
+            } else {
+              link.classList.remove('toc-active');
+            }
+          });
+        }
+
+        let ticking = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateActiveLink();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        updateActiveLink();
+      }
+
+      // Lazy Load Giscus Comments
+      const giscusContainer = document.getElementById('giscus-container');
+      if (giscusContainer) {
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded) return;
+          giscusContainer.dataset.loaded = 'true';
+          const isDark = document.documentElement.classList.contains('dark');
+          const s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.setAttribute('data-repo', 'VVVVVenxo/VVVVVenxo.github.io');
+          s.setAttribute('data-repo-id', 'R_kgDOQ5Bk1Q');
+          s.setAttribute('data-category', 'Announcements');
+          s.setAttribute('data-category-id', 'DIC_kwDOQ5Bk1c4DJO_-');
+          s.setAttribute('data-mapping', 'pathname');
+          s.setAttribute('data-strict', '0');
+          s.setAttribute('data-reactions-enabled', '1');
+          s.setAttribute('data-emit-metadata', '0');
+          s.setAttribute('data-input-position', 'top');
+          s.setAttribute('data-theme', isDark ? 'dark_dimmed' : 'light');
+          s.setAttribute('data-lang', 'zh-CN');
+          s.crossOrigin = 'anonymous';
+          s.async = true;
+          giscusContainer.appendChild(s);
+        };
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            entries => {
+              if (entries.some(e => e.isIntersecting)) {
+                loadGiscus();
+                io.disconnect();
+              }
+            },
+            { rootMargin: '300px' }
+          );
+          io.observe(giscusContainer);
+        } else {
+          loadGiscus();
         }
       }
-      iframe.contentWindow.postMessage(message, 'https://giscus.app')
-    }
-  }
+    })();
+  </script>  </main> <footer class="site-footer border-t border-[var(--border-color)]"> <div class="container py-8"> <div class="flex flex-col items-center justify-between gap-4 md:flex-row"> <div class="flex items-center gap-3"> <a href="https://github.com/VVVVVenxo" target="_blank" rel="noopener noreferrer" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="GitHub" title="GitHub"> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="mailto:1263147353@qq.com" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="Email" title="Email"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="4" width="20" height="16" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> </a> <a href="/atom.xml" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="RSS 订阅" title="RSS 订阅"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M4 11a9 9 0 0 1 9 9"></path> <path d="M4 4a16 16 0 0 1 16 16"></path> <circle cx="5" cy="19" r="1"></circle> </svg> </a> </div> <p class="text-xs text-[var(--text-tertiary)]">
+© 2024–2026 VVVVVenxo · To be a rock and not to roll.
+</p> </div> </div> </footer> <!-- Flat Search Modal --> <div id="search-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/45 px-4 pt-[10vh] backdrop-blur-xs" role="dialog" aria-modal="true" aria-label="全站搜索"> <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl"> <div class="flex items-center gap-3 border-b border-[var(--border-subtle)] px-4 py-3"> <svg class="shrink-0 text-[var(--text-tertiary)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> <input id="search-input" type="search" placeholder="搜索文章标题、关键词、技术栈（支持 C++ / Unity / 渲染 / 网络...）" class="w-full bg-transparent text-base text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none" autocomplete="off"> <button id="search-close" type="button" class="rounded border border-[var(--border-color)] px-2 py-0.5 text-xs text-[var(--text-tertiary)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
+ESC
+</button> </div> <div id="search-results" class="max-h-[62vh] overflow-y-auto divide-y divide-[var(--border-subtle)] px-4 py-2 text-sm"> <p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p> </div> </div> </div> <script>
+      (function () {
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const giscusFrame = document.querySelector('iframe.giscus-frame');
+            if (giscusFrame && giscusFrame.contentWindow) {
+              giscusFrame.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: isDark ? 'dark_dimmed' : 'light' } } },
+                'https://giscus.app'
+              );
+            }
+          });
+        }
 
-  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            const hidden = mobileMenu.classList.toggle('hidden');
+            mobileBtn.setAttribute('aria-expanded', String(!hidden));
+          });
+        }
 
-  if (isShuoshuo) {
-    'Giscus' === 'Giscus'
-      ? window.shuoshuoComment = { loadComment: loadGiscus }
-      : window.loadOtherComment = loadGiscus
-    return
-  }
+        // Code Copy Buttons
+        document.addEventListener('click', async e => {
+          const btn = e.target.closest('.copy-button');
+          if (!btn) return;
+          const wrapper = btn.closest('.code-block-wrapper');
+          const codeEl = wrapper ? wrapper.querySelector('pre code') : null;
+          if (!codeEl) return;
+          try {
+            await navigator.clipboard.writeText(codeEl.innerText);
+            const copyIcon = btn.querySelector('.copy-icon');
+            const checkIcon = btn.querySelector('.check-icon');
+            btn.classList.add('copied');
+            if (copyIcon) copyIcon.classList.add('hidden');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              if (copyIcon) copyIcon.classList.remove('hidden');
+              if (checkIcon) checkIcon.classList.add('hidden');
+            }, 1800);
+          } catch (_) {}
+        });
 
-  if ('Giscus' === 'Giscus' || !true) {
-    if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
-    else loadGiscus()
-  } else {
-    window.loadOtherComment = loadGiscus
-  }
-})()</script></div><script src="/js/site-refinement.js?v=20261020-1" defer></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
-  const pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:description\"]","link[rel=\"canonical\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+        // Search Modal
+        const searchBtn = document.getElementById('search-btn');
+        const searchModal = document.getElementById('search-modal');
+        const searchInput = document.getElementById('search-input');
+        const searchClose = document.getElementById('search-close');
+        const searchResults = document.getElementById('search-results');
+        let searchIndex = null;
 
-  window.pjax = new Pjax({
-    elements: 'a:not([target="_blank"])',
-    selectors: pjaxSelectors,
-    cacheBust: false,
-    analytics: false,
-    scrollRestoration: false
-  })
+        async function ensureSearchIndex() {
+          if (searchIndex) return searchIndex;
+          try {
+            const res = await fetch('/search.json');
+            searchIndex = await res.json();
+          } catch (_) {
+            searchIndex = [];
+          }
+          return searchIndex;
+        }
 
-  const triggerPjaxFn = (val) => {
-    if (!val) return
-    Object.values(val).forEach(fn => {
-      try {
-        fn()
-      } catch (err) {
-        console.debug('Pjax callback failed:', err)
-      }
-    })
-  }
+        function openSearch() {
+          if (!searchModal) return;
+          searchModal.classList.remove('hidden');
+          searchModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          ensureSearchIndex();
+          setTimeout(() => searchInput && searchInput.focus(), 30);
+        }
 
-  document.addEventListener('pjax:send', () => {
-    // removeEventListener
-    btf.removeGlobalFnEvent('pjaxSendOnce')
-    btf.removeGlobalFnEvent('themeChange')
+        function closeSearch() {
+          if (!searchModal) return;
+          searchModal.classList.add('hidden');
+          searchModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
 
-    // reset readmode
-    const $bodyClassList = document.body.classList
-    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+        if (searchBtn) searchBtn.addEventListener('click', openSearch);
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        if (searchModal) {
+          searchModal.addEventListener('click', e => {
+            if (e.target === searchModal) closeSearch();
+          });
+        }
 
-    triggerPjaxFn(window.globalFn.pjaxSend)
-  })
+        window.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (searchModal && searchModal.classList.contains('hidden')) openSearch();
+            else closeSearch();
+          } else if (e.key === 'Escape' && searchModal && !searchModal.classList.contains('hidden')) {
+            closeSearch();
+          }
+        });
 
-  document.addEventListener('pjax:complete', () => {
-    btf.removeGlobalFnEvent('pjaxCompleteOnce')
-    document.querySelectorAll('script[data-pjax]').forEach(item => {
-      const newScript = document.createElement('script')
-      const content = item.text || item.textContent || item.innerHTML || ""
-      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
-      newScript.appendChild(document.createTextNode(content))
-      item.parentNode.replaceChild(newScript, item)
-    })
+        function escapeHtml(s) {
+          return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
 
-    triggerPjaxFn(window.globalFn.pjaxComplete)
-  })
+        if (searchInput && searchResults) {
+          searchInput.addEventListener('input', async () => {
+            const q = searchInput.value.trim().toLowerCase();
+            if (!q) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p>';
+              return;
+            }
+            const data = await ensureSearchIndex();
+            const matched = data.filter(item => {
+              const title = (item.title || '').toLowerCase();
+              const content = (item.content || '').toLowerCase();
+              const tags = (item.tags || []).join(' ').toLowerCase();
+              const cats = (item.categories || []).join(' ').toLowerCase();
+              return title.includes(q) || tags.includes(q) || cats.includes(q) || content.includes(q);
+            });
 
-  document.addEventListener('pjax:error', e => {
-    if (e.request.status === 404) {
-      false
-        ? pjax.loadUrl('/404.html')
-        : window.location.href = e.request.responseURL
-    }
-  })
-})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章、Unity、C++、C#…" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.3"></script></div></div></body></html>
+            if (!matched.length) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">没有找到匹配的文章</p>';
+              return;
+            }
+
+            searchResults.innerHTML = matched
+              .slice(0, 15)
+              .map(item => {
+                const rawText = item.content || '';
+                const idx = rawText.toLowerCase().indexOf(q);
+                let snippet = rawText.slice(0, 110);
+                if (idx > 30) {
+                  snippet = '…' + rawText.slice(idx - 25, idx + 85) + '…';
+                }
+                return `
+                  <a href="${item.url}" class="block py-3.5 transition-colors hover:text-[var(--accent)]">
+                    <div class="flex items-baseline justify-between gap-2">
+                      <span class="font-semibold text-[var(--text-primary)]">${escapeHtml(item.title)}</span>
+                      <span class="shrink-0 text-xs text-[var(--text-tertiary)]">${escapeHtml(item.date || '')}</span>
+                    </div>
+                    <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">${escapeHtml(snippet)}</p>
+                  </a>
+                `;
+              })
+              .join('');
+          });
+        }
+      })();
+    </script> </body> </html>
