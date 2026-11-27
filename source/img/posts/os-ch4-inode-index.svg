@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="inode目录分离与硬软链接及Unix多级混合索引结构">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 4-1 · 文件系统核心：inode 目录分离、硬链接 vs 软链接与 Unix 混合索引</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: Directory & inode & Hard/Soft Link -->
+    <rect x="28" y="64" width="400" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="228" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 目录项与 inode 分离设计及硬链接 vs 软链接</text>
+
+    <rect x="44" y="106" width="368" height="72" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="128" fill="#287B73" font-weight="700">为什么要将 FCB 拆分为“目录项”与“索引节点 inode”：</text>
+    <text x="56" y="150" fill="#17343B">• 目录项仅存 <tspan font-weight="700">[文件名 + inode 号]</tspan>（体积缩小十倍），单盘块</text>
+    <text x="56" y="170" fill="#17343B">  可容纳极多目录项，<tspan font-weight="700" fill="#287B73">大幅减少查找目录时的磁盘 I/O 次数</tspan></text>
+
+    <rect x="44" y="190" width="368" height="130" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="56" y="212" fill="#17343B" font-weight="700">硬链接（Hard Link）vs 软链接（符号链接 Symbolic Link）：</text>
+    <text x="56" y="236" fill="#287B73" font-weight="700">• 硬链接（ln）：多个目录项指向同一个 inode 号（count++）</text>
+    <text x="56" y="256" fill="#17343B">  删除原文件名仅使 count--，直到 <tspan font-weight="700">count==0</tspan> 才真正释放数据；</text>
+    <text x="56" y="274" fill="#61747A">  不能跨文件系统建立，不能对目录建硬链接（防目录环路）</text>
+    <text x="56" y="296" fill="#C47743" font-weight="700">• 软链接（ln -s）：有独立 inode，数据块仅存目标路径串</text>
+    <text x="56" y="314" fill="#61747A">  删除原文件后软链接立即悬空失效；支持跨分区与链接目录</text>
+
+    <!-- Right Panel: Unix Multi-level Hybrid Indexing -->
+    <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="640" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. Unix 多级混合索引与最大文件长度计算</text>
+
+    <rect x="458" y="106" width="364" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="470" y="128" fill="#17343B" font-weight="700">设磁盘块大小 B = 4KB，每个盘块地址指针占 d = 4B：</text>
+    <text x="470" y="150" fill="#287B73" font-weight="700">⇒ 每个索引块可存盘块号个数：k = B / d = 4KB / 4B = 1024</text>
+    <text x="470" y="172" fill="#17343B">• <tspan font-weight="700">n 个直接地址项</tspan>：直接指向数据块，容量 = <tspan font-weight="700">n × 4KB</tspan></text>
+    <text x="470" y="192" fill="#17343B">• <tspan font-weight="700">1 个一次间址</tspan>：可寻址 k 块，容量 = <tspan font-weight="700">1024 × 4KB = 4MB</tspan></text>
+    <text x="470" y="212" fill="#17343B">• <tspan font-weight="700">1 个二次/三次间址</tspan>：容量为 <tspan font-weight="700">k²×4KB (4GB)</tspan> / <tspan font-weight="700">k³×4KB (4TB)</tspan></text>
+
+    <rect x="458" y="232" width="364" height="88" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="470" y="254" fill="#C47743" font-weight="700">位示图（BitMap 空闲盘块管理）行列转换公式：</text>
+    <text x="470" y="276" fill="#17343B">设字长 n 位（每行 n 列，0-based 行号 i、位号 j、盘块号 b）：</text>
+    <text x="470" y="298" fill="#287B73" font-weight="700">• 盘块号 b = n × i + j    |    i = b / n ， j = b % n</text>
+    <text x="470" y="314" fill="#61747A">（若行号/位号/块号从 1 开始，则 b = n × (i - 1) + j）</text>
+  </g>
+</svg>
