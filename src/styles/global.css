@@ -1219,6 +1219,25 @@ body {
   background-color: var(--bg-muted);
 }
 
+/* KaTeX Build-Time Math Blocks & Inline Formulas */
+.prose .math-block {
+  margin-block: 1.35em;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.375rem;
+  background-color: var(--bg-secondary);
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+}
+.prose .math-block .katex-display {
+  margin: 0;
+}
+.prose .katex {
+  font-size: 1.04em;
+  color: var(--text-primary);
+}
+
 /* Shiki Dual Theme & Code Block Copy Button */
 .code-block-wrapper {
   position: relative;

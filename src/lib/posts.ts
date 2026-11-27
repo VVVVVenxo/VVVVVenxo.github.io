@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
+import katex from 'katex';
 import { Marked } from 'marked';
 import { createHighlighter, type Highlighter } from 'shiki';
 
@@ -270,11 +271,68 @@ function postProcessHtml(html: string): string {
   return out;
 }
 
+function cleanTexForToc(tex: string): string {
+  return tex
+    .replace(/\\(?:text|mathrm|mathbf|mathit)\{([^}]*)\}/g, '$1')
+    .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g, '($1/$2)')
+    .replace(/\\cdot/g, '·')
+    .replace(/\\times/g, '×')
+    .replace(/\\leq?/g, '≤')
+    .replace(/\\geq?/g, '≥')
+    .replace(/\\neq/g, '≠')
+    .replace(/\\pi/g, 'π')
+    .replace(/\\theta/g, 'θ')
+    .replace(/\\Omega/g, 'Ω')
+    .replace(/\\omega/g, 'ω')
+    .replace(/\^\{-1\}/g, '⁻¹')
+    .replace(/\^T\b/g, 'ᵀ')
+    .replace(/\\[a-zA-Z]+/g, '')
+    .replace(/[{}]/g, '')
+    .trim();
+}
+
 export async function renderMarkdown(markdown: string): Promise<{ html: string; headings: TocHeading[] }> {
   const highlighter = await getShikiHighlighter();
   const loadedLangs = new Set(highlighter.getLoadedLanguages());
   const headings: TocHeading[] = [];
   const usedSlugs = new Map<string, number>();
+
+  // Extract and render KaTeX blocks ($$...$$) and inline math ($...$) outside code blocks/spans
+  const codePlaceholders: string[] = [];
+  const mathBlocks: { html: string; raw: string }[] = [];
+  const mathInlines: { html: string; raw: string }[] = [];
+
+  let mathProcessedMd = markdown.replace(/(```[\s\S]*?```|`[^`\n]+`)/g, match => {
+    const idx = codePlaceholders.length;
+    codePlaceholders.push(match);
+    return `@@CODE_SPAN_${idx}@@`;
+  });
+
+  mathProcessedMd = mathProcessedMd.replace(/\$\$([\s\S]+?)\$\$/g, (_match, tex: string) => {
+    const idx = mathBlocks.length;
+    const rendered = katex.renderToString(tex.trim(), {
+      displayMode: true,
+      throwOnError: false,
+      strict: false,
+    });
+    mathBlocks.push({ html: `<div class="math-block">${rendered}</div>`, raw: tex.trim() });
+    return `@@KATEX_BLOCK_${idx}@@`;
+  });
+
+  mathProcessedMd = mathProcessedMd.replace(/\$([^\$\n]+?)\$/g, (_match, tex: string) => {
+    const idx = mathInlines.length;
+    const rendered = katex.renderToString(tex.trim(), {
+      displayMode: false,
+      throwOnError: false,
+      strict: false,
+    });
+    mathInlines.push({ html: rendered, raw: tex.trim() });
+    return `@@KATEX_INLINE_${idx}@@`;
+  });
+
+  mathProcessedMd = mathProcessedMd.replace(/@@CODE_SPAN_(\d+)@@/g, (_match, idxStr: string) => {
+    return codePlaceholders[Number(idxStr)];
+  });
 
   const markedInstance = new Marked();
 
@@ -284,7 +342,11 @@ export async function renderMarkdown(markdown: string): Promise<{ html: string; 
     renderer: {
       heading({ tokens, depth }) {
         const innerHtml = this.parser.parseInline(tokens);
-        const plainText = stripHtml(innerHtml);
+        const tocHtml = innerHtml.replace(/@@KATEX_INLINE_(\d+)@@/g, (_m, idxStr: string) => {
+          const item = mathInlines[Number(idxStr)];
+          return item ? cleanTexForToc(item.raw) : '';
+        });
+        const plainText = stripHtml(tocHtml);
         const slug = slugifyHeading(plainText, usedSlugs);
         if (depth === 2 || depth === 3) {
           headings.push({ depth, text: plainText, slug });
@@ -294,6 +356,14 @@ export async function renderMarkdown(markdown: string): Promise<{ html: string; 
       },
       code({ text, lang }) {
         const normalized = normalizeLang(lang);
+        if (normalized === 'math' || normalized === 'latex' || normalized === 'katex') {
+          const rendered = katex.renderToString(text.trim(), {
+            displayMode: true,
+            throwOnError: false,
+            strict: false,
+          });
+          return `<div class="math-block">${rendered}</div>\n`;
+        }
         const finalLang = loadedLangs.has(normalized) ? normalized : 'text';
         const shikiHtml = highlighter.codeToHtml(text, {
           lang: finalLang,
@@ -313,8 +383,23 @@ export async function renderMarkdown(markdown: string): Promise<{ html: string; 
     },
   });
 
-  const rawHtml = await markedInstance.parse(markdown);
-  const html = postProcessHtml(rawHtml);
+  const rawHtml = await markedInstance.parse(mathProcessedMd);
+  let html = postProcessHtml(rawHtml);
+
+  if (mathBlocks.length > 0) {
+    html = html.replace(/<p>\s*@@KATEX_BLOCK_(\d+)@@\s*<\/p>/g, (_m, idxStr: string) => {
+      return mathBlocks[Number(idxStr)]?.html || '';
+    });
+    html = html.replace(/@@KATEX_BLOCK_(\d+)@@/g, (_m, idxStr: string) => {
+      return mathBlocks[Number(idxStr)]?.html || '';
+    });
+  }
+  if (mathInlines.length > 0) {
+    html = html.replace(/@@KATEX_INLINE_(\d+)@@/g, (_m, idxStr: string) => {
+      return mathInlines[Number(idxStr)]?.html || '';
+    });
+  }
+
   return { html, headings };
 }
 

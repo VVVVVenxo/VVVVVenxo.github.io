@@ -74,12 +74,9 @@ description: 梳理实时渲染管线的完整流程：从 CPU 剔除与渲染�
 
 三维空间中的 `3x3` 矩阵只能表示旋转和缩放（线性变换），无法表示平移（仿射变换 `p' = R * p + t`）。引入第 4 个分量 `w` 后，可以用统一的 `4x4` 矩阵完成变换：
 
-```text
-┌ r00  r01  r02  tx ┐   ┌ x ┐   ┌ r00*x + r01*y + r02*z + tx ┐
-│ r10  r11  r12  ty │ * │ y │ = │ r10*x + r11*y + r12*z + ty │
-│ r20  r21  r22  tz │   │ z │   │ r20*x + r21*y + r22*z + tz │
-└  0    0    0    1 ┘   └ w ┘   └             w              ┘
-```
+$$
+\begin{bmatrix} r_{00} & r_{01} & r_{02} & t_x \\ r_{10} & r_{11} & r_{12} & t_y \\ r_{20} & r_{21} & r_{22} & t_z \\ 0 & 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} x \\ y \\ z \\ w \end{bmatrix} = \begin{bmatrix} r_{00}x + r_{01}y + r_{02}z + t_x w \\ r_{10}x + r_{11}y + r_{12}z + t_y w \\ r_{20}x + r_{21}y + r_{22}z + t_z w \\ w \end{bmatrix}
+$$
 
 - **空间点（Position）**：设为 `(x, y, z, 1)`，受平移分量 `(tx, ty, tz)` 影响。
 - **方向向量（Vector，如法线、切线、光方向）**：设为 `(x, y, z, 0)`，平移分量被 `w = 0` 清零，仅受旋转与缩放影响。
@@ -92,16 +89,15 @@ description: 梳理实时渲染管线的完整流程：从 CPU 剔除与渲染�
 设表面切向量为 `t`，法向量为 `n`，两者垂直，满足点积 `transpose(t) * n = 0`。
 经过矩阵 `M` 变换后，新切向量为 `t' = M * t`。设法线变换矩阵为 `G`（即 `n' = G * n`），要保持垂直关系：
 
-```text
-transpose(t') * n' = transpose(M * t) * (G * n)
-                   = transpose(t) * (transpose(M) * G) * n = 0
-```
+$$
+(\mathbf{t}')^T \mathbf{n}' = (\mathbf{M}\mathbf{t})^T (\mathbf{G}\mathbf{n}) = \mathbf{t}^T (\mathbf{M}^T \mathbf{G}) \mathbf{n} = 0
+$$
 
-要使上式恒成立，需满足 `transpose(M) * G = I`，即：
+要使上式恒成立，需满足 $\mathbf{M}^T \mathbf{G} = \mathbf{I}$，即：
 
-```text
-G = transpose(inverse(M))
-```
+$$
+\mathbf{G} = (\mathbf{M}^{-1})^T
+$$
 
 - **结论**：法线向量必须乘以模型矩阵的**逆转置矩阵**。
 - **代码实现**：在 HLSL 中，列向量右乘转置矩阵等价于行向量左乘原矩阵，因此通常写作 `mul(normalOS, (float3x3)UNITY_MATRIX_I_M)`（即 URP 中 `TransformObjectToWorldNormal` 的内部实现）。仅当模型只含旋转与等比缩放时，才能直接用 `M` 变换法线。
@@ -129,11 +125,9 @@ G = transpose(inverse(M))
    - 光栅化器遍历三角形覆盖的像素，计算像素在三角形内的重心坐标 `(α, β, γ)`（满足 `α + β + γ = 1`）。
    - **透视校正插值**：三维空间中的线性属性投影到二维屏幕后不再是线性的。若直接在屏幕空间对 UV 做线性插值，倾斜表面会出现贴图扭曲。硬件实际对 `属性 / w` 和 `1 / w` 分别做线性插值，再相除还原真实值：
 
-```text
-         α * (I0 / w0) + β * (I1 / w1) + γ * (I2 / w2)
-I_real = ─────────────────────────────────────────────
-         α * (1 / w0)  + β * (1 / w1)  + γ * (1 / w2)
-```
+$$
+I_{\text{real}} = \frac{\alpha (I_0 / w_0) + \beta (I_1 / w_1) + \gamma (I_2 / w_2)}{\alpha (1 / w_0) + \beta (1 / w_1) + \gamma (1 / w_2)}
+$$
 
 4. **Early-Z（提前深度测试）**：
    - 硬件在执行片元着色器**之前**，先对比当前片元深度与深度缓冲（Z-Buffer）。若被前景遮挡则直接丢弃，避免无谓的 Fragment Shader 计算。
@@ -199,11 +193,9 @@ CBUFFER_END
 - **Cook-Torrance PBR 微平面模型**：
   基于物理的渲染（PBR）将反射分为漫反射项与镜面反射项，满足能量守恒：
 
-```text
-               c_albedo       D(H) * F(V, H) * G(L, V, H)
-f(L, V) = kd * ──────── + ─────────────────────────────────
-                  π          4 * dot(N, L) * dot(N, V)
-```
+$$
+f(\mathbf{L}, \mathbf{V}) = k_d \frac{\mathbf{c}_{\text{albedo}}}{\pi} + \frac{D(\mathbf{H})\,F(\mathbf{V}, \mathbf{H})\,G(\mathbf{L}, \mathbf{V}, \mathbf{H})}{4\,(\mathbf{N} \cdot \mathbf{L})(\mathbf{N} \cdot \mathbf{V})}
+$$
 
 其中镜面反射分子由 **`D`、`G`、`F` 三个核心函数** 构成：
 
