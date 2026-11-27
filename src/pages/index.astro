@@ -134,24 +134,36 @@ const featuredProjects = [
         {
           featuredPost && (
             <article class="home-post home-post-featured">
-              <div class="home-post-meta">
-                <time datetime={featuredPost.dateStr}>{featuredPost.dateStr}</time>
-                <span>{featuredPost.readingMinutes} 分钟阅读</span>
-                <span class="text-[var(--accent)]">{featuredPost.categoryBadge}</span>
+              <div>
+                <div class="home-post-meta">
+                  <time datetime={featuredPost.dateStr}>{featuredPost.dateStr}</time>
+                  <span>{featuredPost.readingMinutes} 分钟阅读</span>
+                  <span class="text-[var(--accent)]">{featuredPost.categoryBadge}</span>
+                </div>
+                <div class="home-post-copy">
+                  <h3 lang="zh-CN">
+                    <a href={featuredPost.url}>{featuredPost.title}</a>
+                  </h3>
+                  <p lang="zh-CN">{featuredPost.description}</p>
+                  <a href={featuredPost.url} class="home-text-link home-read-link">
+                    阅读文章
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M5 12h14"></path>
+                      <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+                  </a>
+                </div>
               </div>
-              <div class="home-post-copy">
-                <h3 lang="zh-CN">
-                  <a href={featuredPost.url}>{featuredPost.title}</a>
-                </h3>
-                <p lang="zh-CN">{featuredPost.description}</p>
-                <a href={featuredPost.url} class="home-text-link home-read-link">
-                  阅读文章
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 12h14"></path>
-                    <path d="m12 5 7 7-7 7"></path>
-                  </svg>
+              {(featuredPost.coverThumb || featuredPost.cover) && (
+                <a href={featuredPost.url} class="home-post-thumb" aria-label={featuredPost.title}>
+                  <img
+                    src={featuredPost.coverThumb || featuredPost.cover}
+                    alt={featuredPost.title}
+                    loading="eager"
+                    decoding="async"
+                  />
                 </a>
-              </div>
+              )}
             </article>
           )
         }
@@ -169,6 +181,16 @@ const featuredProjects = [
                 </h3>
                 <p lang="zh-CN">{post.description}</p>
               </div>
+              {(post.coverThumb || post.cover) && (
+                <a href={post.url} class="home-post-thumb" aria-label={post.title}>
+                  <img
+                    src={post.coverThumb || post.cover}
+                    alt={post.title}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              )}
             </article>
           ))
         }

@@ -66,6 +66,16 @@ const { name, posts } = Astro.props;
                 </div>
               )}
             </div>
+            {(post.coverThumb || post.cover) && (
+              <a href={post.url} class="post-entry-thumb" aria-label={post.title}>
+                <img
+                  src={post.coverThumb || post.cover}
+                  alt={post.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            )}
           </article>
         ))
       }

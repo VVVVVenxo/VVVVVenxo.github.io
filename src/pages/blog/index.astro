@@ -58,6 +58,16 @@ const filterCategories = categories.filter(c => !['技术笔记', '随笔杂谈'
                 </div>
               )}
             </div>
+            {(post.coverThumb || post.cover) && (
+              <a href={post.url} class="post-entry-thumb" aria-label={post.title}>
+                <img
+                  src={post.coverThumb || post.cover}
+                  alt={post.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            )}
           </article>
         ))
       }

@@ -35,6 +35,19 @@ const { post, prevPost, nextPost } = Astro.props;
   ogType="article"
   activeNav="blog"
 >
+  {post.cover && (
+    <div class="container-wide pt-8">
+      <div class="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[#e8ece9] shadow-[var(--shadow-card)]">
+        <img
+          src={post.cover}
+          alt={post.title}
+          class="mx-auto block h-auto max-h-[420px] w-full object-contain"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  )}
   <div class="post-reading-shell container-wide flex py-10 md:py-14">
     <article class="min-w-0 flex-1">
       <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8">
