@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：IBL 基于图像的光照：漫反射辐照度图卷积与镜面反射 Split-Sum 拆解近似</text>
+
+  <!-- 左栏：漫反射 IBL -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 为什么实时 IBL 必须做离线预计算与漫反射辐照度图</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#17343B" font-weight="700">实时逐像素积分环境贴图（Cubemap）的算力瓶颈：</text>
+    <text x="56" y="134" fill="#17343B">• 为求解反射方程，每个屏幕像素需对半球数千个方向采样</text>
+    <text x="56" y="154" fill="#17343B">  HDR 环境贴图，在实时渲染帧率下完全不可行</text>
+    <text x="56" y="175" fill="#287B73" font-weight="700">• 拆解思路：将反射方程拆为“漫反射 + 镜面反射”两项，</text>
+    <text x="56" y="194" fill="#287B73" font-weight="700">  离线预卷积烘焙进贴图，运行期仅需常数次纹理采样</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">漫反射 IBL：辐照度图（Irradiance Map）或球谐函数 SH</text>
+    <text x="56" y="252" fill="#17343B">• 因 Lambert 漫反射 <tspan font-family="Consolas, monospace">c/π</tspan> 与视线 <tspan font-family="Consolas, monospace">ωo</tspan> 无关，可移出积分：</text>
+    <text x="56" y="273" fill="#287B73" font-weight="700" font-family="Consolas, monospace">L_diff = (c / π) * ∫_Ω L_i(ωi) (n · ωi) dω_i</text>
+    <text x="56" y="294" fill="#17343B">• 积分仅依赖法线 <tspan font-family="Consolas, monospace">n</tspan>：离线遍历法线方向卷积生成 <tspan font-family="Consolas, monospace">32×32</tspan></text>
+    <text x="56" y="314" fill="#17343B">  Irradiance Cubemap（或压缩为 9 个二阶球谐系数 SH）</text>
+  </g>
+
+  <!-- 右栏：镜面反射 Split-Sum -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 镜面反射 IBL：Epic Games Split-Sum 拆解近似法</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">把乘积积分拆解为“预滤波环境图 × 2D BRDF 查找表”：</text>
+    <text x="468" y="134" fill="#17343B">• 镜面波瓣同时依赖法线 n、视线 v 与粗糙度 r，维度过高；</text>
+    <text x="468" y="154" fill="#17343B">  Epic 假设视角等于法线（<tspan font-family="Consolas, monospace">v = n = R</tspan>），将积分拆为两项：</text>
+    <text x="468" y="175" fill="#287B73" font-weight="700">① 预滤波环境图：按不同粗糙度 r 用 GGX 重要性采样</text>
+    <text x="468" y="194" fill="#287B73" font-weight="700">   模糊环境图，存入 Cubemap 的 5 级 Mipmap 链中</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">② 2D BRDF 积分查找表（LUT · RG 双通道贴图）：</text>
+    <text x="468" y="252" fill="#17343B">• 将 Schlick 菲涅尔代入积分，分离出关于 <tspan font-weight="700">F0 的缩放</tspan></text>
+    <text x="468" y="272" fill="#17343B">  <tspan font-weight="700">系数 Scale (存入 R 通道) 与偏移 Bias (存入 G 通道)</tspan></text>
+    <text x="468" y="293" fill="#17343B">• 以 <tspan font-family="Consolas, monospace">(NdotV, roughness)</tspan> 为 UV 采样全局 2D LUT：</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700" font-family="Consolas, monospace">L_spec = Prefiltered * (F0 * lut.r + lut.g)</text>
+  </g>
+</svg>

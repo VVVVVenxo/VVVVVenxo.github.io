@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：Cook-Torrance 微表面镜面 BRDF 三项（D 法线分布 / F 菲涅尔 / G 几何遮蔽）</text>
+
+  <!-- 左栏：Cook-Torrance 总式与 D / G -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 微表面模型总公式、GGX 法线分布 (D) 与几何函数 (G)</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">Cook-Torrance 镜面反射 BRDF 标准公式：</text>
+    <text x="56" y="134" fill="#C47743" font-weight="700" font-family="Consolas, monospace">f_spec = (D(h) * F(v,h) * G(l,v)) / (4*(n·l)*(n·v))</text>
+    <text x="56" y="156" fill="#17343B">• <tspan font-weight="700">半程向量 h = normalize(l + v)</tspan>：仅微法线 <tspan font-family="Consolas, monospace">m = h</tspan> 的</text>
+    <text x="56" y="176" fill="#17343B">  微表面才能把入射光 l 恰好镜面反射进观察方向 v</text>
+    <text x="56" y="194" fill="#61747A">• 粗糙度映射：将美术 roughness 平方 <tspan font-family="Consolas, monospace">α = r²</tspan> 使感知线性</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">Trowbridge-Reitz GGX (D) 与 Smith-GGX (G)：</text>
+    <text x="56" y="252" fill="#17343B" font-weight="700" font-family="Consolas, monospace">D_GGX(n, h) = α² / (π * ((n·h)²*(α² - 1) + 1)²)</text>
+    <text x="56" y="273" fill="#17343B">• <tspan font-weight="700">GGX 核心优势</tspan>：具有真实的“亮核 + 柔和长尾高光光晕”</text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">Smith 几何项</tspan>：<tspan font-family="Consolas, monospace">G = G1(n,v)*G1(n,l)</tspan>，模拟粗糙微平面</text>
+    <text x="56" y="313" fill="#17343B">  对入射光的自阴影遮挡与出射光的自掩蔽损耗</text>
+  </g>
+
+  <!-- 右栏：菲涅尔项 F 与金属度工作流 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. Fresnel-Schlick 菲涅尔方程与金属度-粗糙度工作流</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">Schlick 菲涅尔近似公式（掠射角全反射效应）：</text>
+    <text x="468" y="134" fill="#287B73" font-weight="700" font-family="Consolas, monospace">F(v, h) = F0 + (1 - F0) * (1 - (v · h))⁵</text>
+    <text x="468" y="156" fill="#17343B">• <tspan font-weight="700">垂直入射 (v·h = 1)</tspan>：反射率等于材质基础反射率 <tspan font-weight="700" fill="#C47743">F0</tspan></text>
+    <text x="468" y="176" fill="#17343B">• <tspan font-weight="700">掠射边缘 (v·h → 0)</tspan>：任何表面在视线擦边处的反射率</text>
+    <text x="468" y="194" fill="#17343B">  均趋近于 <tspan font-weight="700" fill="#287B73">100%（1.0）</tspan>，形成真实的物体边缘菲涅尔反光</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">电介质（非金属）vs 导体（金属）与 F0 统一插值公式：</text>
+    <text x="468" y="252" fill="#17343B">• <tspan font-weight="700">非金属 (metallic=0)</tspan>：F0 极低且无色，统一取常数 <tspan font-weight="700" font-family="Consolas, monospace">0.04</tspan></text>
+    <text x="468" y="272" fill="#17343B">• <tspan font-weight="700">纯金属 (metallic=1)</tspan>：内部自由电子立即吸收全部折射光</text>
+    <text x="468" y="292" fill="#17343B">  （<tspan font-weight="700" fill="#C47743">无漫反射 kd=0</tspan>），且镜面高光带染色 (F0 = BaseColor)</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700" font-family="Consolas, monospace">F0 = lerp(float3(0.04), BaseColor, metallic)</text>
+  </g>
+</svg>

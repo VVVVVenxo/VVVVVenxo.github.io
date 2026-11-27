@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：辐射度量学四大核心物理量、渲染方程（Rendering Equation）与能量守恒</text>
+
+  <!-- 左栏：辐射度量学四物理量 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 辐射度量学（Radiometry）四大基本量与立体角</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">四级辐射物理量微分定义（球面总立体角 Ω = 4π sr）：</text>
+    <text x="56" y="133" fill="#17343B">1. <tspan font-weight="700">辐射通量 Φ (Flux · W)</tspan>：单位时间发射或接收的总能量</text>
+    <text x="56" y="153" fill="#17343B">2. <tspan font-weight="700">辐射强度 I (W/sr)</tspan>：<tspan font-family="Consolas, monospace">I = dΦ / dω</tspan>（单位立体角通量）</text>
+    <text x="56" y="173" fill="#17343B">3. <tspan font-weight="700">辐照度 E (W/m²)</tspan>：<tspan font-family="Consolas, monospace">E = dΦ / dA</tspan>（单位受光面积通量）</text>
+    <text x="56" y="194" fill="#C47743" font-weight="700">4. 辐射率 L (Radiance)：L = d²Φ / (dω dA cosθ)</text>
+
+    <rect x="44" y="216" width="364" height="108" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="236" fill="#287B73" font-weight="700">为什么 Shader 直接计算的 RGB 就是辐射率 Radiance：</text>
+    <text x="56" y="258" fill="#17343B">• <tspan font-weight="700">距离无关性</tspan>：在真空无介质衰减下，Radiance 沿光线传播</text>
+    <text x="56" y="278" fill="#17343B">  方向数值恒定不变（表面出射点 L 等于相机像素接收 L）</text>
+    <text x="56" y="300" fill="#17343B">• <tspan font-weight="700">余弦定律</tspan>：斜射面积为 <tspan font-family="Consolas, monospace">dA/cosθ</tspan>，故 <tspan font-family="Consolas, monospace">dE = L cosθ dω</tspan></text>
+  </g>
+
+  <!-- 右栏：BRDF 与渲染方程 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 双向反射分布函数（BRDF）与 Kajiya 反射方程</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">BRDF 定义与半球积分反射方程：</text>
+    <text x="468" y="134" fill="#17343B" font-weight="700" font-family="Consolas, monospace">f_r(ωi, ωo) = dL_o / dE_i = dL_o / (L_i cosθ dω)</text>
+    <text x="468" y="156" fill="#287B73" font-weight="700" font-family="Consolas, monospace">L_o(ωo) = ∫_Ω f_r(ωi, ωo) L_i(ωi) (n · ωi) dω_i</text>
+    <text x="468" y="176" fill="#17343B">• <tspan font-weight="700">物理含义</tspan>：对上半球 Ω 所有入射方向的辐射率加权积分</text>
+    <text x="468" y="194" fill="#61747A">• Lambert 漫反射 BRDF 为常数：<tspan font-family="Consolas, monospace">f_diff = albedo / π</tspan></text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">基于物理的 BRDF 必须满足的两大物理公理：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">亥姆霍兹互易律</tspan>：交换入射与出射方向值不变</text>
+    <text x="468" y="272" fill="#17343B" font-family="Consolas, monospace">   f_r(ωi, ωo) = f_r(ωo, ωi)</text>
+    <text x="468" y="294" fill="#17343B">2. <tspan font-weight="700">能量守恒</tspan>：出射能量 ≤ 入射能量 (<tspan font-family="Consolas, monospace">∫f_r cosθ dω ≤ 1</tspan>)，</text>
+    <text x="468" y="314" fill="#287B73" font-weight="700">   漫反射权重必为：k_d = (1 - F) * (1 - metallic)</text>
+  </g>
+</svg>

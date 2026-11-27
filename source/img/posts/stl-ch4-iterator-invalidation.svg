@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：STL 五级迭代器能力层级、算法分派（Tag Dispatching）与迭代器失效铁律</text>
+
+  <!-- 左栏：五级迭代器分类与算法要求 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. STL 迭代器五级范畴与 std::sort 内省排序（Introsort）</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">由弱到强的五类迭代器范畴（iterator_category）：</text>
+    <text x="56" y="133" fill="#17343B">1. <tspan font-weight="700">Input / Output</tspan>：单遍读写流（如 <tspan font-family="Consolas, monospace">istream_iterator</tspan>）</text>
+    <text x="56" y="153" fill="#17343B">2. <tspan font-weight="700">Forward (前向)</tspan>：仅支持 <tspan font-family="Consolas, monospace">++it</tspan>（如 <tspan font-family="Consolas, monospace">unordered_map</tspan>）</text>
+    <text x="56" y="173" fill="#17343B">3. <tspan font-weight="700">Bidirectional (双向)</tspan>：支持 <tspan font-family="Consolas, monospace">++ / --</tspan>（<tspan font-family="Consolas, monospace">list, map</tspan>）</text>
+    <text x="56" y="193" fill="#287B73" font-weight="700">4. <tspan font-weight="700">RandomAccess</tspan>：支持 <tspan font-family="Consolas, monospace">it + n</tspan>（如 <tspan font-family="Consolas, monospace">vector, deque</tspan>）</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">为什么 std::sort 不能排 list，及其三阶段混合内省排序：</text>
+    <text x="56" y="252" fill="#17343B">• <tspan font-family="Consolas, monospace">std::sort</tspan> 需随机访问迭代器（O(1) 算三数取中枢纽）；</text>
+    <text x="56" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">std::list</tspan> 只能调用成员归并排序 <tspan font-family="Consolas, monospace">list::sort()</tspan></text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">Introsort</tspan>：主用快排 → 递归深超 <tspan font-family="Consolas, monospace">2*logN</tspan> 转<tspan font-weight="700" fill="#C47743">堆排序</tspan></text>
+    <text x="56" y="313" fill="#17343B">  （防 O(N²)）→ 子区间长度 ≤ 16 时转<tspan font-weight="700" fill="#287B73">插入排序</tspan>收尾</text>
+  </g>
+
+  <!-- 右栏：迭代器失效规则 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 四大容器插入/删除迭代器失效核心规则与安全删除范式</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="116" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">各容器修改操作后的迭代器失效范围：</text>
+    <text x="468" y="133" fill="#17343B">• <tspan font-weight="700">vector</tspan>：扩容则<tspan font-weight="700" fill="#C47743">全失效</tspan>；未扩容插删则<tspan font-weight="700">操作点及之后失效</tspan></text>
+    <text x="468" y="153" fill="#17343B">• <tspan font-weight="700">deque</tspan>：中间插删<tspan font-weight="700" fill="#C47743">全失效</tspan>；首尾插若扩 map 则迭代器</text>
+    <text x="468" y="173" fill="#17343B">  全失效（但首尾插时指向已有元素的引用/指针不失效）</text>
+    <text x="468" y="194" fill="#287B73" font-weight="700">• <tspan font-weight="700">list / map / set</tspan>：插入不失效；删除<tspan font-weight="700">仅被删节点失效</tspan></text>
+
+    <rect x="456" y="218" width="362" height="106" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="238" fill="#C47743" font-weight="700">遍历中按条件删除元素的通用安全写法（C++11 起）：</text>
+    <text x="468" y="260" fill="#17343B">• 严禁 <tspan font-family="Consolas, monospace">c.erase(it); ++it;</tspan> (对失效迭代器自增属 UB)</text>
+    <text x="468" y="282" fill="#287B73" font-weight="700" font-family="Consolas, monospace">if (pred(*it)) it = c.erase(it); // 接下一迭代器</text>
+    <text x="468" y="302" fill="#287B73" font-weight="700" font-family="Consolas, monospace">else           ++it;             // vector 优选 erase-remove</text>
+  </g>
+</svg>
