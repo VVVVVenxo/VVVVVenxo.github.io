@@ -8,6 +8,20 @@
     <managingEditor>VVVVVenxo</managingEditor>
     <atom:link href="https://VVVVVenxo.github.io/atom.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>【Unity】ECS数据导向架构与JobSystem实战</title>
+      <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90Unity%E3%80%91ECS%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%90%91%E6%9E%B6%E6%9E%84%E4%B8%8EJobSystem%E5%AE%9E%E6%88%98/</link>
+      <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90Unity%E3%80%91ECS%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%90%91%E6%9E%B6%E6%9E%84%E4%B8%8EJobSystem%E5%AE%9E%E6%88%98/</guid>
+      <pubDate>Fri, 27 Nov 2026 23:30:00 GMT</pubDate>
+      <description>系统梳理 Unity DOTS（数据导向型技术栈）核心架构与工程实践：传统 MonoBehaviour 离散堆内存（AoS）与 ECS Archetype 16KB Chunk（SoA）布局对比，结构性变更开销、EntityCommandBuffer 与可开关组件，C# Job System 工作窃取调度与 NativeContainer 安全检查，以及 Burst 编译器 SIMD 向量化与指针别名消除。</description>
+    </item>
+    <item>
+      <title>【C++】多线程并发与C++11内存模型</title>
+      <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90C%2B%2B%E3%80%91%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91%E4%B8%8EC%2B%2B11%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</link>
+      <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90C%2B%2B%E3%80%91%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91%E4%B8%8EC%2B%2B11%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</guid>
+      <pubDate>Fri, 27 Nov 2026 23:00:00 GMT</pubDate>
+      <description>系统梳理 C++ 多线程并发与 C++11 内存模型：多核 CPU 缓存一致性（MESI）、Store Buffer 内存乱序与伪共享消除，C++11 六种 std::memory_order 与 Acquire-Release 同步机制，std::atomic CAS 无锁操作与 ABA 问题，以及互斥锁、条件变量与固定工作线程池实现。</description>
+    </item>
+    <item>
       <title>【C++】模板泛型与现代C++核心特性</title>
       <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90C%2B%2B%E3%80%91%E6%A8%A1%E6%9D%BF%E6%B3%9B%E5%9E%8B%E4%B8%8E%E7%8E%B0%E4%BB%A3C%2B%2B%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7/</link>
       <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90C%2B%2B%E3%80%91%E6%A8%A1%E6%9D%BF%E6%B3%9B%E5%9E%8B%E4%B8%8E%E7%8E%B0%E4%BB%A3C%2B%2B%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7/</guid>
@@ -167,20 +181,6 @@
       <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90Unity%E3%80%91DrawCall%E4%B8%8E%E5%90%88%E6%89%B9%E4%BC%98%E5%8C%96/</guid>
       <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
       <description>深入理解 DrawCall 的概念与开销，剖析 UGUI 的合批规则（以 Canvas 为单位、Depth 计算、VisibleList 排序），并对比静态合批与动态合批，总结降低 DrawCall 的实战策略。</description>
-    </item>
-    <item>
-      <title>【Unity】资源加载与热更新</title>
-      <link>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90Unity%E3%80%91%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E4%B8%8E%E7%83%AD%E6%9B%B4%E6%96%B0/</link>
-      <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90Unity%E3%80%91%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E4%B8%8E%E7%83%AD%E6%9B%B4%E6%96%B0/</guid>
-      <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
-      <description>梳理 Unity 的资源加载体系——从 Resources、AssetBundle 到 Addressables，同步与异步加载的原理与陷阱，引用计数管理，以及 Lua 与 HybridCLR 两种热更新方案的对比。</description>
-    </item>
-    <item>
-      <title>【算法】排序算法大全</title>
-      <link>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</link>
-      <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</guid>
-      <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
-      <description>系统梳理八大排序算法——选择、冒泡、插入、希尔、归并、快速、堆、计数排序，包含原理、复杂度、稳定性分析与 C# 代码实现，是游戏客户端开发的核心基础知识。</description>
     </item>
   </channel>
 </rss>

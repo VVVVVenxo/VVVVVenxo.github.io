@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：C# Job System 工作窃取队列、JobHandle 依赖图与 NativeContainer 安全检查</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 工作窃取调度（Work-Stealing）与 JobHandle 依赖链</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">固定 Worker 线程池与双端工作窃取队列：</text>
+    <text x="56" y="134" fill="#17343B">• Unity 启动时按 CPU 核心数创建固定数量的 Worker 线程，</text>
+    <text x="56" y="155" fill="#17343B">  避免运行期频繁创建线程引发上下文切换</text>
+    <text x="56" y="175" fill="#17343B">• 每个 Worker 拥有独立任务队列；当自身队列为空时，自动从</text>
+    <text x="56" y="194" fill="#61747A">  其他繁忙线程队列尾部窃取任务分块（Batch）并行执行</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">JobHandle 有向无环依赖图（DAG）调度规范：</text>
+    <text x="56" y="252" fill="#17343B">• <tspan font-family="Consolas, monospace">JobB.Schedule(handleA)</tspan> 声明 JobB 必须在 JobA 完成后执行</text>
+    <text x="56" y="272" fill="#17343B">• 多个前置依赖通过 <tspan font-family="Consolas, monospace">JobHandle.CombineDependencies</tspan> 合并</text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">避免在 Schedule 后立即调用 Complete()</tspan>：应集中提交整条</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  依赖链，直到真正需要读取计算结果时再执行 Complete()</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. NativeContainer 三种分配器与读写冲突安全检查</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">NativeContainer 三类内存分配器（Allocator）：</text>
+    <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700" font-family="Consolas, monospace">Allocator.Temp</tspan>：线程栈式线性分配，最快，限当前帧函数内</text>
+    <text x="468" y="154" fill="#17343B">2. <tspan font-weight="700" font-family="Consolas, monospace">Allocator.TempJob</tspan>：无锁环形缓冲分配，生命周期 4 帧以内</text>
+    <text x="468" y="175" fill="#17343B">3. <tspan font-weight="700" font-family="Consolas, monospace">Allocator.Persistent</tspan>：底层 <tspan font-family="Consolas, monospace">malloc</tspan> 分配，可跨帧长期持有</text>
+    <text x="468" y="194" fill="#61747A">• 所有 NativeContainer 用完必须调用 <tspan font-family="Consolas, monospace">Dispose()</tspan> 释放非托管内存</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">AtomicSafetyHandle 编译/运行期数据竞争拦截：</text>
+    <text x="468" y="252" fill="#17343B">• 若两个并行执行的 Job 同时引用同一个 <tspan font-family="Consolas, monospace">NativeArray</tspan> 且</text>
+    <text x="468" y="272" fill="#17343B">  至少有一个为写入，安全系统会在 <tspan font-family="Consolas, monospace">Schedule</tspan> 时直接报错</text>
+    <text x="468" y="292" fill="#17343B">• 为只读数据源添加 <tspan font-weight="700" font-family="Consolas, monospace">[ReadOnly]</tspan> 特性，可允许多个并行</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  Job 同时并发读取同一块 NativeContainer 数据</text>
+  </g>
+</svg>

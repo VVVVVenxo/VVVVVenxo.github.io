@@ -1,0 +1,672 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Astro v5.18.2"><title>多线程并发与 C++11 内存模型 | VVVVVenxo 的博客</title><meta name="description" content="系统梳理 C++ 多线程并发与 C++11 内存模型：多核 CPU 缓存一致性（MESI）、Store Buffer 内存乱序与伪共享消除，C++11 六种 std::memory_order 与 Acquire-Release 同步机制，std::atomic CAS 无锁操作与 ABA 问题，以及互斥锁、条件变量与固定工作线程池实现。"><meta name="keywords" content="VVVVVenxo, 游戏客户端开发, Unity, C++, C#, 图形学, 实时渲染, 网络同步, 算法, AI Agent"><meta name="author" content="VVVVVenxo"><meta name="theme-color" content="#f3f6f3" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#161f1c" media="(prefers-color-scheme: dark)"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/11/27/%E3%80%90C++%E3%80%91%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91%E4%B8%8EC++11%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"><link rel="icon" href="/img/cat.ico"><link rel="alternate" type="application/rss+xml" title="VVVVVenxo 的博客" href="/atom.xml"><meta property="og:type" content="article"><meta property="og:url" content="https://vvvvvenxo.github.io/2026/11/27/%E3%80%90C++%E3%80%91%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91%E4%B8%8EC++11%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"><meta property="og:title" content="多线程并发与 C++11 内存模型 | VVVVVenxo 的博客"><meta property="og:description" content="系统梳理 C++ 多线程并发与 C++11 内存模型：多核 CPU 缓存一致性（MESI）、Store Buffer 内存乱序与伪共享消除，C++11 六种 std::memory_order 与 Acquire-Release 同步机制，std::atomic CAS 无锁操作与 ABA 问题，以及互斥锁、条件变量与固定工作线程池实现。"><meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/C-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91%E4%B8%8EC-11%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png"><script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script><link rel="stylesheet" href="/_astro/index.U3Dh2Des.css"></head> <body> <header class="site-header sticky top-0 z-40 w-full border-b border-[var(--border-color)]"> <div class="container flex h-16 items-center justify-between"> <a href="/" aria-label="VVVVVenxo 的博客，返回首页" class="brand-link text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]"> <img src="/img/cat.ico" alt="" class="brand-mark" width="30" height="30"> <span class="brand-name">VVVVVenxo</span> <span class="brand-caption">游戏客户端工程手记</span> </a> <nav class="hidden items-center gap-1 md:flex" aria-label="主导航"> <a href="/" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 首页 </a><a href="/blog" aria-current="page" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 分类 </a><a href="/tags" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 标签 </a><a href="/about" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 关于 </a> </nav> <div class="flex items-center gap-1.5"> <button id="search-btn" type="button" class="header-action" aria-label="搜索 (Ctrl+K)" title="搜索 (Ctrl+K)"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </button> <button id="theme-toggle" type="button" class="header-action" aria-label="切换主题" title="切换明暗主题"> <svg class="sun-icon hidden dark:block" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> <svg class="moon-icon block dark:hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="mobile-menu-btn" type="button" class="header-action md:hidden" aria-label="菜单" aria-controls="mobile-menu" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> </div> </div> <div id="mobile-menu" class="hidden border-t border-[var(--border-subtle)] md:hidden"> <nav class="container py-3" aria-label="移动导航"> <div class="bg-[var(--bg-surface)]"> <a href="/" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 首页 </a><a href="/blog" aria-current="page" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors bg-[var(--bg-muted)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 分类 </a><a href="/tags" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 标签 </a><a href="/about" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 关于 </a> </div> </nav> </div> </header> <main class="flex-1">  <div id="reading-progress" class="reading-progress-bar" aria-hidden="true"></div> <div class="post-reading-shell container-wide flex py-10 md:py-14"> <article class="min-w-0 flex-1"> <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8"> <div class="post-header-grid"> <div> <div class="flex flex-wrap items-center gap-2"> <a href="/categories/C%2B%2B/" class="section-kicker hover:underline"> C++ </a> <span class="text-xs text-[var(--text-tertiary)]">
+/ 技术笔记 · C++ </span> </div> <h1 lang="zh-CN" class="mt-3 text-3xl font-bold tracking-tight text-balance text-[var(--text-primary)] md:text-4xl"> 多线程并发与 C++11 内存模型 </h1> <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-tertiary)]"> <time datetime="2026-11-27">2026年11月27日</time> <span>·</span> <span>12 分钟阅读</span> <span>·</span> <span>约 3,906 字</span> </div> <div class="mt-4 flex flex-wrap gap-2"> <a href="/tags/C%2B%2B/" class="tag"> C++ </a><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="tag"> 多线程 </a><a href="/tags/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="tag"> 内存模型 </a><a href="/tags/%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C/" class="tag"> 原子操作 </a><a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="tag"> 线程池 </a> </div> </div> <div class="post-header-diagram"> <img src="/img/covers/gen/C-多线程并发与C-11内存模型-thumb.svg" alt="多线程并发与 C++11 内存模型" loading="eager" fetchpriority="high"> </div> </div> </header> <div class="prose max-w-none" lang="zh-CN"><p>本文梳理 C++11 多线程并发与底层内存模型核心机制，共分为四个章节：<strong>多核 CPU 缓存结构、内存乱序成因与伪共享（False Sharing）</strong>、<strong>C++11 六种内存序（<code>std::memory_order</code>）与 Acquire-Release 同步语义</strong>、<strong><code>std::atomic</code> 原子操作、CAS 无锁编程与 ABA 问题</strong>、<strong>互斥锁、条件变量（虚假唤醒防护）与工作线程池实现</strong>。</p>
+<hr>
+<h2 id="第-1-章多核-cpu-缓存结构内存乱序与伪共享">第 1 章：多核 CPU 缓存结构、内存乱序与伪共享<a class="heading-anchor" href="#第-1-章多核-cpu-缓存结构内存乱序与伪共享" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="11-mesi-缓存一致性协议与硬件乱序成因">1.1 MESI 缓存一致性协议与硬件乱序成因<a class="heading-anchor" href="#11-mesi-缓存一致性协议与硬件乱序成因" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>现代多核 CPU 中，每个核心都拥有独立的 L1/L2 高速缓存（Cache），并以 <strong>64 字节的缓存行（Cache Line）</strong> 为最小单位与主存交换数据。为了保证多核缓存数据一致，硬件普遍采用 <strong>MESI 协议</strong>，将每条缓存行标记为以下四种状态之一：</p>
+<ul>
+<li><strong>M（Modified，已修改）</strong>：当前核心已修改该缓存行，数据最新，尚未写回主存；其他核心中对应的缓存行均处于失效状态。</li>
+<li><strong>E（Exclusive，独占）</strong>：仅当前核心缓存了该行数据，数据未修改且与主存一致；当前核心可直接写入并转为 M 状态，无需通知其他核心。</li>
+<li><strong>S（Shared，共享）</strong>：多个核心同时缓存了该行数据，所有副本均与主存一致；任一核心修改前必须先向其他核心广播失效（Invalidate）消息。</li>
+<li><strong>I（Invalid，已失效）</strong>：当前缓存行数据已过期，读取时必须重新从主存或其他核心加载。</li>
+</ul>
+<p><img width="860" height="360" src="/img/posts/cpp-mt-ch1-mesi-reorder.svg" alt="多核 CPU 缓存结构（Store Buffer / Invalidate Queue）与伪共享（False Sharing）" loading="lazy" decoding="async"></p>
+<p>虽然 MESI 协议保证了缓存最终一致，但如果核心每次写入处于 S 状态的缓存行都停下来等待其他核心返回 Invalidate 确认，CPU 流水线就会频繁停顿。为此，硬件在核心与缓存之间引入了两个异步缓冲结构，这也直接导致了<strong>指令乱序执行与内存可见性延迟</strong>：</p>
+<ol>
+<li><strong>写缓冲器（Store Buffer）</strong>：
+核心执行写操作时，若缓存行不在本地或处于 S 状态，CPU 先将新值写入本地的 <strong>Store Buffer</strong> 并立即继续执行后续指令，随后再异步向其他核心发送失效通知。这会导致<strong>本核心的写操作对其他核心延迟可见</strong>（典型表现为写-读重排 Store-Load Reordering：两个核心各自先写自己的变量再读对方的变量，却都读到了对方的旧值）。</li>
+<li><strong>失效队列（Invalidate Queue）</strong>：
+核心收到其他核心发来的 Invalidate 消息时，不会立即停下当前指令去修改缓存状态，而是先将该消息放入本地 <strong>Invalidate Queue</strong> 并立即返回确认，等空闲时再批量将对应缓存行标记为 I（Invalid）。这会导致<strong>当前核心在短时间内仍可能从本地缓存读到已过期的旧数据</strong>。</li>
+</ol>
+<hr>
+<h3 id="12-缓存行伪共享false-sharing与对齐消除">1.2 缓存行伪共享（False Sharing）与对齐消除<a class="heading-anchor" href="#12-缓存行伪共享false-sharing与对齐消除" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<ul>
+<li><strong>伪共享成因</strong>：
+由于 CPU 缓存同步的最小粒度是 <strong>64 字节缓存行</strong>，如果结构体中两个互相独立的变量 <code>a</code> 和 <code>b</code> 在内存上紧挨着定义，它们就会被加载到同一个 64 字节缓存行中。当线程 0 在核心 0 上高频修改变量 <code>a</code>，而线程 1 在核心 1 上高频修改变量 <code>b</code> 时，虽然两个线程在代码逻辑上访问的是不同变量，但硬件层面每次写入都会广播 Invalidate 使对方的整条缓存行作废，导致该缓存行在两个核心之间反复失效重读，读写耗时成倍增加。</li>
+<li><strong>工程消除方案（<code>alignas(64)</code> 缓存行对齐）</strong>：
+对于多线程各自高频写入的状态字段（如线程池中每个工作线程的统计计数器、环形队列的读写游标 <code>head</code> 与 <code>tail</code>），使用 <code>alignas(64)</code> 强制让每个变量独占一条 64 字节缓存行：</li>
+</ul>
+<div class="code-block-wrapper"><span class="code-lang-badge">C++</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;atomic></span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">// 存在伪共享：head 与 tail 紧邻（共 16 字节），处于同一个 64 字节缓存行内</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">struct</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> BadQueueCounters</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    std::atomic</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;uint64_t></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> head{</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic"> // 消费者线程高频更新</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    std::atomic</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;uint64_t></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> tail{</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic"> // 生产者线程高频更新</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">// 消除伪共享：使用 alignas(64) 将生产者与消费者游标隔离到两个独立的 64 字节缓存行</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">struct</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> AlignedQueueCounters</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> {</span></span>
+<span class="line"><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">    alignas</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(64) std::atomic</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;uint64_t></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> head{</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span></span>
+<span class="line"><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">    alignas</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(64) std::atomic</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;uint64_t></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> tail{</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span></span></code></pre></div>
+<hr>
+<h2 id="第-2-章c11-六种内存序stdmemory_order与同步机制">第 2 章：C++11 六种内存序（<code>std::memory_order</code>）与同步机制<a class="heading-anchor" href="#第-2-章c11-六种内存序stdmemory_order与同步机制" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<p>为了在不同 CPU 架构（如强内存模型的 x86 与弱内存模型的 ARM）上编写可移植的无锁并发代码，C++11 定义了统一的抽象内存模型与六种 <code>std::memory_order</code> 枚举，用来精确控制编译器指令重排与硬件内存屏障（Memory Barrier）的开销。</p>
+<p><img width="860" height="360" src="/img/posts/cpp-mt-ch2-memory-order.svg" alt="C++11 六种内存序（std::memory_order）与 Acquire-Release 同步关系" loading="lazy" decoding="async"></p>
+<h3 id="21-六种内存序语义与开销对比">2.1 六种内存序语义与开销对比<a class="heading-anchor" href="#21-六种内存序语义与开销对比" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<table>
+<thead>
+<tr>
+<th align="left">内存序枚举</th>
+<th align="left">适用原子操作</th>
+<th align="left">核心读写顺序约束与硬件行为</th>
+<th align="left">典型应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>memory_order_relaxed</code></strong></td>
+<td align="left">读 / 写 / 读改写</td>
+<td align="left"><strong>仅保证当前变量自身的原子性</strong>，不限制前后任何内存读写的重排，无内存屏障开销。</td>
+<td align="left">单纯递增统计计数器、<code>std::shared_ptr</code> 引用计数递增。</td>
+</tr>
+<tr>
+<td align="left"><strong><code>memory_order_acquire</code></strong></td>
+<td align="left">读（<code>load</code>）</td>
+<td align="left"><strong>获取语义</strong>：保证该 <code>load</code> <strong>之后</strong>的所有普通或原子内存读写，绝不会被重排到该 <code>load</code> <strong>之前</strong>。</td>
+<td align="left">消费者线程读取就绪标志位、自旋锁加锁（<code>lock</code>）。</td>
+</tr>
+<tr>
+<td align="left"><strong><code>memory_order_release</code></strong></td>
+<td align="left">写（<code>store</code>）</td>
+<td align="left"><strong>释放语义</strong>：保证该 <code>store</code> <strong>之前</strong>的所有普通或原子内存读写，绝不会被重排到该 <code>store</code> <strong>之后</strong>。</td>
+<td align="left">生产者线程发布就绪标志位、自旋锁解锁（<code>unlock</code>）。</td>
+</tr>
+<tr>
+<td align="left"><strong><code>memory_order_acq_rel</code></strong></td>
+<td align="left">读改写（<code>fetch_add</code> / CAS）</td>
+<td align="left">同时包含 Acquire 与 Release：前置读写不可后移，后置读写不可前移。</td>
+<td align="left">包含读写双重语义的原子交换、<code>shared_ptr</code> 引用计数递减。</td>
+</tr>
+<tr>
+<td align="left"><strong><code>memory_order_consume</code></strong></td>
+<td align="left">读（<code>load</code>）</td>
+<td align="left">仅保证后续<strong>直接依赖该原子变量值</strong>的计算表达式不被提前重排（编译器通常直接按 <code>acquire</code> 实现）。</td>
+<td align="left">极少直接使用，一般用 <code>acquire</code> 替代。</td>
+</tr>
+<tr>
+<td align="left"><strong><code>memory_order_seq_cst</code></strong></td>
+<td align="left">读 / 写 / 读改写（<strong>默认</strong>）</td>
+<td align="left"><strong>全局顺序一致</strong>：在 Acquire-Release 基础上，保证所有线程看到的所有 <code>seq_cst</code> 操作顺序完全一致。</td>
+<td align="left">默认安全选项；多生产者多消费者严苛顺序同步。</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="22-acquire-release获取-释放配对同步实战">2.2 Acquire-Release（获取-释放）配对同步实战<a class="heading-anchor" href="#22-acquire-release获取-释放配对同步实战" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>当线程 A 对原子变量 <code>flag</code> 执行 <code>store(..., std::memory_order_release)</code>，且线程 B 对同一个原子变量 <code>flag</code> 执行 <code>load(std::memory_order_acquire)</code> 并读到了线程 A 写入的值时，线程 A 的 <code>store</code> 与线程 B 的 <code>load</code> 之间即建立起 <strong>Synchronizes-With（同步）关系</strong>：</p>
+<ul>
+<li>线程 A 在执行 <code>flag.store(true, release)</code> <strong>之前</strong>写入的所有普通非原子变量（如业务数据缓冲区 <code>g_payload</code>），在线程 B 执行 <code>flag.load(acquire)</code> 读到 <code>true</code> <strong>之后</strong>，保证对线程 B <strong>100% 可见</strong>。</li>
+</ul>
+<div class="code-block-wrapper"><span class="code-lang-badge">C++</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;atomic></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;cassert></span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">struct</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> Message</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    int</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> id </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">=</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> 0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    double</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> value </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">=</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> 0.0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">Message g_msg;</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">                              // 普通非原子业务数据</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">std::atomic</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;bool></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> g_ready{</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">false</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">           // 原子同步标志位</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">// 写线程（生产者）</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">void</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> Producer</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">() {</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">    g_msg</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75">id</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> =</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> 1001</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">                        // 1. 先写入普通业务数据</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">    g_msg</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75">value</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> =</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> 3.14</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">    // 2. 使用 release 发布标志：保证上面对 g_msg 的写入绝不会重排到此行之后</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">    g_ready</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">store</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">true</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, std::memory_order_release);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">// 读线程（消费者）</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">void</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> Consumer</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">() {</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">    // 1. 使用 acquire 读取标志：保证下面对 g_msg 的读取绝不会提前到此行之前</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    while</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (</span><span style="--shiki-light:#A626A4;--shiki-dark:#56B6C2">!</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">g_ready</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">load</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(std::memory_order_acquire)) {</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 等待生产者就绪</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    }</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">    // 2. 一旦循环退出，必然能读到 Producer 在 release 之前写入的完整数据</span></span>
+<span class="line"><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">    assert</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">g_msg</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75">id</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> ==</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> 1001</span><span style="--shiki-light:#A626A4;--shiki-dark:#56B6C2"> &#x26;&#x26;</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B"> g_msg</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75">value</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> ==</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> 3.14</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">}</span></span></code></pre></div>
+<ul>
+<li><strong>x86-64 与 ARM64 硬件指令差异</strong>：<ul>
+<li>在 <strong>x86-64（TSO 强内存模型）</strong> 下，硬件天然保证普通加载（<code>MOV</code>）具备 Acquire 语义、普通存储（<code>MOV</code>）具备 Release 语义（仅允许 Store-Load 重排）。因此在 x86 上使用 <code>acquire</code> 与 <code>release</code> <strong>不会生成任何额外的 CPU 硬件屏障指令</strong>，仅禁止编译器在编译期重排指令；而使用默认的 <code>seq_cst</code> 写操作则会生成带总线锁的 <code>XCHG</code> 或 <code>MFENCE</code> 指令以强制刷新 Store Buffer。</li>
+<li>在 <strong>ARM64（弱内存模型）</strong> 下，硬件允许任意方向的读写重排，编译器会将 <code>acquire</code> 翻译为 <code>LDAR</code>（Load-Acquire）指令，将 <code>release</code> 翻译为 <code>STLR</code>（Store-Release）指令。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="第-3-章stdatomic-原子操作cas-无锁编程与-aba-问题">第 3 章：<code>std::atomic</code> 原子操作、CAS 无锁编程与 ABA 问题<a class="heading-anchor" href="#第-3-章stdatomic-原子操作cas-无锁编程与-aba-问题" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="31-stdatomic-约束与-cascompare-and-swap操作">3.1 <code>std::atomic</code> 约束与 CAS（Compare-And-Swap）操作<a class="heading-anchor" href="#31-stdatomic-约束与-cascompare-and-swap操作" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<ol>
+<li><strong>可实例化 <code>std::atomic&lt;T&gt;</code> 的类型要求</strong>：
+模板参数 <code>T</code> 必须是<strong>平凡可拷贝类型（<code>std::is_trivially_copyable_v&lt;T&gt; == true</code>）</strong>，即可以用 <code>memcpy</code> 直接按字节复制、没有自定义拷贝构造函数或虚函数。可通过 <code>atomicObj.is_lock_free()</code> 检查该类型在当前平台上是否直接由 CPU 原子指令实现（通常大小不超过 8 字节的整型、指针和结构体均为无锁实现；超过 16 字节的大结构体内部会退化为使用自旋锁保护）。</li>
+<li><strong><code>compare_exchange_weak</code> 与 <code>compare_exchange_strong</code></strong>：
+CAS 是无锁数据结构的核心原语，其函数签名为 <code>bool compare_exchange_weak(T&amp; expected, T desired, ...)</code>，执行逻辑如下：<ul>
+<li>原子地比较当前值与 <code>expected</code>：<ul>
+<li><strong>若相等</strong>：将原子变量修改为 <code>desired</code>，并返回 <code>true</code>；</li>
+<li><strong>若不相等</strong>：<strong>自动将原子变量的当前最新值写回引用参数 <code>expected</code> 中</strong>，并返回 <code>false</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><img width="860" height="360" src="/img/posts/cpp-mt-ch3-cas-aba.svg" alt="CAS 原子无锁操作（compare_exchange）与 ABA 问题及版本号解决方案" loading="lazy" decoding="async"></p>
+<ul>
+<li><strong><code>weak</code> 与 <code>strong</code> 的选型准则</strong>：
+在 ARM / PowerPC 等使用 <strong>LL/SC（Load-Linked / Store-Conditional，链接加载/条件存储）</strong> 指令对实现 CAS 的处理器上，即使变量的值没有被其他线程修改，上下文切换或同一缓存行的其他写入也可能导致 <code>SC</code> 指令偶发失败（称为<strong>伪失败 Spurious Failure</strong>）。<ul>
+<li><code>compare_exchange_weak</code> 允许发生伪失败并直接返回 <code>false</code>，省去了底层额外的重试跳转指令。由于无锁编程中 CAS 本身就写在 <code>while</code> 循环里，<strong>凡是配合 <code>while</code> 循环重试的场景，优先使用 <code>compare_exchange_weak</code></strong>。</li>
+<li>若不打算在失败时循环重试（仅做单次状态切换判断），则使用 <code>compare_exchange_strong</code>。</li>
+</ul>
+</li>
+</ul>
+<div class="code-block-wrapper"><span class="code-lang-badge">C++</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">// 使用 CAS 实现无锁单链表栈（Treiber Stack）的压栈操作</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">template</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> &#x3C;</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">typename</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> T</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">class</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> LockFreeStack</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    struct</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> Node</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        T data;</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        Node</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">*</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> next;</span></span>
+<span class="line"><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">        Node</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">const</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> T</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x26;</span><span style="--shiki-light:#383A42;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic"> val</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">) : </span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">data</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(val), </span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">next</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">nullptr</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">) {}</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    };</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    std::atomic</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">Node</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">*></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> m_head{</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">nullptr</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">public:</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    void</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> Push</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">const</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> T</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x26;</span><span style="--shiki-light:#383A42;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic"> val</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">) {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        Node</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">*</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> newNode </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">=</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> new</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> Node</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(val);</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">        newNode</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">-></span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75">next</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> =</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B"> m_head</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">load</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(std::memory_order_relaxed);</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 若 m_head 仍等于 newNode->next，则将 m_head 更新为 newNode；</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 若期间已被其他线程修改，compare_exchange_weak 会自动把最新 m_head 写回 newNode->next 并重试</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        while</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (</span><span style="--shiki-light:#A626A4;--shiki-dark:#56B6C2">!</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">m_head</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">compare_exchange_weak</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">            newNode</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">-></span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75">next</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, newNode,</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            std::memory_order_release,</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            std::memory_order_relaxed)) {}</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span></span></code></pre></div>
+<hr>
+<h3 id="32-无锁编程中的-aba-问题与带版本号指针">3.2 无锁编程中的 ABA 问题与带版本号指针<a class="heading-anchor" href="#32-无锁编程中的-aba-问题与带版本号指针" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>在上面的无锁栈中，如果直接用同样的方式实现 <code>Pop()</code>（读取栈顶 <code>A</code> 及其下一个节点 <code>B</code>，然后用 CAS 将栈顶从 <code>A</code> 改为 <code>B</code>），在多线程并发弹出与压入时会触发 <strong>ABA 问题</strong>：</p>
+<ol>
+<li>初始状态下，栈内节点依次为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>→</mo><mi>B</mi><mo>→</mo><mi>C</mi></mrow><annotation encoding="application/x-tex">A \to B \to C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span></span></span></span>。线程 1 调用 <code>Pop()</code>，读到当前栈顶为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span>，且 <code>A-&gt;next</code> 为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span></span></span></span>，正准备执行 <code>CAS(m_head, A, B)</code> 前被操作系统挂起。</li>
+<li>线程 2 连续执行两次 <code>Pop()</code>，依次弹出节点 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span> 和节点 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span></span></span></span> 并调用 <code>delete</code> 释放了它们的内存；随后线程 2 又调用 <code>Push()</code> 创建了一个新节点，内存分配器恰好复用了刚刚释放的节点 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span> 的内存地址，并将其压回栈顶（此时栈结构变为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>→</mo><mi>C</mi></mrow><annotation encoding="application/x-tex">A \to C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span></span></span></span>，而节点 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span></span></span></span> 已被销毁）。</li>
+<li>线程 1 恢复执行 <code>CAS(m_head, A, B)</code>：由于此时栈顶地址依然是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span>，CAS 检查通过并将栈顶修改为<strong>已经被释放的悬空地址 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span></span></span></span></strong>，导致链表结构损坏。</li>
+</ol>
+<ul>
+<li><strong>工程解决方案</strong>：<ol>
+<li><strong>带递增版本号的指针（Tagged Pointer）</strong>：
+不仅比较指针地址，还将指针与一个单调递增的无符号整型版本号 <code>tag</code> 组合在一起。每次修改指针时都将 <code>tag</code> 加 1。即使地址从 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span> 变成其他值又变回 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span>，其版本号也已经从 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>A</mi><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(A, 1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">A</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span> 变成了 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>A</mi><mo separator="true">,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(A, 2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">A</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mclose">)</span></span></span></span>，CAS 对比失败从而阻止错误更新。在 64 位 x86/ARM 系统中，用户态虚拟地址仅使用低 48 位，可将 <strong>高 16 位直接用于存储递增版本号</strong>，装入单个 <code>uint64_t</code> 原子变量中完成无锁操作。</li>
+<li><strong>延迟内存回收（风险指针 Hazard Pointer / 对象池索引）</strong>：
+弹出节点后不立即归还给系统 <code>free/delete</code>，而是使用固定容量的数组对象池（用“32 位数组下标 + 32 位递增版本号”打包为 64 位整型替代裸指针），既避免了访问已释放内存，又彻底消除了 ABA 问题。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="第-4-章互斥锁条件变量与工作线程池实现">第 4 章：互斥锁、条件变量与工作线程池实现<a class="heading-anchor" href="#第-4-章互斥锁条件变量与工作线程池实现" aria-label="复制小节链接" title="点击复制本节链接">#</a></h2>
+<h3 id="41-互斥锁-raii-包装器死锁预防与条件变量虚假唤醒">4.1 互斥锁 RAII 包装器、死锁预防与条件变量虚假唤醒<a class="heading-anchor" href="#41-互斥锁-raii-包装器死锁预防与条件变量虚假唤醒" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<h4 id="1-互斥量与四种-raii-锁管理工具">1. 互斥量与四种 RAII 锁管理工具</h4>
+<p>直接手动调用 <code>mtx.lock()</code> 和 <code>mtx.unlock()</code> 在遇到提前 <code>return</code> 或抛出异常时极易遗漏解锁。工程中统一使用标准库提供的 RAII 锁守卫：</p>
+<ul>
+<li><strong><code>std::lock_guard&lt;std::mutex&gt;</code></strong>：最轻量的作用域锁，构造时加锁、离开作用域析构时解锁，不支持手动中途解锁。</li>
+<li><strong><code>std::unique_lock&lt;std::mutex&gt;</code></strong>：支持延迟加锁（<code>std::defer_lock</code>）、尝试加锁（<code>std::try_to_lock</code>）、手动提前调用 <code>.unlock()</code> 缩小持锁范围，以及配合 <code>std::condition_variable</code> 使用。</li>
+<li><strong><code>std::scoped_lock</code>（C++17）</strong>：需要同时获取多个互斥锁时（如从账户 A 向账户 B 转账需同时锁住 <code>mtxA</code> 与 <code>mtxB</code>），直接写 <code>std::scoped_lock lock(mtxA, mtxB);</code>，内部采用免死锁加锁算法统一获取所有锁，消除因加锁顺序不一致引起的死锁。</li>
+<li><strong><code>std::shared_lock&lt;std::shared_mutex&gt;</code>（C++17）</strong>：读写锁中的共享读锁。多个读线程可同时持有 <code>shared_lock</code> 并发读取；写线程使用 <code>unique_lock</code> 获取独占写锁。</li>
+</ul>
+<p><img width="860" height="360" src="/img/posts/cpp-mt-ch4-mutex-threadpool.svg" alt="互斥锁、条件变量（虚假唤醒防护）与固定工作线程池架构" loading="lazy" decoding="async"></p>
+<h4 id="2-stdcondition_variable-与虚假唤醒spurious-wakeup防护">2. <code>std::condition_variable</code> 与虚假唤醒（Spurious Wakeup）防护</h4>
+<p>当消费者线程调用 <code>cv.wait(lock)</code> 进入内核休眠等待时，需要注意两个问题：</p>
+<ol>
+<li><strong>信号丢失</strong>：如果生产者在消费者调用 <code>wait()</code> 之前就已经发出了 <code>notify_one()</code>，且没有共享布尔状态变量记录就绪状态，消费者随后调用的 <code>wait()</code> 将一直阻塞。</li>
+<li><strong>虚假唤醒（Spurious Wakeup）</strong>：由于操作系统信号中断或多核唤醒竞争，处于 <code>wait()</code> 状态的线程<strong>即使在没有任何线程调用 <code>notify</code> 的情况下，也可能被操作系统意外唤醒</strong>；或者在多个消费者同时被唤醒时，前一个线程已经取走了队列中唯一的元素。</li>
+</ol>
+<p>因此，调用 <code>cv.wait()</code> 时<strong>必须配合共享状态变量与 <code>while</code> 循环检查</strong>（或直接使用接收 Lambda 条件函数的 <code>wait(lock, predicate)</code> 重载，其内部等价于 <code>while (!predicate()) wait(lock);</code>）。</p>
+<hr>
+<h3 id="42-固定大小工作线程池thread-pool完整实现">4.2 固定大小工作线程池（Thread Pool）完整实现<a class="heading-anchor" href="#42-固定大小工作线程池thread-pool完整实现" aria-label="复制小节链接" title="点击复制本节链接">#</a></h3>
+<p>下面给出一个结合 <code>std::thread</code>、<code>std::mutex</code>、<code>std::condition_variable</code>、<code>std::packaged_task</code> 与 <code>std::future</code> 的生产级固定线程数工作线程池实现：</p>
+<div class="code-block-wrapper"><span class="code-lang-badge">C++</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;vector></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;queue></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;thread></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;mutex></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;condition_variable></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;future></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;functional></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">#include</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379"> &#x3C;stdexcept></span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">class</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> ThreadPool</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">private:</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    std::vector</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">std::thread</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> m_workers;</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">              // 常驻工作线程数组</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    std::queue</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">std::function</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;void</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">()</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">>></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> m_tasks;</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">       // 待执行任务队列</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    std::mutex m_mutex;</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">                              // 保护任务队列与停止标志的互斥锁</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    std::condition_variable m_cv;</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">                    // 唤醒工作线程的条件变量</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    bool</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> m_stop </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">=</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> false</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">                             // 线程池停止标志</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">public:</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    explicit</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> ThreadPool</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(std::</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">size_t</span><span style="--shiki-light:#383A42;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic"> threadCount</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">) {</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">        m_workers</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">reserve</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(threadCount);</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        for</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (std::</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">size_t</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> i </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">=</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> 0</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">; i </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> threadCount; </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">++</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">i) {</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">            m_workers</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">emplace_back</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">([</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">this</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">]() {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">                while</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66">true</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">) {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">                    std::function</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;void</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">()</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> task;</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">                    {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">                        std::unique_lock</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">std::mutex</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">></span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> lock</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(m_mutex);</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">                        // 使用带条件谓词的 wait 防止虚假唤醒：仅当停止或队列非空时才继续向下执行</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">                        m_cv</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">wait</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(lock, [</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">this</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">]() { </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">return</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> m_stop </span><span style="--shiki-light:#A626A4;--shiki-dark:#56B6C2">||</span><span style="--shiki-light:#A626A4;--shiki-dark:#56B6C2"> !</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">m_tasks</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">empty</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(); });</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">                        // 若线程池已请求停止且剩余任务已全部处理完毕，则退出工作线程</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">                        if</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (m_stop </span><span style="--shiki-light:#A626A4;--shiki-dark:#56B6C2">&#x26;&#x26;</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B"> m_tasks</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">empty</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">()) {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">                            return</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">                        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">                        // 在锁保护下通过移动语义取出队首任务</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">                        task </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">=</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> std::</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">move</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">m_tasks</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">front</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">());</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">                        m_tasks</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">pop</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">                    }</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic"> // 离开内部作用域：立即释放互斥锁，保证耗时任务在锁外并发执行</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">                    task</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic"> // 执行具体任务</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">                }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            });</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">    // 提交任意可调用对象与参数，返回 std::future 供调用方异步获取返回值</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    template</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> &#x3C;</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">typename</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> F</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">typename</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">... </span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">Args</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">></span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    auto</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> Enqueue</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">F</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x26;&#x26;</span><span style="--shiki-light:#383A42;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic"> f</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, </span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">Args</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x26;&#x26;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">... </span><span style="--shiki-light:#383A42;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic">args</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">) -> std::</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">future</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">&#x3C;std::</span><span style="--shiki-light:#0184BC;--shiki-dark:#56B6C2">invoke_result_t</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">&#x3C;</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">F</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, Args...>> {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        using</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> ReturnType</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> =</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> std::</span><span style="--shiki-light:#0184BC;--shiki-dark:#56B6C2">invoke_result_t</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">&#x3C;</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">F</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">, Args...>;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 将函数与参数绑定并包装进 packaged_task，用 shared_ptr 管理以便装入 std::function</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        auto</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> taskPtr </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">=</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> std::</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">make_shared</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">&#x3C;std::</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">packaged_task</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">&#x3C;</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">ReturnType</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">()>>(</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            std::</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">bind</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#383A42;--shiki-dark:#E5C07B">std</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">::</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">forward</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">&#x3C;</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">F</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">>(f), std::</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">forward</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">&#x3C;</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B">Args</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">>(args)...)</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        );</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        std::future</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">ReturnType</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">></span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> resultFuture </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">=</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B"> taskPtr</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">-></span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">get_future</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            std::lock_guard</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">std::mutex</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">></span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> lock</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(m_mutex);</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">            if</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (m_stop) {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">                throw</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> std::</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">runtime_error</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(</span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379">"Cannot enqueue task on stopped ThreadPool"</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            }</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">            m_tasks</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">emplace</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">([</span><span style="--shiki-light:#383A42;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic">taskPtr</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">]() { (</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">*</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">taskPtr)(); });</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        }</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">        // 解锁后再通知唤醒一个休眠的工作线程，避免被唤醒线程立即在锁上阻塞</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">        m_cv</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">notify_one</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        return</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> resultFuture;</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">    ~ThreadPool</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">() {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        {</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            std::lock_guard</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">&#x3C;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">std::mutex</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">></span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF"> lock</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">(m_mutex);</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            m_stop </span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">=</span><span style="--shiki-light:#986801;--shiki-dark:#D19A66"> true</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        }</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">        m_cv</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">notify_all</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic"> // 唤醒所有工作线程处理剩余任务并退出</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">        for</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (std::thread</span><span style="--shiki-light:#A626A4;--shiki-dark:#56B6C2">&#x26;</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> worker : m_workers) {</span></span>
+<span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">            if</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF"> (</span><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">worker</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">joinable</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">()) {</span></span>
+<span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E5C07B">                worker</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">.</span><span style="--shiki-light:#4078F2;--shiki-dark:#61AFEF">join</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">();</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">            }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">        }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    }</span></span>
+<span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">};</span></span></code></pre></div>
+</div> <!-- Prev / Next Flat Navigation --> <nav class="mt-16 grid grid-cols-1 gap-6 border-t border-[var(--border-color)] pt-8 md:grid-cols-2" aria-label="上下篇文章导航"> <div> <a href="/2026/11/27/%E3%80%90Unity%E3%80%91ECS%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%90%91%E6%9E%B6%E6%9E%84%E4%B8%8EJobSystem%E5%AE%9E%E6%88%98/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+← 新一篇
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> ECS 数据导向架构与 JobSystem 实战 </p> </a> </div> <div class="md:text-right"> <a href="/2026/11/27/%E3%80%90C%2B%2B%E3%80%91%E6%A8%A1%E6%9D%BF%E6%B3%9B%E5%9E%8B%E4%B8%8E%E7%8E%B0%E4%BB%A3C%2B%2B%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+旧一篇 →
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 模板泛型与现代 C++ 核心特性 </p> </a> </div> </nav> <!-- Giscus Comments --> <section class="mt-14 border-t border-[var(--border-subtle)] pt-8" aria-label="评论区"> <div class="mb-5 flex items-baseline gap-3"> <h2 class="text-lg font-semibold text-[var(--text-primary)]">讨论与评论</h2> <span class="text-xs text-[var(--text-tertiary)]">由 GitHub Discussions 驱动</span> </div> <div id="giscus-container"></div> </section> </article> <!-- Mobile TOC Trigger & Drawer -->  <button id="toc-toggle" class="toc-trigger fixed right-6 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded transition-colors hover:bg-[var(--accent-hover)] lg:hidden" aria-label="目录" title="文章目录"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="8" y1="6" x2="21" y2="6"></line> <line x1="8" y1="12" x2="21" y2="12"></line> <line x1="8" y1="18" x2="21" y2="18"></line> <line x1="3" y1="6" x2="3.01" y2="6"></line> <line x1="3" y1="12" x2="3.01" y2="12"></line> <line x1="3" y1="18" x2="3.01" y2="18"></line> </svg> </button> <div id="toc-mobile-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-xs lg:hidden"></div> <nav id="toc-mobile" aria-label="移动端目录" class="fixed right-0 bottom-0 left-0 z-50 max-h-[64vh] translate-y-full overflow-hidden rounded-t-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl transition-transform duration-300 lg:hidden"> <div class="flex items-center justify-between border-b border-[var(--border-subtle)] p-4"> <h4 class="font-semibold text-[var(--text-primary)]">目录</h4> <button id="toc-close" class="header-action -mr-1" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> <ul class="max-h-[calc(64vh-4rem)] space-y-1 overflow-y-auto p-4 text-sm"> <li> <a href="#第-1-章多核-cpu-缓存结构内存乱序与伪共享" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-1-章多核-cpu-缓存结构内存乱序与伪共享" lang="zh-CN"> 第 1 章：多核 CPU 缓存结构、内存乱序与伪共享 </a> </li><li> <a href="#11-mesi-缓存一致性协议与硬件乱序成因" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="11-mesi-缓存一致性协议与硬件乱序成因" lang="zh-CN"> 1.1 MESI 缓存一致性协议与硬件乱序成因 </a> </li><li> <a href="#12-缓存行伪共享false-sharing与对齐消除" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="12-缓存行伪共享false-sharing与对齐消除" lang="zh-CN"> 1.2 缓存行伪共享（False Sharing）与对齐消除 </a> </li><li> <a href="#第-2-章c11-六种内存序stdmemory_order与同步机制" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-2-章c11-六种内存序stdmemory_order与同步机制" lang="zh-CN"> 第 2 章：C++11 六种内存序（std::memory_order）与同步机制 </a> </li><li> <a href="#21-六种内存序语义与开销对比" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="21-六种内存序语义与开销对比" lang="zh-CN"> 2.1 六种内存序语义与开销对比 </a> </li><li> <a href="#22-acquire-release获取-释放配对同步实战" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="22-acquire-release获取-释放配对同步实战" lang="zh-CN"> 2.2 Acquire-Release（获取-释放）配对同步实战 </a> </li><li> <a href="#第-3-章stdatomic-原子操作cas-无锁编程与-aba-问题" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-3-章stdatomic-原子操作cas-无锁编程与-aba-问题" lang="zh-CN"> 第 3 章：std::atomic 原子操作、CAS 无锁编程与 ABA 问题 </a> </li><li> <a href="#31-stdatomic-约束与-cascompare-and-swap操作" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="31-stdatomic-约束与-cascompare-and-swap操作" lang="zh-CN"> 3.1 std::atomic 约束与 CAS（Compare-And-Swap）操作 </a> </li><li> <a href="#32-无锁编程中的-aba-问题与带版本号指针" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="32-无锁编程中的-aba-问题与带版本号指针" lang="zh-CN"> 3.2 无锁编程中的 ABA 问题与带版本号指针 </a> </li><li> <a href="#第-4-章互斥锁条件变量与工作线程池实现" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第-4-章互斥锁条件变量与工作线程池实现" lang="zh-CN"> 第 4 章：互斥锁、条件变量与工作线程池实现 </a> </li><li> <a href="#41-互斥锁-raii-包装器死锁预防与条件变量虚假唤醒" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="41-互斥锁-raii-包装器死锁预防与条件变量虚假唤醒" lang="zh-CN"> 4.1 互斥锁 RAII 包装器、死锁预防与条件变量虚假唤醒 </a> </li><li> <a href="#42-固定大小工作线程池thread-pool完整实现" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="42-固定大小工作线程池thread-pool完整实现" lang="zh-CN"> 4.2 固定大小工作线程池（Thread Pool）完整实现 </a> </li> </ul> </nav>  <nav class="toc hidden lg:block" aria-label="目录"> <div class="reading-toc sticky top-24"> <h4 class="mb-3 pl-2.5 text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">目录</h4> <ul id="desktop-toc-list" class="max-h-[calc(100vh-10rem)] space-y-0.5 overflow-y-auto text-sm"> <li> <a href="#第-1-章多核-cpu-缓存结构内存乱序与伪共享" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-1-章多核-cpu-缓存结构内存乱序与伪共享" lang="zh-CN"> 第 1 章：多核 CPU 缓存结构、内存乱序与伪共享 </a> </li><li> <a href="#11-mesi-缓存一致性协议与硬件乱序成因" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="11-mesi-缓存一致性协议与硬件乱序成因" lang="zh-CN"> 1.1 MESI 缓存一致性协议与硬件乱序成因 </a> </li><li> <a href="#12-缓存行伪共享false-sharing与对齐消除" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="12-缓存行伪共享false-sharing与对齐消除" lang="zh-CN"> 1.2 缓存行伪共享（False Sharing）与对齐消除 </a> </li><li> <a href="#第-2-章c11-六种内存序stdmemory_order与同步机制" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-2-章c11-六种内存序stdmemory_order与同步机制" lang="zh-CN"> 第 2 章：C++11 六种内存序（std::memory_order）与同步机制 </a> </li><li> <a href="#21-六种内存序语义与开销对比" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="21-六种内存序语义与开销对比" lang="zh-CN"> 2.1 六种内存序语义与开销对比 </a> </li><li> <a href="#22-acquire-release获取-释放配对同步实战" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="22-acquire-release获取-释放配对同步实战" lang="zh-CN"> 2.2 Acquire-Release（获取-释放）配对同步实战 </a> </li><li> <a href="#第-3-章stdatomic-原子操作cas-无锁编程与-aba-问题" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-3-章stdatomic-原子操作cas-无锁编程与-aba-问题" lang="zh-CN"> 第 3 章：std::atomic 原子操作、CAS 无锁编程与 ABA 问题 </a> </li><li> <a href="#31-stdatomic-约束与-cascompare-and-swap操作" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="31-stdatomic-约束与-cascompare-and-swap操作" lang="zh-CN"> 3.1 std::atomic 约束与 CAS（Compare-And-Swap）操作 </a> </li><li> <a href="#32-无锁编程中的-aba-问题与带版本号指针" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="32-无锁编程中的-aba-问题与带版本号指针" lang="zh-CN"> 3.2 无锁编程中的 ABA 问题与带版本号指针 </a> </li><li> <a href="#第-4-章互斥锁条件变量与工作线程池实现" class="toc-link toc-depth-2 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第-4-章互斥锁条件变量与工作线程池实现" lang="zh-CN"> 第 4 章：互斥锁、条件变量与工作线程池实现 </a> </li><li> <a href="#41-互斥锁-raii-包装器死锁预防与条件变量虚假唤醒" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="41-互斥锁-raii-包装器死锁预防与条件变量虚假唤醒" lang="zh-CN"> 4.1 互斥锁 RAII 包装器、死锁预防与条件变量虚假唤醒 </a> </li><li> <a href="#42-固定大小工作线程池thread-pool完整实现" class="toc-link toc-depth-3 line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="42-固定大小工作线程池thread-pool完整实现" lang="zh-CN"> 4.2 固定大小工作线程池（Thread Pool）完整实现 </a> </li> </ul> </div> </nav>  </div>  <button id="back-to-top" type="button" class="back-to-top-pill" aria-label="回到顶部" title="回到顶部"> <span id="back-to-top-pct">0%</span> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"> <path d="M18 15l-6-6-6 6"></path> </svg> </button>  <div id="image-lightbox" class="image-lightbox" role="dialog" aria-modal="true" aria-label="图片放大预览"> <img id="image-lightbox-img" src="" alt=""> <p id="image-lightbox-caption" class="image-lightbox__caption"></p> </div> <script>
+    (function () {
+      // TOC Mobile Drawer & Scroll Spy
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocMobile = document.getElementById('toc-mobile');
+      const tocClose = document.getElementById('toc-close');
+      const tocBackdrop = document.getElementById('toc-mobile-backdrop');
+      let isOpen = false;
+
+      function openMobileToc() {
+        if (isOpen) return;
+        isOpen = true;
+        if (tocMobile) tocMobile.classList.remove('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.remove('hidden');
+        if (tocToggle) tocToggle.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileToc() {
+        if (!isOpen) return;
+        isOpen = false;
+        if (tocMobile) tocMobile.classList.add('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.add('hidden');
+        if (tocToggle) tocToggle.classList.remove('hidden');
+        document.body.style.overflow = '';
+      }
+
+      if (tocToggle) tocToggle.addEventListener('click', openMobileToc);
+      if (tocClose) tocClose.addEventListener('click', closeMobileToc);
+      if (tocBackdrop) tocBackdrop.addEventListener('click', closeMobileToc);
+
+      document.querySelectorAll('.toc-link-mobile').forEach(link => {
+        link.addEventListener('click', () => setTimeout(closeMobileToc, 100));
+      });
+
+      const tocLinks = document.querySelectorAll('.toc-link');
+      if (tocLinks.length > 0) {
+        const headingIds = Array.from(tocLinks)
+          .map(link => link.getAttribute('data-heading'))
+          .filter(Boolean);
+        const headingElements = headingIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateActiveLink() {
+          if (!headingElements.length) return;
+          let activeId = headingIds[0];
+          for (let i = 0; i < headingElements.length; i++) {
+            const rect = headingElements[i].getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.28) {
+              activeId = headingElements[i].id;
+            }
+          }
+          const tocListEl = document.getElementById('desktop-toc-list');
+          tocLinks.forEach(link => {
+            if (link.getAttribute('data-heading') === activeId) {
+              const wasActive = link.classList.contains('toc-active');
+              link.classList.add('toc-active');
+              if (!wasActive && tocListEl) {
+                const linkTop = link.offsetTop;
+                const listHeight = tocListEl.clientHeight;
+                tocListEl.scrollTo({
+                  top: Math.max(0, linkTop - listHeight / 2 + 24),
+                  behavior: 'smooth',
+                });
+              }
+            } else {
+              link.classList.remove('toc-active');
+            }
+          });
+        }
+
+        let ticking = false;
+        const progressBar = document.getElementById('reading-progress');
+        const backToTopBtn = document.getElementById('back-to-top');
+        const backToTopPct = document.getElementById('back-to-top-pct');
+
+        function updateProgress() {
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = docHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100)) : 0;
+          if (progressBar) progressBar.style.width = pct + '%';
+          if (backToTopPct) backToTopPct.textContent = Math.round(pct) + '%';
+          if (backToTopBtn) {
+            backToTopBtn.classList.toggle('is-visible', window.scrollY > 360);
+          }
+        }
+        if (backToTopBtn) {
+          backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateActiveLink();
+                updateProgress();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        updateActiveLink();
+        updateProgress();
+      }
+
+      // Heading Anchor Copy Link
+      document.querySelectorAll('.prose .heading-anchor').forEach(anchor => {
+        anchor.addEventListener('click', async e => {
+          e.preventDefault();
+          const href = anchor.getAttribute('href') || '';
+          const fullUrl = window.location.origin + window.location.pathname + href;
+          history.replaceState(null, '', href);
+          try {
+            await navigator.clipboard.writeText(fullUrl);
+            anchor.classList.add('copied');
+            anchor.textContent = '已复制';
+            setTimeout(() => {
+              anchor.classList.remove('copied');
+              anchor.textContent = '#';
+            }, 1500);
+          } catch (_) {}
+        });
+      });
+
+      // Image Lightbox Zoom
+      const lightbox = document.getElementById('image-lightbox');
+      const lightboxImg = document.getElementById('image-lightbox-img');
+      const lightboxCaption = document.getElementById('image-lightbox-caption');
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.prose img, .post-header-diagram img').forEach(img => {
+        img.addEventListener('click', () => {
+          if (!lightbox || !lightboxImg) return;
+          lightboxImg.src = img.getAttribute('src') || '';
+          lightboxImg.alt = img.getAttribute('alt') || '';
+          if (lightboxCaption) {
+            lightboxCaption.textContent = img.getAttribute('alt') || '';
+          }
+          lightbox.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      if (lightbox) {
+        lightbox.addEventListener('click', closeLightbox);
+      }
+      window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && lightbox && lightbox.classList.contains('is-open')) {
+          closeLightbox();
+        }
+      });
+
+      // Lazy Load Giscus Comments
+      const giscusContainer = document.getElementById('giscus-container');
+      if (giscusContainer) {
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded) return;
+          giscusContainer.dataset.loaded = 'true';
+          const isDark = document.documentElement.classList.contains('dark');
+          const s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.setAttribute('data-repo', 'VVVVVenxo/VVVVVenxo.github.io');
+          s.setAttribute('data-repo-id', 'R_kgDOQ5Bk1Q');
+          s.setAttribute('data-category', 'Announcements');
+          s.setAttribute('data-category-id', 'DIC_kwDOQ5Bk1c4DJO_-');
+          s.setAttribute('data-mapping', 'pathname');
+          s.setAttribute('data-strict', '0');
+          s.setAttribute('data-reactions-enabled', '1');
+          s.setAttribute('data-emit-metadata', '0');
+          s.setAttribute('data-input-position', 'top');
+          s.setAttribute('data-theme', isDark ? 'dark_dimmed' : 'light');
+          s.setAttribute('data-lang', 'zh-CN');
+          s.crossOrigin = 'anonymous';
+          s.async = true;
+          giscusContainer.appendChild(s);
+        };
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            entries => {
+              if (entries.some(e => e.isIntersecting)) {
+                loadGiscus();
+                io.disconnect();
+              }
+            },
+            { rootMargin: '300px' }
+          );
+          io.observe(giscusContainer);
+        } else {
+          loadGiscus();
+        }
+      }
+    })();
+  </script>  </main> <footer class="site-footer border-t border-[var(--border-color)]"> <div class="container py-8"> <div class="flex flex-col items-center justify-between gap-4 md:flex-row"> <div class="flex items-center gap-3"> <a href="https://github.com/VVVVVenxo" target="_blank" rel="noopener noreferrer" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="GitHub" title="GitHub"> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="mailto:1263147353@qq.com" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="Email" title="Email"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="4" width="20" height="16" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> </a> <a href="/atom.xml" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="RSS 订阅" title="RSS 订阅"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M4 11a9 9 0 0 1 9 9"></path> <path d="M4 4a16 16 0 0 1 16 16"></path> <circle cx="5" cy="19" r="1"></circle> </svg> </a> </div> <p class="text-xs text-[var(--text-tertiary)]">
+© 2024–2026 VVVVVenxo
+</p> </div> </div> </footer> <!-- Flat Search Modal --> <div id="search-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/45 px-4 pt-[10vh] backdrop-blur-xs" role="dialog" aria-modal="true" aria-label="全站搜索"> <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl"> <div class="flex items-center gap-3 border-b border-[var(--border-subtle)] px-4 py-3"> <svg class="shrink-0 text-[var(--text-tertiary)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> <input id="search-input" type="search" placeholder="搜索文章标题、关键词、技术栈（支持 C++ / Unity / 渲染 / 网络...）" class="w-full bg-transparent text-base text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none" autocomplete="off"> <button id="search-close" type="button" class="rounded border border-[var(--border-color)] px-2 py-0.5 text-xs text-[var(--text-tertiary)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
+ESC
+</button> </div> <div id="search-results" class="max-h-[62vh] overflow-y-auto divide-y divide-[var(--border-subtle)] px-4 py-2 text-sm"> <p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p> </div> </div> </div> <script>
+      (function () {
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const giscusFrame = document.querySelector('iframe.giscus-frame');
+            if (giscusFrame && giscusFrame.contentWindow) {
+              giscusFrame.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: isDark ? 'dark_dimmed' : 'light' } } },
+                'https://giscus.app'
+              );
+            }
+          });
+        }
+
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            const hidden = mobileMenu.classList.toggle('hidden');
+            mobileBtn.setAttribute('aria-expanded', String(!hidden));
+          });
+        }
+
+        // Code Copy Buttons
+        document.addEventListener('click', async e => {
+          const btn = e.target.closest('.copy-button');
+          if (!btn) return;
+          const wrapper = btn.closest('.code-block-wrapper');
+          const codeEl = wrapper ? wrapper.querySelector('pre code') : null;
+          if (!codeEl) return;
+          try {
+            await navigator.clipboard.writeText(codeEl.innerText);
+            const copyIcon = btn.querySelector('.copy-icon');
+            const checkIcon = btn.querySelector('.check-icon');
+            btn.classList.add('copied');
+            if (copyIcon) copyIcon.classList.add('hidden');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              if (copyIcon) copyIcon.classList.remove('hidden');
+              if (checkIcon) checkIcon.classList.add('hidden');
+            }, 1800);
+          } catch (_) {}
+        });
+
+        // Search Modal
+        const searchBtn = document.getElementById('search-btn');
+        const searchModal = document.getElementById('search-modal');
+        const searchInput = document.getElementById('search-input');
+        const searchClose = document.getElementById('search-close');
+        const searchResults = document.getElementById('search-results');
+        let searchIndex = null;
+
+        async function ensureSearchIndex() {
+          if (searchIndex) return searchIndex;
+          try {
+            const res = await fetch('/search.json');
+            searchIndex = await res.json();
+          } catch (_) {
+            searchIndex = [];
+          }
+          return searchIndex;
+        }
+
+        function openSearch() {
+          if (!searchModal) return;
+          searchModal.classList.remove('hidden');
+          searchModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          ensureSearchIndex();
+          setTimeout(() => searchInput && searchInput.focus(), 30);
+        }
+
+        function closeSearch() {
+          if (!searchModal) return;
+          searchModal.classList.add('hidden');
+          searchModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
+
+        if (searchBtn) searchBtn.addEventListener('click', openSearch);
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        if (searchModal) {
+          searchModal.addEventListener('click', e => {
+            if (e.target === searchModal) closeSearch();
+          });
+        }
+
+        window.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (searchModal && searchModal.classList.contains('hidden')) openSearch();
+            else closeSearch();
+          } else if (e.key === 'Escape' && searchModal && !searchModal.classList.contains('hidden')) {
+            closeSearch();
+          }
+        });
+
+        function escapeHtml(s) {
+          return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
+
+        if (searchInput && searchResults) {
+          searchInput.addEventListener('input', async () => {
+            const q = searchInput.value.trim().toLowerCase();
+            if (!q) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p>';
+              return;
+            }
+            const data = await ensureSearchIndex();
+            const matched = data.filter(item => {
+              const title = (item.title || '').toLowerCase();
+              const content = (item.content || '').toLowerCase();
+              const tags = (item.tags || []).join(' ').toLowerCase();
+              const cats = (item.categories || []).join(' ').toLowerCase();
+              return title.includes(q) || tags.includes(q) || cats.includes(q) || content.includes(q);
+            });
+
+            if (!matched.length) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">没有找到匹配的文章</p>';
+              return;
+            }
+
+            searchResults.innerHTML = matched
+              .slice(0, 15)
+              .map(item => {
+                const rawText = item.content || '';
+                const idx = rawText.toLowerCase().indexOf(q);
+                let snippet = rawText.slice(0, 110);
+                if (idx > 30) {
+                  snippet = '…' + rawText.slice(idx - 25, idx + 85) + '…';
+                }
+                return `
+                  <a href="${item.url}" class="block py-3.5 transition-colors hover:text-[var(--accent)]">
+                    <div class="flex items-baseline justify-between gap-2">
+                      <span class="font-semibold text-[var(--text-primary)]">${escapeHtml(item.title)}</span>
+                      <span class="shrink-0 text-xs text-[var(--text-tertiary)]">${escapeHtml(item.date || '')}</span>
+                    </div>
+                    <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">${escapeHtml(snippet)}</p>
+                  </a>
+                `;
+              })
+              .join('');
+          });
+        }
+      })();
+    </script> </body> </html>

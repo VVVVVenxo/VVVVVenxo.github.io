@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：CAS 原子无锁操作（compare_exchange）与 ABA 问题及版本号解决方案</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. compare_exchange_weak 与 compare_exchange_strong</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">CAS（Compare-And-Swap）硬件原子操作流程：</text>
+    <text x="56" y="134" fill="#17343B">• 比较原子变量当前值与期望值 <tspan font-family="Consolas, monospace">expected</tspan> 是否相等：</text>
+    <text x="56" y="155" fill="#17343B">  1. <tspan font-weight="700">相等</tspan>：将原子变量改为 <tspan font-family="Consolas, monospace">desired</tspan>，返回 <tspan font-family="Consolas, monospace">true</tspan></text>
+    <text x="56" y="175" fill="#17343B">  2. <tspan font-weight="700">不等</tspan>：将当前值写回 <tspan font-family="Consolas, monospace">expected</tspan>，返回 <tspan font-family="Consolas, monospace">false</tspan></text>
+    <text x="56" y="194" fill="#61747A">• 对应 x86 硬件指令 <tspan font-family="Consolas, monospace">LOCK CMPXCHG</tspan>（单条指令原子完成）</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">weak 与 strong 版本的区别与选型：</text>
+    <text x="56" y="252" fill="#17343B">• 在 ARM 等采用 <tspan font-family="Consolas, monospace">LL/SC</tspan>（链接加载/条件存储）的架构上，</text>
+    <text x="56" y="272" fill="#17343B">  即使值未变，中断或缓存行失效也会使 <tspan font-family="Consolas, monospace">SC</tspan> 偶发失败</text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700" font-family="Consolas, monospace">weak</tspan> 允许偶发伪失败，省去内部循环，适合外层已有</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  while 循环的 CAS 重试；单次判定则使用 strong 版本</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 无锁栈/队列的 ABA 问题与带版本号指针</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">无锁数据结构中的 ABA 问题复现过程：</text>
+    <text x="468" y="134" fill="#17343B">1. 栈中原有 <tspan font-family="Consolas, monospace">A → B → C</tspan>，线程 1 读到栈顶 <tspan font-family="Consolas, monospace">A</tspan> 与 <tspan font-family="Consolas, monospace">next = B</tspan></text>
+    <text x="468" y="154" fill="#17343B">2. 线程 1 在执行 CAS 前被抢占；线程 2 弹出 <tspan font-family="Consolas, monospace">A</tspan> 和 <tspan font-family="Consolas, monospace">B</tspan> 并释放，</text>
+    <text x="468" y="175" fill="#17343B">   随后新建节点复用原内存地址 <tspan font-family="Consolas, monospace">A</tspan> 压回栈顶（此时 <tspan font-family="Consolas, monospace">A → C</tspan>）</text>
+    <text x="468" y="194" fill="#61747A">3. 线程 1 恢复 CAS 见栈顶仍为 <tspan font-family="Consolas, monospace">A</tspan> 即通过，将已释放的 <tspan font-family="Consolas, monospace">B</tspan> 设为栈顶</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">ABA 工程解决方案（版本号标记与安全内存回收）：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">带版本号指针（Tagged Pointer）</tspan>：将指针与递增计数</text>
+    <text x="468" y="272" fill="#17343B">   <tspan font-family="Consolas, monospace">tag</tspan> 组合，每次更新时 <tspan font-family="Consolas, monospace">tag + 1</tspan>，使 <tspan font-family="Consolas, monospace">(A, 1) != (A, 2)</tspan></text>
+    <text x="468" y="292" fill="#17343B">2. <tspan font-weight="700">高 16 位存版本号</tspan>（x86-64 虚拟地址仅用低 48 位）</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">3. 配合 Hazard Pointer 延迟释放正在被访问的节点</text>
+  </g>
+</svg>

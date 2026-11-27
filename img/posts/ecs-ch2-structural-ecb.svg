@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：ECS 结构性变更（Structural Change）开销、EntityCommandBuffer 与可开关组件</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 结构性变更（Structural Change）与 Swap-Back 搬移</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">触发结构性变更的四类操作：</text>
+    <text x="56" y="134" fill="#17343B">1. 创建或销毁实体（<tspan font-family="Consolas, monospace">CreateEntity / DestroyEntity</tspan>）</text>
+    <text x="56" y="155" fill="#17343B">2. 向已有实体添加或移除组件（<tspan font-family="Consolas, monospace">AddComponent / RemoveComponent</tspan>）</text>
+    <text x="56" y="175" fill="#17343B">3. 修改共享组件的值（<tspan font-family="Consolas, monospace">SetSharedComponent</tspan>，不同值属不同 Chunk）</text>
+    <text x="56" y="194" fill="#61747A">• 上述操作均会改变实体所在的 Archetype 或目标 Chunk</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">跨 Chunk 内存拷贝与尾部填补（Swap-Back）：</text>
+    <text x="56" y="252" fill="#17343B">• 向实体添加新组件时，需将其原有组件从旧 Chunk 拷贝</text>
+    <text x="56" y="272" fill="#17343B">  到新 Archetype 的 Chunk 中，并更新全局实体索引表</text>
+    <text x="56" y="293" fill="#17343B">• 旧 Chunk 空出的位置由该 Chunk <tspan font-weight="700">末尾实体移动填补</tspan></text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">• 结构性变更必须在主线程同步点执行，会打断并行 Job</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. ECB 命令缓冲与 IEnableableComponent</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">EntityCommandBuffer（延迟命令缓冲回放）：</text>
+    <text x="468" y="134" fill="#17343B">• 并行 Job 运行期间不允许直接修改 Chunk 结构</text>
+    <text x="468" y="154" fill="#17343B">• 各线程通过 <tspan font-family="Consolas, monospace">ECB.ParallelWriter</tspan>（传入 <tspan font-family="Consolas, monospace">sortKey</tspan>）</text>
+    <text x="468" y="175" fill="#17343B">  将创建/销毁/加组件指令写入线程本地缓冲队列</text>
+    <text x="468" y="194" fill="#61747A">• 待阶段末尾（如 <tspan font-family="Consolas, monospace">EndSimulationECBSystem</tspan>）在主线程集中执行</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">IEnableableComponent（高频状态切换）：</text>
+    <text x="468" y="252" fill="#17343B">• 对高频切换的状态标签（如眩晕、选中），避免反复调用</text>
+    <text x="468" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">AddComponent / RemoveComponent</tspan> 引发跨 Chunk 拷贝</text>
+    <text x="468" y="292" fill="#17343B">• 实现 <tspan font-weight="700" font-family="Consolas, monospace">IEnableableComponent</tspan> 仅翻转 Chunk 内部掩码位</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  （可在并行 Job 中直接修改，不产生结构性变更）</text>
+  </g>
+</svg>

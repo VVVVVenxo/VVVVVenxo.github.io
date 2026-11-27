@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：C++11 六种内存序（std::memory_order）与 Acquire-Release 同步关系</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 宽松内存序（Relaxed）与顺序一致内存序（Seq_Cst）</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">memory_order_relaxed（仅保证单变量原子性）：</text>
+    <text x="56" y="134" fill="#17343B">• 不提供跨变量的读写顺序约束，不插入任何硬件内存屏障</text>
+    <text x="56" y="155" fill="#17343B">• 编译器与 CPU 仍可自由重排该操作前后的普通内存读写</text>
+    <text x="56" y="175" fill="#17343B">• <tspan font-weight="700">适用场景</tspan>：无需同步其他内存数据的单纯统计计数器</text>
+    <text x="56" y="194" fill="#61747A">  （如 <tspan font-family="Consolas, monospace">shared_ptr</tspan> 增加引用计数采用 <tspan font-family="Consolas, monospace">relaxed</tspan>）</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">memory_order_seq_cst（全局顺序一致，默认内存序）：</text>
+    <text x="56" y="252" fill="#17343B">• 既具备 Acquire-Release 约束，又保证所有线程看到的</text>
+    <text x="56" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">seq_cst</tspan> 原子操作顺序完全一致</text>
+    <text x="56" y="293" fill="#17343B">• 开销最高：在 x86 上原子写会生成带锁指令 <tspan font-family="Consolas, monospace">XCHG</tspan> 或</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  <tspan font-family="Consolas, monospace">MFENCE</tspan> 全屏障，强制清空 Store Buffer</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. Acquire-Release（获取-释放）配对同步机制</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">写线程（生产者）：flag.store(true, memory_order_release)</text>
+    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700">Release 语义</tspan>：在该 <tspan font-family="Consolas, monospace">store</tspan> 之前的所有内存读写操作，</text>
+    <text x="468" y="154" fill="#17343B">  均不允许被重排到该 <tspan font-family="Consolas, monospace">store</tspan> 之后</text>
+    <text x="468" y="175" fill="#17343B">• 确保在将标志位 <tspan font-family="Consolas, monospace">flag</tspan> 置为 <tspan font-family="Consolas, monospace">true</tspan> 之前，前面准备好</text>
+    <text x="468" y="194" fill="#61747A">  的业务数据 <tspan font-family="Consolas, monospace">data = 42</tspan> 已经全部完成写入</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">读线程（消费者）：flag.load(memory_order_acquire)</text>
+    <text x="468" y="252" fill="#17343B">• <tspan font-weight="700">Acquire 语义</tspan>：在该 <tspan font-family="Consolas, monospace">load</tspan> 之后的所有内存读写操作，</text>
+    <text x="468" y="272" fill="#17343B">  均不允许被提前重排到该 <tspan font-family="Consolas, monospace">load</tspan> 之前</text>
+    <text x="468" y="292" fill="#17343B">• 一旦读线程通过 Acquire 读到写线程 Release 写入的值，</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  写线程在 Release 前的所有写入对读线程立即可见</text>
+  </g>
+</svg>

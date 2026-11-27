@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：Burst 编译器 LLVM 向量化管线（SIMD）与指针别名消除（NoAlias）</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. Burst 编译管线与 HPC#（高性能 C# 子集）限制</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">IL → LLVM IR → 目标平台原生 SIMD 机器码：</text>
+    <text x="56" y="134" fill="#17343B">• 标记 <tspan font-weight="700" font-family="Consolas, monospace">[BurstCompile]</tspan> 的结构体（如 <tspan font-family="Consolas, monospace">IJobEntity</tspan>）</text>
+    <text x="56" y="155" fill="#17343B">  由 Burst 编译器直接翻译为 LLVM 中间表示并执行深度优化</text>
+    <text x="56" y="175" fill="#17343B">• 针对目标架构生成原生指令（x86 <tspan font-family="Consolas, monospace">SSE4/AVX2</tspan>、ARM <tspan font-family="Consolas, monospace">NEON</tspan>）</text>
+    <text x="56" y="194" fill="#61747A">• 省去虚拟函数分派、数组越界检查（Release 下）与装箱开销</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">Burst 编译代码必须遵守的语法约束：</text>
+    <text x="56" y="252" fill="#17343B">• 严禁读写任何托管引用类型（<tspan font-family="Consolas, monospace">class / string / T[] / List&lt;T&gt;</tspan>）</text>
+    <text x="56" y="272" fill="#17343B">• 仅支持可按位拷贝的值类型（<tspan font-family="Consolas, monospace">struct</tspan>）与 <tspan font-family="Consolas, monospace">NativeContainer</tspan></text>
+    <text x="56" y="293" fill="#17343B">• 不支持 <tspan font-family="Consolas, monospace">try / catch</tspan> 异常捕获与访问可变静态托管字段</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  （只读配置常量需使用 <tspan font-family="Consolas, monospace">SharedStatic&lt;T&gt;</tspan> 访问）</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. SIMD 向量化（Unity.Mathematics）与指针别名消除</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">单指令多数据流（SIMD）与 Unity.Mathematics：</text>
+    <text x="468" y="134" fill="#17343B">• 传统标量指令（SISD）每次只计算 1 对 <tspan font-family="Consolas, monospace">float</tspan></text>
+    <text x="468" y="154" fill="#17343B">• 128 位 SIMD 寄存器（<tspan font-family="Consolas, monospace">float4</tspan>）单指令同时计算 4 组</text>
+    <text x="468" y="175" fill="#17343B">  浮点数；256 位 AVX2 单指令同时计算 8 组浮点数</text>
+    <text x="468" y="194" fill="#61747A">• 需使用 <tspan font-family="Consolas, monospace">Unity.Mathematics</tspan> 替代旧版 <tspan font-family="Consolas, monospace">Mathf</tspan> 函数库</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">指针别名消除（NoAlias）保障循环自动向量化：</text>
+    <text x="468" y="252" fill="#17343B">• C++ 编译器若无法证明两个指针不重叠（Pointer Aliasing），</text>
+    <text x="468" y="272" fill="#17343B">  为保证结果正确会被迫放弃循环的自动 SIMD 向量化</text>
+    <text x="468" y="292" fill="#17343B">• Burst 依托 Job 安全系统，默认保证 Job 内不同 <tspan font-family="Consolas, monospace">NativeArray</tspan></text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  内存绝不重叠（自动注入 <tspan font-family="Consolas, monospace">noalias</tspan>），实现完整循环向量化</text>
+  </g>
+</svg>

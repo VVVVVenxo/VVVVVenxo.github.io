@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：多核 CPU 缓存结构（Store Buffer / Invalidate Queue）与伪共享（False Sharing）</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. Store Buffer 与 Invalidate Queue 引起内存乱序</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">MESI 缓存一致性协议的四种缓存行状态：</text>
+    <text x="56" y="134" fill="#17343B">• <tspan font-weight="700">M (Modified)</tspan>：当前核已修改，数据最新，与主存不一致</text>
+    <text x="56" y="155" fill="#17343B">• <tspan font-weight="700">E (Exclusive)</tspan>：仅当前核独占缓存，数据与主存一致</text>
+    <text x="56" y="175" fill="#17343B">• <tspan font-weight="700">S (Shared)</tspan>：多个核心同时缓存该行，数据均与主存一致</text>
+    <text x="56" y="194" fill="#61747A">• <tspan font-weight="700">I (Invalid)</tspan>：当前缓存行已失效，读取时需重新加载</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">硬件异步缓冲导致的内存可见性延迟与乱序：</text>
+    <text x="56" y="252" fill="#17343B">• <tspan font-weight="700">Store Buffer</tspan>：CPU 写入时先存入本地写缓冲，</text>
+    <text x="56" y="272" fill="#17343B">  不等待其他核返回失效确认（导致写-读重排 Store-Load）</text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">Invalidate Queue</tspan>：收到失效消息后先入队并回复确认，</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  稍后才将本地缓存行置为 Invalid（需内存屏障同步）</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 缓存行伪共享（False Sharing，64B Cache Line）</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">伪共享成因（以 64 字节 Cache Line 为最小同步单位）：</text>
+    <text x="468" y="134" fill="#17343B">• 结构体中相邻定义的两个独立变量 <tspan font-family="Consolas, monospace">long a, b;</tspan> 位于同一</text>
+    <text x="468" y="154" fill="#17343B">  64 字节缓存行内</text>
+    <text x="468" y="175" fill="#17343B">• 线程 0 循环写 <tspan font-family="Consolas, monospace">a</tspan>，线程 1 循环写 <tspan font-family="Consolas, monospace">b</tspan>，每次写入都会广播</text>
+    <text x="468" y="194" fill="#61747A">  Invalidate 使对方的整条缓存行作废，触发频繁缓存未命中</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">工程消除方案（缓存行对齐填充）：</text>
+    <text x="468" y="252" fill="#17343B">• 使用 C++11 <tspan font-weight="700" font-family="Consolas, monospace">alignas(64)</tspan> 显式指定变量按 64B 边界对齐</text>
+    <text x="468" y="272" fill="#17343B">• 或使用 C++17 标准常量</text>
+    <text x="468" y="292" fill="#17343B">  <tspan font-family="Consolas, monospace">std::hardware_destructive_interference_size</tspan></text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">• 将不同线程高频写入的字段隔离到独立的缓存行中</text>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：传统 MonoBehaviour 离散堆内存（AoS）与 ECS Archetype 16KB Chunk（SoA）布局</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 传统 MonoBehaviour 面向对象内存布局（AoS）</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">引用类型离散分配与指针间接寻址：</text>
+    <text x="56" y="134" fill="#17343B">• 每个 <tspan font-family="Consolas, monospace">MonoBehaviour</tspan> 是托管堆上单独分配的 <tspan font-family="Consolas, monospace">class</tspan> 对象</text>
+    <text x="56" y="155" fill="#17343B">• 对象内部同时包含对象头、方法表指针与不需要每帧访问的字段</text>
+    <text x="56" y="175" fill="#17343B">• 不同对象的内存地址不连续，遍历时需通过指针数组多次解引用</text>
+    <text x="56" y="194" fill="#61747A">• 托管堆垃圾回收（GC）不会自动整理压缩已分配对象的内存位置</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">CPU 缓存行（64B Cache Line）利用率低下：</text>
+    <text x="56" y="252" fill="#17343B">• 当系统在 <tspan font-family="Consolas, monospace">Update</tspan> 中只读取 <tspan font-family="Consolas, monospace">Position</tspan>（12 字节）与</text>
+    <text x="56" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">Velocity</tspan>（12 字节）时，64B 缓存行其余 40B 全是无关字段</text>
+    <text x="56" y="293" fill="#17343B">• 随机跳转的地址使 CPU 硬件预取器无法预测下一条缓存行，</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  频繁发生 L1/L2 Cache Miss 并等待主存读取</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. ECS Archetype 与 16KB Chunk 连续数组布局（SoA）</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">Entity / IComponentData / Archetype 组织方式：</text>
+    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700" font-family="Consolas, monospace">Entity</tspan>：仅是一个 8 字节整型 ID（<tspan font-family="Consolas, monospace">Index + Version</tspan>）</text>
+    <text x="468" y="154" fill="#17343B">• <tspan font-weight="700" font-family="Consolas, monospace">Archetype</tspan>：组件组合完全相同的实体归入同一原型</text>
+    <text x="468" y="175" fill="#17343B">• 每个 Archetype 在非托管内存中按 <tspan font-weight="700">16KB 大小的 Chunk</tspan></text>
+    <text x="468" y="194" fill="#61747A">  分配空间（16KB 契合现代 CPU 的 32KB L1 数据缓存）</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">Chunk 内部 SoA（Structure of Arrays）并行数组：</text>
+    <text x="468" y="252" fill="#17343B">• 同一个 Chunk 内拆分为多条平行的紧凑连续数组：</text>
+    <text x="468" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">Entity[N]</tspan> | <tspan font-family="Consolas, monospace">LocalTransform[N]</tspan> | <tspan font-family="Consolas, monospace">Velocity[N]</tspan></text>
+    <text x="468" y="292" fill="#17343B">• 第 <tspan font-family="Consolas, monospace">i</tspan> 个实体的各组件分别位于各数组的下标 <tspan font-family="Consolas, monospace">[i]</tspan> 处</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">• 顺序遍历时缓存行有效数据占比 100%，无托管 GC 开销</text>
+  </g>
+</svg>
