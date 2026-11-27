@@ -934,6 +934,7 @@ body {
   font-size: 1.55rem;
   font-weight: 600;
   line-height: 1.4;
+  position: relative;
 }
 .prose h3 {
   font-family: var(--font-serif);
@@ -944,6 +945,33 @@ body {
   font-size: 1.25rem;
   font-weight: 600;
   line-height: 1.5;
+  position: relative;
+}
+.prose .heading-anchor {
+  margin-left: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  opacity: 0;
+  border-bottom: 0 !important;
+  text-decoration: none;
+  transition: opacity 0.18s ease, color 0.18s ease;
+}
+.prose h2:hover .heading-anchor,
+.prose h3:hover .heading-anchor,
+.prose .heading-anchor:focus-visible {
+  opacity: 0.75;
+}
+.prose .heading-anchor:hover {
+  opacity: 1 !important;
+  color: var(--accent);
+}
+.prose .heading-anchor.copied {
+  opacity: 1 !important;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
 }
 .prose h4 {
   color: var(--text-primary);
@@ -1036,6 +1064,134 @@ body {
   margin-top: 1.5em;
   margin-bottom: 1.5em;
   background: var(--bg-elevated);
+  cursor: zoom-in;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.prose img:hover {
+  border-color: var(--accent);
+}
+.post-header-diagram img {
+  cursor: zoom-in;
+}
+
+/* Lightbox Zoom Modal */
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(18, 26, 23, 0.82);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  cursor: zoom-out;
+}
+.image-lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.image-lightbox img {
+  max-width: min(94vw, 1360px);
+  max-height: 84vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: #f3f6f3;
+  padding: 8px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+.image-lightbox__caption {
+  margin-top: 12px;
+  color: #e2ece7;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+/* Back to Top + Reading Percent Pill */
+.back-to-top-pill {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 35;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.back-to-top-pill.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.back-to-top-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+@media (width <= 1023px) {
+  .back-to-top-pill {
+    bottom: 84px;
+  }
+}
+
+/* Blog Instant Filter Bar */
+.blog-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+}
+.blog-filter-input-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+}
+.blog-filter-input {
+  width: 100%;
+  padding: 6px 12px 6px 32px;
+  font-size: 13.5px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: border-color 0.2s ease;
+}
+.blog-filter-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.blog-filter-input::placeholder {
+  color: var(--text-tertiary);
+}
+.blog-filter-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
 }
 .dark .prose img[src$=".svg"] {
   background: #f3f0e8;

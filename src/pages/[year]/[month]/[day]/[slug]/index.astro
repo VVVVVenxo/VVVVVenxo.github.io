@@ -231,6 +231,20 @@ const { post, prevPost, nextPost } = Astro.props;
     }
   </div>
 
+  <!-- Back to Top + Reading Progress Pill -->
+  <button id="back-to-top" type="button" class="back-to-top-pill" aria-label="回到顶部" title="回到顶部">
+    <span id="back-to-top-pct">0%</span>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 15l-6-6-6 6"></path>
+    </svg>
+  </button>
+
+  <!-- Image Lightbox Modal -->
+  <div id="image-lightbox" class="image-lightbox" role="dialog" aria-modal="true" aria-label="图片放大预览">
+    <img id="image-lightbox-img" src="" alt="" />
+    <p id="image-lightbox-caption" class="image-lightbox__caption"></p>
+  </div>
+
   <script is:inline>
     (function () {
       // TOC Mobile Drawer & Scroll Spy
@@ -303,11 +317,22 @@ const { post, prevPost, nextPost } = Astro.props;
 
         let ticking = false;
         const progressBar = document.getElementById('reading-progress');
+        const backToTopBtn = document.getElementById('back-to-top');
+        const backToTopPct = document.getElementById('back-to-top-pct');
+
         function updateProgress() {
-          if (!progressBar) return;
           const docHeight = document.documentElement.scrollHeight - window.innerHeight;
           const pct = docHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100)) : 0;
-          progressBar.style.width = pct + '%';
+          if (progressBar) progressBar.style.width = pct + '%';
+          if (backToTopPct) backToTopPct.textContent = Math.round(pct) + '%';
+          if (backToTopBtn) {
+            backToTopBtn.classList.toggle('is-visible', window.scrollY > 360);
+          }
+        }
+        if (backToTopBtn) {
+          backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
         }
         window.addEventListener(
           'scroll',
@@ -326,6 +351,58 @@ const { post, prevPost, nextPost } = Astro.props;
         updateActiveLink();
         updateProgress();
       }
+
+      // Heading Anchor Copy Link
+      document.querySelectorAll('.prose .heading-anchor').forEach(anchor => {
+        anchor.addEventListener('click', async e => {
+          e.preventDefault();
+          const href = anchor.getAttribute('href') || '';
+          const fullUrl = window.location.origin + window.location.pathname + href;
+          history.replaceState(null, '', href);
+          try {
+            await navigator.clipboard.writeText(fullUrl);
+            anchor.classList.add('copied');
+            anchor.textContent = '已复制';
+            setTimeout(() => {
+              anchor.classList.remove('copied');
+              anchor.textContent = '#';
+            }, 1500);
+          } catch (_) {}
+        });
+      });
+
+      // Image Lightbox Zoom
+      const lightbox = document.getElementById('image-lightbox');
+      const lightboxImg = document.getElementById('image-lightbox-img');
+      const lightboxCaption = document.getElementById('image-lightbox-caption');
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.prose img, .post-header-diagram img').forEach(img => {
+        img.addEventListener('click', () => {
+          if (!lightbox || !lightboxImg) return;
+          lightboxImg.src = img.getAttribute('src') || '';
+          lightboxImg.alt = img.getAttribute('alt') || '';
+          if (lightboxCaption) {
+            lightboxCaption.textContent = img.getAttribute('alt') || '';
+          }
+          lightbox.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      if (lightbox) {
+        lightbox.addEventListener('click', closeLightbox);
+      }
+      window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && lightbox && lightbox.classList.contains('is-open')) {
+          closeLightbox();
+        }
+      });
 
       // Lazy Load Giscus Comments
       const giscusContainer = document.getElementById('giscus-container');

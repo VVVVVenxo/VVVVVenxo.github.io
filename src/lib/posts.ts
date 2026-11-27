@@ -21,6 +21,7 @@ export interface PostItem {
   month: string;
   day: string;
   timestamp: number;
+  sticky: boolean;
   readingMinutes: number;
   wordCount: number;
   categories: string[];
@@ -288,7 +289,8 @@ export async function renderMarkdown(markdown: string): Promise<{ html: string; 
         if (depth === 2 || depth === 3) {
           headings.push({ depth, text: plainText, slug });
         }
-        return `<h${depth} id="${slug}"><a aria-hidden="true" tabindex="-1" href="#${slug}"><span class="icon icon-link"></span></a>${innerHtml}</h${depth}>\n`;
+        const anchor = depth === 2 || depth === 3 ? `<a class="heading-anchor" href="#${slug}" aria-label="复制小节链接" title="点击复制本节链接">#</a>` : '';
+        return `<h${depth} id="${slug}">${innerHtml}${anchor}</h${depth}>\n`;
       },
       code({ text, lang }) {
         const normalized = normalizeLang(lang);
@@ -366,6 +368,8 @@ export async function getAllPosts(): Promise<PostItem[]> {
     const { html: htmlContent, headings } = await renderMarkdown(content);
     const url = `/${year}/${month}/${day}/${encodeURIComponent(slug)}/`;
 
+    const sticky = Boolean(data.sticky || data.top || data.pinned);
+
     posts.push({
       slug,
       title: rawTitle,
@@ -377,6 +381,7 @@ export async function getAllPosts(): Promise<PostItem[]> {
       month,
       day,
       timestamp,
+      sticky,
       readingMinutes,
       wordCount,
       categories,
@@ -392,6 +397,7 @@ export async function getAllPosts(): Promise<PostItem[]> {
   }
 
   posts.sort((a, b) => {
+    if (a.sticky !== b.sticky) return a.sticky ? -1 : 1;
     if (b.timestamp !== a.timestamp) return b.timestamp - a.timestamp;
     return b.slug.localeCompare(a.slug, 'zh-CN');
   });
