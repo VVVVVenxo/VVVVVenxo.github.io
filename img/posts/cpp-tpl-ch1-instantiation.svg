@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：C++ 模板两阶段名称查找（Two-Phase Lookup）与特化匹配优先级</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 两阶段名称查找与按需编译期实例化（POI）</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">第一阶段（模板定义点 Definition Time）：</text>
+    <text x="56" y="134" fill="#17343B">• 检查与模板参数 <tspan font-family="Consolas, monospace">T</tspan> 无关的语法错误与静态断言</text>
+    <text x="56" y="155" fill="#17343B">• 立即解析并绑定所有<tspan font-weight="700">非依赖名称（Non-dependent）</tspan></text>
+    <text x="56" y="175" fill="#17343B">• 嵌套从属类型需加 <tspan font-weight="700" font-family="Consolas, monospace">typename T::SubType</tspan> 消除歧义</text>
+    <text x="56" y="194" fill="#61747A">• 从属模板成员调用需加 <tspan font-family="Consolas, monospace">obj.template func&lt;U&gt;()</tspan></text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">第二阶段（模板实例化点 POI，Instantiation）：</text>
+    <text x="56" y="252" fill="#17343B">• 将具体实参替换 <tspan font-family="Consolas, monospace">T</tspan>，通过 ADL 查找<tspan font-weight="700">依赖名称</tspan>并校验</text>
+    <text x="56" y="272" fill="#17343B">• <tspan font-weight="700">按需惰性实例化</tspan>：未调用的类模板成员函数不生成代码</text>
+    <text x="56" y="293" fill="#17343B">• 多编译单元重复实例标记为 <tspan font-weight="700" font-family="Consolas, monospace">WEAK</tspan> 弱符号（COMDAT），</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  由链接器去重合并，或用 extern template 显式抑制</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 类模板与函数模板特化匹配优先级</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">类模板特化匹配序（支持全特化与偏特化）：</text>
+    <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700">全特化</tspan>：<tspan font-family="Consolas, monospace">template&lt;&gt; struct Map&lt;int, float&gt;</tspan></text>
+    <text x="468" y="154" fill="#17343B">2. <tspan font-weight="700">更具体的偏特化</tspan>：<tspan font-family="Consolas, monospace">struct Map&lt;K, V*&gt;</tspan>（限定指针）</text>
+    <text x="468" y="175" fill="#17343B">3. <tspan font-weight="700">基础主模板</tspan>：<tspan font-family="Consolas, monospace">template&lt;class K, class V&gt; struct Map</tspan></text>
+    <text x="468" y="194" fill="#61747A">• 标准库 type_traits 全部基于类模板偏特化实现</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">函数模板重载决议序（不支持函数模板偏特化）：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">普通非模板函数</tspan>（参数类型完全匹配时优先级最高）</text>
+    <text x="468" y="272" fill="#17343B">2. <tspan font-weight="700">更特化的重载函数模板</tspan>（如 <tspan font-family="Consolas, monospace">f(T*)</tspan> 优先于 <tspan font-family="Consolas, monospace">f(T)</tspan>）</text>
+    <text x="468" y="292" fill="#17343B">3. <tspan font-weight="700">基础主函数模板</tspan>及其下挂的全特化实例</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">• 工程规范：优先用函数重载或 C++17 if constexpr</text>
+  </g>
+</svg>

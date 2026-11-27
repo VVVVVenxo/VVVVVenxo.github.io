@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：可变参数模板展开、SFINAE 类型约束向 C++20 Concepts 的演进</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 可变参数包（Args...）与 C++17 折叠表达式</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">C++17 四种折叠表达式语法（消除递归基函数模板）：</text>
+    <text x="56" y="134" fill="#17343B">• <tspan font-weight="700">一元右折叠</tspan> <tspan font-family="Consolas, monospace">(args op ...)</tspan> → <tspan font-family="Consolas, monospace">a1 op (a2 op a3)</tspan></text>
+    <text x="56" y="155" fill="#17343B">• <tspan font-weight="700">一元左折叠</tspan> <tspan font-family="Consolas, monospace">(... op args)</tspan> → <tspan font-family="Consolas, monospace">(a1 op a2) op a3</tspan></text>
+    <text x="56" y="175" fill="#17343B">• <tspan font-weight="700">二元右折叠</tspan> <tspan font-family="Consolas, monospace">(args op ... op init)</tspan></text>
+    <text x="56" y="194" fill="#61747A">• <tspan font-weight="700">二元左折叠</tspan> <tspan font-family="Consolas, monospace">(init op ... op args)</tspan>（如流输出链）</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">逗号运算符折叠与编译期分支 if constexpr：</text>
+    <text x="56" y="252" fill="#17343B">• 逗号折叠 <tspan font-weight="700" font-family="Consolas, monospace">(func(std::forward&lt;Args&gt;(args)), ...);</tspan></text>
+    <text x="56" y="272" fill="#17343B">  按参数从左到右顺序依次调用，消除递归函数符号膨胀</text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700" font-family="Consolas, monospace">if constexpr (Cond)</tspan> 在编译期丢弃未命中分支，</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  被丢弃分支中的依赖表达式不触发实例化报错</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 编译期类型约束演进：SFINAE → C++20 Concepts</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">C++11/14 SFINAE（替换失败并非编译错误）：</text>
+    <text x="468" y="134" fill="#17343B">• 签名替换时，若 <tspan font-family="Consolas, monospace">std::enable_if_t&lt;Cond, T&gt;</tspan> 为假，</text>
+    <text x="468" y="154" fill="#17343B">  缺失 <tspan font-family="Consolas, monospace">::type</tspan> 成员，编译器静默将其从候选集剔除</text>
+    <text x="468" y="175" fill="#17343B">• 配合 <tspan font-family="Consolas, monospace">std::void_t&lt;decltype(...)&gt;</tspan> 探测成员是否存在</text>
+    <text x="468" y="194" fill="#61747A">• 局限：签名冗长，仅对函数签名直接上下文替换生效</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">C++20 Concepts（概念约束与包含关系决议）：</text>
+    <text x="468" y="252" fill="#17343B">• 用 <tspan font-weight="700" font-family="Consolas, monospace">concept</tspan> 与 <tspan font-weight="700" font-family="Consolas, monospace">requires</tspan> 直接声明编译期布尔谓词</text>
+    <text x="468" y="272" fill="#17343B">• 包含四类要求：简单、类型、复合（含返回类型）与嵌套</text>
+    <text x="468" y="292" fill="#17343B">• <tspan font-weight="700">约束包含决议</tspan>：若概念 B 包含概念 A（如 <tspan font-family="Consolas, monospace">SignedIntegral</tspan>），</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  重载决议时自动优先匹配约束更严格的概念 B</text>
+  </g>
+</svg>

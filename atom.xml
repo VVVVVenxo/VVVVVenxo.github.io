@@ -8,6 +8,13 @@
     <managingEditor>VVVVVenxo</managingEditor>
     <atom:link href="https://VVVVVenxo.github.io/atom.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>【C++】模板泛型与现代C++核心特性</title>
+      <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90C%2B%2B%E3%80%91%E6%A8%A1%E6%9D%BF%E6%B3%9B%E5%9E%8B%E4%B8%8E%E7%8E%B0%E4%BB%A3C%2B%2B%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7/</link>
+      <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90C%2B%2B%E3%80%91%E6%A8%A1%E6%9D%BF%E6%B3%9B%E5%9E%8B%E4%B8%8E%E7%8E%B0%E4%BB%A3C%2B%2B%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7/</guid>
+      <pubDate>Fri, 27 Nov 2026 22:30:00 GMT</pubDate>
+      <description>系统梳理 C++ 模板与现代泛型编程核心机制：两阶段名称查找与按需编译期实例化、全特化与偏特化匹配规则、引用折叠与 std::forward 完美转发、可变参数模板与 C++17 折叠表达式、SFINAE 向 C++20 Concepts 与 constexpr 的演进、以及 Lambda 匿名闭包类展开与 std::function 类型擦除机制。</description>
+    </item>
+    <item>
       <title>【AI探索】AI Agent 与 MCP 工具链工程实践</title>
       <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91AI%20Agent%20%E4%B8%8E%20MCP%20%E5%B7%A5%E5%85%B7%E9%93%BE%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/</link>
       <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91AI%20Agent%20%E4%B8%8E%20MCP%20%E5%B7%A5%E5%85%B7%E9%93%BE%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/</guid>
@@ -174,13 +181,6 @@
       <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</guid>
       <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
       <description>系统梳理八大排序算法——选择、冒泡、插入、希尔、归并、快速、堆、计数排序，包含原理、复杂度、稳定性分析与 C# 代码实现，是游戏客户端开发的核心基础知识。</description>
-    </item>
-    <item>
-      <title>【随笔】最近的所思所想</title>
-      <link>https://VVVVVenxo.github.io/2026/03/28/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E6%9C%80%E8%BF%91%E7%9A%84%E6%89%80%E6%80%9D%E6%89%80%E6%83%B3/</link>
-      <guid>https://VVVVVenxo.github.io/2026/03/28/%E3%80%90%E9%9A%8F%E7%AC%94%E3%80%91%E6%9C%80%E8%BF%91%E7%9A%84%E6%89%80%E6%80%9D%E6%89%80%E6%83%B3/</guid>
-      <pubDate>Sat, 28 Mar 2026 00:00:00 GMT</pubDate>
-      <description>记录从初入商业游戏项目到独立承担客户端核心模块的心路历程：如何应对庞大工程的复杂度、建立稳定的问题定位方法，以及保持长期的技术节奏。</description>
     </item>
   </channel>
 </rss>
