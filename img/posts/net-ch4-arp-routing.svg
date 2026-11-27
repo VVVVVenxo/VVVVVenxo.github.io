@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="跨网段路由转发过程中IP地址与MAC地址的变化">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 4-1 · 跨网段路由转发过程中的地址变化（IP 地址全程不变，MAC 地址逐跳改变）</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Nodes -->
+    <rect x="38" y="68" width="160" height="62" rx="5" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="118" y="92" fill="#17343B" font-weight="700" text-anchor="middle">源主机 H1</text>
+    <text x="118" y="114" fill="#61747A" text-anchor="middle">IP1 · MAC1</text>
+
+    <rect x="315" y="68" width="230" height="62" rx="5" fill="#D8E6E0" stroke="#287B73" stroke-width="2"/>
+    <text x="430" y="92" fill="#17343B" font-weight="700" text-anchor="middle">路由器 R</text>
+    <text x="430" y="114" fill="#287B73" font-weight="600" text-anchor="middle">左接口 MAC_R1 | 右接口 MAC_R2</text>
+
+    <rect x="662" y="68" width="160" height="62" rx="5" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="742" y="92" fill="#17343B" font-weight="700" text-anchor="middle">目的主机 H2</text>
+    <text x="742" y="114" fill="#61747A" text-anchor="middle">IP2 · MAC2</text>
+
+    <!-- Link lines -->
+    <line x1="198" y1="99" x2="315" y2="99" stroke="#287B73" stroke-width="2"/>
+    <text x="256" y="88" fill="#287B73" font-weight="600" text-anchor="middle">网段 1（第 1 跳）</text>
+    <line x1="545" y1="99" x2="662" y2="99" stroke="#287B73" stroke-width="2"/>
+    <text x="603" y="88" fill="#287B73" font-weight="600" text-anchor="middle">网段 2（第 2 跳）</text>
+
+    <!-- Hop 1 Frame box -->
+    <rect x="38" y="156" width="372" height="130" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="224" y="182" fill="#17343B" font-weight="700" text-anchor="middle">第 1 跳链路上的帧（H1 → 路由器左接口）</text>
+    <rect x="50" y="198" width="348" height="34" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="224" y="220" fill="#17343B" font-weight="600" text-anchor="middle">IP 首部：源 IP = IP1  ， 目的 IP = IP2（不变）</text>
+    <rect x="50" y="240" width="348" height="34" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="224" y="262" fill="#C47743" font-weight="700" text-anchor="middle">MAC 帧头：源 MAC = MAC1 ， 目的 MAC = MAC_R1</text>
+
+    <!-- Hop 2 Frame box -->
+    <rect x="450" y="156" width="372" height="130" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="636" y="182" fill="#17343B" font-weight="700" text-anchor="middle">第 2 跳链路上的帧（路由器右接口 → H2）</text>
+    <rect x="462" y="198" width="348" height="34" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="636" y="220" fill="#17343B" font-weight="600" text-anchor="middle">IP 首部：源 IP = IP1  ， 目的 IP = IP2（不变）</text>
+    <rect x="462" y="240" width="348" height="34" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="636" y="262" fill="#C47743" font-weight="700" text-anchor="middle">MAC 帧头：源 MAC = MAC_R2 ， 目的 MAC = MAC2</text>
+
+    <!-- Footer rule -->
+    <text x="430" y="324" fill="#17343B" font-weight="600" text-anchor="middle">核心结论：路由器转发时剥离旧 MAC 帧头，查找下一跳 IP 后通过 ARP 获取下一跳 MAC 并重新封装帧。</text>
+  </g>
+</svg>

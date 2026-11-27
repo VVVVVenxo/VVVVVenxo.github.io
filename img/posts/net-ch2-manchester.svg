@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="390" viewBox="0 0 860 390" role="img" aria-label="数字信号常用编码波形对比：不归零制、曼彻斯特编码与差分曼彻斯特编码">
+  <rect width="860" height="390" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 2-1 · 基带数字信号编码波形对比（不归零制 / 曼彻斯特 / 差分曼彻斯特）</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g stroke="#CBD7CF" stroke-width="1" stroke-dasharray="4 4">
+    <line x1="210" y1="62" x2="210" y2="345"/>
+    <line x1="285" y1="62" x2="285" y2="345"/>
+    <line x1="360" y1="62" x2="360" y2="345"/>
+    <line x1="435" y1="62" x2="435" y2="345"/>
+    <line x1="510" y1="62" x2="510" y2="345"/>
+    <line x1="585" y1="62" x2="585" y2="345"/>
+    <line x1="660" y1="62" x2="660" y2="345"/>
+    <line x1="735" y1="62" x2="735" y2="345"/>
+    <line x1="810" y1="62" x2="810" y2="345"/>
+  </g>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <text x="36" y="84" fill="#17343B" font-weight="700">原始比特流</text>
+    <g fill="#17343B" font-weight="700" text-anchor="middle">
+      <text x="247.5" y="84">1</text>
+      <text x="322.5" y="84">0</text>
+      <text x="397.5" y="84">1</text>
+      <text x="472.5" y="84">1</text>
+      <text x="547.5" y="84">0</text>
+      <text x="622.5" y="84">0</text>
+      <text x="697.5" y="84">1</text>
+      <text x="772.5" y="84">0</text>
+    </g>
+
+    <text x="36" y="132" fill="#17343B" font-weight="700">不归零制 (NRZ)</text>
+    <text x="36" y="152" fill="#61747A">正电平=1，负电平=0</text>
+    <line x1="210" y1="136" x2="810" y2="136" stroke="#AEBDB7" stroke-width="1"/>
+    <path d="M210 114 H285 V158 H360 V114 H510 V158 H660 V114 H735 V158 H810" fill="none" stroke="#61747A" stroke-width="2.5"/>
+
+    <text x="36" y="220" fill="#287B73" font-weight="700">曼彻斯特编码</text>
+    <text x="36" y="240" fill="#61747A">中心必跳变 (前高后低=1)</text>
+    <line x1="210" y1="224" x2="810" y2="224" stroke="#AEBDB7" stroke-width="1"/>
+    <path d="M210 202 H247.5 V246 H322.5 V202 H397.5 V246 H435 V202 H472.5 V246 H547.5 V202 H585 V246 H622.5 V202 H697.5 V246 H772.5 V202 H810" fill="none" stroke="#287B73" stroke-width="2.5"/>
+    <g fill="#C47743">
+      <circle cx="247.5" cy="224" r="3.5"/><circle cx="322.5" cy="224" r="3.5"/>
+      <circle cx="397.5" cy="224" r="3.5"/><circle cx="472.5" cy="224" r="3.5"/>
+      <circle cx="547.5" cy="224" r="3.5"/><circle cx="622.5" cy="224" r="3.5"/>
+      <circle cx="697.5" cy="224" r="3.5"/><circle cx="772.5" cy="224" r="3.5"/>
+    </g>
+
+    <text x="36" y="308" fill="#17343B" font-weight="700">差分曼彻斯特</text>
+    <text x="36" y="328" fill="#61747A">边界跳变=0，无跳变=1</text>
+    <line x1="210" y1="312" x2="810" y2="312" stroke="#AEBDB7" stroke-width="1"/>
+    <path d="M210 290 H247.5 V334 H285 V290 H322.5 V334 H397.5 V290 H472.5 V334 H510 V290 H547.5 V334 H585 V290 H622.5 V334 H697.5 V290 H735 V334 H772.5 V290 H810" fill="none" stroke="#17343B" stroke-width="2.5"/>
+
+    <text x="430" y="372" fill="#61747A" text-anchor="middle">曼彻斯特编码与差分曼彻斯特编码在每个码元中心均有一次电平跳变（橙点），用于提取同步时钟。</text>
+  </g>
+</svg>

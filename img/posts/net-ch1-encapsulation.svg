@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="410" viewBox="0 0 860 410" role="img" aria-label="五层协议体系结构的数据封装过程">
+  <rect width="860" height="410" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 1-2 · 五层协议体系结构与数据逐层封装（Encapsulation）过程</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left column: 5 Layers -->
+    <rect x="28" y="64" width="192" height="50" rx="5" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="124" y="86" fill="#17343B" font-weight="700" text-anchor="middle">5. 应用层</text>
+    <text x="124" y="105" fill="#61747A" text-anchor="middle">HTTP / DNS / DHCP</text>
+
+    <rect x="28" y="130" width="192" height="50" rx="5" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="124" y="152" fill="#17343B" font-weight="700" text-anchor="middle">4. 运输层</text>
+    <text x="124" y="171" fill="#61747A" text-anchor="middle">TCP / UDP · 进程寻址</text>
+
+    <rect x="28" y="196" width="192" height="50" rx="5" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="124" y="218" fill="#17343B" font-weight="700" text-anchor="middle">3. 网络层</text>
+    <text x="124" y="237" fill="#61747A" text-anchor="middle">IP / ICMP / ARP · 路由</text>
+
+    <rect x="28" y="262" width="192" height="50" rx="5" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="124" y="284" fill="#17343B" font-weight="700" text-anchor="middle">2. 数据链路层</text>
+    <text x="124" y="303" fill="#61747A" text-anchor="middle">MAC / PPP · 帧传输</text>
+
+    <rect x="28" y="328" width="192" height="50" rx="5" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="124" y="350" fill="#17343B" font-weight="700" text-anchor="middle">1. 物理层</text>
+    <text x="124" y="369" fill="#61747A" text-anchor="middle">双绞线 / 光纤 · 比特流</text>
+
+    <!-- Right column: Encapsulation blocks -->
+    <rect x="520" y="69" width="210" height="40" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="625" y="94" fill="#17343B" font-weight="700" text-anchor="middle">应用层报文 (App Data)</text>
+    <text x="250" y="94" fill="#61747A">准备应用层报文 →</text>
+
+    <rect x="426" y="135" width="94" height="40" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="473" y="160" fill="#C47743" font-weight="700" text-anchor="middle">TCP/UDP首部</text>
+    <rect x="520" y="135" width="210" height="40" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="625" y="160" fill="#17343B" text-anchor="middle">应用层数据</text>
+    <text x="250" y="160" fill="#61747A">加端口号与序号 →</text>
+    <text x="742" y="160" fill="#287B73" font-weight="600">报文段</text>
+
+    <rect x="344" y="201" width="82" height="40" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="385" y="226" fill="#C47743" font-weight="700" text-anchor="middle">IP 首部</text>
+    <rect x="426" y="201" width="94" height="40" rx="4" fill="#FAFBF8" stroke="#AEBDB7" stroke-width="1.5"/>
+    <text x="473" y="226" fill="#61747A" text-anchor="middle">TCP 首部</text>
+    <rect x="520" y="201" width="210" height="40" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="625" y="226" fill="#17343B" text-anchor="middle">应用层数据</text>
+    <text x="250" y="226" fill="#61747A">加源/目的 IP →</text>
+    <text x="742" y="226" fill="#287B73" font-weight="600">IP 数据报</text>
+
+    <rect x="262" y="267" width="82" height="40" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="303" y="292" fill="#C47743" font-weight="700" text-anchor="middle">MAC 帧头</text>
+    <rect x="344" y="267" width="82" height="40" rx="4" fill="#FAFBF8" stroke="#AEBDB7" stroke-width="1.5"/>
+    <text x="385" y="292" fill="#61747A" text-anchor="middle">IP 首部</text>
+    <rect x="426" y="267" width="94" height="40" rx="4" fill="#FAFBF8" stroke="#AEBDB7" stroke-width="1.5"/>
+    <text x="473" y="292" fill="#61747A" text-anchor="middle">TCP 首部</text>
+    <rect x="520" y="267" width="210" height="40" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="625" y="292" fill="#17343B" text-anchor="middle">应用层数据</text>
+    <rect x="730" y="267" width="66" height="40" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+    <text x="763" y="292" fill="#C47743" font-weight="700" text-anchor="middle">帧尾FCS</text>
+    <text x="804" y="292" fill="#287B73" font-weight="600">帧</text>
+
+    <rect x="262" y="333" width="534" height="40" rx="4" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="529" y="358" fill="#287B73" font-weight="700" text-anchor="middle">0 1 0 1 1 0 1 0 0 1 1 1 0 1 0 0 1 0 1 1 0 1 0 1 ...</text>
+    <text x="804" y="358" fill="#287B73" font-weight="600">比特</text>
+  </g>
+</svg>

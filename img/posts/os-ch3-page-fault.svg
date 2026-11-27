@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="缺页中断处理闭环与fork写时复制COW机制">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 3-2 · 虚拟内存核心机制：缺页中断处理闭环与 fork() 写时复制（COW）</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: Page Fault Handling -->
+    <rect x="28" y="64" width="400" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="228" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 请求页表结构与缺页中断（Page Fault）处理四步</text>
+
+    <!-- Request Page Table Entry -->
+    <g text-anchor="middle" font-weight="700">
+      <rect x="48"  y="104" width="64" height="30" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/><text x="80"  y="124" fill="#17343B">页号 P</text>
+      <rect x="112" y="104" width="68" height="30" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/><text x="146" y="124" fill="#17343B">物理块号</text>
+      <rect x="180" y="104" width="68" height="30" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/><text x="214" y="124" fill="#C47743">状态位 P</text>
+      <rect x="248" y="104" width="64" height="30" fill="#FAFBF8" stroke="#287B73" stroke-width="1.2"/><text x="280" y="124" fill="#287B73">访问位 A</text>
+      <rect x="312" y="104" width="48" height="30" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/><text x="336" y="124" fill="#C47743">脏位 M</text>
+      <rect x="360" y="104" width="52" height="30" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/><text x="386" y="124" fill="#17343B">外存址</text>
+    </g>
+
+    <rect x="44" y="146" width="368" height="174" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="56" y="170" fill="#17343B" font-weight="700">① 查页表发现状态位 <tspan fill="#C47743">P == 0</tspan>（未调入），触发缺页陷入内核</text>
+    <text x="56" y="196" fill="#17343B">② 若内存满，调<tspan font-weight="700" fill="#287B73">页面置换算法</tspan>选淘汰页：若<tspan font-weight="700" fill="#C47743">脏位 M == 1</tspan></text>
+    <text x="56" y="216" fill="#61747A">   需先写回磁盘对换区；若 <tspan font-weight="700" fill="#17343B">M == 0</tspan>（未修改）则直接覆盖</text>
+    <text x="56" y="242" fill="#17343B">③ 启动磁盘 I/O 调入物理块（进程阻塞），完成后唤醒进程，</text>
+    <text x="56" y="262" fill="#17343B">   修改页表项置 <tspan font-weight="700" fill="#287B73">P = 1、M = 0</tspan>，并同步更新快表 TLB</text>
+    <text x="56" y="288" fill="#C47743" font-weight="700">④ iret 返回用户态，重新执行刚才引发缺页的那条指令！</text>
+    <text x="56" y="308" fill="#61747A">（注：一条指令执行期间可能访问多个操作数，可触发多次缺页）</text>
+
+    <!-- Right Panel: Copy-on-Write -->
+    <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#C47743" stroke-width="1.5"/>
+    <text x="640" y="90" fill="#C47743" font-weight="700" text-anchor="middle">2. fork() 写时复制（Copy-on-Write，COW）原理</text>
+
+    <rect x="460" y="106" width="360" height="100" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="472" y="128" fill="#287B73" font-weight="700">阶段一：fork() 创建子进程瞬间（零物理页复制）：</text>
+    <text x="472" y="152" fill="#17343B">• 内核不复制物理页，仅复制父进程的页表结构给子进程</text>
+    <text x="472" y="174" fill="#17343B">• 父子页表项指向<tspan font-weight="700" fill="#287B73">同一物理页框</tspan>（引用计数+1），并将双方</text>
+    <text x="472" y="194" fill="#17343B">  页表项的读写权限全部设为<tspan font-weight="700" fill="#C47743">“只读（Read-Only）”</tspan></text>
+
+    <rect x="460" y="218" width="360" height="102" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="472" y="240" fill="#C47743" font-weight="700">阶段二：任一进程尝试写入该页面时（按需触发拷贝）：</text>
+    <text x="472" y="264" fill="#17343B">• CPU 硬件 MMU 检测到写只读页，立即触发<tspan font-weight="700" fill="#C47743">缺页异常</tspan></text>
+    <text x="472" y="286" fill="#17343B">• 内核分配<tspan font-weight="700" fill="#287B73">新物理页</tspan>并拷贝内容，将写入方页表项重映射</text>
+    <text x="472" y="306" fill="#17343B">  到新物理页，最后将双方权限恢复为<tspan font-weight="700">可读写（R/W）</tspan></text>
+  </g>
+</svg>
