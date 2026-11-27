@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="系统总线带宽定量计算与异步互锁定时及DMA周期挪用">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 6-1 · 系统总线带宽计算、异步互锁通信与 DMA 周期挪用（窃取）</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: Bus Bandwidth & Timing -->
+    <rect x="28" y="64" width="400" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="228" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 系统三总线属性、带宽公式与异步互锁定时</text>
+
+    <rect x="44" y="106" width="368" height="96" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="128" fill="#17343B" font-weight="700">• 地址总线 (AB)：<tspan fill="#287B73">单向</tspan>（由 CPU / DMA 发出）</text>
+    <text x="56" y="148" fill="#17343B" font-weight="700">• 数据总线 (DB)：<tspan fill="#287B73">双向</tspan>（宽度 W） | 控制总线 (CB)：双向</text>
+    <text x="56" y="170" fill="#C47743" font-weight="700">• 总线带宽 B（最大数据传输率，单位 MB/s 或 GB/s）：</text>
+    <text x="228" y="192" fill="#C47743" font-weight="700" text-anchor="middle">B = 总线频率 f × (总线宽度 W / 8) × 每周期传输次数</text>
+
+    <rect x="44" y="212" width="368" height="108" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="56" y="234" fill="#17343B" font-weight="700">总线定时通信（同步定时 vs 异步定时三种互锁）：</text>
+    <text x="56" y="256" fill="#17343B">• <tspan font-weight="700">同步定时</tspan>：统一公共时钟，快但须迁就最慢设备（短距离）</text>
+    <text x="56" y="276" fill="#17343B">• <tspan font-weight="700">异步定时</tspan>：无公共时钟，靠“请求—回答”握手，分三类：</text>
+    <text x="56" y="296" fill="#287B73" font-weight="700">  ① 不互锁  ② 半互锁  ③ 全互锁（请求等回答，回答等撤销）</text>
+
+    <!-- Right Panel: Port Addressing & DMA Cycle Stealing -->
+    <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="640" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. I/O 端口编址与 DMA vs 中断本质区别</text>
+
+    <rect x="462" y="106" width="356" height="86" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="474" y="128" fill="#17343B" font-weight="700">I/O 端口（接口内部寄存器）的两种编址方式：</text>
+    <text x="474" y="150" fill="#287B73" font-weight="700">• 统一编址（MMIO · RISC）：与主存共用地址空间，</text>
+    <text x="474" y="168" fill="#17343B">  直接用访存指令 <tspan font-weight="700">Load/Store</tspan> 读写外设寄存器</text>
+    <text x="474" y="186" fill="#C47743" font-weight="700">• 独立编址（x86）：独立地址空间，须用 IN/OUT 指令</text>
+
+    <rect x="462" y="202" width="356" height="118" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="474" y="224" fill="#C47743" font-weight="700">DMA 方式与程序中断方式的四大硬件本质区别：</text>
+    <text x="474" y="246" fill="#17343B">① <tspan font-weight="700">响应时机</tspan>：中断在<tspan font-weight="700">指令执行结束</tspan>响应；DMA 在<tspan font-weight="700" fill="#287B73">每个存取</tspan></text>
+    <text x="474" y="264" fill="#17343B">   <tspan font-weight="700" fill="#287B73">周期结束</tspan>均可响应（<tspan font-weight="700" fill="#287B73">周期挪用</tspan>：借 1 个访存周期传数）</text>
+    <text x="474" y="284" fill="#17343B">② <tspan font-weight="700">传输方式</tspan>：中断靠程序传送存现场；<tspan font-weight="700" fill="#C47743">DMA 纯硬件直传</tspan>，</text>
+    <text x="474" y="302" fill="#17343B">   <tspan font-weight="700" fill="#C47743">不改变 CPU 程序流</tspan>且优先级高于中断</text>
+  </g>
+</svg>

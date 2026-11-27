@@ -18,18 +18,18 @@
     <text x="228" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 冯·诺依曼结构（以运算器为中心 → 现代以存储器为中心）</text>
 
     <!-- CPU Box (Left inside) -->
-    <rect x="44" y="106" width="184" height="148" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.4"/>
-    <text x="136" y="126" fill="#287B73" font-weight="700" text-anchor="middle">CPU（运算器 + 控制器）</text>
-    <rect x="56" y="136" width="160" height="28" rx="3" fill="#FAFBF8" stroke="#287B73" stroke-width="1"/>
-    <text x="136" y="155" fill="#17343B" font-weight="700" text-anchor="middle">PC（程序计数器·下条指令址）</text>
-    <rect x="56" y="172" width="160" height="28" rx="3" fill="#FAFBF8" stroke="#287B73" stroke-width="1"/>
-    <text x="136" y="191" fill="#17343B" font-weight="700" text-anchor="middle">IR（指令寄存器·当前指令）</text>
-    <rect x="56" y="208" width="160" height="32" rx="3" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
-    <text x="136" y="229" fill="#C47743" font-weight="700" text-anchor="middle">ALU + ACC / 通用寄存器</text>
+    <rect x="44" y="106" width="180" height="148" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.4"/>
+    <text x="134" y="126" fill="#287B73" font-weight="700" text-anchor="middle">CPU（运算器 + 控制器）</text>
+    <rect x="54" y="136" width="160" height="28" rx="3" fill="#FAFBF8" stroke="#287B73" stroke-width="1"/>
+    <text x="134" y="155" fill="#17343B" font-weight="700" text-anchor="middle">PC（程序计数器）</text>
+    <rect x="54" y="172" width="160" height="28" rx="3" fill="#FAFBF8" stroke="#287B73" stroke-width="1"/>
+    <text x="134" y="191" fill="#17343B" font-weight="700" text-anchor="middle">IR（指令寄存器）</text>
+    <rect x="54" y="208" width="160" height="32" rx="3" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="134" y="229" fill="#C47743" font-weight="700" text-anchor="middle">ALU + ACC / 寄存器</text>
 
     <!-- Main Memory Box (Right inside) -->
-    <rect x="252" y="106" width="160" height="148" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.4"/>
-    <text x="332" y="126" fill="#17343B" font-weight="700" text-anchor="middle">主存储器（Main Memory）</text>
+    <rect x="250" y="106" width="162" height="148" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.4"/>
+    <text x="331" y="126" fill="#17343B" font-weight="700" text-anchor="middle">主存储器（内存）</text>
     <rect x="264" y="136" width="136" height="34" rx="3" fill="#FAFBF8" stroke="#17343B" stroke-width="1.2"/>
     <text x="332" y="158" fill="#17343B" font-weight="700" text-anchor="middle">MAR（地址寄存器）</text>
     <rect x="264" y="178" width="136" height="34" rx="3" fill="#FAFBF8" stroke="#17343B" stroke-width="1.2"/>
