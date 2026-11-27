@@ -109,13 +109,13 @@ Canvas Scaler 组件提供了三种缩放模式来适配不同分辨率：
    - 下面有相交元素且**可合批**：`Depth = 下层 Depth`
    - 下面有相交元素且**不可合批**：`Depth = 下层 Depth + 1`
 
-4. **排序生成 VisiableList**：
+4. **排序生成 VisibleList**：
    - 按 Depth 排序（从小到大）
    - Depth 相同按 Material ID 排序
    - Material ID 相同按 Texture ID 排序
    - 剔除 `Depth = -1` 的元素
 
-5. **合批**：VisiableList 中相邻元素如果材质和贴图相同，即可合批
+5. **合批**：VisibleList 中相邻元素如果材质和贴图相同，即可合批
 
 ### 合批条件
 

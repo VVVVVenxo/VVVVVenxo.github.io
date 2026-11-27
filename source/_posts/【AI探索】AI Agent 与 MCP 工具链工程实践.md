@@ -36,7 +36,7 @@ while (response.stop_reason == "tool_use") {
 
 ![AI Agent 核心闭环（ReAct 范式）、结构化 Tool Calling 与 CodeMode 沙箱批处理](/img/posts/ag-ch1-react-toolcall.svg)
 
-- **为什么真实环境反馈（Environment Grounding）能从根源上抑制代码幻觉**：
+- **真实环境反馈（Environment Grounding）抑制代码幻觉的机制**：
   在开环问答中，模型一旦猜错某个 API 签名，后续生成的所有代码都会沿着错误假设发散；而在 ReAct 闭环中，每次 `Edit` 修改文件后立即跟随一次确定性的验证工具调用（编译器类型检查、`pytest / unittest` 单元测试、无头浏览器 DOM 像素边界测量），真实的报错堆栈会作为强负反馈信号（`is_error: true`）迫使模型在下一轮修正根因，直至所有客观测试通过。
 - **原子工具集最小正交原则**：
   宿主内置的核心工具集并非越多越好，而是遵循 Unix 哲学设计为 **4 个正交原子原语**：**`read`**（按行号区间读取文件或图像）、**`edit`**（基于唯一上下文匹配的局部精确替换）、**`write`**（新建或完整覆写文件）、**`bash`**（执行构建、测试、`git`、`rg` 搜索等系统命令）。
@@ -130,7 +130,7 @@ while (response.stop_reason == "tool_use") {
 
 ## 第 4 章：多智能体（Subagent）上下文隔离与分治编排
 
-### 4.1 为什么单 Agent 需要派生子智能体（Subagent）
+### 4.1 子智能体（Subagent）的上下文沙箱隔离机制
 
 当任务需要检索大量源码文件或阅读长篇外部文档时，若在主 Agent 会话中直接读取，数万 Token 的原始文本会直接占用主会话上下文窗口。
 

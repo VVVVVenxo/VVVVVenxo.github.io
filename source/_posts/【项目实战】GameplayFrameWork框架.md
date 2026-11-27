@@ -374,7 +374,7 @@ public class GameManager : MonoBehaviour
     
     private void OnGameStart()
     {
-        Debug.Log("游戏开始！");
+        Debug.Log("Game Start");
     }
 }
 ```

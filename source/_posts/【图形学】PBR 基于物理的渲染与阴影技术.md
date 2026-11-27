@@ -37,7 +37,7 @@ description: 遵循《Real-Time Rendering (4th Ed.)》与迪士尼/Epic Games PB
 | **辐照度（Irradiance）** | $E$ | $E(p) = \dfrac{\mathrm{d}\Phi}{\mathrm{d}A}$ | $\text{W / m}^2$ | 表面点 $p$ 在**单位受光面积**上接收到的所有方向总辐射通量 |
 | **辐射率（Radiance）** | $L$ | $L(p, \omega) = \dfrac{\mathrm{d}^2 \Phi}{\mathrm{d}\omega\,\mathrm{d}A\cos\theta}$ | $\text{W / (sr}\cdot\text{m}^2\text{)}$ | 表面在**单位垂直投影面积 $\mathrm{d}A\cos\theta$、单位立体角 $\mathrm{d}\omega$** 内发射或接收的光通量 |
 
-- **为什么在 Shader 中单条光线的颜色 RGB 就是辐射率 Radiance（$L$）**：
+- **Shader 中单条光线颜色对应辐射率 Radiance（$L$）的原因**：
   1. **沿光线传播的距离不变性**：在无雾气散射的空气或真空中，单条光线沿方向 $\omega$ 传播时，其 Radiance $L$ **不随传播距离衰减**（而点光源对表面的辐照度 $E$ 因球面积 $4\pi r^2$ 扩散而按距离平方反比 $1 / r^2$ 衰减）。因此人眼或摄像机传感器单个像素采样到的颜色值，严格等于物体表面朝向摄像机方向出射的 Radiance $L_o$。
   2. **兰伯特余弦定律（Lambert's Cosine Law）**：一束截面积为 $\mathrm{d}A_{\perp}$ 的光束以与表面法线 $\mathbf{n}$ 夹角 $\theta$ 斜射到表面上时，铺展的受光面积变为 $\mathrm{d}A = \mathrm{d}A_{\perp} / \cos\theta$，因此单位表面积接收到的微分辐照度为 **$\mathrm{d}E = L_i(p, \omega_i)\cos\theta_i\,\mathrm{d}\omega_i$**（其中 $\cos\theta_i = \max(0, \mathbf{n} \cdot \omega_i)$）。
 
@@ -198,7 +198,7 @@ $$
 
 ![Shadow Map 阴影走样（Shadow Acne）成因、PCSS 软阴影与 CSM 级联阴影](/img/posts/pbr-ch4-shadow-csm.svg)
 
-- **为什么不加偏移会产生黑白相间的自阴影条纹（Shadow Acne）**：
+- **自阴影条纹（Shadow Acne）的成因**：
   因为 Shadow Map 的纹素分辨率有限，每个纹素覆盖场景中的一小块矩形面积；当光线倾斜照射平面时，平面上共享同一个 Shadow Map 纹素的多个屏幕片元中，有一半片元的真实深度 $z_{\text{cur}}$ 比纹素中心记录的离散深度 $z_{\text{map}}$ 稍大，另一半稍小，从而导致平面被自己遮挡、浮现出规则的明暗摩尔条纹。
 - **斜率自适应偏移（Slope-Scale Depth Bias）与法线偏移（Normal Bias）**：
   光线与表面法线夹角 $\theta$ 越大（表面越陡峭），纹素跨度引起的深度误差 $\Delta z \propto \tan\theta$ 越大。因此不能使用固定常数偏移，而必须根据 $\mathbf{N} \cdot \mathbf{L}$ 动态调节偏移量：
@@ -236,7 +236,7 @@ $$
      $$
   2. **独立正交包围盒渲染**：为每一级子视锥体单独计算光源方向下的紧凑正交投影包围盒，分别渲染进同一张阴影图集的 4 个象限（或 `Texture2DArray` 的 4 个 Slice，每级各享 $2048 \times 2048$ 分辨率）。这样近处 `Cascade 0` 的纹素密度极高，远景 `Cascade 3` 又能覆盖全场。
   3. **级联接缝平滑混合（Cascade Blending）**：在相邻两级 Cascade 交界处的过渡带（如 10% 宽度）内，同时采样前后两级 Shadow Map 并按距离线性插值，消除级联切换处的硬突变分界线。
-- **为什么主相机移动或旋转时 CSM 阴影边缘会发生剧烈闪烁（Shadow Shimmering）及根治方法**：
+- **相机移动或旋转时 CSM 阴影边缘闪烁（Shadow Shimmering）的成因与稳定化方法**：
   - **原因**：当主相机微移或旋转时，如果每帧重新根据子视锥体 8 个角点计算紧凑轴对齐包围盒（AABB），光源正交投影框的宽高尺寸和中心坐标会随帧连续微变，导致世界空间中的固定物体在 Shadow Map 纹素网格上不断错位滑动，引发阴影边缘高频闪烁。
   - **两步稳定化方法**：
     1. **使用固定半径的球体包围盒（Bounding Sphere）替代 AABB**：子视锥体对应的最小外接球半径在相机任意旋转下**恒定不变**，从而锁死光源正交投影矩阵的缩放尺寸。
