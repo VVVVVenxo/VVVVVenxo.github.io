@@ -28,11 +28,11 @@ const posts = await getAllPosts();
             <div class="post-entry-meta">
               <time datetime={post.dateStr}>{post.dateFormatted}</time>
               <span>{post.readingMinutes} 分钟阅读</span>
-              <span>{post.categoryBadge}</span>
+              <span class="text-[var(--accent)]">{post.categoryBadge}</span>
             </div>
             <div>
               <h2 lang="zh-CN">
-                <a href={post.url}>{post.title}</a>
+                <a href={post.url}>{post.cleanTitle}</a>
               </h2>
               <p class="post-entry-description" lang="zh-CN">
                 {post.description}
@@ -45,16 +45,6 @@ const posts = await getAllPosts();
                 </div>
               )}
             </div>
-            {(post.coverThumb || post.cover) && (
-              <a href={post.url} class="post-entry-thumb" aria-label={post.title}>
-                <img
-                  src={post.coverThumb || post.cover}
-                  alt={post.title}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </a>
-            )}
           </article>
         ))
       }

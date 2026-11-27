@@ -4,7 +4,7 @@ import { getAllPosts, getAllCategories, getAllTags } from '../lib/posts';
 
 const allPosts = await getAllPosts();
 const featuredPost = allPosts[0];
-const latestPosts = allPosts.slice(1, 9);
+const latestPosts = allPosts.slice(1, 6);
 
 const categories = await getAllCategories();
 const tags = await getAllTags();
@@ -153,7 +153,7 @@ const featuredProjects = [
                 </div>
                 <div class="home-post-copy">
                   <h3 lang="zh-CN">
-                    <a href={featuredPost.url}>{featuredPost.title}</a>
+                    <a href={featuredPost.url}>{featuredPost.cleanTitle}</a>
                   </h3>
                   <p lang="zh-CN">{featuredPost.description}</p>
                   <a href={featuredPost.url} class="home-text-link home-read-link">
@@ -166,10 +166,10 @@ const featuredProjects = [
                 </div>
               </div>
               {(featuredPost.coverThumb || featuredPost.cover) && (
-                <a href={featuredPost.url} class="home-post-thumb" aria-label={featuredPost.title}>
+                <a href={featuredPost.url} class="home-post-thumb" aria-label={featuredPost.cleanTitle}>
                   <img
                     src={featuredPost.coverThumb || featuredPost.cover}
-                    alt={featuredPost.title}
+                    alt={featuredPost.cleanTitle}
                     loading="eager"
                     decoding="async"
                   />
@@ -185,23 +185,14 @@ const featuredProjects = [
               <div class="home-post-meta">
                 <time datetime={post.dateStr}>{post.dateStr}</time>
                 <span>{post.readingMinutes} 分钟阅读</span>
+                <span class="text-[var(--accent)]">{post.categoryBadge}</span>
               </div>
               <div class="home-post-copy">
                 <h3 lang="zh-CN">
-                  <a href={post.url}>{post.title}</a>
+                  <a href={post.url}>{post.cleanTitle}</a>
                 </h3>
                 <p lang="zh-CN">{post.description}</p>
               </div>
-              {(post.coverThumb || post.cover) && (
-                <a href={post.url} class="home-post-thumb" aria-label={post.title}>
-                  <img
-                    src={post.coverThumb || post.cover}
-                    alt={post.title}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </a>
-              )}
             </article>
           ))
         }
