@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="指令数据寻址方式有效地址计算与CISCRISC核心对比">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 4-1 · 常见数据寻址方式（有效地址 EA）与偏移寻址三兄弟及 CISC vs RISC</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: Three Offset Addressing Modes -->
+    <rect x="28" y="64" width="416" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="236" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 三大偏移寻址方式对比（基址 vs 变址 vs 相对寻址）</text>
+
+    <rect x="44" y="106" width="384" height="64" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="128" fill="#287B73" font-weight="700">① 基址寻址：EA = (BR) + A（基址寄存器 BR + 形式地址 A）</text>
+    <text x="56" y="148" fill="#17343B">• <tspan font-weight="700">面向操作系统</tspan>：<tspan font-weight="700">BR 内容由 OS 管理</tspan>（程序执行期间 BR 固定不变，</text>
+    <text x="56" y="164" fill="#17343B">  指令中的偏移量 A 可变），用于<tspan font-weight="700" fill="#287B73">多道程序重定位与扩大寻址空间</tspan></text>
+
+    <rect x="44" y="178" width="384" height="64" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="56" y="200" fill="#C47743" font-weight="700">② 变址寻址：EA = (IX) + A（变址寄存器 IX + 形式地址 A）</text>
+    <text x="56" y="220" fill="#17343B">• <tspan font-weight="700">面向用户程序员</tspan>：A 存数组首地址固定不变，<tspan font-weight="700">IX 内容随循环递增</tspan></text>
+    <text x="56" y="236" fill="#17343B">  <tspan font-weight="700">可变</tspan>，专门用于高效处理<tspan font-weight="700" fill="#C47743">一维/多维数组遍历与循环操作</tspan></text>
+
+    <rect x="44" y="250" width="384" height="70" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="56" y="272" fill="#17343B" font-weight="700">③ 相对寻址：EA = (PC) + A（当前 PC 值 + 补码偏移量 A）</text>
+    <text x="56" y="292" fill="#287B73" font-weight="700">• 铁律：计算 EA 时的 (PC) 已经是自动加过本条指令长度后的</text>
+    <text x="56" y="312" fill="#287B73" font-weight="700">  “下一条指令地址”！广泛用于条件跳转与位置无关代码 (PIC)</text>
+
+    <!-- Right Panel: CISC vs RISC -->
+    <rect x="460" y="64" width="372" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="646" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. CISC（复杂指令集）与 RISC（精简指令集）对比</text>
+
+    <rect x="470" y="106" width="352" height="214" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="480" y="130" fill="#17343B" font-weight="700">• 代表架构：<tspan fill="#C47743">CISC 为 x86</tspan>  |  <tspan fill="#287B73">RISC 为 ARM、MIPS、RISC-V</tspan></text>
+    <text x="480" y="156" fill="#17343B">• <tspan font-weight="700">指令长度</tspan>：CISC 字长可变；<tspan font-weight="700" fill="#287B73">RISC 采用定长指令（32位）</tspan></text>
+    <text x="480" y="182" fill="#17343B">• <tspan font-weight="700">访存限制</tspan>：CISC 运算可访存；<tspan font-weight="700" fill="#C47743">RISC 为 Load/Store 架构</tspan></text>
+    <text x="480" y="202" fill="#61747A">  （仅 Load/Store 指令可访存，其余运算全在寄存器间进行）</text>
+    <text x="480" y="228" fill="#17343B">• <tspan font-weight="700">控制器实现</tspan>：CISC 用<tspan font-weight="700">微程序控制</tspan>；<tspan font-weight="700" fill="#287B73">RISC 用硬布线控制</tspan></text>
+    <text x="480" y="254" fill="#17343B">• <tspan font-weight="700">寄存器数量</tspan>：CISC 寄存器较少；<tspan font-weight="700" fill="#287B73">RISC 拥有大量通用寄存器</tspan></text>
+    <text x="480" y="280" fill="#17343B">• <tspan font-weight="700">流水线效率</tspan>：RISC 多为单周期指令，<tspan font-weight="700" fill="#287B73">极易实现指令流水线</tspan></text>
+    <text x="480" y="304" fill="#61747A">  （遵循 20-80 律：用最高频 20% 简单指令组合完成复杂功能）</text>
+  </g>
+</svg>
