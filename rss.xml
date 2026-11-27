@@ -8,10 +8,17 @@
     <managingEditor>VVVVVenxo</managingEditor>
     <atom:link href="https://VVVVVenxo.github.io/atom.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>【计算机基础】线性代数与 3D 数学</title>
+      <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E4%B8%8E%203D%20%E6%95%B0%E5%AD%A6/</link>
+      <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E4%B8%8E%203D%20%E6%95%B0%E5%AD%A6/</guid>
+      <pubDate>Fri, 27 Nov 2026 16:00:00 GMT</pubDate>
+      <description>遵循《3D 数学基础：图形与游戏开发》（Fletcher Dunn 著）与《虎书》（Fundamentals of Computer Graphics）主线，系统梳理向量点积/叉积、4×4 齐次变换矩阵与法线逆转置推导、MVP 坐标流水线与 Reversed-Z 深度、欧拉角万向节死锁与四元数旋转、以及空间射线相交与视锥裁剪算法。</description>
+    </item>
+    <item>
       <title>【计算机基础】编译原理与链接</title>
-      <link>https://VVVVVenxo.github.io/2026/10/29/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E4%B8%8E%E9%93%BE%E6%8E%A5/</link>
-      <guid>https://VVVVVenxo.github.io/2026/10/29/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E4%B8%8E%E9%93%BE%E6%8E%A5/</guid>
-      <pubDate>Thu, 29 Oct 2026 00:00:00 GMT</pubDate>
+      <link>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E4%B8%8E%E9%93%BE%E6%8E%A5/</link>
+      <guid>https://VVVVVenxo.github.io/2026/11/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E4%B8%8E%E9%93%BE%E6%8E%A5/</guid>
+      <pubDate>Fri, 27 Nov 2026 14:00:00 GMT</pubDate>
       <description>遵循龙书《编译原理》（Aho 等著）与《程序员的自我修养：链接、装载与库》（俞甲子等著）主线，系统梳理词法/语法/语义分析、IR 与 SSA 编译优化、ELF 目标文件结构、静态重定位、动态链接 PLT/GOT 以及 C++/C#/IL2CPP 编译管线。</description>
     </item>
     <item>
@@ -139,13 +146,6 @@
       <guid>https://VVVVVenxo.github.io/2026/07/28/%E3%80%90%E7%AE%97%E6%B3%95%E3%80%91%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%A4%A7%E5%85%A8/</guid>
       <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
       <description>系统梳理八大排序算法——选择、冒泡、插入、希尔、归并、快速、堆、计数排序，包含原理、复杂度、稳定性分析与 C# 代码实现，是游戏客户端开发的核心基础知识。</description>
-    </item>
-    <item>
-      <title>【计算机基础】线性代数与 3D 数学</title>
-      <link>https://VVVVVenxo.github.io/2026/04/12/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E4%B8%8E%203D%20%E6%95%B0%E5%AD%A6/</link>
-      <guid>https://VVVVVenxo.github.io/2026/04/12/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E4%B8%8E%203D%20%E6%95%B0%E5%AD%A6/</guid>
-      <pubDate>Sun, 12 Apr 2026 15:30:00 GMT</pubDate>
-      <description>遵循《3D 数学基础：图形与游戏开发》（Fletcher Dunn 著）与《虎书》（Fundamentals of Computer Graphics）主线，系统梳理向量点积/叉积、4×4 齐次变换矩阵与法线逆转置推导、MVP 坐标流水线与 Reversed-Z 深度、欧拉角万向节死锁与四元数旋转、以及空间射线相交与视锥裁剪算法。</description>
     </item>
     <item>
       <title>【随笔】最近的所思所想</title>
