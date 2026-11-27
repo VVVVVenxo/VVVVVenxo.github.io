@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：状态同步平滑表现（本地客户端预测、服务端校正回滚与远端实体插值）</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 本地主角：客户端预测与服务端校正</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">客户端预测（消除自身操作往返延迟 RTT）：</text>
+    <text x="56" y="134" fill="#17343B">• 玩家按下移动键时，本地主角不等待服务端返回，而是</text>
+    <text x="56" y="155" fill="#17343B">  立即按与服务端相同的移动公式先行修改本地位置</text>
+    <text x="56" y="175" fill="#17343B">• 同时将输入指令连递增序号 <tspan font-family="Consolas, monospace">seq</tspan> 与预测结果存入本地</text>
+    <text x="56" y="194" fill="#61747A">  未确认历史环形队列中，并将输入包发往服务端</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">服务端权威校正（回退并重演未确认输入）：</text>
+    <text x="56" y="252" fill="#17343B">• 收到服务端确认包 <tspan font-family="Consolas, monospace">(ackSeq, authPos)</tspan> 后，丢弃队列中序号</text>
+    <text x="56" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">&lt;= ackSeq</tspan> 的记录，并对比当年预测位置与 <tspan font-family="Consolas, monospace">authPos</tspan> 的误差</text>
+    <text x="56" y="293" fill="#17343B">• 若误差超出阈值（如被服务端墙体或眩晕阻挡），立即将坐标</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  重置为 <tspan font-family="Consolas, monospace">authPos</tspan>，并顺序重演队列中 <tspan font-family="Consolas, monospace">&gt; ackSeq</tspan> 的所有输入</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 远端其他玩家：快照插值与航位推测</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">远端实体双快照线性插值（消除网络抖动卡顿）：</text>
+    <text x="468" y="134" fill="#17343B">• 服务端以 15Hz（每 66ms）下发周围其他玩家的坐标</text>
+    <text x="468" y="154" fill="#17343B">• 客户端收到后不立即瞬移过去，而是将渲染时钟人为延后</text>
+    <text x="468" y="175" fill="#17343B">  1～2 个发包周期（100ms），确保始终持有两个已知</text>
+    <text x="468" y="194" fill="#61747A">  历史状态点 <tspan font-family="Consolas, monospace">S_0</tspan> 和 <tspan font-family="Consolas, monospace">S_1</tspan>，在 60FPS 渲染帧中平滑插值过渡</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">航位推测（外推预测）与服务端延迟补偿：</text>
+    <text x="468" y="252" fill="#17343B">• <tspan font-weight="700">航位推测</tspan>：若网络短暂丢包使插值缓冲耗尽，根据最后</text>
+    <text x="468" y="272" fill="#17343B">  一次已知速度向量 <tspan font-family="Consolas, monospace">Pos + Vel * dt</tspan> 短暂向前外推预测位置</text>
+    <text x="468" y="292" fill="#17343B">• <tspan font-weight="700">射击延迟补偿</tspan>：服务端保留最近 1 秒世界历史快照，处理</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  开火请求时回退到客户端开枪时刻的快照执行射线命中判定</text>
+  </g>
+</svg>

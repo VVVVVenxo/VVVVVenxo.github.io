@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：AssetBundle 二进制结构、LZ4 分块压缩与依赖冗余消除</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. AssetBundle 结构与 LZMA / LZ4 压缩选型</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">AB 包内部由包头索引区（Header）与数据块区组成：</text>
+    <text x="56" y="134" fill="#17343B">• <tspan font-weight="700">不压缩</tspan>：包体最大，加载最快，无需解压开销</text>
+    <text x="56" y="155" fill="#17343B">• <tspan font-weight="700">LZMA（整包流式压缩）</tspan>：体积最小，但读取包内任一资源前</text>
+    <text x="56" y="175" fill="#17343B">  必须将整个 AB 包全部解压，首次加载耗时与内存峰值高</text>
+    <text x="56" y="194" fill="#61747A">• <tspan font-weight="700">LZ4（128KB 分块压缩）</tspan>：工程标准选项，支持按需解压</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">LZ4 分块按需加载与 LoadFromFile 零拷贝机制：</text>
+    <text x="56" y="252" fill="#17343B">• 调用 <tspan font-family="Consolas, monospace">AssetBundle.LoadFromFile</tspan> 加载本地 LZ4 格式 AB 包时，</text>
+    <text x="56" y="272" fill="#17343B">  仅将小体积的包头块索引表读入内存，不解压整个文件</text>
+    <text x="56" y="293" fill="#17343B">• 之后调用 <tspan font-family="Consolas, monospace">LoadAsset</tspan> 加载具体资源时，才根据文件偏移量</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  从磁盘读取并解压对应的 128KB 数据块（Chunk）</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 隐式依赖冗余问题与公共包抽取策略</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">未拆包时的公共资源重复打入问题：</text>
+    <text x="468" y="134" fill="#17343B">• 若 Prefab A（打入包 A）与 Prefab B（打入包 B）同时引用了</text>
+    <text x="468" y="154" fill="#17343B">  未单独指定包名的公共贴图 <tspan font-family="Consolas, monospace">CommonTex</tspan></text>
+    <text x="468" y="175" fill="#17343B">• 构建时 Unity 会将 <tspan font-family="Consolas, monospace">CommonTex</tspan> 同时复制进包 A 和包 B，</text>
+    <text x="468" y="194" fill="#61747A">  运行时同时加载包 A 与包 B 会在内存中产生两份重复贴图</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">依赖图扫描与加载顺序规范：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">入度扫描</tspan>：打包前扫描全工程引用关系，凡是被 2 个及以上</text>
+    <text x="468" y="272" fill="#17343B">   AB 包引用的资源，自动抽取到独立的公共依赖包中</text>
+    <text x="468" y="292" fill="#17343B">2. <tspan font-weight="700">先加载依赖包</tspan>：实例化 Prefab A 前，必须先查询清单并</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">   加载其依赖的所有公共 AB 包，否则会出现材质丢失粉红屏</text>
+  </g>
+</svg>

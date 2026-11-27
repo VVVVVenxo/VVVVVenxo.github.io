@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：乐观帧同步架构（逻辑帧与渲染帧分离、输入广播与跨平台定点数确定性）</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 乐观帧同步定时广播与逻辑/渲染分离</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">严格锁步 vs 乐观帧锁定（MOBA / RTS 标准方案）：</text>
+    <text x="56" y="134" fill="#17343B">• <tspan font-weight="700">严格锁步</tspan>：服务端必须收齐所有人的输入才广播，一人卡全房卡</text>
+    <text x="56" y="155" fill="#17343B">• <tspan font-weight="700">乐观帧同步</tspan>：服务端按固定时钟（如 15Hz，每 66ms 一逻辑帧）</text>
+    <text x="56" y="175" fill="#17343B">  准时打包当前收到的操作向全房间广播（未操作玩家帧指令为空）</text>
+    <text x="56" y="194" fill="#61747A">• 网络层采用基于 UDP 的 KCP 协议降低重传延迟</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">固定步长逻辑帧（15Hz）与高频渲染帧（60/120FPS）分离：</text>
+    <text x="56" y="252" fill="#17343B">• <tspan font-weight="700">逻辑层</tspan>：仅在收到服务端帧包时推进一次 <tspan font-family="Consolas, monospace">LogicTick(fixedDt)</tspan>，</text>
+    <text x="56" y="272" fill="#17343B">  帧间隔 <tspan font-family="Consolas, monospace">fixedDt</tspan> 为恒定常数（如 66ms），绝不使用 <tspan font-family="Consolas, monospace">Time.deltaTime</tspan></text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">表现层</tspan>：在两个逻辑帧坐标之间根据经过的渲染时间比例</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  执行平滑视觉插值，保证高刷屏幕下画面流畅</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 跨平台严格确定性的四大工程约束</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">定点数数学库（64 位整型 Q32.32 替代 float）：</text>
+    <text x="468" y="134" fill="#17343B">• 不同 CPU 架构（x86 与 ARM）或编译优化的硬件浮点数</text>
+    <text x="468" y="154" fill="#17343B">  <tspan font-family="Consolas, monospace">float/double</tspan> 在三角函数与乘加上存在最低位舍入差异</text>
+    <text x="468" y="175" fill="#17343B">• 逻辑层统一采用基于 <tspan font-family="Consolas, monospace">int64_t</tspan> 的定点数（高 32 位整数、</text>
+    <text x="468" y="194" fill="#61747A">  低 32 位小数）及查表三角函数、整数开方与确定性物理库</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">随机数、容器遍历顺序与帧哈希校验：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">同步随机种子</tspan>：开局下发统一种子，逻辑层使用独立线性同余</text>
+    <text x="468" y="272" fill="#17343B">   随机发生器（禁止表现层特效调用逻辑随机数发生器）</text>
+    <text x="468" y="292" fill="#17343B">2. <tspan font-weight="700">确定性遍历</tspan>：禁止在逻辑层遍历无序哈希表 <tspan font-family="Consolas, monospace">Dictionary</tspan></text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">3. 每隔 N 帧上报逻辑状态 CRC32 校验码，第一时间定位不同步帧</text>
+  </g>
+</svg>

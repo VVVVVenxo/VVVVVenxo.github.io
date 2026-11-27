@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：CPU 渲染提交开销（SetPass Call 渲染状态切换与 DrawCall 提交）</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. DrawCall 与 SetPass Call 的区别</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">DrawCall（单次网格绘制调用）：</text>
+    <text x="56" y="134" fill="#17343B">• CPU 向图形 API 发送一次绘制命令（如 <tspan font-family="Consolas, monospace">DrawIndexed</tspan>）</text>
+    <text x="56" y="155" fill="#17343B">• 命令本身只指定顶点缓冲区偏移与索引数量，执行很快</text>
+    <text x="56" y="175" fill="#17343B">• 真正耗时的是绘制前 CPU 在驱动层校验参数与绑定缓冲区</text>
+    <text x="56" y="194" fill="#61747A">• 批次（Batches）包含网格数据绑定与一次或多次绘制命令</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">SetPass Call（渲染管线状态与材质切换）：</text>
+    <text x="56" y="252" fill="#17343B">• 切换不同 Shader、贴图或混合/深度测试状态时触发</text>
+    <text x="56" y="272" fill="#17343B">• GPU 需要切换着色器程序并重新绑定材质常量与纹理单元</text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">单次 SetPass Call 的 CPU 与驱动开销远高于普通 DrawCall</tspan></text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">• 优化核心：既要减少绘制次数，更要减少材质与状态切换</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 主线程、渲染线程与 GPU 命令队列</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">主线程与渲染线程职责划分：</text>
+    <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700">主线程</tspan>：执行视锥体剔除、按渲染队列排序可见物体，</text>
+    <text x="468" y="154" fill="#17343B">   将高阶渲染指令写入内部命令缓冲区</text>
+    <text x="468" y="175" fill="#17343B">2. <tspan font-weight="700">渲染线程</tspan>：读取内部命令，调用图形驱动接口（Vulkan /</text>
+    <text x="468" y="194" fill="#61747A">   D3D12 / Metal / OpenGL）生成硬件命令列表提交给 GPU</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">合批与总线带宽的平衡：</text>
+    <text x="468" y="252" fill="#17343B">• 合批并非越少越好：若将全场景巨量顶点强行合并为一个</text>
+    <text x="468" y="272" fill="#17343B">  超大网格，会使视锥体剔除变粗（局部可见即整块提交）</text>
+    <text x="468" y="292" fill="#17343B">• 动态合并过多顶点还会增加每帧 CPU 内存拷贝与总线带宽</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">• 工程中需按静态建筑、动态物体、同类大群物体分类处理</text>
+  </g>
+</svg>
