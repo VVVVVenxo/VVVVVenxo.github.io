@@ -68,21 +68,21 @@
       <link>https://VVVVVenxo.github.io/2026/10/28/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/28/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/</guid>
       <pubDate>Wed, 28 Oct 2026 00:00:00 GMT</pubDate>
-      <description>基于唐朔飞/袁春风《计算机组成原理》、CSAPP 与 408 统考考点的系统复习笔记：涵盖冯·诺依曼结构与性能公式、定点数补码与 IEEE 754 浮点数运算、SRAM/DRAM 主存与 Cache 三种映射、指令寻址与 RISC、CPU 五段流水线三大冒险以及总线与 I/O 硬件。</description>
+      <description>计算机组成原理核心知识笔记：涵盖冯·诺依曼结构与性能公式、定点数补码与 IEEE 754 浮点数运算、SRAM/DRAM 主存与 Cache 三种映射、指令寻址与 RISC、CPU 五段流水线三大冒险以及总线与 I/O 硬件。</description>
     </item>
     <item>
       <title>【计算机基础】操作系统</title>
       <link>https://VVVVVenxo.github.io/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</guid>
       <pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
-      <description>基于汤小丹《计算机操作系统》与 408 统考考点的系统复习笔记：涵盖用户态/内核态与中断异常机制、进程与线程调度、信号量同步互斥与死锁银行家算法、页式虚拟内存与页面置换、文件系统 inode 以及设备 I/O 与磁盘调度。</description>
+      <description>操作系统核心知识笔记：涵盖用户态/内核态与中断异常机制、进程与线程调度、信号量同步互斥与死锁银行家算法、页式虚拟内存与页面置换、文件系统 inode 以及设备 I/O 与磁盘调度。</description>
     </item>
     <item>
       <title>【计算机基础】数据结构</title>
       <link>https://VVVVVenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/26/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
       <pubDate>Mon, 26 Oct 2026 00:00:00 GMT</pubDate>
-      <description>基于严蔚敏《数据结构》与 408 统考考点的系统复习笔记：涵盖线性表（顺序表与链表）、栈与循环队列、KMP 模式匹配、树与二叉树、图论算法、查找（AVL/红黑树/B+ 树/散列表）及内外部排序体系。</description>
+      <description>数据结构核心知识笔记：涵盖线性表（顺序表与链表）、栈与循环队列、KMP 模式匹配、树与二叉树、图论算法、查找（AVL/红黑树/B+ 树/散列表）及内外部排序体系。</description>
     </item>
     <item>
       <title>【计算机基础】离散数学</title>

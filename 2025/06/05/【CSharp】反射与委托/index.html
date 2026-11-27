@@ -113,24 +113,24 @@
 </thead>
 <tbody><tr>
 <td>外部赋值 <code>=</code></td>
-<td>✅ 允许</td>
-<td>❌ 禁止</td>
+<td>允许</td>
+<td>禁止</td>
 </tr>
 <tr>
 <td>外部调用 <code>Invoke</code></td>
-<td>✅ 允许</td>
-<td>❌ 禁止</td>
+<td>允许</td>
+<td>禁止</td>
 </tr>
 <tr>
 <td><code>+=</code> / <code>-=</code></td>
-<td>✅ 允许</td>
-<td>✅ 允许</td>
+<td>允许</td>
+<td>允许</td>
 </tr>
 </tbody></table>
 <p><strong>事件的核心优势</strong>：防止外部代码清空其他人的监听，更安全。</p>
 <div class="code-block-wrapper"><span class="code-lang-badge">C#</span><button class="copy-button" type="button" aria-label="复制代码" title="复制代码"><svg class="copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="check-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button><pre class="shiki shiki-themes one-light one-dark-pro" style="--shiki-light:#383A42;--shiki-dark:#abb2bf;--shiki-light-bg:#FAFAFA;--shiki-dark-bg:#282c34" tabindex="0"><code><span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">public</span><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD"> class</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> Player</span></span>
 <span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">{</span></span>
-<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">    // 委托：外部可以直接赋值，危险！</span></span>
+<span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">    // 委托：外部可直接赋值覆盖已有订阅</span></span>
 <span class="line"><span style="--shiki-light:#A626A4;--shiki-dark:#C678DD">    public</span><span style="--shiki-light:#C18401;--shiki-dark:#E5C07B"> Action</span><span style="--shiki-light:#E45649;--shiki-dark:#E06C75"> OnDeath</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">;</span></span>
 <span class="line"><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF">    </span></span>
 <span class="line"><span style="--shiki-light:#A0A1A7;--shiki-light-font-style:italic;--shiki-dark:#7F848E;--shiki-dark-font-style:italic">    // 事件：外部只能 += 或 -=，安全</span></span>
