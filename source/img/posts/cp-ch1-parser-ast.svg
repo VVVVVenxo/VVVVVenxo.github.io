@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-2：自顶向下 LL(1) 预测分析与自底向上 LR 移进-归约分析及 AST 对比</text>
+
+  <!-- 左栏：LL(1) vs LR -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 自顶向下 LL(1) vs 自底向上 LR 语法分析器</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">自顶向下分析（LL(1) · 从根节点向叶节点推导）：</text>
+    <text x="56" y="134" fill="#17343B">• <tspan font-weight="700">推导方向</tspan>：构造<tspan font-weight="700" fill="#287B73">最左推导</tspan>（Leftmost Derivation）</text>
+    <text x="56" y="156" fill="#17343B">• <tspan font-weight="700">文法改造</tspan>：必须<tspan font-weight="700" fill="#C47743">消除左递归</tspan> (A→Aα|β) 并提取左公因子</text>
+    <text x="56" y="178" fill="#17343B">• <tspan font-weight="700">预测分析表</tspan>：计算 FIRST 终结首集与 FOLLOW 后继集</text>
+    <text x="56" y="198" fill="#61747A">• 无冲突条件：同非终结符各候选式的预测集两两不相交</text>
+
+    <rect x="44" y="216" width="364" height="108" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="236" fill="#287B73" font-weight="700">自底向上分析（LR 系列 · 从叶节点向根节点归约）：</text>
+    <text x="56" y="258" fill="#17343B">• <tspan font-weight="700">归约本质</tspan>：<tspan font-weight="700" fill="#C47743">最右推导的逆过程</tspan>（规范归约，归约句柄）</text>
+    <text x="56" y="280" fill="#17343B">• <tspan font-weight="700">核心动作</tspan>：Shift 移进 / Reduce 归约 / Accept / Error</text>
+    <text x="56" y="300" fill="#17343B">• <tspan font-weight="700">常见冲突</tspan>：移进-归约冲突、归约-归约冲突</text>
+    <text x="56" y="318" fill="#287B73" font-weight="700">• 能力层级：LR(0) &lt; SLR(1) &lt; LALR(1) &lt; LR(1)</text>
+  </g>
+
+  <!-- 右栏：CST vs AST -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 具体语法树 (CST) vs 抽象语法树 (AST)：a + b * c</text>
+
+  <g font-size="13">
+    <!-- CST 示意框 -->
+    <rect x="456" y="92" width="174" height="128" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="543" y="110" text-anchor="middle" fill="#61747A" font-weight="700">具体语法树 (CST)</text>
+    <text x="543" y="132" text-anchor="middle" fill="#17343B" font-family="Consolas, monospace">      E      </text>
+    <text x="543" y="150" text-anchor="middle" fill="#61747A" font-family="Consolas, monospace">   /  |     </text>
+    <text x="543" y="168" text-anchor="middle" fill="#17343B" font-family="Consolas, monospace">  E   +   T  </text>
+    <text x="543" y="186" text-anchor="middle" fill="#61747A" font-family="Consolas, monospace">  |     / | </text>
+    <text x="543" y="206" text-anchor="middle" fill="#17343B" font-family="Consolas, monospace">T→F→a  T  *  F→c</text>
+
+    <!-- AST 示意框 -->
+    <rect x="644" y="92" width="174" height="128" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="731" y="110" text-anchor="middle" fill="#C47743" font-weight="700">抽象语法树 (AST)</text>
+    <text x="731" y="134" text-anchor="middle" fill="#C47743" font-weight="700" font-family="Consolas, monospace">     (+)     </text>
+    <text x="731" y="152" text-anchor="middle" fill="#61747A" font-family="Consolas, monospace">    /       </text>
+    <text x="731" y="170" text-anchor="middle" fill="#17343B" font-weight="700" font-family="Consolas, monospace">   a    (*)  </text>
+    <text x="731" y="188" text-anchor="middle" fill="#61747A" font-family="Consolas, monospace">       /    </text>
+    <text x="731" y="206" text-anchor="middle" fill="#17343B" font-weight="700" font-family="Consolas, monospace">      b     c</text>
+
+    <rect x="456" y="230" width="362" height="94" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="250" fill="#17343B" font-weight="700">为什么语义分析与中间代码生成只使用 AST：</text>
+    <text x="468" y="272" fill="#17343B">• <tspan font-weight="700" fill="#287B73">压缩单链推导</tspan>：剔除 E→T→F 等仅表达优先级的冗余节点</text>
+    <text x="468" y="294" fill="#17343B">• <tspan font-weight="700" fill="#287B73">丢弃语法界符</tspan>：省去括号、分号等无独立计算语义的符号</text>
+    <text x="468" y="314" fill="#17343B">• <tspan font-weight="700" fill="#C47743">属性挂载</tspan>：算符节点直接记录求值类型与符号表指针</text>
+  </g>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：三地址码（TAC）、静态单赋值（SSA φ 函数）与后端图着色寄存器分配</text>
+
+  <!-- 左栏：TAC vs SSA -->
+  <rect x="28" y="54" width="400" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="228" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 普通三地址码 (TAC) vs 静态单赋值 (SSA)</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="176" height="120" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="132" y="110" text-anchor="middle" fill="#61747A" font-weight="700">普通三地址码 (TAC)</text>
+    <text x="54" y="132" fill="#17343B" font-family="Consolas, monospace">B1: x = a + 1</text>
+    <text x="54" y="152" fill="#17343B" font-family="Consolas, monospace">B2: x = b + 2</text>
+    <text x="54" y="172" fill="#17343B" font-family="Consolas, monospace">B3: y = x * 3</text>
+    <text x="54" y="198" fill="#C47743">x 多次覆写，来源模糊</text>
+
+    <rect x="236" y="92" width="176" height="120" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="324" y="110" text-anchor="middle" fill="#287B73" font-weight="700">静态单赋值 (SSA)</text>
+    <text x="246" y="132" fill="#17343B" font-family="Consolas, monospace">B1: x1 = a + 1</text>
+    <text x="246" y="152" fill="#17343B" font-family="Consolas, monospace">B2: x2 = b + 2</text>
+    <text x="246" y="172" fill="#287B73" font-weight="700" font-family="Consolas, monospace">B3: x3 = φ(x1, x2)</text>
+    <text x="246" y="194" fill="#17343B" font-family="Consolas, monospace">    y1 = x3 * 3</text>
+
+    <rect x="44" y="222" width="368" height="102" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="242" fill="#287B73" font-weight="700">SSA 优势与核心机器无关优化 Pass（LLVM / GCC）：</text>
+    <text x="56" y="264" fill="#17343B">• <tspan font-weight="700">显式 Def-Use 链</tspan>：每个变量仅赋值一次，合流处用 φ 选择</text>
+    <text x="56" y="286" fill="#17343B">• <tspan font-weight="700">常量传播与死代码消除</tspan>：引用计数为 0 的定值直接删去</text>
+    <text x="56" y="308" fill="#17343B">• <tspan font-weight="700">循环优化</tspan>：循环不变式外提 (LICM) + 归纳变量强度削弱</text>
+  </g>
+
+  <!-- 右栏：活跃变量分析与图着色寄存器分配 -->
+  <rect x="444" y="54" width="388" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="638" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 控制流图 (CFG) 活跃分析与图着色寄存器分配</text>
+
+  <g font-size="13">
+    <rect x="458" y="92" width="360" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="470" y="112" fill="#17343B" font-weight="700">逆向数据流方程（活跃变量分析 Liveness Analysis）：</text>
+    <text x="470" y="134" fill="#287B73" font-weight="700" font-family="Consolas, monospace">OUT[B] = ∪ IN[S]  (S 为基本块 B 的所有后继块)</text>
+    <text x="470" y="156" fill="#287B73" font-weight="700" font-family="Consolas, monospace">IN[B]  = use[B] ∪ (OUT[B] - def[B])</text>
+    <text x="470" y="178" fill="#17343B">• <tspan font-weight="700">use[B]</tspan>：B 内先用后定的变量；<tspan font-weight="700">def[B]</tspan>：B 内定值变量</text>
+    <text x="470" y="198" fill="#C47743" font-weight="700">• 冲突边：同一程序点同时活跃的两变量不可共享寄存器</text>
+
+    <rect x="458" y="216" width="360" height="108" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="470" y="236" fill="#C47743" font-weight="700">Chaitin 图着色寄存器分配（K 个物理寄存器 = K 色）：</text>
+    <text x="470" y="258" fill="#17343B">1. <tspan font-weight="700">简化 (Simplify)</tspan>：反复摘除冲突图中度数 &lt; K 节点压栈</text>
+    <text x="470" y="280" fill="#17343B">2. <tspan font-weight="700">溢出 (Spill)</tspan>：若剩余度数均 ≥ K，选低频变量溢出至栈帧</text>
+    <text x="470" y="300" fill="#17343B">3. <tspan font-weight="700">染色 (Select)</tspan>：弹栈并分配与邻居不冲突的物理寄存器</text>
+    <text x="470" y="318" fill="#61747A">（补充：JIT 常采用 O(n) 线性扫描寄存器分配以加速编译）</text>
+  </g>
+</svg>

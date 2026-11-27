@@ -43,6 +43,7 @@ CAPTIONS = {
     "pipeline": "三维顶点经过坐标变换与光栅化，最终着色为屏幕像素",
     "linux": "无 GUI 损耗，以纯文本配置与命令行驱动 7×24 小时持续构建",
     "computer-org": "指令经流水线译码执行，通过多级缓存与主存交换数据",
+    "compiler": "源码经语法分析与中间优化生成目标文件，再由链接器完成符号重定位",
 }
 
 
@@ -422,6 +423,22 @@ def diagram_computer_org():
     ])
 
 
+def diagram_compiler():
+    return "".join([
+        t(650, 205, "AST · IR 优化 · ELF 符号重定位", 21, INK, 650),
+        rule(650, 222, 1125, 222),
+        box(668, 290, 136, 86, "前端 AST", PALE, SOFT, 18, "词法 · 语法"),
+        box(842, 290, 136, 86, "IR 优化", MINT, TEAL, 18, "SSA · 寄存器"),
+        box(1016, 290, 136, 86, "ELF .o", "#F4E6D9", ORANGE, 18, "符号 · 重定位"),
+        rule(804, 333, 834, 333, TEAL, 2, marker="tealArrow"),
+        rule(978, 333, 1008, 333, ORANGE, 2, marker="orangeArrow"),
+        box(668, 418, 484, 56, "静态段合并  ·  符号地址重定位  ·  PLT / GOT 动态绑定", PALE, TEAL, 15, mono=True),
+        rule(910, 418, 910, 376, TEAL, 1.5, "4 4"),
+        rule(1084, 418, 1084, 376, ORANGE, 1.5, "4 4"),
+        t(910, 524, "从源代码到可执行程序：编译前端、后端优化与动静态链接", 16, MUTED, anchor="middle"),
+    ])
+
+
 def select_variant(top, sub, title):
     if sub == "图形学" or "渲染管线" in title or "Shader" in title:
         return "pipeline"
@@ -438,6 +455,7 @@ def select_variant(top, sub, title):
         if "离散数学" in title: return "graph"
         if "数据结构" in title: return "huffman"
         if "组成原理" in title: return "computer-org"
+        if "编译" in title or "链接" in title: return "compiler"
         return "process"
     if sub == "网络":
         if "帧同步" in title: return "frame-sync"
@@ -490,6 +508,7 @@ def diagram_for(kind):
     if kind == "pipeline": return diagram_pipeline()
     if kind == "linux": return diagram_linux()
     if kind == "computer-org": return diagram_computer_org()
+    if kind == "compiler": return diagram_compiler()
     if kind in ("learning","reflection-notes"): return diagram_learning(kind=="reflection-notes")
     return diagram_layers("architecture", "")
 
@@ -506,6 +525,7 @@ def diagram_heading(kind):
         "covers":"文章到封面的生成链路","pipeline":"顶点变换 · 光栅化 · 片元着色",
         "linux":"无头服务 · 命令行 · 持续构建",
         "computer-org":"CPU 流水线 · Cache · 主存层次",
+        "compiler":"AST · IR 优化 · ELF 符号重定位",
         "learning":"学习闭环","reflection-notes":"经验与思考"}
     return names[kind]
 
@@ -563,7 +583,7 @@ THUMB_OFFSETS = {
     "frame-sync": (26, 15), "state-sync": (26, 15), "network": (14, -2),
     "huffman": (79, 13), "ai-coding": (13, -2), "ai-agent": (13, -2),
     "covers": (7, 8), "learning": (35, 1), "reflection-notes": (35, 1),
-    "pipeline": (9, 4), "linux": (14, 6), "computer-org": (0, 0),
+    "pipeline": (9, 4), "linux": (14, 6), "computer-org": (0, 0), "compiler": (0, 0),
 }
 
 

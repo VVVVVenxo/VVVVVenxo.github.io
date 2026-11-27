@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 5-1：动态链接地址无关代码（PIC）与 PLT / GOT 延迟绑定（Lazy Binding）机制</text>
+
+  <!-- 左栏：为什么需要 PIC 与 GOT -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 为什么共享库需要地址无关代码 (PIC) 与 GOT</text>
+
+  <g font-size="13">
+    <rect x="44" y="94" width="364" height="110" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="114" fill="#17343B" font-weight="700">共享库（.so / .dll）的核心诉求与矛盾：</text>
+    <text x="56" y="136" fill="#17343B">• <tspan font-weight="700" fill="#287B73">物理内存共享</tspan>：多进程映射同一份 .so 的只读 <tspan font-weight="700">.text 段</tspan></text>
+    <text x="56" y="158" fill="#17343B">• <tspan font-weight="700" fill="#C47743">虚拟基址不同</tspan>：不同进程将同一 .so 装载在不同虚拟地址</text>
+    <text x="56" y="180" fill="#17343B">• 若装载时直接修改 .text 内的绝对地址，会触发写时复制，</text>
+    <text x="56" y="198" fill="#61747A">  导致每个进程各自拷贝私有代码页，丧失共享省内存优势</text>
+
+    <rect x="44" y="214" width="364" height="110" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="234" fill="#287B73" font-weight="700">解决方案：全局偏移表（Global Offset Table · GOT）</text>
+    <text x="56" y="256" fill="#17343B">• <tspan font-weight="700">不变量</tspan>：无论加载到何处，<tspan font-weight="700" fill="#287B73">.text 与 .data 相对距离恒定</tspan></text>
+    <text x="56" y="278" fill="#17343B">• 将外部符号绝对地址抽离到各进程私有可写数据段的 <tspan font-weight="700">GOT</tspan></text>
+    <text x="56" y="300" fill="#17343B">• 代码段通过 <tspan font-family="Consolas, monospace">RIP + 固定偏移</tspan> 寻址本模块 GOT 表项，</text>
+    <text x="56" y="318" fill="#17343B">  再间接跳转目标地址，保证 <tspan font-weight="700" fill="#287B73">.text 全程只读零修改</tspan></text>
+  </g>
+
+  <!-- 右栏：PLT / GOT 延迟绑定 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 过程链接表 (PLT) 与 .got.plt 延迟绑定双状态对比</text>
+
+  <g font-size="13">
+    <rect x="456" y="94" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="114" fill="#C47743" font-weight="700">第一次调用外部函数 bar@plt（惰性解析与回填）：</text>
+    <text x="468" y="136" fill="#17343B">1. <tspan font-family="Consolas, monospace">call bar@plt</tspan> → 执行首条指令 <tspan font-family="Consolas, monospace">jmp *(bar@GOT)</tspan></text>
+    <text x="468" y="158" fill="#17343B">2. 初始 <tspan font-family="Consolas, monospace">bar@GOT</tspan> 指向 bar@plt 的<tspan font-weight="700" fill="#C47743">下一条指令</tspan>（跳回 PLT）</text>
+    <text x="468" y="180" fill="#17343B">3. 压入符号重定位索引与模块 ID，跳入公共 <tspan font-family="Consolas, monospace">PLT[0]</tspan></text>
+    <text x="468" y="200" fill="#C47743" font-weight="700">4. 调 _dl_runtime_resolve 解析真地址并写入 bar@GOT</text>
+
+    <rect x="456" y="218" width="362" height="106" rx="4" fill="#FAFBF8" stroke="#287B73" stroke-width="1.2"/>
+    <text x="468" y="238" fill="#287B73" font-weight="700">第二次及以后调用 bar@plt（零解析开销直接跳转）：</text>
+    <text x="468" y="260" fill="#17343B">1. <tspan font-family="Consolas, monospace">call bar@plt</tspan> → 执行首条指令 <tspan font-family="Consolas, monospace">jmp *(bar@GOT)</tspan></text>
+    <text x="468" y="282" fill="#287B73" font-weight="700">2. 此时 bar@GOT 已存有外部库中 bar 的真实函数地址</text>
+    <text x="468" y="304" fill="#17343B">3. 单次间接跳转直达目标函数，不再进入动态链接器</text>
+  </g>
+</svg>

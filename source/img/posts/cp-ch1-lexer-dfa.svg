@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 350" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <defs>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#287B73"/>
+    </marker>
+  </defs>
+  <rect width="860" height="350" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：词法分析自动机转换链路（正规式 → Thompson NFA → 子集构造法 DFA → 最小化 DFA）</text>
+
+  <!-- 左栏：自动机等价转换四阶段 -->
+  <rect x="28" y="54" width="396" height="276" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 自动机等价转换四阶段与确定化优势</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="44" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="110" fill="#17343B" font-weight="700">① 正规式 (Regular Expression · RE)</text>
+    <text x="56" y="128" fill="#61747A">声明式描述词法模式（如标识符 [a-zA-Z_][a-zA-Z0-9_]*）</text>
+
+    <line x1="226" y1="136" x2="226" y2="148" stroke="#287B73" stroke-width="1.8" marker-end="url(#arrow-teal)"/>
+
+    <rect x="44" y="150" width="364" height="44" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="168" fill="#C47743" font-weight="700">② 非确定有限自动机 (NFA · Thompson 构造法)</text>
+    <text x="56" y="186" fill="#61747A">含 ε 空转移，同字符可达多状态；状态数 O(|r|)，回溯耗时</text>
+
+    <line x1="226" y1="194" x2="226" y2="206" stroke="#287B73" stroke-width="1.8" marker-end="url(#arrow-teal)"/>
+
+    <rect x="44" y="208" width="364" height="44" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="226" fill="#287B73" font-weight="700">③ 确定有限自动机 (DFA · 子集构造法)</text>
+    <text x="56" y="244" fill="#17343B">消除 ε 转移，每个状态对任意输入字符仅有唯一后继状态</text>
+
+    <line x1="226" y1="252" x2="226" y2="264" stroke="#287B73" stroke-width="1.8" marker-end="url(#arrow-teal)"/>
+
+    <rect x="44" y="266" width="364" height="48" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="56" y="285" fill="#C47743" font-weight="700">④ 状态最小化 DFA (Hopcroft 等价类分割法)</text>
+    <text x="56" y="305" fill="#17343B">合并不可区分等价状态，扫描词素时间复杂度严格为 O(|w|)</text>
+  </g>
+
+  <!-- 右栏：子集构造法与扫描规则 -->
+  <rect x="442" y="54" width="390" height="276" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 子集构造法核心运算与词法扫描冲突规则</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#287B73" font-weight="700">子集构造法（Subset Construction）三核心操作：</text>
+    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700">ε-closure(s)</tspan>：从状态 s 仅沿 ε 空边可达的状态集合</text>
+    <text x="468" y="156" fill="#17343B">• <tspan font-weight="700">ε-closure(T)</tspan>：状态集 T 中所有状态的 ε-闭包之并集</text>
+    <text x="468" y="178" fill="#17343B">• <tspan font-weight="700">move(T, a)</tspan>：T 中状态经字符 a 走一步到达的状态集</text>
+    <text x="468" y="198" fill="#C47743" font-weight="700">DFA 转移方程：Dtran[T, a] = ε-closure(move(T, a))</text>
+
+    <rect x="456" y="216" width="362" height="98" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="468" y="236" fill="#287B73" font-weight="700">词法扫描器（Lexer）二大二义性消解规则：</text>
+    <text x="468" y="258" fill="#17343B">1. <tspan font-weight="700">最长匹配原则</tspan>：持续读入字符直到 DFA 无法继续转移，</text>
+    <text x="468" y="278" fill="#17343B">   回退至最近终态（如 &gt;= 识别为单个 Token 而非 &gt; 与 =）</text>
+    <text x="468" y="298" fill="#17343B">2. <tspan font-weight="700">模式优先级</tspan>：同长度词素匹配多条规则时，关键字优先</text>
+  </g>
+</svg>
