@@ -1154,6 +1154,51 @@ body {
   }
 }
 
+/* About Contact Chips */
+.about-contact-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+.prose .about-contact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-color) !important;
+  transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+.prose .about-contact-chip svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.prose .about-contact-chip__sub {
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  padding-left: 6px;
+  border-left: 1px solid var(--border-subtle);
+}
+.prose .about-contact-chip:hover {
+  border-color: var(--accent) !important;
+  background: var(--accent-soft);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+.prose .about-contact-chip:hover .about-contact-chip__sub {
+  color: var(--accent);
+}
+
 /* Blog Instant Filter Bar */
 .blog-filter-bar {
   display: flex;

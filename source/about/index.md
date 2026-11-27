@@ -86,4 +86,25 @@ comments: false
 - **主力方向**：Unity 商业项目客户端开发、底层性能优化、框架与工具链研发
 - **技术兴趣**：游戏客户端架构 / 网络同步 / 计算机图形学与实时渲染 / AI Agent 工程实践
 - **常用语言与引擎**：C#、C++、Lua、Python · Unity、Unreal Engine
-- **GitHub**：[github.com/VVVVVenxo](https://github.com/VVVVVenxo) · **Email**：[1263147353@qq.com](mailto:1263147353@qq.com) · **Steam**：[Steam Profile](https://steamcommunity.com/profiles/76561198863443106/) · **RSS 订阅**：[/atom.xml](/atom.xml)
+<div class="about-contact-bar">
+  <a href="https://github.com/VVVVVenxo" target="_blank" rel="noopener" class="about-contact-chip">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+    <span>GitHub</span>
+    <span class="about-contact-chip__sub">@VVVVVenxo ↗</span>
+  </a>
+  <a href="mailto:1263147353@qq.com" class="about-contact-chip">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+    <span>Email</span>
+    <span class="about-contact-chip__sub">1263147353@qq.com</span>
+  </a>
+  <a href="https://steamcommunity.com/profiles/76561198863443106/" target="_blank" rel="noopener" class="about-contact-chip">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"></line><line x1="8" x2="8" y1="10" y2="14"></line><line x1="15" x2="15.01" y1="13" y2="13"></line><line x1="18" x2="18.01" y1="11" y2="11"></line><rect width="20" height="12" x="2" y="6" rx="2"></rect></svg>
+    <span>Steam</span>
+    <span class="about-contact-chip__sub">Profile ↗</span>
+  </a>
+  <a href="/atom.xml" class="about-contact-chip">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+    <span>RSS 订阅</span>
+    <span class="about-contact-chip__sub">Atom Feed</span>
+  </a>
+</div>
