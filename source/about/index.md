@@ -76,11 +76,11 @@ comments: false
 
 ---
 
-## 关于这里与联系
+## 关于我与联系
 
-这里是一份持续更新的**游戏客户端工程手记**，用来记录 Unity 引擎底层、C++ / C# 语言机制、客户端架构、实时渲染与计算机基础的学习与思考。
+你好，我是 **VVVVVenxo**！一名软件工程专业背景的游戏开发者，目前在 **上海某游戏大厂** 担任游戏客户端开发。这里是一份持续更新的**游戏客户端工程手记**，用来沉淀从编程语言底层、游戏引擎核心机制、客户端架构设计到实时图形与 AI 工具链的工程思考。
 
-- **GitHub**：[github.com/VVVVVenxo](https://github.com/VVVVVenxo)
-- **Email**：[1263147353@qq.com](mailto:1263147353@qq.com)
-- **Steam**：[Steam Profile](https://steamcommunity.com/profiles/76561198863443106/)
-- **RSS 订阅**：[/atom.xml](/atom.xml)
+- **主力方向**：Unity 商业项目客户端开发、底层性能优化、框架与工具链研发
+- **技术兴趣**：游戏客户端架构 / 网络同步 / 计算机图形学与实时渲染 / AI Agent 工程实践
+- **常用语言与引擎**：C#、C++、Lua、Python · Unity、Unreal Engine
+- **GitHub**：[github.com/VVVVVenxo](https://github.com/VVVVVenxo) · **Email**：[1263147353@qq.com](mailto:1263147353@qq.com) · **Steam**：[Steam Profile](https://steamcommunity.com/profiles/76561198863443106/) · **RSS 订阅**：[/atom.xml](/atom.xml)
