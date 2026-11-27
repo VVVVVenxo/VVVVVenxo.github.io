@@ -11,13 +11,13 @@
     <text x="56" y="112" fill="#287B73" font-weight="700">第一阶段（模板定义点 Definition Time）：</text>
     <text x="56" y="134" fill="#17343B">• 检查与模板参数 <tspan font-family="Consolas, monospace">T</tspan> 无关的语法错误与静态断言</text>
     <text x="56" y="155" fill="#17343B">• 立即解析并绑定所有<tspan font-weight="700">非依赖名称（Non-dependent）</tspan></text>
-    <text x="56" y="175" fill="#17343B">• 嵌套从属类型需加 <tspan font-weight="700" font-family="Consolas, monospace">typename T::SubType</tspan> 消除歧义</text>
-    <text x="56" y="194" fill="#61747A">• 从属模板成员调用需加 <tspan font-family="Consolas, monospace">obj.template func&lt;U&gt;()</tspan></text>
+    <text x="56" y="175" fill="#17343B">• 访问 T 内部类型需加 <tspan font-weight="700" font-family="Consolas, monospace">typename T::SubType</tspan></text>
+    <text x="56" y="194" fill="#61747A">• 调用 T 内部模板函数需加 <tspan font-family="Consolas, monospace">obj.template func&lt;U&gt;()</tspan></text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="230" fill="#287B73" font-weight="700">第二阶段（模板实例化点 POI，Instantiation）：</text>
-    <text x="56" y="252" fill="#17343B">• 将具体实参替换 <tspan font-family="Consolas, monospace">T</tspan>，通过 ADL 查找<tspan font-weight="700">依赖名称</tspan>并校验</text>
-    <text x="56" y="272" fill="#17343B">• <tspan font-weight="700">按需惰性实例化</tspan>：未调用的类模板成员函数不生成代码</text>
+    <text x="56" y="252" fill="#17343B">• 将具体类型代入 <tspan font-family="Consolas, monospace">T</tspan>，检查所有与 <tspan font-family="Consolas, monospace">T</tspan> 相关的表达式</text>
+    <text x="56" y="272" fill="#17343B">• <tspan font-weight="700">按需实例化</tspan>：未调用的类模板成员函数不生成代码</text>
     <text x="56" y="293" fill="#17343B">• 多编译单元重复实例标记为 <tspan font-weight="700" font-family="Consolas, monospace">WEAK</tspan> 弱符号（COMDAT），</text>
     <text x="56" y="313" fill="#287B73" font-weight="700">  由链接器去重合并，或用 extern template 显式抑制</text>
   </g>
@@ -38,7 +38,7 @@
     <text x="468" y="230" fill="#C47743" font-weight="700">函数模板重载决议序（不支持函数模板偏特化）：</text>
     <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">普通非模板函数</tspan>（参数类型完全匹配时优先级最高）</text>
     <text x="468" y="272" fill="#17343B">2. <tspan font-weight="700">更特化的重载函数模板</tspan>（如 <tspan font-family="Consolas, monospace">f(T*)</tspan> 优先于 <tspan font-family="Consolas, monospace">f(T)</tspan>）</text>
-    <text x="468" y="292" fill="#17343B">3. <tspan font-weight="700">基础主函数模板</tspan>及其下挂的全特化实例</text>
+    <text x="468" y="292" fill="#17343B">3. <tspan font-weight="700">基础主函数模板</tspan>及其全特化版本</text>
     <text x="468" y="313" fill="#287B73" font-weight="700">• 工程规范：优先用函数重载或 C++17 if constexpr</text>
   </g>
 </svg>

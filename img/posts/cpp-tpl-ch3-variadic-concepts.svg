@@ -19,7 +19,7 @@
     <text x="56" y="252" fill="#17343B">• 逗号折叠 <tspan font-weight="700" font-family="Consolas, monospace">(func(std::forward&lt;Args&gt;(args)), ...);</tspan></text>
     <text x="56" y="272" fill="#17343B">  按参数从左到右顺序依次调用，消除递归函数符号膨胀</text>
     <text x="56" y="293" fill="#17343B">• <tspan font-weight="700" font-family="Consolas, monospace">if constexpr (Cond)</tspan> 在编译期丢弃未命中分支，</text>
-    <text x="56" y="313" fill="#287B73" font-weight="700">  被丢弃分支中的依赖表达式不触发实例化报错</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  条件不成立的分支直接丢弃，不参与编译检查</text>
   </g>
 
   <!-- 右栏 -->
@@ -32,13 +32,13 @@
     <text x="468" y="134" fill="#17343B">• 签名替换时，若 <tspan font-family="Consolas, monospace">std::enable_if_t&lt;Cond, T&gt;</tspan> 为假，</text>
     <text x="468" y="154" fill="#17343B">  缺失 <tspan font-family="Consolas, monospace">::type</tspan> 成员，编译器静默将其从候选集剔除</text>
     <text x="468" y="175" fill="#17343B">• 配合 <tspan font-family="Consolas, monospace">std::void_t&lt;decltype(...)&gt;</tspan> 探测成员是否存在</text>
-    <text x="468" y="194" fill="#61747A">• 局限：签名冗长，仅对函数签名直接上下文替换生效</text>
+    <text x="468" y="194" fill="#61747A">• 局限：函数声明冗长，且函数体内部报错难以定位</text>
 
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
-    <text x="468" y="230" fill="#C47743" font-weight="700">C++20 Concepts（概念约束与包含关系决议）：</text>
-    <text x="468" y="252" fill="#17343B">• 用 <tspan font-weight="700" font-family="Consolas, monospace">concept</tspan> 与 <tspan font-weight="700" font-family="Consolas, monospace">requires</tspan> 直接声明编译期布尔谓词</text>
-    <text x="468" y="272" fill="#17343B">• 包含四类要求：简单、类型、复合（含返回类型）与嵌套</text>
-    <text x="468" y="292" fill="#17343B">• <tspan font-weight="700">约束包含决议</tspan>：若概念 B 包含概念 A（如 <tspan font-family="Consolas, monospace">SignedIntegral</tspan>），</text>
-    <text x="468" y="313" fill="#287B73" font-weight="700">  重载决议时自动优先匹配约束更严格的概念 B</text>
+    <text x="468" y="230" fill="#C47743" font-weight="700">C++20 Concepts（直接声明类型要求与优先级匹配）：</text>
+    <text x="468" y="252" fill="#17343B">• 用 <tspan font-weight="700" font-family="Consolas, monospace">concept</tspan> 与 <tspan font-weight="700" font-family="Consolas, monospace">requires</tspan> 直接声明模板参数条件</text>
+    <text x="468" y="272" fill="#17343B">• 可检查表达式是否合法、内嵌类型是否存在及返回值类型</text>
+    <text x="468" y="292" fill="#17343B">• <tspan font-weight="700">自动匹配更具体版本</tspan>：多个重载同时满足条件时，</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  编译器自动优先选用限制条件更具体的重载版本</text>
   </g>
 </svg>
