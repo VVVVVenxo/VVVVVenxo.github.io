@@ -103,7 +103,7 @@
       <link>https://VVVVVenxo.github.io/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/</link>
       <guid>https://VVVVVenxo.github.io/2026/10/23/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%A6%96%E9%80%89Linux/</guid>
       <pubDate>Fri, 23 Oct 2026 00:00:00 GMT</pubDate>
-      <description>结合项目部署开发云与自动化构建服务器的实践，总结为什么服务端与构建机清一色选择 Linux：零 GUI 资源损耗、7×24 高可用、一切皆文件与命令行驱动，以及开源工具链生态。</description>
+      <description>总结服务端与自动化构建服务器选择 Linux 的核心工程原因：无 GUI 资源开销、进程级热重载与高可用、纯文本配置与 CLI 自动化，以及容器与开源工具链支持。</description>
     </item>
     <item>
       <title>【Unity】URP渲染管线架构与RenderFeature实战</title>
