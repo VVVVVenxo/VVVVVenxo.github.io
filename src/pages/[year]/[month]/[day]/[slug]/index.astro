@@ -1,0 +1,337 @@
+---
+import BaseLayout from '../../../../../layouts/BaseLayout.astro';
+import { getAllPosts, toTermSlug, type PostItem } from '../../../../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return posts.map((post, index) => ({
+    params: {
+      year: post.year,
+      month: post.month,
+      day: post.day,
+      slug: post.slug,
+    },
+    props: {
+      post,
+      prevPost: index > 0 ? posts[index - 1] : null,
+      nextPost: index < posts.length - 1 ? posts[index + 1] : null,
+    },
+  }));
+}
+
+interface Props {
+  post: PostItem;
+  prevPost: PostItem | null;
+  nextPost: PostItem | null;
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+---
+
+<BaseLayout
+  title={`${post.title} | VVVVVenxo 的博客`}
+  description={post.description}
+  ogImage={post.cover || '/img/Avatar.jpg'}
+  ogType="article"
+  activeNav="blog"
+>
+  <div class="post-reading-shell container-wide flex py-10 md:py-14">
+    <article class="min-w-0 flex-1">
+      <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8">
+        <div class="flex flex-wrap items-center gap-2">
+          <a
+            href={`/categories/${encodeURIComponent(toTermSlug(post.categoryBadge))}/`}
+            class="section-kicker hover:underline"
+          >
+            {post.categoryBadge}
+          </a>
+          {post.categories.length > 1 && (
+            <span class="text-xs text-[var(--text-tertiary)]">
+              / {post.categories.join(' · ')}
+            </span>
+          )}
+        </div>
+
+        <h1
+          lang="zh-CN"
+          class="mt-4 text-3xl font-bold tracking-tight text-balance text-[var(--text-primary)] md:text-5xl"
+        >
+          {post.title}
+        </h1>
+
+        <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-tertiary)]">
+          <time datetime={post.dateStr}>{post.dateFormatted}</time>
+          <span>·</span>
+          <span>{post.readingMinutes} 分钟阅读</span>
+          <span>·</span>
+          <span>约 {post.wordCount.toLocaleString()} 字</span>
+        </div>
+
+        {
+          post.tags.length > 0 && (
+            <div class="mt-5 flex flex-wrap gap-2">
+              {post.tags.map(tag => (
+                <a href={`/tags/${encodeURIComponent(toTermSlug(tag))}/`} class="tag">
+                  {tag}
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      <div class="prose max-w-none" lang="zh-CN" set:html={post.htmlContent} />
+
+      <!-- Prev / Next Flat Navigation -->
+      {
+        (prevPost || nextPost) && (
+          <nav
+            class="mt-16 grid grid-cols-1 gap-6 border-t border-[var(--border-color)] pt-8 md:grid-cols-2"
+            aria-label="上下篇文章导航"
+          >
+            <div>
+              {prevPost && (
+                <a
+                  href={prevPost.url}
+                  class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"
+                >
+                  <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+                    ← 新一篇
+                  </span>
+                  <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">
+                    {prevPost.title}
+                  </p>
+                </a>
+              )}
+            </div>
+            <div class="md:text-right">
+              {nextPost && (
+                <a
+                  href={nextPost.url}
+                  class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"
+                >
+                  <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+                    旧一篇 →
+                  </span>
+                  <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">
+                    {nextPost.title}
+                  </p>
+                </a>
+              )}
+            </div>
+          </nav>
+        )
+      }
+
+      <!-- Giscus Comments -->
+      <section class="mt-14 border-t border-[var(--border-subtle)] pt-8" aria-label="评论区">
+        <div class="mb-5 flex items-baseline gap-3">
+          <h2 class="text-lg font-semibold text-[var(--text-primary)]">讨论与评论</h2>
+          <span class="text-xs text-[var(--text-tertiary)]">由 GitHub Discussions 驱动</span>
+        </div>
+        <div id="giscus-container"></div>
+      </section>
+    </article>
+
+    <!-- Mobile TOC Trigger & Drawer -->
+    {
+      post.headings.length > 0 && (
+        <>
+          <button
+            id="toc-toggle"
+            class="toc-trigger fixed right-6 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded transition-colors hover:bg-[var(--accent-hover)] lg:hidden"
+            aria-label="目录"
+            title="文章目录"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+          </button>
+
+          <div
+            id="toc-mobile-backdrop"
+            class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-xs lg:hidden"
+          ></div>
+
+          <nav
+            id="toc-mobile"
+            aria-label="移动端目录"
+            class="fixed right-0 bottom-0 left-0 z-50 max-h-[64vh] translate-y-full overflow-hidden rounded-t-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl transition-transform duration-300 lg:hidden"
+          >
+            <div class="flex items-center justify-between border-b border-[var(--border-subtle)] p-4">
+              <h4 class="font-semibold text-[var(--text-primary)]">目录</h4>
+              <button id="toc-close" class="header-action -mr-1" aria-label="关闭目录">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <ul class="max-h-[calc(64vh-4rem)] space-y-1 overflow-y-auto p-4 text-sm">
+              {post.headings.map(h => (
+                <li>
+                  <a
+                    href={`#${h.slug}`}
+                    class={`toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] ${
+                      h.depth === 3 ? 'pl-6 text-xs' : ''
+                    }`}
+                    data-heading={h.slug}
+                    lang="zh-CN"
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <!-- Desktop Sticky Right TOC -->
+          <nav class="toc hidden lg:block" aria-label="目录">
+            <div class="reading-toc sticky top-24">
+              <h4 class="mb-3 text-sm font-semibold text-[var(--text-primary)]">目录</h4>
+              <ul class="max-h-[calc(100vh-12rem)] space-y-1 overflow-y-auto text-sm">
+                {post.headings.map(h => (
+                  <li>
+                    <a
+                      href={`#${h.slug}`}
+                      class={`toc-link toc-depth-${h.depth} line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]`}
+                      data-heading={h.slug}
+                      lang="zh-CN"
+                    >
+                      {h.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </nav>
+        </>
+      )
+    }
+  </div>
+
+  <script is:inline>
+    (function () {
+      // TOC Mobile Drawer & Scroll Spy
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocMobile = document.getElementById('toc-mobile');
+      const tocClose = document.getElementById('toc-close');
+      const tocBackdrop = document.getElementById('toc-mobile-backdrop');
+      let isOpen = false;
+
+      function openMobileToc() {
+        if (isOpen) return;
+        isOpen = true;
+        if (tocMobile) tocMobile.classList.remove('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.remove('hidden');
+        if (tocToggle) tocToggle.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileToc() {
+        if (!isOpen) return;
+        isOpen = false;
+        if (tocMobile) tocMobile.classList.add('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.add('hidden');
+        if (tocToggle) tocToggle.classList.remove('hidden');
+        document.body.style.overflow = '';
+      }
+
+      if (tocToggle) tocToggle.addEventListener('click', openMobileToc);
+      if (tocClose) tocClose.addEventListener('click', closeMobileToc);
+      if (tocBackdrop) tocBackdrop.addEventListener('click', closeMobileToc);
+
+      document.querySelectorAll('.toc-link-mobile').forEach(link => {
+        link.addEventListener('click', () => setTimeout(closeMobileToc, 100));
+      });
+
+      const tocLinks = document.querySelectorAll('.toc-link');
+      if (tocLinks.length > 0) {
+        const headingIds = Array.from(tocLinks)
+          .map(link => link.getAttribute('data-heading'))
+          .filter(Boolean);
+        const headingElements = headingIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateActiveLink() {
+          if (!headingElements.length) return;
+          let activeId = headingIds[0];
+          for (let i = 0; i < headingElements.length; i++) {
+            const rect = headingElements[i].getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.28) {
+              activeId = headingElements[i].id;
+            }
+          }
+          tocLinks.forEach(link => {
+            if (link.getAttribute('data-heading') === activeId) {
+              link.classList.add('toc-active');
+            } else {
+              link.classList.remove('toc-active');
+            }
+          });
+        }
+
+        let ticking = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateActiveLink();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        updateActiveLink();
+      }
+
+      // Lazy Load Giscus Comments
+      const giscusContainer = document.getElementById('giscus-container');
+      if (giscusContainer) {
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded) return;
+          giscusContainer.dataset.loaded = 'true';
+          const isDark = document.documentElement.classList.contains('dark');
+          const s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.setAttribute('data-repo', 'VVVVVenxo/VVVVVenxo.github.io');
+          s.setAttribute('data-repo-id', 'R_kgDOQ5Bk1Q');
+          s.setAttribute('data-category', 'Announcements');
+          s.setAttribute('data-category-id', 'DIC_kwDOQ5Bk1c4DJO_-');
+          s.setAttribute('data-mapping', 'pathname');
+          s.setAttribute('data-strict', '0');
+          s.setAttribute('data-reactions-enabled', '1');
+          s.setAttribute('data-emit-metadata', '0');
+          s.setAttribute('data-input-position', 'top');
+          s.setAttribute('data-theme', isDark ? 'dark_dimmed' : 'light');
+          s.setAttribute('data-lang', 'zh-CN');
+          s.crossOrigin = 'anonymous';
+          s.async = true;
+          giscusContainer.appendChild(s);
+        };
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            entries => {
+              if (entries.some(e => e.isIntersecting)) {
+                loadGiscus();
+                io.disconnect();
+              }
+            },
+            { rootMargin: '300px' }
+          );
+          io.observe(giscusContainer);
+        } else {
+          loadGiscus();
+        }
+      }
+    })();
+  </script>
+</BaseLayout>

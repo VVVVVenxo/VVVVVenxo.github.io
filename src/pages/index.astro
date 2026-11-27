@@ -1,0 +1,285 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllPosts, getAllCategories, getAllTags } from '../lib/posts';
+
+const allPosts = await getAllPosts();
+const featuredPost = allPosts[0];
+const latestPosts = allPosts.slice(1, 9);
+
+const categories = await getAllCategories();
+const tags = await getAllTags();
+
+// Combine key secondary categories & top tags for sidebar topic navigation
+const preferredTopics = [
+  'Unity',
+  'C++',
+  '计算机基础',
+  'C#',
+  '项目实战',
+  '算法',
+  '网络',
+  'AI探索',
+  '图形学',
+  '数据结构',
+];
+
+const topicList = preferredTopics
+  .map(name => {
+    const catMatch = categories.find(c => c.name.toLowerCase() === name.toLowerCase());
+    if (catMatch) {
+      return { name: catMatch.name, count: catMatch.count, href: `/categories/${encodeURIComponent(catMatch.slug)}/` };
+    }
+    const tagMatch = tags.find(t => t.name.toLowerCase() === name.toLowerCase());
+    if (tagMatch) {
+      return { name: tagMatch.name, count: tagMatch.count, href: `/tags/${encodeURIComponent(tagMatch.slug)}/` };
+    }
+    return null;
+  })
+  .filter((x): x is { name: string; count: number; href: string } => Boolean(x));
+
+const knowledgeTracks = [
+  {
+    subtitle: '01 · ENGINE & RUNTIME',
+    title: 'Unity 引擎核心与优化',
+    description: '从生命周期、协程/多线程、UGUI 源码到 URP 渲染管线、DrawCall 合批、Boehm GC 与 xLua 热更新机制。',
+    href: '/categories/Unity/',
+    cta: '浏览 Unity 专题',
+  },
+  {
+    subtitle: '02 · LANGUAGES & MEMORY',
+    title: 'C++ 与 C# 语言底层',
+    description: '剖析 C++ 对象内存布局、虚函数表（vtable）、右值移动语义、STL 容器底层实现与 .NET CLR 运行时。',
+    href: '/categories/C%2B%2B/',
+    cta: '浏览语言底层',
+  },
+  {
+    subtitle: '03 · GRAPHICS & ARCHITECTURE',
+    title: '实时渲染与客户端框架',
+    description: '现代渲染管线与 Shader 编程（MVP / PBR / GPU 架构）、OpenGL 场景漫游系统与商业级客户端框架设计。',
+    href: '/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/',
+    cta: '浏览实战与图形',
+  },
+  {
+    subtitle: '04 · CS CORE & AI',
+    title: '计算机基础与 AI 探索',
+    description: '数据结构、操作系统、计算机网络、离散数学体系化笔记，以及图论搜索算法与 AI Coding 工程实践。',
+    href: '/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/',
+    cta: '浏览科班基础',
+  },
+];
+
+const featuredProjects = [
+  {
+    title: 'LEngine 游戏客户端核心框架',
+    description: '商业级 Unity 客户端基础架构：资源管理、事件总线、UI 栈管理、对象池与热更新工作流封装。',
+    href: '/2025/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91LEngine%E6%A1%86%E6%9E%B6/',
+  },
+  {
+    title: 'OpenGL 大规模自然场景实时漫游系统',
+    description: '从零实现的 C++ / OpenGL 渲染引擎实践：高度图地形、天空盒、Phong/PBR 光照、水体反射与摄像机漫游。',
+    href: '/2026/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91OpenGL%E6%BC%AB%E6%B8%B8%E7%B3%BB%E7%BB%9F/',
+  },
+  {
+    title: 'GameplayFramework 模块化业务与战斗框架',
+    description: '解耦表现层与逻辑层的游戏玩法框架设计：实体组件、状态机、技能与 Buff 管线。',
+    href: '/2025/01/15/%E3%80%90%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E3%80%91GameplayFrameWork%E6%A1%86%E6%9E%B6/',
+  },
+  {
+    title: '技术博客程序化 SVG/PNG 封面生成系统',
+    description: '基于 Python 与无头浏览器的编辑部风格工程图解封面生成器，根据文章主题自动绘制架构与数据结构图。',
+    href: '/2026/07/30/%E3%80%90AI%E6%8E%A2%E7%B4%A2%E3%80%91%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B0%81%E9%9D%A2%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F/',
+  },
+];
+---
+
+<BaseLayout activeNav="home">
+  <div class="home-shell">
+    <!-- Intro Section -->
+    <section class="home-intro" aria-labelledby="home-heading">
+      <div>
+        <h1 id="home-heading">
+          VVVVVenxo<span>的工程笔记</span>
+        </h1>
+        <p>
+          关于游戏客户端架构、Unity 引擎与实时渲染、C++ / C# 底层机制，以及 AI 工具链与写代码过程中的思考。
+        </p>
+      </div>
+      <div class="home-intro-links">
+        <a href="/about" class="home-text-link">关于与知识图谱</a>
+        <a
+          href="https://github.com/VVVVVenxo"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="home-text-link"
+        >
+          GitHub
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17L17 7"></path>
+            <path d="M7 7h10v10"></path>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Main 2-Column Flat Reading Layout -->
+    <div class="home-reading-layout">
+      <section aria-labelledby="latest-posts-heading">
+        <div class="home-section-heading">
+          <h2 id="latest-posts-heading">最新文章</h2>
+          <a href="/blog" class="home-text-link">
+            全部 {allPosts.length} 篇文章 <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        {
+          featuredPost && (
+            <article class="home-post home-post-featured">
+              <div class="home-post-meta">
+                <time datetime={featuredPost.dateStr}>{featuredPost.dateStr}</time>
+                <span>{featuredPost.readingMinutes} 分钟阅读</span>
+                <span class="text-[var(--accent)]">{featuredPost.categoryBadge}</span>
+              </div>
+              <div class="home-post-copy">
+                <h3 lang="zh-CN">
+                  <a href={featuredPost.url}>{featuredPost.title}</a>
+                </h3>
+                <p lang="zh-CN">{featuredPost.description}</p>
+                <a href={featuredPost.url} class="home-text-link home-read-link">
+                  阅读文章
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                  </svg>
+                </a>
+              </div>
+            </article>
+          )
+        }
+
+        {
+          latestPosts.map(post => (
+            <article class="home-post">
+              <div class="home-post-meta">
+                <time datetime={post.dateStr}>{post.dateStr}</time>
+                <span>{post.readingMinutes} 分钟阅读</span>
+              </div>
+              <div class="home-post-copy">
+                <h3 lang="zh-CN">
+                  <a href={post.url}>{post.title}</a>
+                </h3>
+                <p lang="zh-CN">{post.description}</p>
+              </div>
+            </article>
+          ))
+        }
+      </section>
+
+      <!-- Right Sidebar -->
+      <aside class="home-sidebar" aria-label="继续探索博客">
+        <section class="home-about" aria-labelledby="home-about-heading">
+          <h2 id="home-about-heading">关于这里</h2>
+          <p>
+            软件工程背景，现于上海从事游戏客户端研发。这里沉淀从编程语言内存模型、引擎源码、渲染管线到客户端框架的体系化笔记。
+          </p>
+          <a href="/about" class="home-text-link">
+            查看完整知识图谱 <span aria-hidden="true">→</span>
+          </a>
+        </section>
+
+        <section class="home-topics" aria-labelledby="home-topics-heading">
+          <div class="home-section-heading">
+            <h2 id="home-topics-heading">按主题阅读</h2>
+            <a href="/categories" class="home-text-link" aria-label="查看全部分类">
+              全部
+            </a>
+          </div>
+          <ul>
+            {
+              topicList.map(topic => (
+                <li>
+                  <a href={topic.href}>
+                    <span lang="zh-CN">{topic.name}</span>
+                    <span class="home-topic-count">
+                      {topic.count}
+                      <span class="sr-only"> 篇文章</span>
+                    </span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <a href="/atom.xml" class="home-rss">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 11a9 9 0 0 1 9 9"></path>
+            <path d="M4 4a16 16 0 0 1 16 16"></path>
+            <circle cx="5" cy="19" r="1"></circle>
+          </svg>
+          <span>
+            <strong>RSS 订阅更新</strong>
+            <span>通过阅读器订阅全站最新技术长文与工程复盘。</span>
+          </span>
+        </a>
+      </aside>
+    </div>
+
+    <!-- Knowledge Tracks (Bookshelf Flat Grid) -->
+    <section class="home-books-section" aria-labelledby="tracks-heading">
+      <div class="home-section-heading">
+        <div>
+          <h2 id="tracks-heading">体系化专题</h2>
+          <p>按知识脉络组织的四大核心技术专栏，适合顺着目录系统阅读。</p>
+        </div>
+        <a href="/about" class="home-text-link">
+          阅读路线图 <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="home-bookshelf">
+        {
+          knowledgeTracks.map(track => (
+            <a href={track.href} class="home-book">
+              <span class="home-book-subtitle">{track.subtitle}</span>
+              <h3 class="mt-2">{track.title}</h3>
+              <p class="home-book-description">{track.description}</p>
+              <span class="home-text-link">
+                {track.cta} <span aria-hidden="true">→</span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Featured Engineering Projects -->
+    <section class="home-projects-section" aria-labelledby="projects-heading">
+      <div class="home-section-heading">
+        <div>
+          <h2 id="projects-heading">项目与工程实战</h2>
+          <p>从客户端底层框架到实时图形渲染系统的完整架构拆解。</p>
+        </div>
+        <a href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/" class="home-text-link">
+          全部实战 <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <ul class="home-projects">
+        {
+          featuredProjects.map(proj => (
+            <li>
+              <a href={proj.href}>
+                <h3>{proj.title}</h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
+                <p>{proj.description}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

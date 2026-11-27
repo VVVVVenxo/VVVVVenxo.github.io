@@ -4,5 +4,6 @@ db.json
 *.log
 node_modules/
 public/
+.astro/
 .deploy*/
 _multiconfig.yml

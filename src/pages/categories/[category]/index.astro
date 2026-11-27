@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getAllCategories, toTermSlug, type PostItem } from '../../../lib/posts';
+
+export async function getStaticPaths() {
+  const categories = await getAllCategories();
+  return categories.map(cat => ({
+    params: { category: cat.slug },
+    props: { name: cat.name, slug: cat.slug, posts: cat.posts },
+  }));
+}
+
+interface Props {
+  name: string;
+  posts: PostItem[];
+}
+
+const { name, posts } = Astro.props;
+const allCategories = await getAllCategories();
+const filterCategories = allCategories.filter(c => !['技术笔记', '随笔杂谈'].includes(c.name)).slice(0, 10);
+---
+
+<BaseLayout
+  title={`分类：${name} | VVVVVenxo 的博客`}
+  description={`浏览「${name}」分类下的 ${posts.length} 篇技术文章。`}
+  activeNav="categories"
+>
+  <div class="container py-12 md:py-16">
+    <header class="page-heading">
+      <p class="section-kicker">分类归档</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight text-[var(--text-primary)] md:text-5xl">
+        {name}
+      </h1>
+      <p class="mt-4 max-w-2xl text-base leading-8 text-[var(--text-secondary)]">
+        该分类下共收录 {posts.length} 篇文章，按时间倒序排列。
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        <a href="/blog" class="tag">全部文章</a>
+        {
+          filterCategories.map(cat => (
+            <a
+              href={`/categories/${encodeURIComponent(cat.slug)}/`}
+              class={`tag ${cat.name === name ? 'tag-active' : ''}`}
+            >
+              {cat.name} ({cat.count})
+            </a>
+          ))
+        }
+      </div>
+    </header>
+
+    <div class="post-list">
+      {
+        posts.map(post => (
+          <article class="post-entry">
+            <div class="post-entry-meta">
+              <time datetime={post.dateStr}>{post.dateFormatted}</time>
+              <span>{post.readingMinutes} 分钟阅读</span>
+              <span>{post.categoryBadge}</span>
+            </div>
+            <div>
+              <h2 lang="zh-CN">
+                <a href={post.url}>{post.title}</a>
+              </h2>
+              <p class="post-entry-description" lang="zh-CN">
+                {post.description}
+              </p>
+              {post.tags.length > 0 && (
+                <div class="post-entry-tags">
+                  {post.tags.map(tag => (
+                    <a href={`/tags/${encodeURIComponent(toTermSlug(tag))}/`}># {tag}</a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
