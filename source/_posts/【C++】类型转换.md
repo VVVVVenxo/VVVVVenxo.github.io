@@ -65,7 +65,7 @@ Derived* pd = new Derived();
 Base* pb = static_cast<Base*>(pd);      // 向上转换，安全
 
 Base* pb2 = new Base();
-Derived* pd2 = static_cast<Derived*>(pb2);  // 向下转换，不安全！
+Derived* pd2 = static_cast<Derived*>(pb2);  // 向下转换，缺乏运行时类型检查
 ```
 
 **限制**：

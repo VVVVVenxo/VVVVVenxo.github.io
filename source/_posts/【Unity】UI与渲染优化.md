@@ -78,7 +78,7 @@ Canvas Scaler 组件提供了三种缩放模式来适配不同分辨率：
 
 **DrawCall** 是 CPU 准备好渲染数据后，**告知 GPU 开始渲染的命令**。
 
-### 为什么 DrawCall 影响性能？
+### DrawCall 影响性能的原因
 
 - 每次 DrawCall 都有额外的 CPU 开销
 - DrawCall 过多会导致 CPU 成为瓶颈

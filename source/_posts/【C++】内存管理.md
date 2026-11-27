@@ -100,7 +100,7 @@ void leak() {
 ```cpp
 int* p = new int(42);
 delete p;
-*p = 100;  // 危险！p 已经是悬空指针
+*p = 100;  // 错误：p 已成为悬空指针
 ```
 
 ### 3. 重复释放 (Double Free)
@@ -110,7 +110,7 @@ delete p;
 ```cpp
 int* p = new int(42);
 delete p;
-delete p;  // 危险！重复释放，未定义行为
+delete p;  // 错误：重复释放导致未定义行为
 ```
 
 ### 4. 数组释放不匹配
@@ -119,7 +119,7 @@ delete p;  // 危险！重复释放，未定义行为
 
 ```cpp
 int* arr = new int[10];
-delete arr;    // 错误！应该用 delete[]
+delete arr;    // 错误：应使用 delete[]
 delete[] arr;  // 正确
 ```
 
@@ -212,7 +212,7 @@ public:
 
 class B {
 public:
-    std::shared_ptr<A> ptrA;  // B 持有 A → 循环引用！
+    std::shared_ptr<A> ptrA;  // B 持有 A，形成循环引用
 };
 
 // A 和 B 互相持有，引用计数永远不为 0，内存泄漏
@@ -244,7 +244,7 @@ public:
 // 错误：用原始指针初始化多个智能指针
 int* raw = new int(42);
 std::shared_ptr<int> sp1(raw);
-std::shared_ptr<int> sp2(raw);  // 危险！两个独立的引用计数
+std::shared_ptr<int> sp2(raw);  // 错误：产生两个独立的控制块与引用计数
 
 // 正确：使用 make_shared 或从已有 shared_ptr 拷贝
 auto sp1 = std::make_shared<int>(42);
@@ -255,7 +255,7 @@ auto sp2 = sp1;  // 共享同一引用计数
 
 ## 五、内存对齐
 
-### 为什么需要内存对齐？
+### 内存对齐的原因
 
 CPU 从内存取数据是按**固定长度**进行的（如 32 位机每次取 4 字节）。若数据未对齐，需要多次内存访问并进行掩码、移位操作，效率很低。
 

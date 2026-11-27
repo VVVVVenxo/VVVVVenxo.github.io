@@ -199,10 +199,10 @@ void LateUpdate()
 
 ## 常见问题
 
-### 为什么 Awake 比 Start 更适合初始化？
+### Awake 与 Start 的初始化职责划分
 
 `Awake` 在所有脚本的 `Start` 之前执行，因此在 `Awake` 中初始化的组件可以确保在其他脚本的 `Start` 中被访问。
 
-### 为什么物理操作要放在 FixedUpdate？
+### 物理操作放在 FixedUpdate 的原因
 
 物理引擎按固定时间步长计算，与 `FixedUpdate` 同步。在 `Update` 中操作物理会导致不稳定的结果。

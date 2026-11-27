@@ -97,7 +97,7 @@ async Task<string> DownloadAsync() {
 - **死锁闭环链条**：
   - **主线程**卡在 `.Result` 上休眠阻塞，等待 `DownloadAsync` 返回的 `Task` 状态变为 `RanToCompletion`；
   - **100ms 计时器到期后**，状态机的下半段代码（`return "ok"` 触发 `SetResult`）已经被 `ctx.Post` 投递到了主线程队列里，排队等待主线程下一帧唤醒执行；
-  - 主线程被 `.Result` 锁死无法推进帧循环去消费 `Post` 队列，而 `Post` 队列里的 `MoveNext` 不执行就永远无法完成该 `Task` 唤醒主线程——双方互相等待对方先完成，形成典型的**循环等待死锁**。
+  - 主线程被 `.Result` 锁死无法推进帧循环去消费 `Post` 队列，而 `Post` 队列里的 `MoveNext` 不执行就无法完成该 `Task` 唤醒主线程——双方互相等待对方先完成，形成典型的**循环等待死锁**。
 - **`ConfigureAwait(false)` 的解耦作用**：在通用底层库代码（无需访问 Unity 主线程 API 的纯网络 I/O、文件读写或数据解析）中，在 `await` 后追加 `.ConfigureAwait(false)`，即可显式告知 Awaiter **忽略并丢弃当前的 `SynchronizationContext`**，当底层任务完成时直接在当前线程池线程上顺着执行状态机剩余代码，既省去了主线程排队延迟，又从根源上消除了 `.Result` 死锁。
 
 ---
@@ -169,7 +169,7 @@ struct Span<T> {
 | :--- | :--- | :--- | :--- | :--- |
 | **`Span<T>` / `ReadOnlySpan<T>`** | `ref struct`（仅限栈） | **否**（不可作类字段、不可跨 `await`） | `(ref T ptr, int length)` | 同步代码块内的高速切片、解析与原地修改 |
 | **`Memory<T>` / `ReadOnlyMemory<T>`** | 普通 `struct`（可上堆） | **是**（可存入类字段、可作为异步方法参数） | `(object owner, int index, int length)` | 跨 `await` 异步 I/O 传递，进入同步块后调 `.Span` 转为 `Span<T>` |
-| **`ArrayPool<T>.Shared`** | 线程安全全局数组池 | 是（租借返回真实 `T[]` 数组） | 按 `2^k` 容量分桶的线程本地缓存 + 共享桶队列 | 替代 `new byte[N]`，彻底消除大缓冲区分配与 LOH 碎片 |
+| **`ArrayPool<T>.Shared`** | 线程安全全局数组池 | 是（租借返回真实 `T[]` 数组） | 按 `2^k` 容量分桶的线程本地缓存 + 共享桶队列 | 替代 `new byte[N]`，避免大缓冲区重复分配与 LOH 碎片 |
 
 - **`ArrayPool<T>.Shared` 使用规范**：
   1. **租借数组长度通常大于请求长度**：调用 `byte[] buf = ArrayPool<byte>.Shared.Rent(1000)` 时，数组池按 2 的幂次容量桶向上取整，实际返回的 `buf.Length` 为 **`1024`**。因此后续切片或读取时，**必须显式传入实际请求长度 `buf.AsSpan(0, 1000)`**，不能直接使用 `buf.Length`。

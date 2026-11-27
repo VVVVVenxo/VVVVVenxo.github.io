@@ -13,7 +13,7 @@ tags:
 description: 理解 C# 迭代器模式：IEnumerable/IEnumerator 接口、foreach 的本质，以及 yield return 语法糖的实现原理。
 ---
 
-## 什么是迭代器？
+## 迭代器概述
 
 迭代器（Iterator）是一种设计模式，提供一种方法顺序访问聚合对象中的各个元素，而又**不暴露内部结构**。
 
@@ -252,4 +252,4 @@ foreach (var num in GetInfiniteNumbers().Take(5))
 
 - 节省内存：不需要一次性生成所有元素
 - 支持无限序列
-- 与 LINQ 完美配合
+- 支持与 LINQ 组合查询

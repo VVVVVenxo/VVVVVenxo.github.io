@@ -14,14 +14,14 @@ tags:
 description: 理解 C++ 值语义：从拷贝到移动的演进，掌握左值右值、深浅拷贝、移动语义，以及 Rule of Five/Zero。
 ---
 
-## 概述：为什么需要移动语义？
+## 概述：移动语义的作用
 
 在 C++98 时代，对象传递主要依赖**拷贝**。但对于大型对象（如容器、字符串），深拷贝的开销很大：
 
 ```cpp
 std::vector<int> createBigVector() {
     std::vector<int> v(1000000);  // 100 万个元素
-    return v;  // C++98：拷贝 100 万个元素！
+    return v;  // C++98：触发深拷贝
 }
 ```
 

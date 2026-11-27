@@ -13,7 +13,7 @@ tags:
 description: 理解 Unity 协程的原理与用法，协程与线程的区别，以及 JobSystem 多线程方案。
 ---
 
-## 什么是协程？
+## 协程概述
 
 Unity 中的协程（Coroutine）是一种基于**迭代器（Iterator）** 的轻量级协作式多任务机制，允许在主线程中**分阶段执行逻辑**。
 
@@ -121,7 +121,7 @@ IEnumerator Example()
 | GameObject 失活 | ❌ 停止 |
 | GameObject 销毁 | ❌ 停止 |
 
-### 记得关闭协程！
+### 及时停止协程
 
 协程开启后如果不手动关闭，可能导致意外行为：
 

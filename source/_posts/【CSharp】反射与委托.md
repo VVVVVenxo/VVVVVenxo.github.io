@@ -128,7 +128,7 @@ public class Player
 
 // 外部使用
 player.OnDeath = null;      // 委托：可以清空所有监听（危险）
-player.OnDamage = null;     // 事件：编译错误！
+player.OnDamage = null;     // 事件：外部不可直接赋值，编译报错
 player.OnDamage += MyHandler; // 事件：只能这样订阅
 ```
 
