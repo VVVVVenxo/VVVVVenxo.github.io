@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：Lambda 编译器匿名闭包类展开与 std::function 类型擦除及小对象优化（SOO）</text>
+
+  <!-- 左栏 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. Lambda 表达式编译器展开（匿名 Closure 结构体）</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">捕获列表到闭包类成员变量的编译期映射：</text>
+    <text x="56" y="134" fill="#17343B">• <tspan font-weight="700">按值捕获 [x]</tspan>：闭包内生成值拷贝成员 <tspan font-family="Consolas, monospace">int x;</tspan></text>
+    <text x="56" y="155" fill="#17343B">• <tspan font-weight="700">按引用捕获 [&amp;y]</tspan>：生成引用成员 <tspan font-family="Consolas, monospace">int&amp; y;</tspan>（需防悬空）</text>
+    <text x="56" y="175" fill="#17343B">• <tspan font-weight="700">初始化捕获 [p = std::move(ptr)]</tspan>：支持移动独占资源</text>
+    <text x="56" y="194" fill="#61747A">• 默认生成 <tspan font-family="Consolas, monospace">operator() const</tspan>；加 <tspan font-family="Consolas, monospace">mutable</tspan> 移除 <tspan font-family="Consolas, monospace">const</tspan></text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">无捕获 Lambda 与泛型 Lambda（C++14/20）：</text>
+    <text x="56" y="252" fill="#17343B">• <tspan font-weight="700">无状态空捕获 [](){}</tspan>：大小为 1B，编译器额外生成</text>
+    <text x="56" y="272" fill="#17343B">  向 C 函数指针的隐式转换 <tspan font-family="Consolas, monospace">operator Ret(*)(Args)()</tspan></text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">泛型 Lambda [](auto&amp;&amp; x)</tspan>：编译器将闭包类的</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  operator() 生成为成员函数模板 template&lt;class T&gt;</text>
+  </g>
+
+  <!-- 右栏 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. std::function 类型擦除与小对象优化（SOO）</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">类型擦除（Type Erasure）三字段布局（GCC 占 32B）：</text>
+    <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700" font-family="Consolas, monospace">_M_functor (16B union)</tspan>：栈内缓冲或堆对象指针</text>
+    <text x="468" y="154" fill="#17343B">2. <tspan font-weight="700" font-family="Consolas, monospace">_M_manager (8B)</tspan>：管理函数指针（拷贝/移动/析构闭包）</text>
+    <text x="468" y="175" fill="#17343B">3. <tspan font-weight="700" font-family="Consolas, monospace">_M_invoker (8B)</tspan>：调用转发函数指针（调 operator()）</text>
+    <text x="468" y="194" fill="#61747A">• 将函数指针、仿函数、不同捕获的 Lambda 统一为同类型</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">小对象优化（Small Object Optimization, SOO）：</text>
+    <text x="468" y="252" fill="#17343B">• 当闭包体积 <tspan font-weight="700" font-family="Consolas, monospace">&lt;= 16B</tspan>（GCC）且移动构造带 <tspan font-family="Consolas, monospace">noexcept</tspan> 时，</text>
+    <text x="468" y="272" fill="#17343B">  直接在栈内 <tspan font-family="Consolas, monospace">_M_functor</tspan> 缓冲原位构造，实现<tspan font-weight="700">零堆分配</tspan></text>
+    <text x="468" y="292" fill="#17343B">• 若按值捕获大对象超出 16B，则在构造与拷贝时</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  触发 operator new 堆分配（热路径建议用模板 F&amp;&amp;）</text>
+  </g>
+</svg>

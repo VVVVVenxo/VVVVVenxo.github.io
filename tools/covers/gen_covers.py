@@ -480,7 +480,7 @@ def select_variant(top, sub, title):
         if "状态同步" in title: return "state-sync"
         return "network"
     if sub == "C++":
-        for terms,kind in [("内存","memory"),("虚函数","dispatch"),("值语义","move"),("移动","move"),("STL","vector"),("容器","vector"),("类型转换","language"),("整体框架","architecture"),("关键字","language")]:
+        for terms,kind in [("内存模型","process"),("多线程","process"),("并发","process"),("模板","compiler"),("泛型","compiler"),("内存","memory"),("虚函数","dispatch"),("值语义","move"),("移动","move"),("STL","vector"),("容器","vector"),("类型转换","language"),("整体框架","architecture"),("关键字","language")]:
             if terms in title: return kind
         return "language"
     if sub == "C#":
@@ -563,7 +563,7 @@ def wrap_title(title, max_units=10.5):
     if current: lines.append(current.rstrip())
     if len(lines)>1:
         last_units=sum(0.56 if ord(char)<128 else 1.0 for char in lines[-1])
-        if last_units<3.0:
+        if last_units<=3.5:
             combined=lines[-2]+lines[-1]
             split=len(combined)//2
             lines[-2:]=[combined[:split],combined[split:]]
