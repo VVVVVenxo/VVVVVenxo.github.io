@@ -16,9 +16,9 @@
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="230" fill="#287B73" font-weight="700">服务端权威校正（回退并重演未确认输入）：</text>
-    <text x="56" y="252" fill="#17343B">• 收到服务端确认包 <tspan font-family="Consolas, monospace">(ackSeq, authPos)</tspan> 后，丢弃队列中序号</text>
-    <text x="56" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">&lt;= ackSeq</tspan> 的记录，并对比当年预测位置与 <tspan font-family="Consolas, monospace">authPos</tspan> 的误差</text>
-    <text x="56" y="293" fill="#17343B">• 若误差超出阈值（如被服务端墙体或眩晕阻挡），立即将坐标</text>
+    <text x="56" y="252" fill="#17343B">• 收到确认包 <tspan font-family="Consolas, monospace">(ackSeq, authPos)</tspan> 后，丢弃队列中序号</text>
+    <text x="56" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">&lt;= ackSeq</tspan> 的记录，并对比预测坐标与 <tspan font-family="Consolas, monospace">authPos</tspan> 的误差</text>
+    <text x="56" y="293" fill="#17343B">• 若误差超出阈值（如被墙体或眩晕阻挡），立即将坐标</text>
     <text x="56" y="313" fill="#287B73" font-weight="700">  重置为 <tspan font-family="Consolas, monospace">authPos</tspan>，并顺序重演队列中 <tspan font-family="Consolas, monospace">&gt; ackSeq</tspan> 的所有输入</text>
   </g>
 

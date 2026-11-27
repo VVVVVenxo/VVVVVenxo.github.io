@@ -12,14 +12,14 @@
     <text x="56" y="134" fill="#17343B">• 构建或加载时将同材质静态物体的顶点预变换到世界空间，</text>
     <text x="56" y="155" fill="#17343B">  合并写入同一个大型顶点缓冲区（VB）与索引缓冲区（IB）</text>
     <text x="56" y="175" fill="#17343B">• <tspan font-weight="700">代价</tspan>：物体运行期不可移动；若 100 棵树共用同一模型，</text>
-    <text x="56" y="194" fill="#61747A">  合并后顶点数据会在内存中复制 100 份，显著增加包体与内存</text>
+    <text x="56" y="194" fill="#61747A">  合并后顶点数据会复制 100 份，增加包体与内存占用</text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="230" fill="#287B73" font-weight="700">动态合批（CPU 每帧实时变换合并小网格）：</text>
     <text x="56" y="252" fill="#17343B">• 每帧由 CPU 将同材质小模型顶点变换到世界空间后合并</text>
-    <text x="56" y="272" fill="#17343B">• <tspan font-weight="700">严格限制</tspan>：网格顶点属性总数不超过 900（通常少于 300 顶点），</text>
+    <text x="56" y="272" fill="#17343B">• <tspan font-weight="700">限制</tspan>：顶点属性总数不超过 900（约 300 顶点），</text>
     <text x="56" y="293" fill="#17343B">  且不能包含负缩放或不同光照贴图</text>
-    <text x="56" y="313" fill="#287B73" font-weight="700">• 现代 URP 管线中通常关闭网格动态合批，改用 SRP Batcher</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">• URP 管线中通常关闭动态合批，改用 SRP Batcher</text>
   </g>
 
   <!-- 右栏 -->
@@ -30,9 +30,9 @@
     <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="468" y="112" fill="#C47743" font-weight="700">单份网格内存 + 实例属性数组（单次 DrawCall）：</text>
     <text x="468" y="134" fill="#17343B">• 显存中<tspan font-weight="700">仅保存 1 份原始 Mesh 顶点数据</tspan>（零内存膨胀）</text>
-    <text x="468" y="154" fill="#17343B">• CPU 将上千个实例各自的变换矩阵、颜色等差异参数打包进</text>
+    <text x="468" y="154" fill="#17343B">• CPU 将上千个实例的变换矩阵与颜色等参数打包进</text>
     <text x="468" y="175" fill="#17343B">  常量数组，调用一次 <tspan font-family="Consolas, monospace">DrawMeshInstanced</tspan> 全部绘出</text>
-    <text x="468" y="194" fill="#61747A">• 顶点着色器通过 <tspan font-family="Consolas, monospace">SV_InstanceID</tspan> 索引当前实例的矩阵与颜色</text>
+    <text x="468" y="194" fill="#61747A">• 顶点着色器通过 <tspan font-family="Consolas, monospace">SV_InstanceID</tspan> 读取当前实例参数</text>
 
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="468" y="230" fill="#C47743" font-weight="700">MaterialPropertyBlock 与 Indirect 进阶渲染：</text>

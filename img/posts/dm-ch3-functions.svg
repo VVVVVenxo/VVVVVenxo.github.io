@@ -15,14 +15,14 @@
   <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
     <!-- Card 1: Injection (x=28, w=256) -->
     <rect x="28" y="64" width="256" height="262" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
-    <text x="156" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 单射（Injection · 一对一）</text>
-    <text x="156" y="110" fill="#17343B" text-anchor="middle">x1 ≠ x2 ⇒ f(x1) ≠ f(x2)</text>
+    <text x="156" y="86" fill="#287B73" font-weight="700" text-anchor="middle">1. 单射（Injection · 一对一）</text>
+    <text x="156" y="105" fill="#17343B" text-anchor="middle">x1 ≠ x2 ⇒ f(x1) ≠ f(x2)</text>
 
     <!-- Sets A and B -->
-    <ellipse cx="96" cy="184" rx="28" ry="54" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
-    <ellipse cx="216" cy="184" rx="28" ry="54" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
-    <text x="96" y="124" fill="#17343B" font-weight="700" text-anchor="middle">A</text>
-    <text x="216" y="124" fill="#17343B" font-weight="700" text-anchor="middle">B</text>
+    <ellipse cx="96" cy="188" rx="28" ry="50" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <ellipse cx="216" cy="188" rx="28" ry="50" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="96" y="128" fill="#17343B" font-weight="700" text-anchor="middle">A</text>
+    <text x="216" y="128" fill="#17343B" font-weight="700" text-anchor="middle">B</text>
     <!-- Points in A (2 points) and B (3 points) -->
     <circle cx="96" cy="162" r="5" fill="#17343B"/><circle cx="96" cy="206" r="5" fill="#17343B"/>
     <circle cx="216" cy="152" r="5" fill="#287B73"/><circle cx="216" cy="184" r="5" fill="#287B73"/><circle cx="216" cy="216" r="5" fill="#AEBDB7"/>
@@ -35,13 +35,13 @@
 
     <!-- Card 2: Surjection (x=302, w=256) -->
     <rect x="302" y="64" width="256" height="262" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
-    <text x="430" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 满射（Surjection · 映上）</text>
-    <text x="430" y="110" fill="#17343B" text-anchor="middle">ran f = B（∀y∈B ∃x∈A (f(x)=y)）</text>
+    <text x="430" y="86" fill="#17343B" font-weight="700" text-anchor="middle">2. 满射（Surjection · 映上）</text>
+    <text x="430" y="105" fill="#17343B" text-anchor="middle">ran f = B（∀y∈B ∃x∈A (f(x)=y)）</text>
 
-    <ellipse cx="370" cy="184" rx="28" ry="54" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
-    <ellipse cx="490" cy="184" rx="28" ry="54" fill="#FAFBF8" stroke="#C47743" stroke-width="1.5"/>
-    <text x="370" y="124" fill="#17343B" font-weight="700" text-anchor="middle">A</text>
-    <text x="490" y="124" fill="#17343B" font-weight="700" text-anchor="middle">B</text>
+    <ellipse cx="370" cy="188" rx="28" ry="50" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <ellipse cx="490" cy="188" rx="28" ry="50" fill="#FAFBF8" stroke="#C47743" stroke-width="1.5"/>
+    <text x="370" y="128" fill="#17343B" font-weight="700" text-anchor="middle">A</text>
+    <text x="490" y="128" fill="#17343B" font-weight="700" text-anchor="middle">B</text>
     <!-- Points in A (3 points) and B (2 points) -->
     <circle cx="370" cy="152" r="5" fill="#17343B"/><circle cx="370" cy="184" r="5" fill="#17343B"/><circle cx="370" cy="216" r="5" fill="#17343B"/>
     <circle cx="490" cy="164" r="5" fill="#C47743"/><circle cx="490" cy="204" r="5" fill="#C47743"/>
@@ -55,13 +55,13 @@
 
     <!-- Card 3: Bijection (x=576, w=256) -->
     <rect x="576" y="64" width="256" height="262" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
-    <text x="704" y="90" fill="#287B73" font-weight="700" text-anchor="middle">3. 双射（Bijection · 一一对应）</text>
-    <text x="704" y="110" fill="#17343B" text-anchor="middle">既是单射，又是满射</text>
+    <text x="704" y="86" fill="#287B73" font-weight="700" text-anchor="middle">3. 双射（Bijection · 一一对应）</text>
+    <text x="704" y="105" fill="#17343B" text-anchor="middle">既是单射，又是满射</text>
 
-    <ellipse cx="644" cy="184" rx="28" ry="54" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
-    <ellipse cx="764" cy="184" rx="28" ry="54" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
-    <text x="644" y="124" fill="#17343B" font-weight="700" text-anchor="middle">A</text>
-    <text x="764" y="124" fill="#17343B" font-weight="700" text-anchor="middle">B</text>
+    <ellipse cx="644" cy="188" rx="28" ry="50" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <ellipse cx="764" cy="188" rx="28" ry="50" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+    <text x="644" y="128" fill="#17343B" font-weight="700" text-anchor="middle">A</text>
+    <text x="764" y="128" fill="#17343B" font-weight="700" text-anchor="middle">B</text>
     <circle cx="644" cy="152" r="5" fill="#17343B"/><circle cx="644" cy="184" r="5" fill="#17343B"/><circle cx="644" cy="216" r="5" fill="#17343B"/>
     <circle cx="764" cy="152" r="5" fill="#287B73"/><circle cx="764" cy="184" r="5" fill="#287B73"/><circle cx="764" cy="216" r="5" fill="#287B73"/>
     <line x1="651" y1="152" x2="755" y2="152" stroke="#287B73" stroke-width="1.8" marker-end="url(#aT)"/>

@@ -30,9 +30,9 @@
     <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="468" y="112" fill="#C47743" font-weight="700">无锁数据结构中的 ABA 问题复现过程：</text>
     <text x="468" y="134" fill="#17343B">1. 栈中原有 <tspan font-family="Consolas, monospace">A → B → C</tspan>，线程 1 读到栈顶 <tspan font-family="Consolas, monospace">A</tspan> 与 <tspan font-family="Consolas, monospace">next = B</tspan></text>
-    <text x="468" y="154" fill="#17343B">2. 线程 1 在执行 CAS 前被抢占；线程 2 弹出 <tspan font-family="Consolas, monospace">A</tspan> 和 <tspan font-family="Consolas, monospace">B</tspan> 并释放，</text>
-    <text x="468" y="175" fill="#17343B">   随后新建节点复用原内存地址 <tspan font-family="Consolas, monospace">A</tspan> 压回栈顶（此时 <tspan font-family="Consolas, monospace">A → C</tspan>）</text>
-    <text x="468" y="194" fill="#61747A">3. 线程 1 恢复 CAS 见栈顶仍为 <tspan font-family="Consolas, monospace">A</tspan> 即通过，将已释放的 <tspan font-family="Consolas, monospace">B</tspan> 设为栈顶</text>
+    <text x="468" y="154" fill="#17343B">2. 线程 1 被挂起；线程 2 弹出 <tspan font-family="Consolas, monospace">A</tspan> 和 <tspan font-family="Consolas, monospace">B</tspan> 并释放内存，</text>
+    <text x="468" y="175" fill="#17343B">   随后新建节点复用地址 <tspan font-family="Consolas, monospace">A</tspan> 压回栈顶（此时 <tspan font-family="Consolas, monospace">A → C</tspan>）</text>
+    <text x="468" y="194" fill="#61747A">3. 线程 1 恢复见栈顶仍为 <tspan font-family="Consolas, monospace">A</tspan>，把已释放的 <tspan font-family="Consolas, monospace">B</tspan> 设为栈顶</text>
 
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="468" y="230" fill="#C47743" font-weight="700">ABA 工程解决方案（版本号标记与安全内存回收）：</text>

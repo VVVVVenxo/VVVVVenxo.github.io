@@ -12,12 +12,12 @@
     <text x="56" y="134" fill="#17343B">• 若对局已进行 20 分钟（按 15Hz 共 18000 个逻辑帧），</text>
     <text x="56" y="155" fill="#17343B">  重连后从第 1 帧开始顺序执行全部历史帧会导致长时间卡在</text>
     <text x="56" y="175" fill="#17343B">  加载进度条</text>
-    <text x="56" y="194" fill="#61747A">• 追帧期间必须关闭所有特效、音效与 UI 刷新，仅空跑纯逻辑</text>
+    <text x="56" y="194" fill="#61747A">• 追帧期间关闭所有特效、音效与 UI 刷新，仅跑纯逻辑</text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="230" fill="#287B73" font-weight="700">定期逻辑状态快照 + 尾部少量增量帧倍速追赶：</text>
-    <text x="56" y="252" fill="#17343B">• 服务端（或校验服）每隔 1000 帧保存一份完整逻辑世界快照</text>
-    <text x="56" y="272" fill="#17343B">• 玩家在 18200 帧重连时，直接下载第 18000 帧快照反序列化</text>
+    <text x="56" y="252" fill="#17343B">• 服务端每隔 1000 帧保存一份完整逻辑世界快照</text>
+    <text x="56" y="272" fill="#17343B">• 在 18200 帧重连时，直接下载第 18000 帧快照恢复</text>
     <text x="56" y="293" fill="#17343B">  恢复现场，随后仅需在单帧循环内快速追赶剩余的 200 帧</text>
     <text x="56" y="313" fill="#287B73" font-weight="700">  增量操作，1 秒内即可恢复实时画面</text>
   </g>
@@ -38,7 +38,7 @@
     <text x="468" y="230" fill="#C47743" font-weight="700">预测对手输入 → 收到真实输入后回滚重演：</text>
     <text x="468" y="252" fill="#17343B">1. 若第 <tspan font-family="Consolas, monospace">N</tspan> 帧尚未收到远端对手输入，先预测对手维持第 <tspan font-family="Consolas, monospace">N-1</tspan></text>
     <text x="468" y="272" fill="#17343B">   帧的按键状态继续向前推进，并每帧保存内存二进制快照</text>
-    <text x="468" y="292" fill="#17343B">2. 在第 <tspan font-family="Consolas, monospace">N+3</tspan> 帧收到对手第 <tspan font-family="Consolas, monospace">N</tspan> 帧真实输入且发现与预测不符时，</text>
+    <text x="468" y="292" fill="#17343B">2. 在第 <tspan font-family="Consolas, monospace">N+3</tspan> 帧收到对手第 <tspan font-family="Consolas, monospace">N</tspan> 帧输入且与预测不符时，</text>
     <text x="468" y="313" fill="#287B73" font-weight="700">   立即加载第 <tspan font-family="Consolas, monospace">N-1</tspan> 帧快照，在当前帧内一口气重演 <tspan font-family="Consolas, monospace">N..N+3</tspan> 帧</text>
   </g>
 </svg>

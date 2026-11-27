@@ -64,6 +64,6 @@
     <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">绝对寻址修正 (R_386_32 / R_X86_64_32)</tspan>：</text>
     <text x="468" y="272" fill="#287B73" font-weight="700" font-family="Consolas, monospace">   修正值 = S + A  (直接填入目标符号绝对虚拟地址)</text>
     <text x="468" y="294" fill="#17343B">2. <tspan font-weight="700">PC 相对寻址修正 (R_386_PC32 / R_X86_64_PC32)</tspan>：</text>
-    <text x="468" y="314" fill="#C47743" font-weight="700" font-family="Consolas, monospace">   修正值 = S + A - P = S - (P + 4) (距下条指令偏移)</text>
+    <text x="468" y="314" fill="#C47743" font-weight="700" font-family="Consolas, monospace">修正值 = S + A - P = S - (P + 4) (相对偏移)</text>
   </g>
 </svg>

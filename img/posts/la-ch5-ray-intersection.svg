@@ -38,7 +38,7 @@
     <text x="468" y="236" fill="#C47743" font-weight="700">Gribb-Hartmann 视锥体 6 平面快速提取算法：</text>
     <text x="468" y="258" fill="#17343B">• 设复合矩阵 <tspan font-family="Consolas, monospace">M = P * V</tspan> 的四行向量为 <tspan font-family="Consolas, monospace">R0, R1, R2, R3</tspan></text>
     <text x="468" y="280" fill="#17343B">• 由裁剪不等式 <tspan font-family="Consolas, monospace">-w ≤ x ≤ w</tspan> 直接导出世界空间平面方程：</text>
-    <text x="468" y="300" fill="#287B73" font-weight="700" font-family="Consolas, monospace">左平面: R3 + R0,  右平面: R3 - R0,  下/上: R3 ± R1</text>
+    <text x="468" y="300" fill="#287B73" font-weight="700" font-family="Consolas, monospace">左: R3 + R0, 右: R3 - R0, 下/上: R3 ± R1</text>
     <text x="468" y="318" fill="#17343B">• 若 AABB 8 顶点均在任一平面外侧，则整物体剔除</text>
   </g>
 </svg>

@@ -11,13 +11,13 @@
     <text x="56" y="112" fill="#287B73" font-weight="700">IL → LLVM IR → 目标平台原生 SIMD 机器码：</text>
     <text x="56" y="134" fill="#17343B">• 标记 <tspan font-weight="700" font-family="Consolas, monospace">[BurstCompile]</tspan> 的结构体（如 <tspan font-family="Consolas, monospace">IJobEntity</tspan>）</text>
     <text x="56" y="155" fill="#17343B">  由 Burst 编译器直接翻译为 LLVM 中间表示并执行深度优化</text>
-    <text x="56" y="175" fill="#17343B">• 针对目标架构生成原生指令（x86 <tspan font-family="Consolas, monospace">SSE4/AVX2</tspan>、ARM <tspan font-family="Consolas, monospace">NEON</tspan>）</text>
-    <text x="56" y="194" fill="#61747A">• 省去虚拟函数分派、数组越界检查（Release 下）与装箱开销</text>
+    <text x="56" y="175" fill="#17343B">• 生成目标平台指令（x86 <tspan font-family="Consolas, monospace">AVX2</tspan>、ARM <tspan font-family="Consolas, monospace">NEON</tspan>）</text>
+    <text x="56" y="194" fill="#61747A">• 省去虚函数分派、数组越界检查与值类型装箱开销</text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="230" fill="#287B73" font-weight="700">Burst 编译代码必须遵守的语法约束：</text>
-    <text x="56" y="252" fill="#17343B">• 严禁读写任何托管引用类型（<tspan font-family="Consolas, monospace">class / string / T[] / List&lt;T&gt;</tspan>）</text>
-    <text x="56" y="272" fill="#17343B">• 仅支持可按位拷贝的值类型（<tspan font-family="Consolas, monospace">struct</tspan>）与 <tspan font-family="Consolas, monospace">NativeContainer</tspan></text>
+    <text x="56" y="252" fill="#17343B">• 禁止访问托管引用类型（<tspan font-family="Consolas, monospace">class / string / List&lt;T&gt;</tspan>）</text>
+    <text x="56" y="272" fill="#17343B">• 仅支持纯值类型（<tspan font-family="Consolas, monospace">struct</tspan>）与 <tspan font-family="Consolas, monospace">NativeContainer</tspan></text>
     <text x="56" y="293" fill="#17343B">• 不支持 <tspan font-family="Consolas, monospace">try / catch</tspan> 异常捕获与访问可变静态托管字段</text>
     <text x="56" y="313" fill="#287B73" font-weight="700">  （只读配置常量需使用 <tspan font-family="Consolas, monospace">SharedStatic&lt;T&gt;</tspan> 访问）</text>
   </g>
@@ -36,9 +36,9 @@
 
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="468" y="230" fill="#C47743" font-weight="700">指针别名消除（NoAlias）保障循环自动向量化：</text>
-    <text x="468" y="252" fill="#17343B">• C++ 编译器若无法证明两个指针不重叠（Pointer Aliasing），</text>
+    <text x="468" y="252" fill="#17343B">• 传统编译器若无法证明两个指针不发生内存重叠，</text>
     <text x="468" y="272" fill="#17343B">  为保证结果正确会被迫放弃循环的自动 SIMD 向量化</text>
-    <text x="468" y="292" fill="#17343B">• Burst 依托 Job 安全系统，默认保证 Job 内不同 <tspan font-family="Consolas, monospace">NativeArray</tspan></text>
+    <text x="468" y="292" fill="#17343B">• Burst 依托安全系统，默认保证不同 <tspan font-family="Consolas, monospace">NativeArray</tspan></text>
     <text x="468" y="313" fill="#287B73" font-weight="700">  内存绝不重叠（自动注入 <tspan font-family="Consolas, monospace">noalias</tspan>），实现完整循环向量化</text>
   </g>
 </svg>

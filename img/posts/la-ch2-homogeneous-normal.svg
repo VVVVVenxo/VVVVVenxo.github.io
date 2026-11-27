@@ -36,7 +36,7 @@
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
     <text x="468" y="230" fill="#C47743" font-weight="700">代数推导（设法线矩阵为 G，要求保持正交 t'·n' = 0）：</text>
     <text x="468" y="252" fill="#17343B" font-family="Consolas, monospace">(t')ᵀ n' = (M t)ᵀ (G n) = tᵀ (Mᵀ G) n = 0</text>
-    <text x="468" y="274" fill="#287B73" font-weight="700" font-family="Consolas, monospace">令 Mᵀ G = I  ⇒  G = (Mᵀ)⁻¹ = (M⁻¹)ᵀ （逆转置矩阵）</text>
+    <text x="468" y="274" fill="#287B73" font-weight="700" font-family="Consolas, monospace">令 Mᵀ G = I ⇒ G = (Mᵀ)⁻¹ = (M⁻¹)ᵀ（逆转置）</text>
     <text x="468" y="296" fill="#17343B">• <tspan font-weight="700">优化</tspan>：若 M 仅含旋转（正交矩阵满足 <tspan font-family="Consolas, monospace">M⁻¹ = Mᵀ</tspan>），</text>
     <text x="468" y="316" fill="#17343B">  则 <tspan font-family="Consolas, monospace">(M⁻¹)ᵀ = M</tspan>，可直接用原矩阵 3×3 部分变换法线</text>
   </g>

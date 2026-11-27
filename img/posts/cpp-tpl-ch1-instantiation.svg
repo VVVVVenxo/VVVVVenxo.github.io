@@ -31,7 +31,7 @@
     <text x="468" y="112" fill="#C47743" font-weight="700">类模板特化匹配序（支持全特化与偏特化）：</text>
     <text x="468" y="134" fill="#17343B">1. <tspan font-weight="700">全特化</tspan>：<tspan font-family="Consolas, monospace">template&lt;&gt; struct Map&lt;int, float&gt;</tspan></text>
     <text x="468" y="154" fill="#17343B">2. <tspan font-weight="700">更具体的偏特化</tspan>：<tspan font-family="Consolas, monospace">struct Map&lt;K, V*&gt;</tspan>（限定指针）</text>
-    <text x="468" y="175" fill="#17343B">3. <tspan font-weight="700">基础主模板</tspan>：<tspan font-family="Consolas, monospace">template&lt;class K, class V&gt; struct Map</tspan></text>
+    <text x="468" y="175" fill="#17343B">3. <tspan font-weight="700">主模板</tspan>：<tspan font-family="Consolas, monospace">template&lt;class K, class V&gt; struct Map</tspan></text>
     <text x="468" y="194" fill="#61747A">• 标准库 type_traits 全部基于类模板偏特化实现</text>
 
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>

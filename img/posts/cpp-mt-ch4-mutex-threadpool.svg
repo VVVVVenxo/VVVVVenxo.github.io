@@ -15,11 +15,11 @@
     <text x="56" y="194" fill="#61747A">• <tspan font-weight="700" font-family="Consolas, monospace">shared_lock</tspan>：配合 <tspan font-family="Consolas, monospace">shared_mutex</tspan> 实现多读单写共享锁</text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
-    <text x="56" y="230" fill="#287B73" font-weight="700">std::condition_variable 虚假唤醒（Spurious Wakeup）：</text>
+    <text x="56" y="230" fill="#287B73" font-weight="700">condition_variable 虚假唤醒防护：</text>
     <text x="56" y="252" fill="#17343B">• 操作系统内核信号中断或多核竞争下，等待线程可能在</text>
     <text x="56" y="272" fill="#17343B">  没有收到通知或条件已被其他线程消费的情况下被唤醒</text>
-    <text x="56" y="293" fill="#17343B">• 必须使用带条件谓词的循环等待重载：</text>
-    <text x="56" y="313" fill="#287B73" font-weight="700" font-family="Consolas, monospace">  cv.wait(lock, [this] { return stop || !tasks.empty(); });</text>
+    <text x="56" y="293" fill="#17343B">• 必须使用带条件函数的循环等待重载：</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700" font-family="Consolas, monospace">cv.wait(lock, [&amp;]{ return !q.empty(); });</text>
   </g>
 
   <!-- 右栏 -->
@@ -29,9 +29,9 @@
   <g font-size="13">
     <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="468" y="112" fill="#C47743" font-weight="700">std::promise / std::packaged_task / std::future：</text>
-    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700">任务提交端</tspan>：用 <tspan font-family="Consolas, monospace">packaged_task&lt;Ret()&gt;</tspan> 包装待执行函数，</text>
+    <text x="468" y="134" fill="#17343B">• <tspan font-weight="700">提交端</tspan>：用 <tspan font-family="Consolas, monospace">packaged_task</tspan> 包装待执行函数，</text>
     <text x="468" y="154" fill="#17343B">  调用 <tspan font-family="Consolas, monospace">get_future()</tspan> 返回给外部调用者用于等待返回值</text>
-    <text x="468" y="175" fill="#17343B">• 生产端与消费端通过堆上引用计数的<tspan font-weight="700">共享状态（Shared State）</tspan></text>
+    <text x="468" y="175" fill="#17343B">• 生产端与消费端通过堆上引用计数的<tspan font-weight="700">共享状态</tspan></text>
     <text x="468" y="194" fill="#61747A">  传递计算结果或跨线程重新抛出捕获到的异常</text>
 
     <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>

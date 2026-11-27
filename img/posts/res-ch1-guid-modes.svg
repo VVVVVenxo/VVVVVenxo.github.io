@@ -11,8 +11,8 @@
     <text x="56" y="112" fill="#287B73" font-weight="700">Unity 引用资源不依赖文件路径，而依赖两个标识：</text>
     <text x="56" y="134" fill="#17343B">1. <tspan font-weight="700">GUID（全局唯一标识）</tspan>：保存在配套的 <tspan font-family="Consolas, monospace">.meta</tspan> 文件中，</text>
     <text x="56" y="155" fill="#17343B">   用于定位哪一个磁盘资源文件（移动文件不会丢失引用）</text>
-    <text x="56" y="175" fill="#17343B">2. <tspan font-weight="700">LocalID（文件内部局部 ID）</tspan>：用于定位该资源文件内部的</text>
-    <text x="56" y="194" fill="#61747A">   哪一个具体子对象（如 Prefab 内的某个组件或图集内的小图）</text>
+    <text x="56" y="175" fill="#17343B">2. <tspan font-weight="700">LocalID（内部局部 ID）</tspan>：用于定位该资源文件内的</text>
+    <text x="56" y="194" fill="#61747A">   具体子对象（如 Prefab 内的组件或图集内的小图）</text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
     <text x="56" y="230" fill="#287B73" font-weight="700">运行期实例标识 InstanceID：</text>
