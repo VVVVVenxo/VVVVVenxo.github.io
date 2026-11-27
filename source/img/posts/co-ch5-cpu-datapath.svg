@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="CPU指令周期四阶段数据通路与硬布线微程序控制器对比">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 5-1 · 指令周期四阶段数据通路流向与控制器设计（硬布线 vs 微程序）</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: Instruction Cycle 4 Phases -->
+    <rect x="28" y="64" width="400" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="228" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. 指令周期四阶段微操作数据流向（必考）</text>
+
+    <rect x="44" y="104" width="368" height="62" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="124" fill="#287B73" font-weight="700">① 取指周期 (FE · 所有指令必经)：取指令并自动 PC + "1"</text>
+    <text x="56" y="144" fill="#17343B">PC → MAR → 地址总线 → 主存；M(MAR) → MDR → <tspan font-weight="700" fill="#287B73">IR</tspan>；</text>
+    <text x="56" y="160" fill="#61747A">同时执行 (PC) + 指令字长 → PC</text>
+
+    <rect x="44" y="174" width="368" height="46" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="56" y="194" fill="#17343B" font-weight="700">② 间址周期 (IND · 间接寻址)：取操作数的有效地址 EA</text>
+    <text x="56" y="212" fill="#17343B">Ad(IR) → MAR → 主存；M(MAR) → <tspan font-weight="700">MDR（存有效地址 EA）</tspan></text>
+
+    <rect x="44" y="228" width="368" height="42" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="248" fill="#17343B" font-weight="700">③ 执行周期 (EX)：不同指令微操作不同（访存或 ALU 运算）</text>
+    <text x="56" y="264" fill="#61747A">（注：仅在执行周期结束后，CPU 才采样查询外中断请求）</text>
+
+    <rect x="44" y="278" width="368" height="44" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="56" y="298" fill="#C47743" font-weight="700">④ 中断周期 (INT)：关中断 → 保存断点进栈 → 向量址送 PC</text>
+    <text x="56" y="314" fill="#17343B">SP-1 → MAR；<tspan font-weight="700">(PC) → MDR → 主存</tspan>；向量地址 → PC</text>
+
+    <!-- Right Panel: Hardwired vs Microprogrammed Control Unit -->
+    <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="640" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 硬布线控制器 vs 微程序控制器（字段直接编码）</text>
+
+    <rect x="462" y="106" width="356" height="92" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="474" y="128" fill="#287B73" font-weight="700">• 硬布线控制器（组合逻辑 · RISC 采用）：</text>
+    <text x="474" y="148" fill="#17343B">  纯门电路按操作码、节拍与状态标志直接生成微命令。</text>
+    <text x="474" y="168" fill="#17343B">  <tspan font-weight="700" fill="#287B73">执行速度最快</tspan>，但电路庞杂、扩充修改指令困难</text>
+
+    <rect x="462" y="208" width="356" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="474" y="230" fill="#C47743" font-weight="700">• 微程序控制器（存储逻辑 · CISC 采用）：</text>
+    <text x="474" y="250" fill="#17343B">  1 条机器指令对应 1 段<tspan font-weight="700">微程序</tspan>（存于控存 CM / ROM 中，</text>
+    <text x="474" y="270" fill="#17343B">  共用同一段“取指微程序”）。<tspan font-weight="700" fill="#C47743">字段直接编码铁律</tspan>：</text>
+    <text x="474" y="290" fill="#287B73" font-weight="700">  互斥分同段，相容分不同段；每段留 1 个全 0 状态表</text>
+    <text x="474" y="310" fill="#287B73" font-weight="700">  “不操作”（k 个互斥命令需 ⌈log2(k+1)⌉ 位）</text>
+  </g>
+</svg>
