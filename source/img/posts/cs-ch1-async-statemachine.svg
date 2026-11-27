@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：C# async / await 编译器状态机（IAsyncStateMachine）展开与堆装箱机制</text>
+
+  <!-- 左栏：状态机结构体展开 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 编译器将 async 方法改写为 IAsyncStateMachine 结构体</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">async 关键字零线程创建本质（编译期语法糖）：</text>
+    <text x="56" y="133" fill="#17343B">• <tspan font-family="Consolas, monospace">async</tspan> 方法本身<tspan font-weight="700" fill="#C47743">绝不创建新线程</tspan>，而是将方法体按每个</text>
+    <text x="56" y="153" fill="#17343B">  <tspan font-family="Consolas, monospace">await</tspan> 挂起点切分为状态分支 (<tspan font-family="Consolas, monospace">state = -1, 0, 1...</tspan>)</text>
+    <text x="56" y="173" fill="#17343B">• 跨 await 存活的局部变量被提升为状态机结构体字段</text>
+    <text x="56" y="193" fill="#61747A">• 核函数 MoveNext() 内通过 switch(state) 跳转到恢复位置</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">MoveNext() 执行与挂起快速路径（Fast Path）：</text>
+    <text x="56" y="252" fill="#17343B">1. 调用被等待对象的 <tspan font-family="Consolas, monospace">GetAwaiter()</tspan>，先检查 <tspan font-weight="700" fill="#287B73">IsCompleted</tspan></text>
+    <text x="56" y="272" fill="#17343B">2. <tspan font-weight="700">同步快路径</tspan>：若任务已完成，不挂起直接同步往下跑，</text>
+    <text x="56" y="292" fill="#287B73" font-weight="700">   全程在栈上运行，零状态机装箱、零委托分配（0 GC）！</text>
+    <text x="56" y="313" fill="#17343B">3. <tspan font-weight="700">异步挂起路径</tspan>：未完成则调 <tspan font-family="Consolas, monospace">AwaitUnsafeOnCompleted</tspan></text>
+  </g>
+
+  <!-- 右栏：为什么标准 Task 产生堆分配 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 原生 Task 异步挂起时的三处托管堆 GC 分配来源</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">当 await 遇到未完成任务首次挂起时的堆内存分配：</text>
+    <text x="468" y="133" fill="#17343B">1. <tspan font-weight="700">Task 引用对象分配</tspan>：<tspan font-family="Consolas, monospace">Task&lt;T&gt;</tspan> 是 class，每次异步完成</text>
+    <text x="468" y="153" fill="#17343B">   （非缓存常量）均需在托管堆上 new 一个 Task 对象</text>
+    <text x="468" y="173" fill="#17343B">2. <tspan font-weight="700">状态机结构体装箱 (Box)</tspan>：栈上状态机 struct 必须被</text>
+    <text x="468" y="193" fill="#C47743" font-weight="700">   装箱拷贝到托管堆 (StateMachineBox) 以跨帧存活</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">3. Action 回调委托与 ExecutionContext 捕获开销：</text>
+    <text x="468" y="252" fill="#17343B">• 为在底层 I/O 或延时结束时重新唤醒状态机的 <tspan font-family="Consolas, monospace">MoveNext</tspan>，</text>
+    <text x="468" y="272" fill="#17343B">  需分配延续回调包装器与捕获线程上下文</text>
+    <text x="468" y="293" fill="#17343B">• <tspan font-weight="700">严禁 async void</tspan>：异常无法被调用方 try-catch 捕获，</text>
+    <text x="468" y="313" fill="#17343B">  会直接抛向 SynchronizationContext 导致整个进程崩溃</text>
+  </g>
+</svg>

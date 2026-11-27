@@ -9,7 +9,7 @@
   <g font-size="13">
     <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
     <text x="56" y="112" fill="#287B73" font-weight="700">Cook-Torrance 镜面反射 BRDF 标准公式：</text>
-    <text x="56" y="134" fill="#C47743" font-weight="700" font-family="Consolas, monospace">f_spec = (D(h) * F(v,h) * G(l,v)) / (4*(n·l)*(n·v))</text>
+    <text x="56" y="134" fill="#C47743" font-weight="700" font-family="Consolas, monospace">f_spec = (D * F * G) / (4 * (n · l) * (n · v))</text>
     <text x="56" y="156" fill="#17343B">• <tspan font-weight="700">半程向量 h = normalize(l + v)</tspan>：仅微法线 <tspan font-family="Consolas, monospace">m = h</tspan> 的</text>
     <text x="56" y="176" fill="#17343B">  微表面才能把入射光 l 恰好镜面反射进观察方向 v</text>
     <text x="56" y="194" fill="#61747A">• 粗糙度映射：将美术 roughness 平方 <tspan font-family="Consolas, monospace">α = r²</tspan> 使感知线性</text>

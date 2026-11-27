@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：C# 高性能零拷贝内存视图：Span&lt;T&gt;（ref struct）、Memory&lt;T&gt; 与 ArrayPool</text>
+
+  <!-- 左栏：Span<T> 与 ref struct -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. Span&lt;T&gt; 统一三类连续内存视图与 ref struct 栈安全限制</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">Span&lt;T&gt; 结构（仅含内部指针 ref T + int Length）：</text>
+    <text x="56" y="133" fill="#17343B">• 统一三类内存：① <tspan font-weight="700">托管数组 T[]</tspan>；② <tspan font-weight="700" fill="#287B73">stackalloc 栈内存</tspan>；</text>
+    <text x="56" y="153" fill="#17343B">  ③ <tspan font-weight="700" fill="#C47743">非托管 Native 内存</tspan>（如 C++ 插件或 Marshal 分配）</text>
+    <text x="56" y="173" fill="#17343B">• <tspan font-weight="700">Slice(start, len) 零拷贝切片</tspan>：仅做指针偏移与长度减法，</text>
+    <text x="56" y="193" fill="#287B73" font-weight="700">  耗时 O(1) 且不分配任何子数组或子字符串（0 GC）</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">为什么 Span&lt;T&gt; 必须声明为 ref struct（仅驻留栈上）：</text>
+    <text x="56" y="252" fill="#17343B">1. <tspan font-weight="700">防栈指针悬空</tspan>：若 Span 指向 stackalloc 栈内存且允许被</text>
+    <text x="56" y="272" fill="#17343B">   装箱到堆上，函数返回销毁栈帧后堆上 Span 将变成野指针</text>
+    <text x="56" y="292" fill="#17343B">2. <tspan font-weight="700">GC 追踪限制</tspan>：内部指针 <tspan font-family="Consolas, monospace">ref T</tspan> 指向数组中间元素，若存</text>
+    <text x="56" y="313" fill="#17343B">   在堆上且发生多线程撕裂写，会导致 GC 无法定位对象头</text>
+  </g>
+
+  <!-- 右栏：Memory<T> 与 ArrayPool -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 跨 await 异步传递的 Memory&lt;T&gt; 与 ArrayPool 数组池</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">为什么 async 方法中不能跨 await 持有 Span&lt;T&gt;：</text>
+    <text x="468" y="133" fill="#17343B">• 跨 <tspan font-family="Consolas, monospace">await</tspan> 的局部变量必须提升为状态机字段并可能上堆，</text>
+    <text x="468" y="153" fill="#17343B">  而编译器严禁 <tspan font-family="Consolas, monospace">ref struct</tspan> 作为普通类/结构体字段上堆！</text>
+    <text x="468" y="173" fill="#287B73" font-weight="700">• 方案：跨 await 异步传输改用普通 struct Memory&lt;T&gt;，</text>
+    <text x="468" y="193" fill="#287B73" font-weight="700">  在同步块内调 memory.Span 转为局部 Span 高速处理</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">ArrayPool&lt;T&gt;.Shared 桶式数组池（消除 LOH 分配）：</text>
+    <text x="468" y="252" fill="#17343B">• .NET 中 ≥ 85KB 的数组直接分配在大对象堆 (LOH)，</text>
+    <text x="468" y="272" fill="#17343B">  且 Unity Boehm GC 下大数组频繁 new 会导致堆只增不减</text>
+    <text x="468" y="292" fill="#17343B">• 通过 <tspan font-family="Consolas, monospace">Rent(minLen)</tspan> 租借 2 的幂次容量桶数组，用完在</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  <tspan font-family="Consolas, monospace">finally</tspan> 中 <tspan font-family="Consolas, monospace">Return(buf)</tspan>（注意：借出长度 ≥ 请求值）</text>
+  </g>
+</svg>

@@ -487,6 +487,7 @@ def select_variant(top, sub, title):
         if ".NET" in title or "平台" in title: return "language"
         if "迭代器" in title: return "iterator"
         if "反射" in title or "委托" in title: return "reflection"
+        if "异步" in title or "async" in title or "UniTask" in title: return "async"
         return "parameters"
     if sub == "Unity":
         if "动画" in title: return "animation"
