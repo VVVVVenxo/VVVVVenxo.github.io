@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="IEEE754浮点数标准格式与浮点加减法五步流程">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D8E0DA" stroke-width="1.5"/>
+  <text x="28" y="34" fill="#17343B" font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="16" font-weight="700">图 2-2 · IEEE 754 浮点数标准格式（32位 float / 64位 double）与加减法五步流程</text>
+  <line x1="28" y1="46" x2="832" y2="46" stroke="#CBD7CF" stroke-width="1.5"/>
+
+  <g font-family="'Microsoft YaHei','Noto Sans SC',sans-serif" font-size="13">
+    <!-- Left Panel: IEEE 754 Format -->
+    <rect x="28" y="64" width="400" height="272" rx="6" fill="#FAFBF8" stroke="#287B73" stroke-width="1.5"/>
+    <text x="228" y="90" fill="#287B73" font-weight="700" text-anchor="middle">1. IEEE 754 单精度 float（32 位）位域布局</text>
+
+    <!-- Bit fields: S (1b), E (8b), M (23b) -->
+    <g text-anchor="middle" font-weight="700">
+      <rect x="46"  y="108" width="54"  height="38" fill="#F4E6D9" stroke="#C47743" stroke-width="1.5"/>
+      <text x="73"  y="132" fill="#C47743">S (1位)</text>
+      <rect x="100" y="108" width="124" height="38" fill="#D8E6E0" stroke="#287B73" stroke-width="1.5"/>
+      <text x="162" y="132" fill="#287B73">阶码 E (8位·移码)</text>
+      <rect x="224" y="108" width="186" height="38" fill="#FAFBF8" stroke="#17343B" stroke-width="1.5"/>
+      <text x="317" y="132" fill="#17343B">尾数 M (23位·隐含 1.)</text>
+    </g>
+
+    <rect x="46" y="156" width="364" height="164" rx="4" fill="#E8ECE9" stroke="#AEBDB7" stroke-width="1.2"/>
+    <text x="58" y="178" fill="#287B73" font-weight="700">规格化真值公式（1 ≤ E ≤ 254，偏置值 Bias = 127）：</text>
+    <text x="228" y="200" fill="#C47743" font-weight="700" text-anchor="middle">真值 V = (-1)^S × (1.M)_2 × 2^(E - 127)</text>
+    <text x="58" y="224" fill="#17343B">• <tspan font-weight="700">64位 double</tspan>：<tspan font-weight="700">1 位 S + 11 位 E（偏置 1023）+ 52 位 M</tspan></text>
+    <text x="58" y="246" fill="#17343B">• <tspan font-weight="700">E=0 且 M=0</tspan>：精确表示机器零 <tspan font-weight="700">±0</tspan></text>
+    <text x="58" y="268" fill="#17343B">• <tspan font-weight="700">E=0 且 M≠0</tspan>：非规格化数 <tspan font-weight="700">(-1)^S × (0.M) × 2^(-126)</tspan></text>
+    <text x="58" y="290" fill="#17343B">• <tspan font-weight="700">E=255 (全1) 且 M=0</tspan>：无穷大 <tspan font-weight="700" fill="#C47743">±∞</tspan></text>
+    <text x="58" y="310" fill="#17343B">• <tspan font-weight="700">E=255 (全1) 且 M≠0</tspan>：非数值 <tspan font-weight="700" fill="#C47743">NaN</tspan>（如 0/0、√-1）</text>
+
+    <!-- Right Panel: 5 Steps of Floating Point Add/Sub -->
+    <rect x="448" y="64" width="384" height="272" rx="6" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.5"/>
+    <text x="640" y="90" fill="#17343B" font-weight="700" text-anchor="middle">2. 浮点数加减运算五步流程与精度陷阱</text>
+
+    <rect x="458" y="106" width="364" height="148" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="470" y="128" fill="#C47743" font-weight="700">① 对阶（铁律：小阶向大阶看齐！）：</text>
+    <text x="470" y="148" fill="#17343B">   小阶尾数右移 ΔE 位，阶码加 ΔE（右移丢低位误差最小）</text>
+    <text x="470" y="170" fill="#287B73" font-weight="700">② 尾数加减：对对阶后的两个定点尾数执行加减运算</text>
+    <text x="470" y="192" fill="#17343B"><tspan font-weight="700">③ 规格化</tspan>：尾数恢复为 <tspan font-weight="700">1.M</tspan>（左规：尾数左移、阶码减 1；</text>
+    <text x="470" y="210" fill="#61747A">   右规：尾数溢出为 1x.xx 时，尾数右移 1 位、阶码加 1）</text>
+    <text x="470" y="230" fill="#17343B"><tspan font-weight="700">④ 舍入</tspan>（0舍1入 / 恒置1 / 偶数舍入） → <tspan font-weight="700">⑤ 判阶码溢出</tspan></text>
+
+    <rect x="462" y="264" width="356" height="56" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="474" y="286" fill="#C47743" font-weight="700">工程陷阱：“大数吃小数”（浮点数加法不满足结合律）</text>
+    <text x="470" y="306" fill="#17343B">当阶差 ΔE &gt; 24 时，小数的尾数在对阶右移中全部移出为 0</text>
+  </g>
+</svg>

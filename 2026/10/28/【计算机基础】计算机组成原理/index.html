@@ -1,0 +1,581 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Astro v5.18.2"><title>【计算机基础】计算机组成原理 | VVVVVenxo 的博客</title><meta name="description" content="基于唐朔飞/袁春风《计算机组成原理》、CSAPP 与 408 统考考点的系统复习笔记：涵盖冯·诺依曼结构与性能公式、定点数补码与 IEEE 754 浮点数运算、SRAM/DRAM 主存与 Cache 三种映射、指令寻址与 RISC、CPU 五段流水线三大冒险以及总线与 I/O 硬件。"><meta name="keywords" content="VVVVVenxo, 游戏客户端开发, Unity, C++, C#, 图形学, 实时渲染, 网络同步, 算法, AI Agent"><meta name="author" content="VVVVVenxo"><meta name="theme-color" content="#f7f5ef" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#201f1c" media="(prefers-color-scheme: dark)"><link rel="canonical" href="https://vvvvvenxo.github.io/2026/10/28/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"><link rel="icon" href="/img/cat.ico"><link rel="alternate" type="application/rss+xml" title="VVVVVenxo 的博客" href="/atom.xml"><meta property="og:type" content="article"><meta property="og:url" content="https://vvvvvenxo.github.io/2026/10/28/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"><meta property="og:title" content="【计算机基础】计算机组成原理 | VVVVVenxo 的博客"><meta property="og:description" content="基于唐朔飞/袁春风《计算机组成原理》、CSAPP 与 408 统考考点的系统复习笔记：涵盖冯·诺依曼结构与性能公式、定点数补码与 IEEE 754 浮点数运算、SRAM/DRAM 主存与 Cache 三种映射、指令寻址与 RISC、CPU 五段流水线三大冒险以及总线与 I/O 硬件。"><meta property="og:image" content="https://vvvvvenxo.github.io/img/covers/gen/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86.png"><script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script><link rel="stylesheet" href="/_astro/index.CgpjNjEc.css"></head> <body> <header class="site-header sticky top-0 z-40 w-full border-b border-[var(--border-color)]"> <div class="container flex h-16 items-center justify-between"> <a href="/" aria-label="VVVVVenxo 的博客，返回首页" class="brand-link text-[var(--text-primary)] transition-colors hover:text-[var(--accent)]"> <span class="brand-mark" style="--brand-logo: url('/logo.svg')" aria-hidden="true"></span> <span class="brand-name">VVVVVenxo</span> <span class="brand-caption">游戏客户端工程手记</span> </a> <nav class="hidden items-center gap-1 md:flex" aria-label="主导航"> <a href="/" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 首页 </a><a href="/blog" aria-current="page" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 分类 </a><a href="/tags" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 标签 </a><a href="/about" class="site-nav-link px-3 py-2 text-sm font-medium transition-colors duration-200 hover:text-[var(--accent)] text-[var(--text-secondary)]"> 关于 </a> </nav> <div class="flex items-center gap-1.5"> <button id="search-btn" type="button" class="header-action" aria-label="搜索 (Ctrl+K)" title="搜索 (Ctrl+K)"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </button> <button id="theme-toggle" type="button" class="header-action" aria-label="切换主题" title="切换明暗主题"> <svg class="sun-icon hidden dark:block" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> <svg class="moon-icon block dark:hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="mobile-menu-btn" type="button" class="header-action md:hidden" aria-label="菜单" aria-controls="mobile-menu" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> </div> </div> <div id="mobile-menu" class="hidden border-t border-[var(--border-subtle)] md:hidden"> <nav class="container py-3" aria-label="移动导航"> <div class="bg-[var(--bg-surface)]"> <a href="/" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 首页 </a><a href="/blog" aria-current="page" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors bg-[var(--bg-muted)] text-[var(--accent)]"> 博客 </a><a href="/categories" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 分类 </a><a href="/tags" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 标签 </a><a href="/about" class="block rounded px-3 py-2.5 text-sm font-semibold transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]"> 关于 </a> </div> </nav> </div> </header> <main class="flex-1">  <div class="post-reading-shell container-wide flex py-10 md:py-14"> <article class="min-w-0 flex-1"> <header class="post-reading-header mb-10 border-b border-[var(--border-color)] pb-8"> <div class="flex flex-wrap items-center gap-2"> <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" class="section-kicker hover:underline"> 计算机基础 </a> <span class="text-xs text-[var(--text-tertiary)]">
+/ 技术笔记 · 计算机基础 </span> </div> <h1 lang="zh-CN" class="mt-4 text-3xl font-bold tracking-tight text-balance text-[var(--text-primary)] md:text-5xl"> 【计算机基础】计算机组成原理 </h1> <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-tertiary)]"> <time datetime="2026-10-28">2026年10月28日</time> <span>·</span> <span>17 分钟阅读</span> <span>·</span> <span>约 5,442 字</span> </div> <div class="mt-5 flex flex-wrap gap-2"> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" class="tag"> 计算机组成原理 </a><a href="/tags/%E6%9C%BA%E5%99%A8%E6%95%B0%E4%B8%8EIEEE754/" class="tag"> 机器数与IEEE754 </a><a href="/tags/Cache%E6%98%A0%E5%B0%84/" class="tag"> Cache映射 </a><a href="/tags/%E6%8C%87%E4%BB%A4%E6%B5%81%E6%B0%B4%E7%BA%BF/" class="tag"> 指令流水线 </a><a href="/tags/CPU%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF/" class="tag"> CPU数据通路 </a> </div> </header> <div class="prose max-w-none" lang="zh-CN"><h2 id="第一章-计算机系统概论与性能指标"><a aria-hidden="true" tabindex="-1" href="#第一章-计算机系统概论与性能指标"><span class="icon icon-link"></span></a>第一章 计算机系统概论与性能指标</h2>
+<h3 id="11-冯诺依曼体系结构与硬件五大部件"><a aria-hidden="true" tabindex="-1" href="#11-冯诺依曼体系结构与硬件五大部件"><span class="icon icon-link"></span></a>1.1 冯·诺依曼体系结构与硬件五大部件</h3>
+<ol>
+<li><strong>冯·诺依曼计算机的五大核心特征</strong><ol>
+<li>计算机硬件系统由<strong>运算器、控制器、存储器、输入设备、输出设备</strong>五大部件组成；</li>
+<li>核心思想是<strong>“存储程序（Stored-Program）”<strong>：将事先编制好的</strong>指令和数据以同等地位存放在同一个主存储器中</strong>，两者在形式上均为二进制代码（CPU 完全根据<strong>访问主存所处的指令周期阶段</strong>来区分取出的是指令还是数据：<strong>取指周期</strong>取出的必为指令送入 <code>IR</code>，<strong>执行周期</strong>取出的必为数据送入运算器）；</li>
+<li>指令由<strong>操作码（指明操作性质）<strong>和</strong>地址码（指明操作数位置）</strong>两部分组成；</li>
+<li>指令在主存中按顺序存放，默认按 <code>PC + &quot;1&quot;</code> 顺序执行，遇到转移指令时改变 <code>PC</code> 值；</li>
+<li>早期冯·诺依曼机以<strong>运算器</strong>为中心（I/O 与主存交换数据必须经过运算器中转），<strong>现代计算机已演进为以“存储器”为中心</strong>（运算器与控制器集成为 <strong>CPU</strong>，I/O 设备尽可能绕过 CPU 直接与主存交换数据，如 DMA）。</li>
+</ol>
+</li>
+<li><strong>CPU 与主存储器内部的六大关键寄存器</strong><ul>
+<li><strong>主存接口寄存器（现多集成于 CPU 内部存储控制器中，对汇编程序员完全透明不可见）</strong>：<ul>
+<li><strong>MAR（Memory Address Register，存储器地址寄存器）</strong>：存放欲访问的主存单元地址。<strong><code>MAR</code> 的位数严格等于地址码长度，直接决定了主存最大可寻址的存储单元个数（<code>2^MAR</code>）</strong>。</li>
+<li><strong>MDR（Memory Data Register，存储器数据寄存器）</strong>：暂存要从主存读出或向主存写入的一条指令或一个数据字。<strong><code>MDR</code> 的位数严格等于存储字长</strong>。</li>
+</ul>
+</li>
+<li><strong>控制器核心寄存器</strong>：<ul>
+<li><strong>PC（Program Counter，程序计数器，对汇编程序员可见）</strong>：存放<strong>下一条欲执行指令的主存地址</strong>，具有自动加 <code>&quot;1&quot;</code>（严格来说是加上一条指令占用的字节数）的计数功能，其位数与 <code>MAR</code> 相等。</li>
+<li><strong>IR（Instruction Register，指令寄存器，对程序员完全透明不可见）</strong>：存放<strong>当前正在执行的那条指令</strong>，其操作码字段送往译码器（ID）生成控制信号。</li>
+</ul>
+</li>
+<li><strong>运算器核心部件</strong>：<ul>
+<li><strong>ALU（算术逻辑单元，组合逻辑电路）</strong>、<strong>ACC（累加器）</strong>、<strong>MQ（乘商寄存器）</strong>、<strong>X（通用操作数寄存器）<strong>与</strong>PSW（程序状态字 / 标志寄存器，对程序员可见）</strong>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><img width="860" height="360" src="/img/posts/co-ch1-von-neumann.svg" alt="冯诺依曼计算机硬件结构与CPU性能公式" loading="lazy" decoding="async"></p>
+<hr>
+<h3 id="12-计算机系统的多级层次结构与定量性能指标"><a aria-hidden="true" tabindex="-1" href="#12-计算机系统的多级层次结构与定量性能指标"><span class="icon icon-link"></span></a>1.2 计算机系统的多级层次结构与定量性能指标</h3>
+<ol>
+<li><strong>计算机系统的五级层次结构（自底向上）</strong><ul>
+<li><strong>M0 微程序机器级</strong>（硬件直接执行微指令）→ <strong>M1 传统机器语言级</strong>（由微程序解释执行二进制机器指令）→ <strong>M2 操作系统机器级</strong>（向上提供系统调用与虚拟内存）→ <strong>M3 汇编语言机器级</strong>（由汇编器翻译为机器语言）→ <strong>M4 高级语言机器级</strong>（由编译器翻译为汇编或机器码）。</li>
+<li><strong>软硬件逻辑等价的分界线</strong>：在 M1 与 M2 之间，定义为<strong>指令集体系结构（ISA，Instruction Set Architecture）</strong>——它是软件与硬件之间唯一的契约接口（规定了指令格式、寻址方式、数据类型以及<strong>对程序员可见的寄存器集合</strong>）。</li>
+</ul>
+</li>
+<li><strong>字长与存储容量概念辨析</strong><ul>
+<li><strong>机器字长</strong>：CPU 内部整数运算器（ALU）和通用寄存器<strong>一次能处理的二进制数据位数</strong>（如 32 位或 64 位，决定了整数表示范围与运算精度）。</li>
+<li><strong>指令字长</strong>：一条机器指令所包含的二进制代码位数。</li>
+<li><strong>存储字长</strong>：一个主存存储单元所包含的二进制位数（现代计算机通常<strong>按字节 <code>1B = 8 bit</code> 编址</strong>，存储字长常为字节的整数倍）。</li>
+</ul>
+</li>
+<li><strong>CPU 核心性能定量计算公式（408 必考公式）</strong><ul>
+<li><strong>时钟周期 <code>T</code> 与主频（CPU 时钟频率）<code>f</code> 互为倒数</strong>：
+<strong><code>T = 1 / f</code></strong>（例如主频 <code>f = 2 GHz = 2 × 10^9 Hz</code>，则时钟周期 <code>T = 0.5 ns</code>；注意计算机性能领域的 <strong><code>G / M / K</code> 在表示频率和速率时均为 <code>10^9 / 10^6 / 10^3</code></strong>，在表示存储容量时为 <strong><code>2^30 / 2^20 / 2^10</code></strong>）。</li>
+<li><strong>CPI（Clock Cycles Per Instruction，执行一条指令所需的平均时钟周期数）</strong>：
+若某程序共包含 <code>n</code> 类指令，第 <code>i</code> 类指令的 <code>CPI</code> 为 <code>CPI_i</code>、占总指令条数的比例为 <code>Pi</code>，则加权平均 <code>CPI</code> 为：
+<strong><code>CPI = Σ (CPI_i × Pi) = 程序总时钟周期数 / 指令总条数 I</code></strong></li>
+<li><strong>CPU 执行时间（CPU Time，衡量性能的最根本指标）</strong>：
+<strong><code>CPU 执行时间 = 指令总条数 I × CPI × 时钟周期 T = (I × CPI) / f</code></strong>
+（铁律：程序的 CPU 执行时间由<strong>指令条数 <code>I</code>、每条指令平均周期数 <code>CPI</code>、时钟周期 <code>T</code></strong> 三者共同乘积决定；单看主频 <code>f</code> 高低或 MIPS 高低均不能片面判定两台不同架构计算机的快慢）。</li>
+<li><strong>MIPS（Million Instructions Per Second，每秒执行百万条指令数）与 FLOPS（每秒浮点运算次数）</strong>：
+<strong><code>MIPS = 指令总条数 I / (CPU 执行时间 × 10^6) = f / (CPI × 10^6)</code></strong></li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="第二章-数据的机器表示与运算器alu"><a aria-hidden="true" tabindex="-1" href="#第二章-数据的机器表示与运算器alu"><span class="icon icon-link"></span></a>第二章 数据的机器表示与运算器（ALU）</h2>
+<h3 id="21-定点数的编码表示原码反码补码移码"><a aria-hidden="true" tabindex="-1" href="#21-定点数的编码表示原码反码补码移码"><span class="icon icon-link"></span></a>2.1 定点数的编码表示（原码、反码、补码、移码）</h3>
+<p>设机器字长为 <code>n</code> 位（含 1 位最高符号位 + <code>n - 1</code> 位数值位，以下以 <strong>8 位定点整数</strong>为例）：</p>
+<ol>
+<li><strong>四种机器码的定义、范围与零的表示对比</strong></li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="left">编码类型</th>
+<th align="left">正数（<code>X ≥ 0</code>）规则</th>
+<th align="left">负数（<code>X &lt; 0</code>）规则</th>
+<th align="center">8 位定点整数表示范围</th>
+<th align="left">机器零 <code>0</code> 的编码唯一性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>1. 原码</strong></td>
+<td align="left">符号位为 <code>0</code>，数值位照抄</td>
+<td align="left">符号位为 <code>1</code>，数值位取绝对值 <code>|X|</code></td>
+<td align="center"><code>-127 ～ +127</code><br><code>-(2^7 - 1) ～ +(2^7 - 1)</code></td>
+<td align="left"><strong>不唯一</strong>（有两个零：<code>[+0]_原 = 0000 0000</code>，<code>[-0]_原 = 1000 0000</code>）</td>
+</tr>
+<tr>
+<td align="left"><strong>2. 反码</strong></td>
+<td align="left">与原码完全相同</td>
+<td align="left">符号位为 <code>1</code>，其余<strong>数值位在原码基础上按位取反</strong></td>
+<td align="center"><code>-127 ～ +127</code></td>
+<td align="left"><strong>不唯一</strong>（<code>[+0]_反 = 0000 0000</code>，<code>[-0]_反 = 1111 1111</code>）</td>
+</tr>
+<tr>
+<td align="left"><strong>3. 补码</strong></td>
+<td align="left">与原码完全相同</td>
+<td align="left">符号位为 <code>1</code>，<strong>数值位在原码基础上按位取反、末位加 1</strong>（模 <code>2^n</code>）</td>
+<td align="center"><strong><code>-128 ～ +127</code></strong><br><strong><code>-2^7 ～ +(2^7 - 1)</code></strong></td>
+<td align="left"><strong>唯一</strong>（<code>[+0]_补 = [-0]_补 = 0000 0000</code>；原 <code>[-0]_原</code> 的编码 <strong><code>1000 0000</code> 被规定用来表示最小负数 <code>-128</code></strong>）</td>
+</tr>
+<tr>
+<td align="left"><strong>4. 移码</strong><br>（偏置码）</td>
+<td align="left">真值 <code>X</code> 加上偏置常数 <code>2^(n-1)</code>（即 <strong><code>[X]_移 = 2^(n-1) + X</code></strong>）</td>
+<td align="left"><strong>将补码的最高符号位取反（0 变 1、1 变 0），其余数值位与补码完全一致</strong></td>
+<td align="center"><strong><code>-128 ～ +127</code></strong><br>（仅用于定点整数阶码）</td>
+<td align="left"><strong>唯一</strong>（<code>[0]_移 = 1000 0000</code>；最小真值 <code>-128</code> 对应全 0 <code>0000 0000</code>，最大真值 <code>+127</code> 对应全 1 <code>1111 1111</code>）</td>
+</tr>
+</tbody></table>
+<p><img width="860" height="360" src="/img/posts/co-ch2-integer-alu.svg" alt="定点数编码与ALU四大标志位" loading="lazy" decoding="async"></p>
+<ol start="2">
+<li><strong>为什么现代计算机整数全部采用补码，而浮点数阶码采用移码</strong><ul>
+<li><strong>采用补码的两大原因</strong>：<ol>
+<li><strong>使符号位能与数值位一起直接参与加减运算，并将减法彻底转化为加法</strong>（<code>[A - B]_补 = [A]_补 + [-B]_补</code>），使 CPU 内部<strong>无需专门设计减法器电路</strong>，仅靠一个加法器即可完成所有有符号/无符号加减法；</li>
+<li>消除了 <code>+0</code> 和 <code>-0</code> 的重复编码，比原码多表示一个最小负数 <strong><code>-2^(n-1)</code></strong>（8 位为 <code>-128</code>，补码 <code>1000 0000B</code>；32 位 <code>int</code> 为 <code>-2147483648</code>，十六进制 <strong><code>0x80000000</code></strong>，注意对最小负数取绝对值或取负 <code>-(-2147483648)</code> 会因超出最大正数 <code>+2147483647</code> 而直接溢出变回它自己）。</li>
+</ol>
+</li>
+<li><strong>手算原码 ⇔ 补码及求 <code>[-X]_补</code> 的秒杀捷径</strong>：<ul>
+<li><strong>负数原码 ⇔ 负数补码</strong>：保持最高符号位 <code>1</code> 不变，从最右边（最低位）往左扫描找到<strong>第一个 <code>1</code></strong>——<strong>这个 <code>1</code> 及其右边的所有 <code>0</code> 原样保持不变，这个 <code>1</code> 左边的所有数值位（不含符号位）全部按位取反</strong>。</li>
+<li><strong>已知 <code>[X]_补</code> 求 <code>[-X]_补</code>（补码求相反数）</strong>：<strong>连同最高符号位在内，全体按位取反，末位加 1</strong>（或从右往左找到第一个 <code>1</code>，该 <code>1</code> 及其右侧不变，<strong>该 <code>1</code> 左侧连同符号位在内全部按位取反</strong>）。</li>
+</ul>
+</li>
+<li><strong>浮点数阶码采用移码的原因</strong>：移码将真值区间整体平移映射为非负无符号数，<strong>真值越大其移码的二进制无符号值就严格越大</strong>，因此硬件在对两个浮点数比较大小或对阶时，只需直接按无符号数比较两个阶码的二进制位即可。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="22-定点数的移位扩展加减运算与溢出判定"><a aria-hidden="true" tabindex="-1" href="#22-定点数的移位扩展加减运算与溢出判定"><span class="icon icon-link"></span></a>2.2 定点数的移位、扩展、加减运算与溢出判定</h3>
+<ol>
+<li><strong>算术移位（有符号数）与逻辑移位（无符号数）</strong><ul>
+<li><strong>逻辑移位（针对无符号数 <code>unsigned</code>）</strong>：无论左移还是右移，移出位丢弃，<strong>空出的位一律补 <code>0</code></strong>。</li>
+<li><strong>算术移位（针对有符号补码数 <code>int</code>，左移 1 位相当于乘 2，右移 1 位相当于除以 2 向下取整）</strong>：<ul>
+<li><strong>补码算术左移</strong>：低位<strong>补 <code>0</code></strong>（若移出的最高数值位不等于原符号位，则发生左移溢出）；</li>
+<li><strong>补码算术右移</strong>：高位<strong>补符号位（正数补 <code>0</code>，负数补 <code>1</code>）</strong>，以保持负数右移后符号不变。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>数据位宽扩展：零扩展（Zero Extension）与符号扩展（Sign Extension）</strong>
+当把短字长数据（如 8 位 <code>char</code>）赋值给长字长变量（如 32 位 <code>int</code>）时：<ul>
+<li><strong>无符号数采用“零扩展”</strong>：高 24 位<strong>全部填 <code>0</code></strong>；</li>
+<li><strong>有符号补码数采用“符号扩展”</strong>：高 24 位<strong>全部填充原数的符号位</strong>（正数全填 <code>0</code>，负数全填 <code>1</code> / <code>0xFF</code>；例如 8 位 <code>-1</code> 的补码 <code>0xFF</code> 符号扩展为 32 位后为 <code>0xFFFFFFFF</code>）。</li>
+<li><strong>C 语言有符号与无符号混合运算陷阱（必考）</strong>：在 C/C++ 中，当同一表达式里同时包含<strong>有符号数（<code>int</code>）和无符号数（<code>unsigned int</code>）<strong>时，编译器会</strong>隐式将有符号数强制转换为无符号数</strong>（底层二进制位完全不变，仅改变解释方式）。例如比较 <code>-1 &lt; 0U</code> 时，<code>-1</code>（<code>0xFFFFFFFF</code>）被当成无符号最大值 <code>4294967295U</code>，导致 <strong><code>-1 &lt; 0U</code> 结果为假（<code>false</code>）</strong>！</li>
+</ul>
+</li>
+<li><strong>补码加减运算与溢出判定（Overflow）的三种硬件方法</strong><ul>
+<li><strong>补码加减法公式</strong>：
+<code>[A + B]_补 = [A]_补 + [B]_补 (mod 2^n)</code>
+<code>[A - B]_补 = [A]_补 + [-B]_补 (mod 2^n)</code></li>
+<li><strong>有符号补码溢出的三种等价判定法则（仅同号相加或异号相减才可能溢出）</strong>：<ol>
+<li><strong>一位符号位判别法</strong>：设两操作数符号位为 <code>As, Bs</code>，运算结果符号位为 <code>Ss</code>，当“<strong>两个正数相加结果为负</strong>”或“<strong>两个负数相加结果为正</strong>”时溢出：
+<strong><code>V = As · Bs · (~Ss) + (~As) · (~Bs) · Ss</code></strong></li>
+<li><strong>双符号位判别法（变形补码 / 模 4 补码）</strong>：用两位符号位 <code>S1 S2</code> 参与运算（正数为 <code>00</code>，负数为 <code>11</code>），运算结果的<strong>最高位 <code>S1</code> 永远代表真正的正确符号</strong>：<ul>
+<li><code>S1 S2 == 00</code>：结果为正，无溢出；</li>
+<li><code>S1 S2 == 11</code>：结果为负，无溢出；</li>
+<li><strong><code>S1 S2 == 01</code></strong>：<strong>正溢出（上溢）</strong>；</li>
+<li><strong><code>S1 S2 == 10</code></strong>：<strong>负溢出（下溢）</strong>（即 <strong><code>V = S1 ⊕ S2 == 1</code></strong> 时发生溢出）。</li>
+</ul>
+</li>
+<li><strong>进位位异或判别法（硬件 ALU 直接采用）</strong>：设符号位产生的进位为 <code>Cn</code>，最高数值位向符号位产生的进位为 <code>Cn-1</code>，当两者不一致（一个有进位、另一个无进位）时必发生有符号溢出：
+<strong><code>OF = Cn ⊕ Cn-1</code></strong></li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="23-ieee-754-浮点数标准与运算精度陷阱"><a aria-hidden="true" tabindex="-1" href="#23-ieee-754-浮点数标准与运算精度陷阱"><span class="icon icon-link"></span></a>2.3 IEEE 754 浮点数标准与运算精度陷阱</h3>
+<ol>
+<li><strong>IEEE 754 浮点数的位域格式与真值转换（必考手算）</strong>
+浮点数由<strong>数符 <code>S</code>（1 位）</strong>、<strong>阶码 <code>E</code>（移码表示）</strong>、<strong>尾数 <code>M</code>（原码表示，规格化时最高有效位 <code>1.</code> 默认隐含不存，以多赚 1 位精度）</strong>三部分组成：</li>
+</ol>
+<p><img width="860" height="360" src="/img/posts/co-ch2-ieee754.svg" alt="IEEE754浮点数标准格式与加减法五步流程" loading="lazy" decoding="async"></p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="center">总位数</th>
+<th align="center">符号位 <code>S</code></th>
+<th align="center">阶码 <code>E</code> 位数与偏置值 <code>Bias</code></th>
+<th align="center">尾数 <code>M</code> 位数</th>
+<th align="left">规格化数（<code>1 ≤ E ≤ 全1-1</code>）的真值计算公式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>单精度 <code>float</code></strong></td>
+<td align="center">32 位</td>
+<td align="center">1 位</td>
+<td align="center"><strong>8 位</strong>（偏置值 <strong><code>Bias = 127</code></strong>，注意非标准移码 128）</td>
+<td align="center"><strong>23 位</strong>（实际精度 24 位）</td>
+<td align="left"><strong><code>(-1)^S × (1.M)_2 × 2^(E - 127)</code></strong></td>
+</tr>
+<tr>
+<td align="left"><strong>双精度 <code>double</code></strong></td>
+<td align="center">64 位</td>
+<td align="center">1 位</td>
+<td align="center"><strong>11 位</strong>（偏置值 <strong><code>Bias = 1023</code></strong>）</td>
+<td align="center"><strong>52 位</strong>（实际精度 53 位）</td>
+<td align="left"><strong><code>(-1)^S × (1.M)_2 × 2^(E - 1023)</code></strong></td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>IEEE 754 的四类特殊阶码状态（以 32 位 <code>float</code> 为例）</strong>：<ol>
+<li><strong><code>1 ≤ E ≤ 254</code>（正常规格化数）</strong>：阶码真值范围 <code>-126 ～ +127</code>，尾数隐含整数位 <code>1.</code>（最小正规格化数为 <code>1.0 × 2^-126</code>，最大正规格化数为 <code>1.11...1 × 2^127 ≈ 3.4 × 10^38</code>）。</li>
+<li><strong><code>E == 0</code> 且 <code>M == 0</code></strong>：精确表示<strong>机器零 <code>±0</code></strong>。</li>
+<li><strong><code>E == 0</code> 且 <code>M ≠ 0</code>（非规格化数）</strong>：用于平滑逼近 0（逐渐下溢），此时<strong>阶码真值固定为 <code>-126</code>（而非 <code>-127</code>），且尾数隐含整数位变为 <code>0.</code></strong>，真值为 <strong><code>(-1)^S × (0.M)_2 × 2^-126</code></strong>。</li>
+<li><strong><code>E == 255</code>（阶码全 1）</strong>：若 <strong><code>M == 0</code></strong> 表示<strong>正负无穷大 <code>±∞</code></strong>（如浮点数除以 <code>0.0</code> 不会崩溃，而是产生 <code>±Infinity</code>）；若 <strong><code>M ≠ 0</code></strong> 表示<strong>非数值 <code>NaN</code>（Not a Number，如 <code>0.0 / 0.0</code> 或负数开平方，且 <code>NaN != NaN</code> 恒成立）</strong>。</li>
+</ol>
+</li>
+</ul>
+<ol start="2">
+<li><strong>浮点数加减法运算的五步标准流程</strong><ol>
+<li><strong>对阶（Align Exponents）</strong>：求两数阶差 <code>ΔE = Ex - Ey</code>。<strong>铁律：必须“小阶向大阶看齐”</strong>——将阶码较小的那个数的尾数<strong>向右移 <code>|ΔE|</code> 位</strong>，每右移 1 位其阶码加 1，直到两数阶码相等（若反过来大阶向小阶左移，会把尾数最高有效位 <code>1</code> 直接移丢导致灾难性数量级错误）。</li>
+<li><strong>尾数加减</strong>：对对阶后的两个定点尾数（记得补回隐含的最高位 <code>1.</code>）执行定点加减运算。</li>
+<li><strong>规格化（Normalization）</strong>：<ul>
+<li><strong>右规</strong>：若尾数相加后绝对值出现 <code>10.xxx</code> 或 <code>11.xxx</code>（即尾数溢出 &gt; 1），则需将<strong>尾数右移 1 位、阶码加 1</strong>（右规最多只需 1 次）；</li>
+<li><strong>左规</strong>：若尾数相减后出现 <code>0.00...1xx</code>（最高有效位不是 1），则需将<strong>尾数连续左移 <code>k</code> 位、阶码减 <code>k</code></strong>，直至恢复为 <code>1.M</code> 形式。</li>
+</ul>
+</li>
+<li><strong>舍入（Rounding）</strong>：为减少对阶右移和右规时低位移出造成的精度损失，在尾数末端设置保护位/附加位，常用舍入策略包括：<strong>就近舍入（0 舍 1 入 / 偶数舍入，IEEE 754 默认）</strong>、恒置 1 法、截断法（注意舍入加 1 后可能导致尾数再次溢出，需补做一次右规）。</li>
+<li><strong>判溢出（仅看阶码！）</strong>：<strong>浮点数的溢出完全由“阶码”是否超出最大/最小范围决定</strong>——若<strong>阶码上溢（&gt; 最大阶码 +127）</strong>，则发生浮点正/负<strong>溢出异常（记为 <code>±∞</code>）</strong>；若<strong>阶码下溢（&lt; 最小阶码 -126）</strong>，则按<strong>机器零 <code>0</code></strong> 处理，不报错。</li>
+</ol>
+</li>
+<li><strong>游戏与工程开发中的三大浮点数陷阱</strong><ul>
+<li><strong>为什么 <code>0.1 + 0.2 != 0.3</code></strong>：十进制的 <code>0.1</code> 转换为二进制小数是无限循环小数 <code>0.0001100110011...B</code>，受限于 23/52 位尾数必须截断舍入，因此绝不能直接用 <code>a == b</code> 判断两个浮点数相等，必须用 <strong><code>fabs(a - b) &lt; EPSILON</code></strong>。</li>
+<li><strong>大数吃小数（浮点加法不满足结合律 <code>(a + b) + c != a + (b + c)</code>）</strong>：当一个极大的浮点数（如 <code>10^8</code>）加上一个极小的浮点数（如 <code>1.0</code>）时，两数阶差超过 24 位，小数的尾数在第一步“对阶右移”中全部移出有效位变成 <code>0</code>，导致连加几百万次 <code>1.0</code> 结果依然卡在原地（解决方案：<strong>Kahan 求和算法</strong>或用双精度 <code>double</code> / 定点数累加）。</li>
+<li><strong>类型强制转换精度损失（<code>int</code> ↔ <code>float</code> ↔ <code>double</code>）</strong>：<ul>
+<li><code>int</code>（32 位有效位）转 <code>float</code>（仅 24 位有效尾数）：<strong>不会溢出，但当 <code>int</code> 绝对值 <code>&gt; 2^24 (16,777,216)</code> 时会丢失低位有效数字精度</strong>；</li>
+<li><code>int</code> 或 <code>float</code> 转 <code>double</code>（53 位有效尾数，阶码 11 位）：<strong>既不会溢出，也绝对不会丢失任何精度</strong>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="24-算术逻辑单元alu先行进位加法器与四大标志位"><a aria-hidden="true" tabindex="-1" href="#24-算术逻辑单元alu先行进位加法器与四大标志位"><span class="icon icon-link"></span></a>2.4 算术逻辑单元（ALU）：先行进位加法器与四大标志位</h3>
+<ol>
+<li><strong>一位全加器（FA）与串行 / 先行进位加法器</strong><ul>
+<li><strong>一位全加器（Full Adder）</strong>：输入本位加数 <code>Ai</code>、<code>Bi</code> 与低位进位 <code>Ci-1</code>，输出本位和 <code>Si</code> 与向高位的进位 <code>Ci</code>：<ul>
+<li><strong>和表达式</strong>：<strong><code>Si = Ai ⊕ Bi ⊕ Ci-1</code></strong></li>
+<li><strong>进位表达式</strong>：<strong><code>Ci = Ai · Bi + (Ai ⊕ Bi) · Ci-1</code></strong></li>
+</ul>
+</li>
+<li><strong>定义两个辅助逻辑函数</strong>：<ul>
+<li><strong>进位生成函数（本地进位）<code>Gi = Ai · Bi</code></strong>（只要 <code>Ai</code> 和 <code>Bi</code> 同为 1，无论低位有无进位，本位必产生进位）；</li>
+<li><strong>进位传递函数 <code>Pi = Ai ⊕ Bi</code></strong>（当 <code>Ai</code> 和 <code>Bi</code> 中恰有一个为 1 时，可将低位进位 <code>Ci-1</code> 传递到高位），则进位公式简化为：<strong><code>Ci = Gi + Pi · Ci-1</code></strong>。</li>
+</ul>
+</li>
+<li><strong>串行进位（行波进位）vs 先行进位（超前进位 CLA）</strong>：<ul>
+<li><strong>串行进位加法器</strong>：高位的进位必须苦等低位一级一级逐位算出传递上来，总延迟与位数 <code>n</code> 成正比（<code>2n</code> 级门延迟），速度极慢。</li>
+<li><strong>先行进位加法器（Carry-Lookahead Adder，CLA）</strong>：将 <code>Ci = Gi + Pi · Ci-1</code> 递归展开，使每一位进位 <code>C1, C2, C3, C4</code> <strong>仅由各输入位 <code>Ai, Bi</code>（即 <code>Gi, Pi</code>）和初始进位 <code>C0</code> 直接并行算出</strong>，无需等待低位进位逐级传递，大幅缩短加法器门延迟（4 位 CLA 组内并行，多组间可采用组内先行、组间先行两级 CLA）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>ALU 状态标志寄存器的四大标志位（<code>OF / CF / ZF / SF</code> 必背区分）</strong>
+ALU 硬件在执行一次加/减法（设执行 <code>A - B</code>，减法控制信号 <code>Sub = 1</code>，加法 <code>Sub = 0</code>，最高位进位输出为 <code>Cout</code>）时，<strong>并不知道操作数是有符号数还是无符号数</strong>，而是<strong>同时生成全部四个标志位</strong>，交给后续的条件跳转指令（如无符号跳转 <code>JA/JB</code> 或有符号跳转 <code>JG/JL</code>）按需读取：<ol>
+<li><strong><code>OF</code>（Overflow Flag，溢出标志）</strong>：<strong>仅对“有符号数（补码）”运算有意义</strong>！<code>OF = Cn ⊕ Cn-1</code>（<code>OF = 1</code> 表示有符号运算结果超出 <code>[-2^(n-1), 2^(n-1)-1]</code> 范围溢出；无符号运算完全忽略 <code>OF</code>）。</li>
+<li><strong><code>CF</code>（Carry/Borrow Flag，进位/借位标志）</strong>：<strong>仅对“无符号数”运算有意义</strong>！硬件公式为 <strong><code>CF = Sub ⊕ Cout</code></strong>（加法时 <code>Sub = 0</code>，<code>CF = Cout == 1</code> 表示无符号加法进位溢出；减法时 <code>Sub = 1</code>，<code>CF = ~Cout == 1</code> 表示无符号减法不够减产生<strong>借位</strong>，即无符号 <code>A &lt; B</code>）。</li>
+<li><strong><code>ZF</code>（Zero Flag，零标志）</strong>：当运算结果的<strong>所有二进制位全为 <code>0</code></strong> 时，<code>ZF = 1</code>；否则 <code>ZF = 0</code>（对有符号和无符号数均适用）。</li>
+<li><strong><code>SF</code>（Sign Flag，符号标志）</strong>：<strong>仅对“有符号数”有意义</strong>！直接等于运算结果的<strong>最高位（符号位）</strong>（<code>SF = 1</code> 表示结果为负，<code>SF = 0</code> 表示结果为非负）。</li>
+</ol>
+<ul>
+<li><strong>有符号数 <code>A</code> 与 <code>B</code> 比较大小（执行 <code>CMP A, B</code>，即计算 <code>A - B</code>）的硬件判定逻辑</strong>：<ul>
+<li>若无溢出（<code>OF == 0</code>），则 <code>SF == 1</code>（结果为负）说明 <code>A &lt; B</code>；</li>
+<li>若发生了溢出（<code>OF == 1</code>），则结果的符号位被翻转，此时 <code>SF == 0</code>（正数减负数正溢出得负数的反面：负数减正数负溢出得正数）反而说明 <code>A &lt; B</code>；</li>
+<li>综上所述，<strong>有符号数 <code>A &lt; B</code> 的充要条件是：<code>SF ⊕ OF == 1</code></strong>（而<strong>无符号数 <code>A &lt; B</code> 的充要条件直接是：<code>CF == 1</code></strong>）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="第三章-存储系统主存与高速缓冲存储器-cache待更新"><a aria-hidden="true" tabindex="-1" href="#第三章-存储系统主存与高速缓冲存储器-cache待更新"><span class="icon icon-link"></span></a>第三章 存储系统（主存与高速缓冲存储器 Cache）（待更新）</h2>
+<ul>
+<li><strong>3.1 半导体主存（SRAM vs DRAM）、容量扩展与大小端字节序</strong>：DRAM 三种刷新、字位扩展、多体低位交叉、大端/小端与结构体内存对齐。</li>
+<li><strong>3.2 高速缓冲存储器（Cache）与三种地址映射</strong>：直接映射、全相联映射、组相联映射的主存物理地址拆分与 Cache 总容量计算。</li>
+<li><strong>3.3 Cache 替换算法、写策略与伪共享（False Sharing）</strong>：LRU、全写法（Write-Through）vs 写回法（Write-Back）、Cache Line 伪共享。</li>
+</ul>
+<hr>
+<h2 id="第四章-指令系统isa待更新"><a aria-hidden="true" tabindex="-1" href="#第四章-指令系统isa待更新"><span class="icon icon-link"></span></a>第四章 指令系统（ISA）（待更新）</h2>
+<ul>
+<li><strong>4.1 指令格式、扩展操作码与数据寻址方式</strong>：定长/变长扩展操作码、立即/直接/间接/寄存器/基址/变址/相对寻址 <code>EA = (PC) + A</code>。</li>
+<li><strong>4.2 CISC（复杂指令集）与 RISC（精简指令集）对比</strong>：x86 vs ARM/RISC-V 核心架构特征对照。</li>
+</ul>
+<hr>
+<h2 id="第五章-中央处理器cpu与指令流水线待更新"><a aria-hidden="true" tabindex="-1" href="#第五章-中央处理器cpu与指令流水线待更新"><span class="icon icon-link"></span></a>第五章 中央处理器（CPU）与指令流水线（待更新）</h2>
+<ul>
+<li><strong>5.1 CPU 数据通路与控制器设计</strong>：指令周期四阶段、硬布线控制器 vs 微程序控制器（水平型/垂直型微指令与字段直接编码）。</li>
+<li><strong>5.2 经典五段指令流水线与三大冒险（Hazards）</strong>：IF/ID/EX/MEM/WB、结构冒险、数据冒险（旁路转发 Forwarding 与 Load-Use 停顿）、控制冒险（分支预测）。</li>
+</ul>
+<hr>
+<h2 id="第六章-总线与输入输出io系统硬件待更新"><a aria-hidden="true" tabindex="-1" href="#第六章-总线与输入输出io系统硬件待更新"><span class="icon icon-link"></span></a>第六章 总线与输入/输出（I/O）系统硬件（待更新）</h2>
+<ul>
+<li><strong>6.1 总线分类、带宽计算与定时通信</strong>：系统三总线、总线带宽公式、同步定时 vs 异步定时（不互锁/半互锁/全互锁）。</li>
+<li><strong>6.2 I/O 接口编址、多重中断屏蔽字与 DMA 访存冲突</strong>：统一编址 vs 独立编址、中断屏蔽字优先级修改、DMA 周期挪用（窃取）。</li>
+</ul>
+</div> <!-- Prev / Next Flat Navigation --> <nav class="mt-16 grid grid-cols-1 gap-6 border-t border-[var(--border-color)] pt-8 md:grid-cols-2" aria-label="上下篇文章导航"> <div>  </div> <div class="md:text-right"> <a href="/2026/10/27/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E3%80%91%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="group block rounded border border-transparent p-2 -m-2 transition-colors hover:border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"> <span class="text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">
+旧一篇 →
+</span> <p class="mt-1.5 font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]"> 【计算机基础】操作系统 </p> </a> </div> </nav> <!-- Giscus Comments --> <section class="mt-14 border-t border-[var(--border-subtle)] pt-8" aria-label="评论区"> <div class="mb-5 flex items-baseline gap-3"> <h2 class="text-lg font-semibold text-[var(--text-primary)]">讨论与评论</h2> <span class="text-xs text-[var(--text-tertiary)]">由 GitHub Discussions 驱动</span> </div> <div id="giscus-container"></div> </section> </article> <!-- Mobile TOC Trigger & Drawer -->  <button id="toc-toggle" class="toc-trigger fixed right-6 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded transition-colors hover:bg-[var(--accent-hover)] lg:hidden" aria-label="目录" title="文章目录"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="8" y1="6" x2="21" y2="6"></line> <line x1="8" y1="12" x2="21" y2="12"></line> <line x1="8" y1="18" x2="21" y2="18"></line> <line x1="3" y1="6" x2="3.01" y2="6"></line> <line x1="3" y1="12" x2="3.01" y2="12"></line> <line x1="3" y1="18" x2="3.01" y2="18"></line> </svg> </button> <div id="toc-mobile-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-xs lg:hidden"></div> <nav id="toc-mobile" aria-label="移动端目录" class="fixed right-0 bottom-0 left-0 z-50 max-h-[64vh] translate-y-full overflow-hidden rounded-t-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl transition-transform duration-300 lg:hidden"> <div class="flex items-center justify-between border-b border-[var(--border-subtle)] p-4"> <h4 class="font-semibold text-[var(--text-primary)]">目录</h4> <button id="toc-close" class="header-action -mr-1" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> <ul class="max-h-[calc(64vh-4rem)] space-y-1 overflow-y-auto p-4 text-sm"> <li> <a href="#第一章-计算机系统概论与性能指标" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第一章-计算机系统概论与性能指标" lang="zh-CN"> 第一章 计算机系统概论与性能指标 </a> </li><li> <a href="#11-冯诺依曼体系结构与硬件五大部件" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="11-冯诺依曼体系结构与硬件五大部件" lang="zh-CN"> 1.1 冯·诺依曼体系结构与硬件五大部件 </a> </li><li> <a href="#12-计算机系统的多级层次结构与定量性能指标" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="12-计算机系统的多级层次结构与定量性能指标" lang="zh-CN"> 1.2 计算机系统的多级层次结构与定量性能指标 </a> </li><li> <a href="#第二章-数据的机器表示与运算器alu" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第二章-数据的机器表示与运算器alu" lang="zh-CN"> 第二章 数据的机器表示与运算器（ALU） </a> </li><li> <a href="#21-定点数的编码表示原码反码补码移码" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="21-定点数的编码表示原码反码补码移码" lang="zh-CN"> 2.1 定点数的编码表示（原码、反码、补码、移码） </a> </li><li> <a href="#22-定点数的移位扩展加减运算与溢出判定" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="22-定点数的移位扩展加减运算与溢出判定" lang="zh-CN"> 2.2 定点数的移位、扩展、加减运算与溢出判定 </a> </li><li> <a href="#23-ieee-754-浮点数标准与运算精度陷阱" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="23-ieee-754-浮点数标准与运算精度陷阱" lang="zh-CN"> 2.3 IEEE 754 浮点数标准与运算精度陷阱 </a> </li><li> <a href="#24-算术逻辑单元alu先行进位加法器与四大标志位" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] pl-6 text-xs" data-heading="24-算术逻辑单元alu先行进位加法器与四大标志位" lang="zh-CN"> 2.4 算术逻辑单元（ALU）：先行进位加法器与四大标志位 </a> </li><li> <a href="#第三章-存储系统主存与高速缓冲存储器-cache待更新" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第三章-存储系统主存与高速缓冲存储器-cache待更新" lang="zh-CN"> 第三章 存储系统（主存与高速缓冲存储器 Cache）（待更新） </a> </li><li> <a href="#第四章-指令系统isa待更新" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第四章-指令系统isa待更新" lang="zh-CN"> 第四章 指令系统（ISA）（待更新） </a> </li><li> <a href="#第五章-中央处理器cpu与指令流水线待更新" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第五章-中央处理器cpu与指令流水线待更新" lang="zh-CN"> 第五章 中央处理器（CPU）与指令流水线（待更新） </a> </li><li> <a href="#第六章-总线与输入输出io系统硬件待更新" class="toc-link-mobile block rounded px-3 py-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)] " data-heading="第六章-总线与输入输出io系统硬件待更新" lang="zh-CN"> 第六章 总线与输入/输出（I/O）系统硬件（待更新） </a> </li> </ul> </nav>  <nav class="toc hidden lg:block" aria-label="目录"> <div class="reading-toc sticky top-24"> <h4 class="mb-3 text-sm font-semibold text-[var(--text-primary)]">目录</h4> <ul class="max-h-[calc(100vh-12rem)] space-y-1 overflow-y-auto text-sm"> <li> <a href="#第一章-计算机系统概论与性能指标" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第一章-计算机系统概论与性能指标" lang="zh-CN"> 第一章 计算机系统概论与性能指标 </a> </li><li> <a href="#11-冯诺依曼体系结构与硬件五大部件" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="11-冯诺依曼体系结构与硬件五大部件" lang="zh-CN"> 1.1 冯·诺依曼体系结构与硬件五大部件 </a> </li><li> <a href="#12-计算机系统的多级层次结构与定量性能指标" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="12-计算机系统的多级层次结构与定量性能指标" lang="zh-CN"> 1.2 计算机系统的多级层次结构与定量性能指标 </a> </li><li> <a href="#第二章-数据的机器表示与运算器alu" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第二章-数据的机器表示与运算器alu" lang="zh-CN"> 第二章 数据的机器表示与运算器（ALU） </a> </li><li> <a href="#21-定点数的编码表示原码反码补码移码" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="21-定点数的编码表示原码反码补码移码" lang="zh-CN"> 2.1 定点数的编码表示（原码、反码、补码、移码） </a> </li><li> <a href="#22-定点数的移位扩展加减运算与溢出判定" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="22-定点数的移位扩展加减运算与溢出判定" lang="zh-CN"> 2.2 定点数的移位、扩展、加减运算与溢出判定 </a> </li><li> <a href="#23-ieee-754-浮点数标准与运算精度陷阱" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="23-ieee-754-浮点数标准与运算精度陷阱" lang="zh-CN"> 2.3 IEEE 754 浮点数标准与运算精度陷阱 </a> </li><li> <a href="#24-算术逻辑单元alu先行进位加法器与四大标志位" class="toc-link toc-depth-3 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="24-算术逻辑单元alu先行进位加法器与四大标志位" lang="zh-CN"> 2.4 算术逻辑单元（ALU）：先行进位加法器与四大标志位 </a> </li><li> <a href="#第三章-存储系统主存与高速缓冲存储器-cache待更新" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第三章-存储系统主存与高速缓冲存储器-cache待更新" lang="zh-CN"> 第三章 存储系统（主存与高速缓冲存储器 Cache）（待更新） </a> </li><li> <a href="#第四章-指令系统isa待更新" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第四章-指令系统isa待更新" lang="zh-CN"> 第四章 指令系统（ISA）（待更新） </a> </li><li> <a href="#第五章-中央处理器cpu与指令流水线待更新" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第五章-中央处理器cpu与指令流水线待更新" lang="zh-CN"> 第五章 中央处理器（CPU）与指令流水线（待更新） </a> </li><li> <a href="#第六章-总线与输入输出io系统硬件待更新" class="toc-link toc-depth-2 line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]" data-heading="第六章-总线与输入输出io系统硬件待更新" lang="zh-CN"> 第六章 总线与输入/输出（I/O）系统硬件（待更新） </a> </li> </ul> </div> </nav>  </div> <script>
+    (function () {
+      // TOC Mobile Drawer & Scroll Spy
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocMobile = document.getElementById('toc-mobile');
+      const tocClose = document.getElementById('toc-close');
+      const tocBackdrop = document.getElementById('toc-mobile-backdrop');
+      let isOpen = false;
+
+      function openMobileToc() {
+        if (isOpen) return;
+        isOpen = true;
+        if (tocMobile) tocMobile.classList.remove('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.remove('hidden');
+        if (tocToggle) tocToggle.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileToc() {
+        if (!isOpen) return;
+        isOpen = false;
+        if (tocMobile) tocMobile.classList.add('translate-y-full');
+        if (tocBackdrop) tocBackdrop.classList.add('hidden');
+        if (tocToggle) tocToggle.classList.remove('hidden');
+        document.body.style.overflow = '';
+      }
+
+      if (tocToggle) tocToggle.addEventListener('click', openMobileToc);
+      if (tocClose) tocClose.addEventListener('click', closeMobileToc);
+      if (tocBackdrop) tocBackdrop.addEventListener('click', closeMobileToc);
+
+      document.querySelectorAll('.toc-link-mobile').forEach(link => {
+        link.addEventListener('click', () => setTimeout(closeMobileToc, 100));
+      });
+
+      const tocLinks = document.querySelectorAll('.toc-link');
+      if (tocLinks.length > 0) {
+        const headingIds = Array.from(tocLinks)
+          .map(link => link.getAttribute('data-heading'))
+          .filter(Boolean);
+        const headingElements = headingIds.map(id => document.getElementById(id)).filter(Boolean);
+
+        function updateActiveLink() {
+          if (!headingElements.length) return;
+          let activeId = headingIds[0];
+          for (let i = 0; i < headingElements.length; i++) {
+            const rect = headingElements[i].getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.28) {
+              activeId = headingElements[i].id;
+            }
+          }
+          tocLinks.forEach(link => {
+            if (link.getAttribute('data-heading') === activeId) {
+              link.classList.add('toc-active');
+            } else {
+              link.classList.remove('toc-active');
+            }
+          });
+        }
+
+        let ticking = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                updateActiveLink();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true }
+        );
+        updateActiveLink();
+      }
+
+      // Lazy Load Giscus Comments
+      const giscusContainer = document.getElementById('giscus-container');
+      if (giscusContainer) {
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded) return;
+          giscusContainer.dataset.loaded = 'true';
+          const isDark = document.documentElement.classList.contains('dark');
+          const s = document.createElement('script');
+          s.src = 'https://giscus.app/client.js';
+          s.setAttribute('data-repo', 'VVVVVenxo/VVVVVenxo.github.io');
+          s.setAttribute('data-repo-id', 'R_kgDOQ5Bk1Q');
+          s.setAttribute('data-category', 'Announcements');
+          s.setAttribute('data-category-id', 'DIC_kwDOQ5Bk1c4DJO_-');
+          s.setAttribute('data-mapping', 'pathname');
+          s.setAttribute('data-strict', '0');
+          s.setAttribute('data-reactions-enabled', '1');
+          s.setAttribute('data-emit-metadata', '0');
+          s.setAttribute('data-input-position', 'top');
+          s.setAttribute('data-theme', isDark ? 'dark_dimmed' : 'light');
+          s.setAttribute('data-lang', 'zh-CN');
+          s.crossOrigin = 'anonymous';
+          s.async = true;
+          giscusContainer.appendChild(s);
+        };
+
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver(
+            entries => {
+              if (entries.some(e => e.isIntersecting)) {
+                loadGiscus();
+                io.disconnect();
+              }
+            },
+            { rootMargin: '300px' }
+          );
+          io.observe(giscusContainer);
+        } else {
+          loadGiscus();
+        }
+      }
+    })();
+  </script>  </main> <footer class="site-footer border-t border-[var(--border-color)]"> <div class="container py-8"> <div class="flex flex-col items-center justify-between gap-4 md:flex-row"> <div class="flex items-center gap-3"> <a href="https://github.com/VVVVVenxo" target="_blank" rel="noopener noreferrer" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="GitHub" title="GitHub"> <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="mailto:1263147353@qq.com" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="Email" title="Email"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="2" y="4" width="20" height="16" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> </a> <a href="/atom.xml" class="rounded p-2 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]" aria-label="RSS 订阅" title="RSS 订阅"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M4 11a9 9 0 0 1 9 9"></path> <path d="M4 4a16 16 0 0 1 16 16"></path> <circle cx="5" cy="19" r="1"></circle> </svg> </a> </div> <p class="text-xs text-[var(--text-tertiary)]">
+© 2024–2026 VVVVVenxo · To be a rock and not to roll.
+</p> </div> </div> </footer> <!-- Flat Search Modal --> <div id="search-modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/45 px-4 pt-[10vh] backdrop-blur-xs" role="dialog" aria-modal="true" aria-label="全站搜索"> <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] shadow-2xl"> <div class="flex items-center gap-3 border-b border-[var(--border-subtle)] px-4 py-3"> <svg class="shrink-0 text-[var(--text-tertiary)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> <input id="search-input" type="search" placeholder="搜索文章标题、关键词、技术栈（支持 C++ / Unity / 渲染 / 网络...）" class="w-full bg-transparent text-base text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none" autocomplete="off"> <button id="search-close" type="button" class="rounded border border-[var(--border-color)] px-2 py-0.5 text-xs text-[var(--text-tertiary)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
+ESC
+</button> </div> <div id="search-results" class="max-h-[62vh] overflow-y-auto divide-y divide-[var(--border-subtle)] px-4 py-2 text-sm"> <p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p> </div> </div> </div> <script>
+      (function () {
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const giscusFrame = document.querySelector('iframe.giscus-frame');
+            if (giscusFrame && giscusFrame.contentWindow) {
+              giscusFrame.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: isDark ? 'dark_dimmed' : 'light' } } },
+                'https://giscus.app'
+              );
+            }
+          });
+        }
+
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            const hidden = mobileMenu.classList.toggle('hidden');
+            mobileBtn.setAttribute('aria-expanded', String(!hidden));
+          });
+        }
+
+        // Code Copy Buttons
+        document.addEventListener('click', async e => {
+          const btn = e.target.closest('.copy-button');
+          if (!btn) return;
+          const wrapper = btn.closest('.code-block-wrapper');
+          const codeEl = wrapper ? wrapper.querySelector('pre code') : null;
+          if (!codeEl) return;
+          try {
+            await navigator.clipboard.writeText(codeEl.innerText);
+            const copyIcon = btn.querySelector('.copy-icon');
+            const checkIcon = btn.querySelector('.check-icon');
+            btn.classList.add('copied');
+            if (copyIcon) copyIcon.classList.add('hidden');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              if (copyIcon) copyIcon.classList.remove('hidden');
+              if (checkIcon) checkIcon.classList.add('hidden');
+            }, 1800);
+          } catch (_) {}
+        });
+
+        // Search Modal
+        const searchBtn = document.getElementById('search-btn');
+        const searchModal = document.getElementById('search-modal');
+        const searchInput = document.getElementById('search-input');
+        const searchClose = document.getElementById('search-close');
+        const searchResults = document.getElementById('search-results');
+        let searchIndex = null;
+
+        async function ensureSearchIndex() {
+          if (searchIndex) return searchIndex;
+          try {
+            const res = await fetch('/search.json');
+            searchIndex = await res.json();
+          } catch (_) {
+            searchIndex = [];
+          }
+          return searchIndex;
+        }
+
+        function openSearch() {
+          if (!searchModal) return;
+          searchModal.classList.remove('hidden');
+          searchModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          ensureSearchIndex();
+          setTimeout(() => searchInput && searchInput.focus(), 30);
+        }
+
+        function closeSearch() {
+          if (!searchModal) return;
+          searchModal.classList.add('hidden');
+          searchModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
+
+        if (searchBtn) searchBtn.addEventListener('click', openSearch);
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        if (searchModal) {
+          searchModal.addEventListener('click', e => {
+            if (e.target === searchModal) closeSearch();
+          });
+        }
+
+        window.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (searchModal && searchModal.classList.contains('hidden')) openSearch();
+            else closeSearch();
+          } else if (e.key === 'Escape' && searchModal && !searchModal.classList.contains('hidden')) {
+            closeSearch();
+          }
+        });
+
+        function escapeHtml(s) {
+          return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
+
+        if (searchInput && searchResults) {
+          searchInput.addEventListener('input', async () => {
+            const q = searchInput.value.trim().toLowerCase();
+            if (!q) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">输入关键词开始检索全部文章…</p>';
+              return;
+            }
+            const data = await ensureSearchIndex();
+            const matched = data.filter(item => {
+              const title = (item.title || '').toLowerCase();
+              const content = (item.content || '').toLowerCase();
+              const tags = (item.tags || []).join(' ').toLowerCase();
+              const cats = (item.categories || []).join(' ').toLowerCase();
+              return title.includes(q) || tags.includes(q) || cats.includes(q) || content.includes(q);
+            });
+
+            if (!matched.length) {
+              searchResults.innerHTML = '<p class="py-6 text-center text-[var(--text-tertiary)]">没有找到匹配的文章</p>';
+              return;
+            }
+
+            searchResults.innerHTML = matched
+              .slice(0, 15)
+              .map(item => {
+                const rawText = item.content || '';
+                const idx = rawText.toLowerCase().indexOf(q);
+                let snippet = rawText.slice(0, 110);
+                if (idx > 30) {
+                  snippet = '…' + rawText.slice(idx - 25, idx + 85) + '…';
+                }
+                return `
+                  <a href="${item.url}" class="block py-3.5 transition-colors hover:text-[var(--accent)]">
+                    <div class="flex items-baseline justify-between gap-2">
+                      <span class="font-semibold text-[var(--text-primary)]">${escapeHtml(item.title)}</span>
+                      <span class="shrink-0 text-xs text-[var(--text-tertiary)]">${escapeHtml(item.date || '')}</span>
+                    </div>
+                    <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">${escapeHtml(snippet)}</p>
+                  </a>
+                `;
+              })
+              .join('');
+          });
+        }
+      })();
+    </script> </body> </html>
