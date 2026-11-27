@@ -209,13 +209,13 @@ const { post, prevPost, nextPost } = Astro.props;
           <!-- Desktop Sticky Right TOC -->
           <nav class="toc hidden lg:block" aria-label="目录">
             <div class="reading-toc sticky top-24">
-              <h4 class="mb-3 text-sm font-semibold text-[var(--text-primary)]">目录</h4>
-              <ul class="max-h-[calc(100vh-12rem)] space-y-1 overflow-y-auto text-sm">
+              <h4 class="mb-3 pl-2.5 text-xs font-semibold tracking-wider text-[var(--text-tertiary)] uppercase">目录</h4>
+              <ul id="desktop-toc-list" class="max-h-[calc(100vh-10rem)] space-y-0.5 overflow-y-auto text-sm">
                 {post.headings.map(h => (
                   <li>
                     <a
                       href={`#${h.slug}`}
-                      class={`toc-link toc-depth-${h.depth} line-clamp-2 block rounded-r py-1.5 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]`}
+                      class={`toc-link toc-depth-${h.depth} line-clamp-2 block rounded py-1.5 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent)]`}
                       data-heading={h.slug}
                       lang="zh-CN"
                     >
@@ -282,9 +282,19 @@ const { post, prevPost, nextPost } = Astro.props;
               activeId = headingElements[i].id;
             }
           }
+          const tocListEl = document.getElementById('desktop-toc-list');
           tocLinks.forEach(link => {
             if (link.getAttribute('data-heading') === activeId) {
+              const wasActive = link.classList.contains('toc-active');
               link.classList.add('toc-active');
+              if (!wasActive && tocListEl) {
+                const linkTop = link.offsetTop;
+                const listHeight = tocListEl.clientHeight;
+                tocListEl.scrollTo({
+                  top: Math.max(0, linkTop - listHeight / 2 + 24),
+                  behavior: 'smooth',
+                });
+              }
             } else {
               link.classList.remove('toc-active');
             }

@@ -848,27 +848,53 @@ body {
 }
 .toc {
   flex-shrink: 0;
-  width: 228px;
+  width: 236px;
 }
 .reading-toc {
   border-left: 1px solid var(--border-color);
-  padding-left: 20px;
+  padding-left: 14px;
+}
+.reading-toc ul {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.reading-toc ul::-webkit-scrollbar {
+  display: none;
 }
 .toc-link {
-  border-left: 2px solid transparent;
-  margin-left: -21px;
-  padding-left: 19px;
+  position: relative;
+  padding-left: 10px;
+  padding-right: 8px;
   text-decoration: none;
+  line-height: 1.5;
+}
+.toc-link::before {
+  content: "";
+  position: absolute;
+  left: -15px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: transparent;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+.toc-link.toc-depth-2 {
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 .toc-link.toc-depth-3 {
-  padding-left: 31px;
+  padding-left: 20px;
   font-size: 0.8125rem;
+  color: var(--text-tertiary);
 }
 .toc-link.toc-active {
   color: var(--accent);
-  border-left-color: var(--accent);
   background: var(--bg-muted);
   font-weight: 600;
+}
+.toc-link.toc-active::before {
+  background: var(--accent);
 }
 .toc-trigger {
   background: var(--accent);
