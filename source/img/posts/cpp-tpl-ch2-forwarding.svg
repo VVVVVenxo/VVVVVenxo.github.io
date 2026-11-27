@@ -19,7 +19,7 @@
     <text x="56" y="252" fill="#17343B">• <tspan font-weight="700">传入左值 int x</tspan>：<tspan font-family="Consolas, monospace">T</tspan> 被推导为 <tspan font-weight="700" font-family="Consolas, monospace">int&amp;</tspan>，</text>
     <text x="56" y="272" fill="#17343B">  形参 <tspan font-family="Consolas, monospace">int&amp; &amp;&amp;</tspan> 经引用折叠变为左值引用 <tspan font-weight="700" font-family="Consolas, monospace">int&amp;</tspan></text>
     <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">传入右值 42</tspan>：<tspan font-family="Consolas, monospace">T</tspan> 被推导为非引用类型 <tspan font-weight="700" font-family="Consolas, monospace">int</tspan>，</text>
-    <text x="56" y="313" fill="#287B73" font-weight="700">  形参保持为右值引用 int&amp;&amp;（用 T 编码实参值类别）</text>
+    <text x="56" y="313" fill="#287B73" font-weight="700">  形参为右值引用 int&amp;&amp;（由 T 记录实参是左值或右值）</text>
   </g>
 
   <!-- 右栏 -->
