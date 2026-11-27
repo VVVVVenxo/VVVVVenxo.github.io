@@ -13,23 +13,20 @@ const posts = await getAllPosts();
 ---
 
 <BaseLayout
-  title="关于与知识图谱 | VVVVVenxo 的博客"
-  description="关于 VVVVVenxo 以及游戏客户端开发、Unity、C++/C#、图形学与计算机基础的知识图谱。"
+  title="知识图谱与关于 | VVVVVenxo 的博客"
+  description="游戏客户端开发、Unity、C++/C#、图形学与计算机基础的知识图谱与阅读路线。"
   activeNav="about"
 >
   <div class="container py-12 md:py-16">
-    <div class="about-intro">
-      <img src="/img/Avatar.jpg" alt="VVVVVenxo" width="88" height="88" />
-      <div>
-        <p class="section-kicker">ABOUT &amp; KNOWLEDGE MAP</p>
-        <h1 class="mt-2 font-serif text-3xl font-semibold text-[var(--text-primary)] md:text-4xl">
-          VVVVVenxo
-        </h1>
-        <p class="mt-2 text-sm text-[var(--text-secondary)]">
-          游戏客户端开发工程师 · 已收录 {posts.length} 篇体系化技术手记
-        </p>
-      </div>
-    </div>
+    <header class="page-heading">
+      <p class="section-kicker">KNOWLEDGE MAP &amp; ABOUT</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight text-[var(--text-primary)] md:text-5xl">
+        知识图谱
+      </h1>
+      <p class="mt-4 max-w-2xl text-base leading-8 text-[var(--text-secondary)]">
+        全站目前已收录 {posts.length} 篇体系化技术手记，按四大核心方向整理。
+      </p>
+    </header>
 
     <div class="prose max-w-none" lang="zh-CN" set:html={html} />
   </div>

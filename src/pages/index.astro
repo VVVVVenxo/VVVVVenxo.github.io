@@ -94,31 +94,42 @@ const featuredProjects = [
 
 <BaseLayout activeNav="home">
   <div class="home-shell">
-    <!-- Intro Section -->
+    <!-- Intro Section (Left Copy + Right Cat Frame) -->
     <section class="home-intro" aria-labelledby="home-heading">
       <div>
         <h1 id="home-heading">
           VVVVVenxo<span>的工程笔记</span>
         </h1>
         <p>
-          关于游戏客户端架构、Unity 引擎与实时渲染、C++ / C# 底层机制，以及 AI 工具链与写代码过程中的思考。
+          记录游戏客户端架构、Unity 引擎与实时渲染、C++ / C# 底层机制，以及 AI 工具链与写代码过程中的思考。
         </p>
+        <div class="home-intro-links">
+          <a href="/blog" class="home-text-link">浏览全部文章</a>
+          <a href="/about" class="home-text-link">知识图谱</a>
+          <a
+            href="https://github.com/VVVVVenxo"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="home-text-link"
+          >
+            GitHub
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 17L17 7"></path>
+              <path d="M7 7h10v10"></path>
+            </svg>
+          </a>
+        </div>
       </div>
-      <div class="home-intro-links">
-        <a href="/about" class="home-text-link">关于与知识图谱</a>
-        <a
-          href="https://github.com/VVVVVenxo"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="home-text-link"
-        >
-          GitHub
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 17L17 7"></path>
-            <path d="M7 7h10v10"></path>
-          </svg>
-        </a>
-      </div>
+
+      <figure class="home-cat-card">
+        <div class="home-cat-card__img-wrap">
+          <img src="/img/banner.jpg" alt="睡觉的大猫猫" loading="eager" decoding="async" />
+        </div>
+        <figcaption>
+          <span>Everything's Alright</span>
+          <span>Nap Mode · ON</span>
+        </figcaption>
+      </figure>
     </section>
 
     <!-- Main 2-Column Flat Reading Layout -->
@@ -198,16 +209,6 @@ const featuredProjects = [
 
       <!-- Right Sidebar -->
       <aside class="home-sidebar" aria-label="继续探索博客">
-        <section class="home-about" aria-labelledby="home-about-heading">
-          <h2 id="home-about-heading">关于这里</h2>
-          <p>
-            软件工程背景，现于上海从事游戏客户端研发。这里沉淀从编程语言内存模型、引擎源码、渲染管线到客户端框架的体系化笔记。
-          </p>
-          <a href="/about" class="home-text-link">
-            查看完整知识图谱 <span aria-hidden="true">→</span>
-          </a>
-        </section>
-
         <section class="home-topics" aria-labelledby="home-topics-heading">
           <div class="home-section-heading">
             <h2 id="home-topics-heading">按主题阅读</h2>
