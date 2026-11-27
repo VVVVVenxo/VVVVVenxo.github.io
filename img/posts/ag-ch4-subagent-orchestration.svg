@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 4-1：多智能体（Subagent）上下文隔离、并行/链式编排模式与并发写冲突防护</text>
+
+  <!-- 左栏：为什么需要 Subagent -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 为什么复杂工程任务需要派生子智能体（Subagent）</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">子智能体核心价值：上下文沙箱隔离（Context Isolation）</text>
+    <text x="56" y="133" fill="#17343B">• 当主 Agent 需要全局搜索代码库、阅读数十个源码文件或</text>
+    <text x="56" y="153" fill="#17343B">  分析长篇日志时，若在主会话直接读取，数万 Token 的原始</text>
+    <text x="56" y="173" fill="#17343B">  文件内容会永久滞留并污染主 Agent 的工作上下文</text>
+    <text x="56" y="193" fill="#287B73" font-weight="700">• 派生独立 Subagent 执行探索，仅向主会话返回结论</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">三种标准 Subagent 编排拓扑模式：</text>
+    <text x="56" y="252" fill="#17343B">1. <tspan font-weight="700">Single (单点委派)</tspan>：将专项任务交由单个子 Agent 闭环</text>
+    <text x="56" y="272" fill="#17343B">2. <tspan font-weight="700">Parallel (并行扇出)</tspan>：同时启动多个子 Agent 并行调研</text>
+    <text x="56" y="292" fill="#17343B">   不同模块或并行审查不同维度的代码缺陷</text>
+    <text x="56" y="313" fill="#17343B">3. <tspan font-weight="700">Chain (流水线)</tspan>：通过 <tspan font-family="Consolas, monospace">{previous}</tspan> 依次传递阶段产物</text>
+  </g>
+
+  <!-- 右栏：读写分离与验证纪律 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 多 Agent 协同工程纪律：只读并行、写操作互斥与验证闭环</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">并行 Subagent 的读写冲突边界（只读并行 / 写入互斥）：</text>
+    <text x="468" y="133" fill="#17343B">• <tspan font-weight="700" fill="#287B73">只读任务可任意并行</tspan>：代码检索、根因定位、文档提炼、</text>
+    <text x="468" y="153" fill="#17343B">  只读 API 查询互不修改状态，适合 Parallel 模式满并发提速</text>
+    <text x="468" y="173" fill="#17343B">• <tspan font-weight="700" fill="#C47743">写任务须划分正交文件集</tspan>：严禁两个并行 Subagent 同时</text>
+    <text x="468" y="193" fill="#17343B">  编辑同一文件或同时操作 Git 暂存区，防止互相覆盖</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">高可靠 AI 工程工作流的三条黄金准则：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">先证据后修改</tspan>：未读完目标文件上下文前，严禁盲目猜改</text>
+    <text x="468" y="272" fill="#17343B">2. <tspan font-weight="700">确定性工具验证</tspan>：用编译器、单测与无头浏览器像素检测</text>
+    <text x="468" y="292" fill="#17343B">   作为客观准出条件，不依赖模型的口头主观确认</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">3. <tspan font-weight="700">最小爆炸半径</tspan>：精准暂存变更文件，严禁破坏未提交现场</text>
+  </g>
+</svg>

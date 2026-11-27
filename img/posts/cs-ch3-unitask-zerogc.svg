@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：Unity UniTask 零 GC 架构原理（值类型封装 + 对象池状态机 + PlayerLoop 驱动）</text>
+
+  <!-- 左栏：ValueTask / UniTask 零 GC 原理 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. UniTask 如何彻底消除原生 Task 的三处堆内存分配</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">自定义 AsyncMethodBuilder + 池化 IUniTaskSource：</text>
+    <text x="56" y="133" fill="#17343B">1. <tspan font-weight="700">值类型返回值</tspan>：<tspan font-family="Consolas, monospace">UniTask&lt;T&gt;</tspan> 是轻量 <tspan font-weight="700" fill="#287B73">struct</tspan>（仅含 source</text>
+    <text x="56" y="153" fill="#17343B">   接口指针、内联结果 T 与 short 版本号），不分配 Task</text>
+    <text x="56" y="173" fill="#17343B">2. <tspan font-weight="700">状态机自动池化</tspan>：通过 <tspan font-family="Consolas, monospace">[AsyncMethodBuilder]</tspan> 接管</text>
+    <text x="56" y="193" fill="#287B73" font-weight="700">   编译器装箱，从静态栈式池 TaskPool 租借 Runner 节点</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">short Token 版本号防二次 Await 机制：</text>
+    <text x="56" y="252" fill="#17343B">• 当外部调用完 <tspan font-family="Consolas, monospace">GetResult(token)</tspan> 拿到返回值的一瞬间，</text>
+    <text x="56" y="272" fill="#17343B">  底层 Runner 节点立即清空状态机、将自身 <tspan font-weight="700" fill="#C47743">version++</tspan> 并</text>
+    <text x="56" y="292" fill="#17343B">  自动归还回静态对象池复用，实现<tspan font-weight="700" fill="#287B73">全链路 0 Byte GC</tspan>！</text>
+    <text x="56" y="313" fill="#C47743" font-weight="700">• 约束：同一 UniTask 不可 await 两次 (需调 Preserve)</text>
+  </g>
+
+  <!-- 右栏：PlayerLoop 替代协程 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 注入 Unity PlayerLoop 帧循环替代传统 IEnumerator 协程</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">传统 Unity 协程（Coroutine / IEnumerator）缺陷：</text>
+    <text x="468" y="133" fill="#17343B">• <tspan font-weight="700">每次必分配 GC</tspan>：new 状态机实例 + C++ 协程包装器</text>
+    <text x="468" y="153" fill="#17343B">• <tspan font-weight="700">无法直接返回结果值</tspan>：只能靠传入 Action 回调闭包</text>
+    <text x="468" y="173" fill="#17343B">• <tspan font-weight="700">不支持 try-catch</tspan>：语法禁止在含 yield 的块内捕获异常</text>
+    <text x="468" y="193" fill="#17343B">• <tspan font-weight="700">强绑 MonoBehaviour</tspan>：物体失活即导致协程被强行终止</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">UniTask PlayerLoopTiming 精确帧阶段调度：</text>
+    <text x="468" y="252" fill="#17343B">• 完全绕开 .NET ThreadPool Timer，直接在 Unity 底层</text>
+    <text x="468" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">PlayerLoop</tspan> 的 <tspan font-weight="700" fill="#287B73">Initialization / Update / FixedUpdate /</tspan></text>
+    <text x="468" y="292" fill="#287B73" font-weight="700">  LateUpdate / LastPostLateUpdate</tspan> 注入 14 个轮询点</text>
+    <text x="468" y="313" fill="#17343B">• 配合 <tspan font-family="Consolas, monospace">GetCancellationTokenOnDestroy</tspan> 绑定生命周期</text>
+  </g>
+</svg>

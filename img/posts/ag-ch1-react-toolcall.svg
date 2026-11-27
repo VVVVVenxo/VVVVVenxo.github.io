@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：AI Agent 核心闭环（ReAct 范式）、结构化 Tool Calling 与 CodeMode 沙箱批处理</text>
+
+  <!-- 左栏：ReAct 与 Function Calling -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. ReAct（Reasoning + Acting）循环与结构化工具调用</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">从单轮问答 Chat 到自主工程 Agent 的核心状态机：</text>
+    <text x="56" y="133" fill="#17343B">1. <tspan font-weight="700">Thought (推理)</tspan>：分析上下文，定位缺失信息与子目标</text>
+    <text x="56" y="153" fill="#17343B">2. <tspan font-weight="700">Action (调用)</tspan>：按 JSON Schema 生成结构化 <tspan font-family="Consolas, monospace">tool_use</tspan></text>
+    <text x="56" y="173" fill="#17343B">3. <tspan font-weight="700">Observation (反馈)</tspan>：执行本地命令或读写文件，</text>
+    <text x="56" y="193" fill="#287B73" font-weight="700">   将真实输出作为 tool_result 追加回消息流继续循环</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">为什么真实环境反馈（Grounding）能消除大模型幻觉：</text>
+    <text x="56" y="252" fill="#17343B">• 纯生成模型无法预知代码库隐式依赖与编译器真实报错</text>
+    <text x="56" y="272" fill="#17343B">• 通过 <tspan font-family="Consolas, monospace">Read / Edit / Bash(测试构建)</tspan> 形成闭环负反馈，</text>
+    <text x="56" y="292" fill="#17343B">  每次修改立即由编译器或单测验证，报错则自动迭代修复，</text>
+    <text x="56" y="313" fill="#17343B">  直至满足客观验收条件（<tspan font-family="Consolas, monospace">stop_reason == "end_turn"</tspan>）</text>
+  </g>
+
+  <!-- 右栏：CodeMode 沙箱编排 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 传统逐次 JSON 工具调用 vs CodeMode 脚本化批处理</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">传统单步 JSON Tool Call 的两大工程瓶颈：</text>
+    <text x="468" y="133" fill="#17343B">1. <tspan font-weight="700">多轮网络往返延迟 (RTT)</tspan>：连续修改 10 个文件或串联</text>
+    <text x="468" y="153" fill="#17343B">   查询需要耗费 10 轮 LLM 推理往返，总耗时成倍增加</text>
+    <text x="468" y="173" fill="#17343B">2. <tspan font-weight="700">中间大输出撑爆上下文</tspan>：工具返回的数千行原始日志必须</text>
+    <text x="468" y="193" fill="#61747A">   全量塞进 Prompt 才能让模型提取其中两行关键字段</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">CodeMode（QuickJS 沙箱代码调用工具）核心优势：</text>
+    <text x="468" y="252" fill="#17343B">• 模型输出一段 JS 脚本，在轻量沙箱中通过 <tspan font-family="Consolas, monospace">Promise.all</tspan></text>
+    <text x="468" y="272" fill="#17343B">  并行发起数十次工具调用，或在脚本内用循环/条件串联调用</text>
+    <text x="468" y="292" fill="#287B73" font-weight="700">• 在沙箱内直接用正则/JSON 过滤几万行大输出，仅将精简</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  后的摘要 return 回主上下文，节省 80%+ Token 与轮次</text>
+  </g>
+</svg>

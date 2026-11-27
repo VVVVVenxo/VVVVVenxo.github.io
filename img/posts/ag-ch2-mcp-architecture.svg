@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：MCP（模型上下文协议）三层拓扑架构、传输协议与延迟工具发现（Tool Search）</text>
+
+  <!-- 左栏：MCP 架构与三大原语 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. MCP 协议（Host / Client / Server）解耦 M×N 集成难题</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">基于 JSON-RPC 2.0 的三层标准架构：</text>
+    <text x="56" y="133" fill="#17343B">• <tspan font-weight="700">MCP Host (宿主)</tspan>：Claude Code / Cursor / IDE 插件</text>
+    <text x="56" y="153" fill="#17343B">• <tspan font-weight="700">MCP Client (连接器)</tspan>：与单个 Server 维护 1:1 会话</text>
+    <text x="56" y="173" fill="#17343B">• <tspan font-weight="700">MCP Server (服务端)</tspan>：封装 Unity / 飞书 / 数据库接口</text>
+    <text x="56" y="193" fill="#61747A">• 传输：本地用 Stdio 管道；远端用 Streamable HTTP</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">MCP Server 暴露的三大标准能力原语（Primitives）：</text>
+    <text x="56" y="252" fill="#17343B">1. <tspan font-weight="700">Tools (模型可控)</tspan>：由 LLM 自主决定何时调用的动作</text>
+    <text x="56" y="272" fill="#17343B">   函数（如修改 Unity Prefab、查询数据库、发送消息）</text>
+    <text x="56" y="292" fill="#17343B">2. <tspan font-weight="700">Resources (应用可控)</tspan>：URI 寻址的只读上下文数据源</text>
+    <text x="56" y="313" fill="#17343B">3. <tspan font-weight="700">Prompts (用户可控)</tspan>：预置斜杠命令模板与标准工作流</text>
+  </g>
+
+  <!-- 右栏：Deferred Tool Loading / Tool Search -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 为什么需要延迟工具加载（Deferred Tool Search）</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">全量挂载多个 MCP Server 时的“Schema 膨胀灾难”：</text>
+    <text x="468" y="133" fill="#17343B">• 每个 MCP 工具定义均含数百字描述与 JSON Schema</text>
+    <text x="468" y="153" fill="#17343B">• 若同时接入 Unity、GitHub、飞书等上百个外部工具，</text>
+    <text x="468" y="173" fill="#C47743" font-weight="700">  仅工具声明就会在首轮吞噬 30,000+ Token 并干扰选择</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">Tool Search（BM25 按需动态检索挂载）机制：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">初始只传目录摘要</tspan>：系统提示词仅列 MCP Server 名称</text>
+    <text x="468" y="272" fill="#17343B">   与简介，将具体工具 Schema 设为 <tspan font-family="Consolas, monospace">deferred</tspan> 延迟状态</text>
+    <text x="468" y="292" fill="#287B73" font-weight="700">2. <tspan font-weight="700">按需检索激活</tspan>：需要时调用 <tspan font-family="Consolas, monospace">tool_search(query)</tspan>，</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">   按 BM25 匹配动态注入 Top-K 工具定义至下一轮会话</text>
+  </g>
+</svg>

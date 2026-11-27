@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 3-1：上下文工程（Context Engineering）：Skill 渐进式披露、KV Cache 与状态压缩</text>
+
+  <!-- 左栏：Skill 渐进式披露 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. Skill 领域技能包的“三级渐进式披露”设计</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">为什么不能把所有操作手册全塞进全局 CLAUDE.md：</text>
+    <text x="56" y="133" fill="#17343B">• 注意力稀释（Lost in the Middle）：无关领域规则越多，</text>
+    <text x="56" y="153" fill="#17343B">  模型对当前核心约束的遵循率越低，且每轮重复计费</text>
+    <text x="56" y="173" fill="#287B73" font-weight="700">• 渐进式披露（Progressive Disclosure）三级按需加载：</text>
+    <text x="56" y="193" fill="#17343B">  ① <tspan font-weight="700">L1 路由层</tspan>：常驻上下文仅存各 Skill 的名称与触发描述</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">② L2 指令层（SKILL.md）与 ③ L3 引用资源层：</text>
+    <text x="56" y="252" fill="#17343B">• 当用户意图命中某 Skill 的触发条件时，Agent 才调用</text>
+    <text x="56" y="272" fill="#17343B">  <tspan font-family="Consolas, monospace">read(SKILL.md)</tspan> 将该领域的专用 SOP 规范载入当前会话</text>
+    <text x="56" y="292" fill="#17343B">• <tspan font-weight="700">L3 附属脚本</tspan>：大段参考文档与辅助脚本存放于子目录中，</text>
+    <text x="56" y="313" fill="#17343B">  仅在执行到具体子步骤时按相对路径读取或直接命令行调用</text>
+  </g>
+
+  <!-- 右栏：Prompt Caching 与 Context Compaction -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 前缀 KV Cache 命中率优化与长程会话压缩（Compaction）</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">保护前缀 KV Cache（Prompt Caching）的工程铁律：</text>
+    <text x="468" y="133" fill="#17343B">• LLM 推理的 Prefill 阶段仅对<tspan font-weight="700" fill="#C47743">完全一致的静态前缀</tspan>复用缓存</text>
+    <text x="468" y="153" fill="#17343B">• <tspan font-weight="700">静态置顶、动态追加</tspan>：System Prompt 与工具列表必须</text>
+    <text x="468" y="173" fill="#17343B">  严格固定在消息头；严禁在系统提示词中塞入每轮变化的</text>
+    <text x="468" y="193" fill="#61747A">  当前时间戳或随机顺序字典，否则整条前缀缓存全部失效</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">Context Compaction（上下文摘要压缩）与文件化状态：</text>
+    <text x="468" y="252" fill="#17343B">• 当多轮工具调用逼近上下文窗口上限时，自动将历史消息</text>
+    <text x="468" y="272" fill="#17343B">  浓缩为结构化 <tspan font-family="Consolas, monospace">&lt;summary&gt;</tspan>（目标/已完成/进行中/修改文件）</text>
+    <text x="468" y="292" fill="#287B73" font-weight="700">• 防跑偏纪律：将关键架构决策与路线图持久化写入文件，</text>
+    <text x="468" y="313" fill="#287B73" font-weight="700">  使跨次 Compaction 或新会话启动后仍能零损耗恢复状态</text>
+  </g>
+</svg>

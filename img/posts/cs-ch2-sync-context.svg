@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 2-1：SynchronizationContext 线程切回机制、.Wait() 死锁成因与 ConfigureAwait</text>
+
+  <!-- 左栏：SynchronizationContext 机制 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. await 之后的代码为什么能自动回到 Unity 主线程执行</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">SynchronizationContext（同步上下文）捕获与投递：</text>
+    <text x="56" y="133" fill="#17343B">• Unity 在主线程绑定 <tspan font-weight="700" fill="#287B73">UnitySynchronizationContext</tspan></text>
+    <text x="56" y="153" fill="#17343B">• 当主线程执行到 <tspan font-family="Consolas, monospace">await task</tspan> 挂起时，Awaiter 自动捕获</text>
+    <text x="56" y="173" fill="#17343B">  当前线程的 <tspan font-family="Consolas, monospace">SynchronizationContext.Current</tspan></text>
+    <text x="56" y="193" fill="#287B73" font-weight="700">• 后台完成时调 ctx.Post(MoveNext)，投递回主线程队列</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">不同宿主环境的 SynchronizationContext 行为对比：</text>
+    <text x="56" y="252" fill="#17343B">• <tspan font-weight="700">Unity / WPF</tspan>：单线程 UI 上下文，Post 的回调在主线程</text>
+    <text x="56" y="272" fill="#17343B">  下一帧消息泵 / PlayerLoop 中串行取出执行</text>
+    <text x="56" y="293" fill="#17343B">• <tspan font-weight="700">控制台 / ASP.NET</tspan>：<tspan font-family="Consolas, monospace">Current == null</tspan>，await 后续代码</text>
+    <text x="56" y="313" fill="#17343B">  直接在完成该任务的任意 ThreadPool 线程池线程上继续跑</text>
+  </g>
+
+  <!-- 右栏：经典死锁与 ConfigureAwait(false) -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 主线程调用 task.Wait() / .Result 死锁与 ConfigureAwait</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">为什么在 Unity 主线程调 task.Result 会瞬间永久卡死：</text>
+    <text x="468" y="133" fill="#17343B">1. 主线程调用 <tspan font-family="Consolas, monospace">GetDataAsync().Result</tspan> 并<tspan font-weight="700" fill="#C47743">同步阻塞主线程</tspan></text>
+    <text x="468" y="153" fill="#17343B">2. 异步方法内 <tspan font-family="Consolas, monospace">await</tspan> 结束，通过 <tspan font-family="Consolas, monospace">ctx.Post</tspan> 请求回到主线程</text>
+    <text x="468" y="173" fill="#17343B">   执行下半段代码以设置 Task 完成状态</text>
+    <text x="468" y="193" fill="#C47743" font-weight="700">3. 主线程卡在 .Result 等待，无法处理 Post 队列 → 死锁</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">ConfigureAwait(false) 的作用与工程规范：</text>
+    <text x="468" y="252" fill="#17343B">• 显式指示 Awaiter <tspan font-weight="700" fill="#287B73">不捕获 SynchronizationContext</tspan></text>
+    <text x="468" y="272" fill="#17343B">• await 完成后直接在线程池线程继续执行后续纯计算/IO，</text>
+    <text x="468" y="292" fill="#17343B">  既消除主线程排队切换开销，又避免同步等待引发的死锁</text>
+    <text x="468" y="313" fill="#61747A">• 注意：ConfigureAwait(false) 后续代码不可调 Unity API</text>
+  </g>
+</svg>

@@ -15,7 +15,7 @@
     <text x="56" y="194" fill="#61747A">  了自己！表面与光线夹角越倾斜，所需的深度偏移量越大</text>
 
     <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
-    <text x="56" y="230" fill="#287B73" font-weight="700">斜率自适应偏移（Slope Bias）与阴影脱节（Peter Pan）：</text>
+    <text x="56" y="230" fill="#287B73" font-weight="700">斜率自适应偏移（Slope Bias）与阴影悬浮伪影：</text>
     <text x="56" y="252" fill="#287B73" font-weight="700" font-family="Consolas, monospace">bias = max(slope * (1.0 - dot(N, L)), minBias)</text>
     <text x="56" y="273" fill="#17343B">• <tspan font-weight="700">法线偏移 (Normal Bias)</tspan>：沿顶点法线向内微缩采样点</text>
     <text x="56" y="293" fill="#17343B">• <tspan font-weight="700" fill="#C47743">Peter Panning (阴影悬浮)</tspan>：若 Depth Bias 设得过大，</text>
