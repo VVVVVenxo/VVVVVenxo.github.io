@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 5-1：空间几何相交测试（AABB Slab 算法、Möller-Trumbore 算法与视锥体提取）</text>
+
+  <!-- 左栏：射线与平面/球体/AABB -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 射线 R(t) = O + tD 与平面、球体及 AABB Slab 算法</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="98" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">射线与平面 (n·P + d = 0) 及球体 (|P - C|² = r²) 求交：</text>
+    <text x="56" y="134" fill="#17343B">• <tspan font-weight="700">射线-平面</tspan>：<tspan font-family="Consolas, monospace">t = -(n·O + d)/(n·D)</tspan> (分母为0则平行)</text>
+    <text x="56" y="156" fill="#17343B">• <tspan font-weight="700">射线-球体</tspan>：设 <tspan font-family="Consolas, monospace">m = O - C</tspan>，得二次方程 <tspan font-family="Consolas, monospace">t² + 2(m·D)t +</tspan></text>
+    <text x="56" y="176" fill="#17343B">  <tspan font-family="Consolas, monospace">(|m|² - r²) = 0</tspan>，判别式 <tspan font-family="Consolas, monospace">Δ ≥ 0</tspan> 时相交</text>
+
+    <rect x="44" y="200" width="364" height="128" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="220" fill="#287B73" font-weight="700">射线与轴对齐包围盒（AABB）求交：Slab 平行板交集算法</text>
+    <text x="56" y="242" fill="#17343B">• 将 AABB 视为 X / Y / Z 三对平行平面（Slab）的交集区域</text>
+    <text x="56" y="264" fill="#17343B">• 分别求射线穿过三轴平面的参数区间 <tspan font-family="Consolas, monospace">[tx_min, tx_max]</tspan></text>
+    <text x="56" y="285" fill="#287B73" font-weight="700" font-family="Consolas, monospace">t_enter = max(tx_min, ty_min, tz_min)</text>
+    <text x="56" y="303" fill="#287B73" font-weight="700" font-family="Consolas, monospace">t_exit  = min(tx_max, ty_max, tz_max)</text>
+    <text x="56" y="321" fill="#C47743" font-weight="700">• 相交充要条件：t_enter ≤ t_exit  且  t_exit ≥ 0</text>
+  </g>
+
+  <!-- 右栏：Möller-Trumbore 与视锥体裁剪 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. Möller-Trumbore 射线三角形求交与视锥体平面提取</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="114" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">Möller-Trumbore 射线-三角形求交（无需预存平面）：</text>
+    <text x="468" y="134" fill="#17343B">• 重心坐标方程：<tspan font-family="Consolas, monospace">O + tD = (1 - u - v)V0 + uV1 + vV2</tspan></text>
+    <text x="468" y="156" fill="#17343B">• 设边 <tspan font-family="Consolas, monospace">E1=V1-V0, E2=V2-V0, T=O-V0, P=D×E2, Q=T×E1</tspan></text>
+    <text x="468" y="178" fill="#287B73" font-weight="700" font-family="Consolas, monospace">[t, u, v] = [Q·E2, P·T, Q·D] / (P · E1)</text>
+    <text x="468" y="198" fill="#17343B">• 命中条件：<tspan font-family="Consolas, monospace">t &gt; 0, u ≥ 0, v ≥ 0</tspan> 且 <tspan font-family="Consolas, monospace">u + v ≤ 1</tspan></text>
+
+    <rect x="456" y="216" width="362" height="108" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="236" fill="#C47743" font-weight="700">Gribb-Hartmann 视锥体 6 平面快速提取算法：</text>
+    <text x="468" y="258" fill="#17343B">• 设复合矩阵 <tspan font-family="Consolas, monospace">M = P * V</tspan> 的四行向量为 <tspan font-family="Consolas, monospace">R0, R1, R2, R3</tspan></text>
+    <text x="468" y="280" fill="#17343B">• 由裁剪不等式 <tspan font-family="Consolas, monospace">-w ≤ x ≤ w</tspan> 直接导出世界空间平面方程：</text>
+    <text x="468" y="300" fill="#287B73" font-weight="700" font-family="Consolas, monospace">左平面: R3 + R0,  右平面: R3 - R0,  下/上: R3 ± R1</text>
+    <text x="468" y="318" fill="#17343B">• 若 AABB 8 顶点均在任一平面外侧，则整物体剔除</text>
+  </g>
+</svg>

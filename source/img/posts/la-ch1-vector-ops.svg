@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif">
+  <rect width="860" height="360" rx="8" fill="#F4F6F3" stroke="#D5DDD8" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#17343B">图 1-1：三维向量点积（Dot Product）与叉积（Cross Product）几何意义及游戏判定应用</text>
+
+  <!-- 左栏：点积 -->
+  <rect x="28" y="54" width="396" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="226" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">1. 点积（Dot Product / 内积）：投影长度与方向夹角</text>
+
+  <g font-size="13">
+    <rect x="44" y="92" width="364" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="56" y="112" fill="#287B73" font-weight="700">代数定义与几何定义（结果为一个标量 Scalar）：</text>
+    <text x="56" y="134" fill="#17343B" font-weight="700" font-family="Consolas, monospace">a · b = ax*bx + ay*by + az*bz = |a| |b| cos(θ)</text>
+    <text x="56" y="155" fill="#17343B">• <tspan font-weight="700">a · b &gt; 0</tspan>：夹角 θ &lt; 90°（同向锐角，目标在正前方）</text>
+    <text x="56" y="175" fill="#17343B">• <tspan font-weight="700">a · b = 0</tspan>：夹角 θ = 90°（两非零向量严格<tspan font-weight="700" fill="#287B73">正交垂直</tspan>）</text>
+    <text x="56" y="194" fill="#17343B">• <tspan font-weight="700">a · b &lt; 0</tspan>：夹角 θ &gt; 90°（反向钝角，目标在背后）</text>
+
+    <rect x="44" y="210" width="364" height="114" rx="4" fill="#D8E6E0" stroke="#287B73" stroke-width="1.2"/>
+    <text x="56" y="230" fill="#287B73" font-weight="700">图形学与游戏玩法三大高频应用：</text>
+    <text x="56" y="252" fill="#17343B">1. <tspan font-weight="700">正交分解</tspan>：a 在单位向量 n 上的投影 <tspan font-family="Consolas, monospace">a_∥ = (a·n)n</tspan></text>
+    <text x="56" y="274" fill="#17343B">2. <tspan font-weight="700">扇形视野判定</tspan>：<tspan font-family="Consolas, monospace">dot(forward, dir) &gt;= cos(fov/2)</tspan></text>
+    <text x="56" y="295" fill="#17343B">   （用一次乘法点积替代昂贵的 acos 反三角函数）</text>
+    <text x="56" y="315" fill="#17343B">3. <tspan font-weight="700">Lambert 漫反射</tspan>：光强正比于 <tspan font-family="Consolas, monospace">max(0, N · L)</tspan></text>
+  </g>
+
+  <!-- 右栏：叉积 -->
+  <rect x="442" y="54" width="390" height="284" rx="6" fill="#FFFFFF" stroke="#CBD7CF" stroke-width="1.5"/>
+  <text x="637" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#17343B">2. 叉积（Cross Product / 外积）：法线构建与左右侧判定</text>
+
+  <g font-size="13">
+    <rect x="456" y="92" width="362" height="108" rx="4" fill="#FAFBF8" stroke="#CBD7CF" stroke-width="1.2"/>
+    <text x="468" y="112" fill="#C47743" font-weight="700">代数定义与几何性质（结果为垂直于两者的向量）：</text>
+    <text x="468" y="134" fill="#17343B" font-weight="700" font-family="Consolas, monospace">a×b = (ay*bz-az*by, az*bx-ax*bz, ax*by-ay*bx)</text>
+    <text x="468" y="155" fill="#17343B">• <tspan font-weight="700">模长</tspan>：<tspan font-family="Consolas, monospace">|a × b| = |a| |b| sin(θ)</tspan> (平行四边形面积)</text>
+    <text x="468" y="175" fill="#17343B">• <tspan font-weight="700">反交换律</tspan>：<tspan font-family="Consolas, monospace">a × b = -(b × a)</tspan>；共线向量叉积为零</text>
+    <text x="468" y="194" fill="#61747A">• 旋向：左手系(Unity)左手定则；右手系(OpenGL)右手</text>
+
+    <rect x="456" y="210" width="362" height="114" rx="4" fill="#F4E6D9" stroke="#C47743" stroke-width="1.2"/>
+    <text x="468" y="230" fill="#C47743" font-weight="700">图形学与游戏玩法三大高频应用：</text>
+    <text x="468" y="252" fill="#17343B">1. <tspan font-weight="700">构造面法线</tspan>：<tspan font-family="Consolas, monospace">N = normalize((B - A) × (C - A))</tspan></text>
+    <text x="468" y="274" fill="#17343B">2. <tspan font-weight="700">正交基构建</tspan>：由前向 F 与上方向 U 叉乘得右向量 R</text>
+    <text x="468" y="295" fill="#17343B">3. <tspan font-weight="700">左右转向判定</tspan>：检测 <tspan font-family="Consolas, monospace">(forward × toTarget).y</tspan> 正负</text>
+    <text x="468" y="315" fill="#17343B">   即可判断目标位于角色左侧还是右侧</text>
+  </g>
+</svg>

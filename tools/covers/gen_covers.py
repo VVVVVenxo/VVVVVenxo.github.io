@@ -44,6 +44,7 @@ CAPTIONS = {
     "linux": "无 GUI 损耗，以纯文本配置与命令行驱动 7×24 小时持续构建",
     "computer-org": "指令经流水线译码执行，通过多级缓存与主存交换数据",
     "compiler": "源码经语法分析与中间优化生成目标文件，再由链接器完成符号重定位",
+    "math-3d": "三维几何经齐次矩阵变换、四元数旋转与透视投影映射至屏幕空间",
 }
 
 
@@ -423,6 +424,22 @@ def diagram_computer_org():
     ])
 
 
+def diagram_math_3d():
+    return "".join([
+        t(650, 205, "向量基底 · 齐次矩阵 · 四元数旋转", 21, INK, 650),
+        rule(650, 222, 1125, 222),
+        box(668, 290, 136, 86, "向量与基底", PALE, SOFT, 18, "点积 · 叉积"),
+        box(842, 290, 136, 86, "4×4 齐次矩阵", MINT, TEAL, 17, "仿射 · 投影"),
+        box(1016, 290, 136, 86, "单位四元数", "#F4E6D9", ORANGE, 18, "q·v·q* · Slerp"),
+        rule(804, 333, 834, 333, TEAL, 2, marker="tealArrow"),
+        rule(978, 333, 1008, 333, ORANGE, 2, marker="orangeArrow"),
+        box(668, 418, 484, 56, "Model → World → View → Clip(1/w) → NDC → Screen", PALE, TEAL, 15, mono=True),
+        rule(910, 418, 910, 376, TEAL, 1.5, "4 4"),
+        rule(1084, 418, 1084, 376, ORANGE, 1.5, "4 4"),
+        t(910, 524, "线性代数与三维几何构成图形渲染与物理仿真的数学底座", 16, MUTED, anchor="middle"),
+    ])
+
+
 def diagram_compiler():
     return "".join([
         t(650, 205, "AST · IR 优化 · ELF 符号重定位", 21, INK, 650),
@@ -456,6 +473,7 @@ def select_variant(top, sub, title):
         if "数据结构" in title: return "huffman"
         if "组成原理" in title: return "computer-org"
         if "编译" in title or "链接" in title: return "compiler"
+        if "线性代数" in title or "3D" in title or "数学" in title: return "math-3d"
         return "process"
     if sub == "网络":
         if "帧同步" in title: return "frame-sync"
@@ -509,6 +527,7 @@ def diagram_for(kind):
     if kind == "linux": return diagram_linux()
     if kind == "computer-org": return diagram_computer_org()
     if kind == "compiler": return diagram_compiler()
+    if kind == "math-3d": return diagram_math_3d()
     if kind in ("learning","reflection-notes"): return diagram_learning(kind=="reflection-notes")
     return diagram_layers("architecture", "")
 
@@ -526,6 +545,7 @@ def diagram_heading(kind):
         "linux":"无头服务 · 命令行 · 持续构建",
         "computer-org":"CPU 流水线 · Cache · 主存层次",
         "compiler":"AST · IR 优化 · ELF 符号重定位",
+        "math-3d":"向量基底 · 齐次矩阵 · 四元数旋转",
         "learning":"学习闭环","reflection-notes":"经验与思考"}
     return names[kind]
 
@@ -583,7 +603,7 @@ THUMB_OFFSETS = {
     "frame-sync": (26, 15), "state-sync": (26, 15), "network": (14, -2),
     "huffman": (79, 13), "ai-coding": (13, -2), "ai-agent": (13, -2),
     "covers": (7, 8), "learning": (35, 1), "reflection-notes": (35, 1),
-    "pipeline": (9, 4), "linux": (14, 6), "computer-org": (0, 0), "compiler": (0, 0),
+    "pipeline": (9, 4), "linux": (14, 6), "computer-org": (0, 0), "compiler": (0, 0), "math-3d": (0, 0),
 }
 
 
