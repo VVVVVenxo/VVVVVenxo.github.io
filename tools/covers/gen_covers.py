@@ -492,6 +492,7 @@ def select_variant(top, sub, title):
     if sub == "Unity":
         if "动画" in title: return "animation"
         if "物理" in title: return "physics"
+        if "ECS" in title or "DOTS" in title or "JobSystem" in title: return "async"
         if "协程" in title or "多线程" in title: return "async"
         if "热更新" in title: return "assets"
         if "资源" in title or "内存" in title: return "assets"
@@ -553,20 +554,26 @@ def diagram_heading(kind):
 
 def wrap_title(title, max_units=10.5):
     lines=[]; current=""; units=0.0
-    for char in title:
-        size=0.56 if ord(char)<128 else 1.0
-        if char==" " and not current: continue
+    for token in re.findall(r"[A-Za-z0-9+#.]+|.", title):
+        size=sum(0.56 if ord(c)<128 else 1.0 for c in token)
+        if token==" " and not current: continue
         if current and units+size>max_units:
             lines.append(current.rstrip());current="";units=0.0
-            if char==" ": continue
-        current+=char;units+=size
+            if token==" ": continue
+        current+=token;units+=size
     if current: lines.append(current.rstrip())
     if len(lines)>1:
         last_units=sum(0.56 if ord(char)<128 else 1.0 for char in lines[-1])
         if last_units<=3.5:
             combined=lines[-2]+lines[-1]
-            split=len(combined)//2
-            lines[-2:]=[combined[:split],combined[split:]]
+            tokens=re.findall(r"[A-Za-z0-9+#.]+|.", combined)
+            acc=""; best=len(combined)//2
+            for tok in tokens:
+                if len(acc+tok)<=len(combined)//2 or not acc:
+                    acc+=tok
+                else:
+                    break
+            lines[-2:]=[acc,combined[len(acc):]]
         elif re.match(r"^[\u4e00-\u9fff]\s+[A-Za-z]", lines[-1]) and re.search(r"[\u4e00-\u9fff]$", lines[-2]):
             lines[-1] = lines[-2][-1] + lines[-1]
             lines[-2] = lines[-2][:-1]
